@@ -1,2 +1,2 @@
 # proskomma-js
-A JS Implementation of the 
+A Javascript Implementation of the **Proskomma** document model.
