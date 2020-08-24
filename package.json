@@ -1,0 +1,26 @@
+{
+  "name": "proskomma",
+  "version": "0.0.1",
+  "description": "A Model for Complex Text Documents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mvahowe/proskomma-js.git"
+  },
+  "keywords": [
+    "USFM",
+    "USX",
+    "Scripture",
+    "parser",
+    "lexer"
+  ],
+  "author": "Mark Howe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mvahowe/proskomma-js/issues"
+  },
+  "homepage": "https://github.com/mvahowe/proskomma-js#readme"
+}
