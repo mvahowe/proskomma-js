@@ -1,3 +1,5 @@
-const VersePT = class {};
+const PreToken = require('./pretoken');
 
-module.exports = VersePT;
+class VersesPT extends PreToken {};
+
+module.exports = VersesPT;

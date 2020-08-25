@@ -1,3 +1,5 @@
-const BreakPT = class {};
+const PreToken = require('./pretoken');
 
-module.exports = BreakPT;
+class MilestonePT extends PreToken {};
+
+module.exports = MilestonePT;

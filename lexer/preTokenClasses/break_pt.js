@@ -1,3 +1,5 @@
-const TagPT = class {};
+const PreToken = require('./pretoken');
 
-module.exports = TagPT;
+class BreakPT extends PreToken {};
+
+module.exports = BreakPT;

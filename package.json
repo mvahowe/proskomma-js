@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/mvahowe/proskomma-js/issues"
   },
-  "homepage": "https://github.com/mvahowe/proskomma-js#readme"
+  "homepage": "https://github.com/mvahowe/proskomma-js#readme",
+  "dependencies": {
+    "xregexp": "^4.3.0"
+  }
 }

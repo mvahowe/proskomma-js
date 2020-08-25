@@ -1,3 +1,5 @@
-const PrintablePT = class {};
+const PreToken = require('./pretoken');
 
-module.exports = PrintablePT;
+class ChapterPT extends PreToken {};
+
+module.exports = ChapterPT;

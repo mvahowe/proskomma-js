@@ -1,3 +1,3 @@
-const PrintablePT = class {};
+const PreToken = class {};
 
-module.exports = PrintablePT;
+module.exports = PreToken;
