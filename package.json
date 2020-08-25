@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/mvahowe/proskomma-js#readme",
   "dependencies": {
+    "fs-extra": "^9.0.1",
+    "uuid-base64": "^1.0.0",
     "xregexp": "^4.3.0"
   }
 }
