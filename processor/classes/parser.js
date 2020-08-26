@@ -1,5 +1,5 @@
-const { Sequence } = require("./sequence");
-const { specs } = require("../resources/parser_specs");
+const {Sequence} = require("./sequence");
+const {specs} = require("../resources/parser_specs");
 
 const Parser = class {
 
@@ -41,10 +41,35 @@ const Parser = class {
 
     parse(lexedItems) {
         for (const lexedItem of lexedItems) {
-            console.log(lexedItem.printValue);
+            const spec = this.specForItem(lexedItem);
+            if (spec) {
+                console.log(lexedItem.printValue);
+            }
         }
+    }
+
+    specForItem(item) {
+        let ret = null;
+        for (const spec of this.specs) {
+            if (this.specMatchesItem(spec, item)) {
+                ret = spec;
+                break;
+            }
+        }
+        return ret;
+    }
+
+    specMatchesItem(spec, item) {
+        for (const [subclass, accessor, value] of spec.contexts) {
+            if (item.subclass === subclass) {
+                if (item[accessor] === value) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
 
-    module.exports = { Parser };
+module.exports = {Parser};
