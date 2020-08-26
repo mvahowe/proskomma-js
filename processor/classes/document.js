@@ -1,5 +1,6 @@
 const { generateId } = require("../generate_id");
 const { lexify } = require("../../lexer");
+const { Parser } = require("./parser");
 
 class Document {
 
@@ -15,6 +16,9 @@ class Document {
 
     processUsfm(str) {
         const lexed = lexify(str);
+        const parser = new Parser();
+        parser.parse(lexed);
+
     }
 
 }

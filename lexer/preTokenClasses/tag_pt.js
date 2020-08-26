@@ -5,7 +5,9 @@ class TagPT extends PreToken {
     constructor(subclass, matchedBits) {
         super(subclass);
         this.tagName = matchedBits[2];
-        this.printValue = subclass === "startTag" ? `\\${this.tagName} ` : `\\${this.tagName}*`;
+        this.tagLevel = matchedBits[3] !== "" ? parseInt(matchedBits[3]) : 1;
+        this.fullTagName = `${this.tagName}${matchedBits[3]}`;
+        this.printValue = subclass === "startTag" ? `\\${this.fullTagName} ` : `\\${this.fullTagName}*`;
     }
 
 }
