@@ -15,7 +15,6 @@ class Document {
 
     processUsfm(str) {
         const lexed = lexify(str);
-        console.log(lexed.slice(0, 100))
     }
 
 }

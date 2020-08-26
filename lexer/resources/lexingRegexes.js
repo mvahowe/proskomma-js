@@ -28,7 +28,7 @@ module.exports = [
     ],
     [
         "milestone",
-        "endMilestoneTag",
+        "endMilestoneMarker",
         xre("(\\\\([*]))")
     ],
     [
