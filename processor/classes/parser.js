@@ -5,6 +5,13 @@ const Parser = class {
 
     constructor() {
         this.specs = specs;
+        this.headers = {};
+        this.setSequenceTypes();
+        this.setSequences();
+        this.setCurrent();
+    }
+
+    setSequenceTypes() {
         this.baseSequenceTypes = {
             main: "1",
             intro: "*",
@@ -18,6 +25,9 @@ const Parser = class {
             xref: "*",
             temp: "?"
         };
+    }
+
+    setSequences() {
         this.sequences = {};
         for (const [sType, sArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
             switch (sArity) {
@@ -34,9 +44,15 @@ const Parser = class {
                     throw new Error(`Unexpected base sequence arity '${sArity}' for '${sType}'`);
             }
         }
-        this.currentSequence = this.sequences.main;
-        this.headers = {};
-        this.activeScopes = [];
+    }
+
+    setCurrent() {
+        this.current = {
+            sequence: this.sequences.main,
+            activeScopes: [],
+            baseSequenceType: "main",
+            inlineSequenceType: null
+        }
     }
 
     parse(lexedItems) {
