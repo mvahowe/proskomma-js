@@ -11,8 +11,8 @@ const Sequence = class {
         return this.blocks.map(b => b.plainText()).join('').trim();
     }
 
-    addToken(pt) {
-        this.lastBlock().addToken(pt);
+    addItem(i) {
+        this.lastBlock().addItem(i);
     }
 
     lastBlock() {

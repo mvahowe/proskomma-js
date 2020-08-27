@@ -1,5 +1,6 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
+const { Token } = require("./items");
 
 const Parser = class {
 
@@ -171,7 +172,7 @@ const Parser = class {
     }
 
     addToken(pt) {
-        this.current.sequence.addToken(pt);
+        this.current.sequence.addItem(new Token(pt));
     }
 
 }

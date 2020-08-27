@@ -1,15 +1,17 @@
+const { Token } = require("./items");
+
 const Block = class {
 
     constructor () {
         this.items = [];
     }
 
-    addToken(pt) {
-        this.items.push(pt);
+    addItem(i) {
+        this.items.push(i);
     }
 
     plainText() {
-        return this.items.map(i => i.printValue).join('');
+        return this.items.filter(i => i instanceof Token).map(i => i.chars).join('');
     }
 
 }
