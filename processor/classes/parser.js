@@ -18,7 +18,8 @@ const Parser = class {
             title: "?",
             endTitle: "?",
             heading: "*",
-            rem: "*",
+            header: "*",
+            remark: "*",
             footnote: "*"
         };
         this.inlineSequenceTypes = {
@@ -56,12 +57,34 @@ const Parser = class {
     }
 
     parse(lexedItems) {
+        let changeSequence;
         for (const lexedItem of lexedItems) {
             const spec = this.specForItem(lexedItem);
             if (spec) {
-                console.log(lexedItem.printValue);
+                if ("before" in spec.parser) {
+                    spec.parser.before(this, lexedItem);
+                }
+                changeSequence = spec.parser.baseSequenceType && (
+                    (spec.parser.baseSequenceType !== this.current.baseSequenceType) ||
+                    spec.parser.forceNewSequence
+                );
+                if (changeSequence) {
+                    this.closeActiveScopes(spec.parser, "baseSequenceChange");
+                    this.changeBaseSequence(spec.parser);
+                }
+                if ("during" in spec.parser) {
+                    spec.parser.during(this, lexedItem);
+                }
+                if (changeSequence) {
+                    this.openNewScopes(spec.parser, lexedItem);
+                }
+                if ("after" in spec.parser) {
+                    spec.parser.after(this, lexedItem);
+                }
             }
         }
+        console.log(this.headers);
+        console.log(this.sequences.title.plainText());
     }
 
     specForItem(item) {
@@ -76,16 +99,79 @@ const Parser = class {
     }
 
     specMatchesItem(spec, item) {
-        for (const [subclass, accessor, value] of spec.contexts) {
-            if (item.subclass === subclass) {
-                if (item[accessor] === value) {
-                    return true;
-                }
+        for (const [subclass, accessor, values] of spec.contexts) {
+            if (
+                (item.subclass === subclass) &&
+                (!accessor || values.includes(item[accessor]))
+            ) {
+                return true;
             }
         }
         return false;
     }
 
+    closeActiveScopes(parserSpec, closeLabel) {
+        const matchedScopes = this.current.activeScopes.filter(
+            sc => sc.endedBy.includes(closeLabel)
+        );
+        const parser = this;
+        matchedScopes.forEach(
+            sc => {
+                if (sc.onEnd) {
+                    sc.onEnd(parser, sc.label);
+                }
+            }
+        );
+        this.current.activeScopes = this.current.activeScopes.filter(
+            sc => !sc.endedBy.includes(closeLabel)
+        );
+    }
+
+    changeBaseSequence(parserSpec) {
+        const newType = parserSpec.baseSequenceType
+        this.current.baseSequenceType = newType;
+        const arity = this.baseSequenceTypes[newType];
+        switch (arity) {
+            case "1":
+                this.current.sequence = this.sequences[newType];
+                break;
+            case "?":
+                if (!this.sequences[newType]) {
+                    this.sequences[newType] = new Sequence(newType);
+                }
+                this.current.sequence = this.sequences[newType];
+                break;
+            case "*":
+                this.current.sequence = new Sequence(newType);
+                if (!parserSpec.useTempSequence) {
+                    this.sequences[newType].push(this.current.sequence);
+                }
+                break;
+            default:
+                throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
+        }
+    }
+
+    openNewScopes(parserSpec, pt) {
+        parserSpec.newScopes.forEach(
+            (sc) => {
+                const newScope = {
+                    label: sc.label(pt),
+                    endedBy: sc.endedBy
+                };
+                if ("onEnd" in sc) {
+                    newScope.onEnd = sc.onEnd;
+                }
+                this.current.activeScopes.push(newScope);
+            }
+        );
+
+    }
+
+    addToken(pt) {
+        this.current.sequence.addToken(pt);
+    }
+
 }
 
-module.exports = {Parser};
+module.exports = { Parser };
