@@ -113,6 +113,29 @@ const specs = [
                 "startTag",
                 "tagName",
                 [
+                    "rem"
+                ]
+            ]
+        ],
+        parser: {
+            baseSequenceType: "remark",
+            inlineSequenceType: null,
+            forceNewSequence: true,
+            useTempSequence: false,
+            newScopes: [
+                {
+                    label: pt => pt.fullTagName,
+                    endedBy: ["baseSequenceChange"],
+                }
+            ]
+        }
+    },
+    {
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
                     "cd",
                     "p",
                     "m",

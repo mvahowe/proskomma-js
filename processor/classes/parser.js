@@ -83,8 +83,6 @@ const Parser = class {
                 }
             }
         }
-        console.log(this.headers);
-        console.log(this.sequences.title.plainText());
     }
 
     specForItem(item) {
