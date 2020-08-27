@@ -19,6 +19,7 @@ const specs = [
             baseSequenceType: "header",
             inlineSequenceType: null,
             forceNewSequence: true,
+            newBlock: true,
             useTempSequence: true,
             newScopes: [
                 {
@@ -52,7 +53,7 @@ const specs = [
             baseSequenceType: "heading",
             inlineSequenceType: null,
             forceNewSequence: true,
-            useTempSequence: false,
+            newBlock: true,
             newScopes: [
                 {
                     label: pt => pt.fullTagName,
@@ -74,8 +75,7 @@ const specs = [
         parser: {
             baseSequenceType: "title",
             inlineSequenceType: null,
-            forceNewSequence: false,
-            useTempSequence: false,
+            newBlock: true,
             newScopes: [
                 {
                     label: pt => pt.fullTagName,
@@ -97,8 +97,7 @@ const specs = [
         parser: {
             baseSequenceType: "endTitle",
             inlineSequenceType: null,
-            forceNewSequence: false,
-            useTempSequence: false,
+            newBlock: true,
             newScopes: [
                 {
                     label: pt => pt.fullTagName,
@@ -121,7 +120,6 @@ const specs = [
             baseSequenceType: "remark",
             inlineSequenceType: null,
             forceNewSequence: true,
-            useTempSequence: false,
             newScopes: [
                 {
                     label: pt => pt.fullTagName,
@@ -169,8 +167,7 @@ const specs = [
         parser: {
             baseSequenceType: "main",
             inlineSequenceType: null,
-            forceNewSequence: false,
-            useTempSequence: false,
+            newBlock: true,
             newScopes: [],
         }
     },

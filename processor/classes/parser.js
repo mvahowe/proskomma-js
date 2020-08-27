@@ -72,6 +72,9 @@ const Parser = class {
                     this.closeActiveScopes(spec.parser, "baseSequenceChange");
                     this.changeBaseSequence(spec.parser);
                 }
+                if ("newBlock" in spec.parser) {
+                    this.current.sequence.newBlock(lexedItem.fullTagName);
+                }
                 if ("during" in spec.parser) {
                     spec.parser.during(this, lexedItem);
                 }
@@ -83,6 +86,7 @@ const Parser = class {
                 }
             }
         }
+        console.log(this.headers);
     }
 
     specForItem(item) {

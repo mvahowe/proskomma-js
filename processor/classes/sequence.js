@@ -12,14 +12,19 @@ const Sequence = class {
     }
 
     addToken(pt) {
-        if (this.blocks.length === 0) {
-            this.blocks.push(new Block());
-        }
         this.lastBlock().addToken(pt);
     }
 
     lastBlock() {
-        return this.blocks.length > 0 ? this.blocks[this.blocks.length - 1] : null;
+        if (this.blocks.length > 0) {
+            return this.blocks[this.blocks.length - 1];
+        } else {
+            throw new Error(`lastBlock when no blocks present in ${this.type} sequence`);
+        }
+    }
+
+    newBlock(label) {
+        this.blocks.push(new Block());
     }
 
 }
