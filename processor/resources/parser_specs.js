@@ -168,7 +168,7 @@ const specs = [
             baseSequenceType: "main",
             inlineSequenceType: null,
             newBlock: true,
-            newScopes: [],
+            newScopes: []
         }
     },
     {

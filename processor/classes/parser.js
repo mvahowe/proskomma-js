@@ -1,6 +1,6 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
-const { Token } = require("./items");
+const {Token} = require("./items");
 
 const Parser = class {
 
@@ -73,7 +73,13 @@ const Parser = class {
                     this.changeBaseSequence(spec.parser);
                 }
                 if ("newBlock" in spec.parser) {
+                    this.closeActiveScopes(spec.parser, "endBlock");
                     this.current.sequence.newBlock(lexedItem.fullTagName);
+                    const blockScope = {
+                        label: pt => pt.fullTagName,
+                        endedBy: ["endBlock"]
+                    };
+                    this.openNewScope(lexedItem, blockScope);
                 }
                 if ("during" in spec.parser) {
                     spec.parser.during(this, lexedItem);
@@ -86,7 +92,7 @@ const Parser = class {
                 }
             }
         }
-        console.log(this.headers);
+        console.log(this.sequences.main.lastBlock());
     }
 
     specForItem(item) {
@@ -155,19 +161,18 @@ const Parser = class {
     }
 
     openNewScopes(parserSpec, pt) {
-        parserSpec.newScopes.forEach(
-            (sc) => {
-                const newScope = {
-                    label: sc.label(pt),
-                    endedBy: sc.endedBy
-                };
-                if ("onEnd" in sc) {
-                    newScope.onEnd = sc.onEnd;
-                }
-                this.current.sequence.activeScopes.push(newScope);
-            }
-        );
+        parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc));
+    }
 
+    openNewScope(pt, sc) {
+        const newScope = {
+            label: sc.label(pt),
+            endedBy: sc.endedBy
+        };
+        if ("onEnd" in sc) {
+            newScope.onEnd = sc.onEnd;
+        }
+        this.current.sequence.activeScopes.push(newScope);
     }
 
     addToken(pt) {
@@ -176,4 +181,4 @@ const Parser = class {
 
 }
 
-module.exports = { Parser };
+module.exports = {Parser};

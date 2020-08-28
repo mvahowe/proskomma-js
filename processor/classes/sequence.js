@@ -1,5 +1,6 @@
 const { generateId } = require("../generate_id");
 const { Block } = require("./block");
+const { Scope } = require("./items");
 
 const Sequence = class {
 
@@ -28,6 +29,9 @@ const Sequence = class {
 
     newBlock(label) {
         this.blocks.push(new Block());
+        this.lastBlock().addItem(
+            new Scope("start", label)
+        )
     }
 
 }
