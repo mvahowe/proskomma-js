@@ -51,7 +51,6 @@ const Parser = class {
     setCurrent() {
         this.current = {
             sequence: this.sequences.main,
-            activeScopes: [],
             baseSequenceType: "main",
             inlineSequenceType: null
         }
@@ -114,7 +113,7 @@ const Parser = class {
     }
 
     closeActiveScopes(parserSpec, closeLabel) {
-        const matchedScopes = this.current.activeScopes.filter(
+        const matchedScopes = this.current.sequence.activeScopes.filter(
             sc => sc.endedBy.includes(closeLabel)
         );
         const parser = this;
@@ -125,7 +124,7 @@ const Parser = class {
                 }
             }
         );
-        this.current.activeScopes = this.current.activeScopes.filter(
+        this.current.sequence.activeScopes = this.current.sequence.activeScopes.filter(
             sc => !sc.endedBy.includes(closeLabel)
         );
     }
@@ -165,7 +164,7 @@ const Parser = class {
                 if ("onEnd" in sc) {
                     newScope.onEnd = sc.onEnd;
                 }
-                this.current.activeScopes.push(newScope);
+                this.current.sequence.activeScopes.push(newScope);
             }
         );
 

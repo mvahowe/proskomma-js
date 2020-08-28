@@ -1,10 +1,13 @@
+const { generateId } = require("../generate_id");
 const { Block } = require("./block");
 
 const Sequence = class {
 
     constructor(sType) {
+        this.id = generateId();
         this.type = sType;
         this.blocks = [];
+        this.activeScopes = [];
     }
 
     plainText() {

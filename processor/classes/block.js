@@ -1,8 +1,10 @@
+const { generateId } = require("../generate_id");
 const { Token } = require("./items");
 
 const Block = class {
 
     constructor () {
+        this.id = generateId();
         this.items = [];
     }
 
