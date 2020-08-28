@@ -1,6 +1,6 @@
-const {Sequence} = require("./sequence");
-const {specs} = require("../resources/parser_specs");
-const {Token} = require("./items");
+const { Sequence } = require("./sequence");
+const { specs } = require("../resources/parser_specs");
+const { Token, Scope } = require("./items");
 
 const Parser = class {
 
@@ -92,7 +92,7 @@ const Parser = class {
                 }
             }
         }
-        console.log(this.sequences.main.lastBlock());
+        console.log(JSON.stringify(this.sequences.main.blocks[0]));
     }
 
     specForItem(item) {
@@ -125,6 +125,7 @@ const Parser = class {
         const parser = this;
         matchedScopes.forEach(
             sc => {
+                parser.addScope("close", sc.label);
                 if (sc.onEnd) {
                     sc.onEnd(parser, sc.label);
                 }
@@ -178,6 +179,10 @@ const Parser = class {
     addToken(pt) {
         this.current.sequence.addItem(new Token(pt));
     }
+
+    addScope(sOrE, label) {
+    this.current.sequence.addItem(new Scope(sOrE, label));
+}
 
 }
 
