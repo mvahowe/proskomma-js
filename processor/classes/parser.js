@@ -1,6 +1,7 @@
 const { Sequence } = require("./sequence");
 const { specs } = require("../resources/parser_specs");
 const { Token, Scope } = require("./items");
+const { labelForScope } = require("../label_for_scope");
 
 const Parser = class {
 
@@ -43,7 +44,7 @@ const Parser = class {
                     this.sequences[sType] = [];
                     break;
                 default:
-                    throw new Error(`Unexpected base sequence arity '${sArity}' for '${sType}'`);
+                    throw new Error(`Unexpected sequence arity '${sArity}' for '${sType}'`);
             }
         }
     }
@@ -57,6 +58,14 @@ const Parser = class {
     }
 
     parse(lexedItems) {
+        this.parseFirstPass(lexedItems);
+        for (const seq of this.allSequences()) {
+            seq.close(this);
+        }
+        console.log(JSON.stringify(this.sequences.main.lastBlock()));
+    }
+
+    parseFirstPass(lexedItems) {
         let changeSequence;
         for (const lexedItem of lexedItems) {
             const spec = this.specForItem(lexedItem);
@@ -74,9 +83,9 @@ const Parser = class {
                 }
                 if ("newBlock" in spec.parser) {
                     this.closeActiveScopes(spec.parser, "endBlock");
-                    this.current.sequence.newBlock(lexedItem.fullTagName);
+                    this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
                     const blockScope = {
-                        label: pt => pt.fullTagName,
+                        label: pt => labelForScope("blockTag", [pt.fullTagName]),
                         endedBy: ["endBlock"]
                     };
                     this.openNewScope(lexedItem, blockScope);
@@ -92,7 +101,26 @@ const Parser = class {
                 }
             }
         }
-        console.log(JSON.stringify(this.sequences.main.blocks[0]));
+    }
+
+    allSequences() {
+        const ret = [];
+        for (const [seqName, seqArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
+            switch (seqArity) {
+                case "1":
+                case "?":
+                    if (this.sequences[seqName]) {
+                        ret.push(this.sequences[seqName]);
+                    }
+                    break;
+                case "*":
+                    this.sequences[seqName].forEach(s => {ret.push(s)});
+                    break;
+                default:
+                    throw new Error(`Unexpected sequence arity '${seqArity}' for '${seqName}'`);
+            }
+        }
+        return ret;
     }
 
     specForItem(item) {
@@ -123,20 +151,20 @@ const Parser = class {
             sc => sc.endedBy.includes(closeLabel)
         );
         const parser = this;
-        matchedScopes.forEach(
-            sc => {
-                parser.addScope("close", sc.label);
-                if (sc.onEnd) {
-                    sc.onEnd(parser, sc.label);
-                }
-            }
-        );
+        matchedScopes.forEach(ms => this.closeActiveScope(ms));
         this.current.sequence.activeScopes = this.current.sequence.activeScopes.filter(
             sc => !sc.endedBy.includes(closeLabel)
         );
     }
 
-    changeBaseSequence(parserSpec) {
+    closeActiveScope(sc) {
+        this.addScope("close", sc.label);
+        if (sc.onEnd) {
+            sc.onEnd(this, sc.label);
+        }
+    }
+
+changeBaseSequence(parserSpec) {
         const newType = parserSpec.baseSequenceType
         this.current.baseSequenceType = newType;
         const arity = this.baseSequenceTypes[newType];

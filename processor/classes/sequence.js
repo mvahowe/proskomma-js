@@ -34,6 +34,19 @@ const Sequence = class {
         )
     }
 
+    close(parser) {
+        for (const activeScope of this.activeScopes) {
+            this.closeActiveScope(parser, activeScope);
+        }
+    }
+
+    closeActiveScope(parser, sc) {
+        this.addItem(new Scope("close", sc.label));
+        if (sc.onEnd) {
+            sc.onEnd(parser, sc.label);
+        }
+    }
+
 }
 
 module.exports = {Sequence};
