@@ -1,7 +1,7 @@
-const { Sequence } = require("./sequence");
-const { specs } = require("../resources/parser_specs");
-const { Token, Scope } = require("./items");
-const { labelForScope } = require("../label_for_scope");
+const {Sequence} = require("./sequence");
+const {specs} = require("../resources/parser_specs");
+const {Token, Scope} = require("./items");
+const {labelForScope} = require("../label_for_scope");
 
 const Parser = class {
 
@@ -52,6 +52,7 @@ const Parser = class {
     setCurrent() {
         this.current = {
             sequence: this.sequences.main,
+            parentSequence: null,
             baseSequenceType: "main",
             inlineSequenceType: null
         }
@@ -62,42 +63,52 @@ const Parser = class {
         for (const seq of this.allSequences()) {
             seq.close(this);
         }
-        console.log(JSON.stringify(this.sequences.main.lastBlock()));
+        console.log(JSON.stringify(this.sequences.footnote, null, 2));
     }
 
     parseFirstPass(lexedItems) {
-        let changeSequence;
+        let changeBaseSequence;
         for (const lexedItem of lexedItems) {
             const spec = this.specForItem(lexedItem);
             if (spec) {
                 if ("before" in spec.parser) {
                     spec.parser.before(this, lexedItem);
                 }
-                changeSequence = spec.parser.baseSequenceType && (
+                changeBaseSequence = spec.parser.baseSequenceType && (
                     (spec.parser.baseSequenceType !== this.current.baseSequenceType) ||
                     spec.parser.forceNewSequence
                 );
-                if (changeSequence) {
-                    this.closeActiveScopes(spec.parser, "baseSequenceChange");
+                if (changeBaseSequence) {
+                    this.closeActiveScopes("baseSequenceChange");
                     this.changeBaseSequence(spec.parser);
-                }
-                if ("newBlock" in spec.parser) {
-                    this.closeActiveScopes(spec.parser, "endBlock");
-                    this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
-                    const blockScope = {
-                        label: pt => labelForScope("blockTag", [pt.fullTagName]),
-                        endedBy: ["endBlock"]
-                    };
-                    this.openNewScope(lexedItem, blockScope);
+                    if ("newBlock" in spec.parser) {
+                        this.closeActiveScopes("endBlock");
+                        this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
+                        const blockScope = {
+                            label: pt => labelForScope("blockTag", [pt.fullTagName]),
+                            endedBy: ["endBlock"]
+                        };
+                        this.openNewScope(lexedItem, blockScope);
+                    }
+                } else if (spec.parser.inlineSequenceType) {
+                    this.current.inlineSequenceType = spec.parser.inlineSequenceType;
+                    this.current.parentSequence = this.current.sequence;
+                    this.current.sequence = new Sequence(this.current.inlineSequenceType);
+                    this.current.sequence.newBlock();
+                    this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
                 }
                 if ("during" in spec.parser) {
                     spec.parser.during(this, lexedItem);
                 }
-                if (changeSequence) {
+                if (changeBaseSequence || spec.parser.inlineSequenceType) {
                     this.openNewScopes(spec.parser, lexedItem);
                 }
                 if ("after" in spec.parser) {
                     spec.parser.after(this, lexedItem);
+                }
+            } else {
+                if (lexedItem.subclass === "endTag") {
+                    this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
                 }
             }
         }
@@ -114,7 +125,9 @@ const Parser = class {
                     }
                     break;
                 case "*":
-                    this.sequences[seqName].forEach(s => {ret.push(s)});
+                    this.sequences[seqName].forEach(s => {
+                        ret.push(s)
+                    });
                     break;
                 default:
                     throw new Error(`Unexpected sequence arity '${seqArity}' for '${seqName}'`);
@@ -146,25 +159,24 @@ const Parser = class {
         return false;
     }
 
-    closeActiveScopes(parserSpec, closeLabel) {
+    closeActiveScopes(closeLabel) {
         const matchedScopes = this.current.sequence.activeScopes.filter(
             sc => sc.endedBy.includes(closeLabel)
         );
-        const parser = this;
-        matchedScopes.forEach(ms => this.closeActiveScope(ms));
         this.current.sequence.activeScopes = this.current.sequence.activeScopes.filter(
             sc => !sc.endedBy.includes(closeLabel)
         );
+        matchedScopes.forEach(ms => this.closeActiveScope(ms));
     }
 
     closeActiveScope(sc) {
-        this.addScope("close", sc.label);
+        this.addScope("end", sc.label);
         if (sc.onEnd) {
             sc.onEnd(this, sc.label);
         }
     }
 
-changeBaseSequence(parserSpec) {
+    changeBaseSequence(parserSpec) {
         const newType = parserSpec.baseSequenceType
         this.current.baseSequenceType = newType;
         const arity = this.baseSequenceTypes[newType];
@@ -189,11 +201,18 @@ changeBaseSequence(parserSpec) {
         }
     }
 
+    returnToBaseSequence() {
+        this.current.inlineSequenceType = null;
+        this.current.sequence = this.current.parentSequence;
+        this.current.parentSequence = null;
+    }
+
     openNewScopes(parserSpec, pt) {
         parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc));
     }
 
     openNewScope(pt, sc) {
+        this.current.sequence.addItem(new Scope("start", sc.label(pt)));
         const newScope = {
             label: sc.label(pt),
             endedBy: sc.endedBy
@@ -209,8 +228,8 @@ changeBaseSequence(parserSpec) {
     }
 
     addScope(sOrE, label) {
-    this.current.sequence.addItem(new Scope(sOrE, label));
-}
+        this.current.sequence.addItem(new Scope(sOrE, label));
+    }
 
 }
 

@@ -26,7 +26,7 @@ const preTokenClassForFragment = (fragment) => {
             return new classForFragment[tClass](tSubclass, matchedBits);
         }
     }
-    return null;
+    throw new Error(`Could not match preToken fragment '${fragment}'`);
 }
 
 const lexify = (str) => {

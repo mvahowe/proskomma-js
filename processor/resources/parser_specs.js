@@ -1,3 +1,5 @@
+const { labelForScope } = require("../label_for_scope");
+
 const specs = [
     {
         contexts: [
@@ -17,7 +19,6 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "header",
-            inlineSequenceType: null,
             forceNewSequence: true,
             newBlock: true,
             useTempSequence: true,
@@ -51,7 +52,6 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "heading",
-            inlineSequenceType: null,
             forceNewSequence: true,
             newBlock: true,
             newScopes: [
@@ -74,7 +74,6 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "title",
-            inlineSequenceType: null,
             newBlock: true,
             newScopes: [
                 {
@@ -96,7 +95,6 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "endTitle",
-            inlineSequenceType: null,
             newBlock: true,
             newScopes: [
                 {
@@ -118,7 +116,6 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "remark",
-            inlineSequenceType: null,
             forceNewSequence: true,
             newScopes: [
                 {
@@ -166,9 +163,53 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "main",
-            inlineSequenceType: null,
             newBlock: true,
             newScopes: []
+        }
+    },
+    {
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "f",
+                    "fe"
+                ]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "footnote",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", pt.fullTagName),
+                    endedBy: ["endTag/f", "endTag/fe", "endBlock"],
+                    onEnd: (parser, label) => parser.returnToBaseSequence()
+                }
+            ]
+        }
+    },
+    {
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "x"
+                ]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "xref",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", pt.fullTagName),
+                    endedBy: ["endTag/x", "endBlock"],
+                    onEnd: (parser, label) => parser.returnToBaseSequence()
+                }
+            ]
         }
     },
     {

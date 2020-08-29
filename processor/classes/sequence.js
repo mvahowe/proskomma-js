@@ -29,22 +29,26 @@ const Sequence = class {
 
     newBlock(label) {
         this.blocks.push(new Block());
-        this.lastBlock().addItem(
-            new Scope("start", label)
-        )
+        if (label) {
+            this.lastBlock().addItem(
+                new Scope("start", label)
+            )
+        }
     }
 
     close(parser) {
         for (const activeScope of this.activeScopes) {
             this.closeActiveScope(parser, activeScope);
         }
+        this.activeScopes = [];
     }
 
     closeActiveScope(parser, sc) {
-        this.addItem(new Scope("close", sc.label));
+        this.addItem(new Scope("end", sc.label));
         if (sc.onEnd) {
             sc.onEnd(parser, sc.label);
         }
+
     }
 
 }
