@@ -288,7 +288,7 @@ const specs = [
     },
     {
         contexts: [
-            ["startMilestoneTag", "sOrE", "sgit s"]
+            ["startMilestoneTag", "sOrE", "s"]
         ],
         parser: {
             newScopes: [
