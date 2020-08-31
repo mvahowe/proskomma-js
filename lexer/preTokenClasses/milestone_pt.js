@@ -4,6 +4,7 @@ class MilestonePT extends PreToken {
 
     constructor(subclass, matchedBits) {
         super(subclass);
+        this.sOrE = null;
         if (subclass === "endMilestoneMarker") {
             this.printValue = "\\*";
         } else {
@@ -12,6 +13,7 @@ class MilestonePT extends PreToken {
                 this.printValue = `\\${this.tagName}\\*`;
             } else {
                 this.printValue = `\\${this.tagName}`;
+                this.sOrE = matchedBits[3];
             }
         }
     }

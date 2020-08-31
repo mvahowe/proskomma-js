@@ -280,6 +280,40 @@ const specs = [
     },
     {
         contexts: [
+            ["emptyMilestone"]
+        ],
+        parser: {
+            during: (parser, pt) => parser.addEmptyMilestone(labelForScope("milestone", [pt.tagName]))
+        }
+    },
+    {
+        contexts: [
+            ["startMilestoneTag", "sOrE", "sgit s"]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("milestone", [pt.tagName]),
+                    endedBy: ["endMilestone/$tagName$"]
+                }
+            ],
+            during: (parser, pt) => {
+                if (pt.sOrE === "s") {
+                    parser.setAttributeContext(labelForScope("milestone", [pt.tagName]))
+                }
+            }
+        }
+    },
+    {
+        contexts: [
+            ["endMilestoneMarker"]
+        ],
+        parser: {
+            during: (parser, pt) => parser.clearAttributeContext()
+        }
+    },
+    {
+        contexts: [
             ["wordLike"],
             ["lineSpace"],
             ["punctuation"],

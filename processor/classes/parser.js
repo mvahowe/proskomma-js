@@ -54,7 +54,8 @@ const Parser = class {
             sequence: this.sequences.main,
             parentSequence: null,
             baseSequenceType: "main",
-            inlineSequenceType: null
+            inlineSequenceType: null,
+            attributeContext: null
         }
     }
 
@@ -71,6 +72,9 @@ const Parser = class {
         for (const lexedItem of lexedItems) {
             if (["endTag"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+            }
+            if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
+                this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
             }
             if (["chapter", "verses"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(lexedItem.subclass);
@@ -229,7 +233,11 @@ const Parser = class {
     }
 
     substituteEndedBys(endedBy, pt) {
-        return endedBy.map(eb => eb.replace("$fullTagName$", pt.fullTagName))
+        return endedBy.map(
+            eb => eb
+                .replace("$fullTagName$", pt.fullTagName)
+                .replace("$tagName$", pt.tagName)
+        )
     }
 
     addToken(pt) {
@@ -243,6 +251,14 @@ const Parser = class {
     addEmptyMilestone(label) {
         this.current.sequence.addItem(new Scope("start", label));
         this.current.sequence.addItem(new Scope("end", label));
+    }
+
+    setAttributeContext(label) {
+        this.current.attributeContext = label;
+    }
+
+    clearAttributeContext() {
+        this.current.attributeContext = null;
     }
 
 }
