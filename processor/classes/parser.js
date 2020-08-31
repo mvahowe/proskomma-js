@@ -69,6 +69,12 @@ const Parser = class {
     parseFirstPass(lexedItems) {
         let changeBaseSequence;
         for (const lexedItem of lexedItems) {
+            if (["endTag"].includes(lexedItem.subclass)) {
+                this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+            }
+            if (["chapter", "verses"].includes(lexedItem.subclass)) {
+                this.closeActiveScopes(lexedItem.subclass);
+            }
             const spec = this.specForItem(lexedItem);
             if (spec) {
                 if ("before" in spec.parser) {
@@ -103,10 +109,6 @@ const Parser = class {
                 this.openNewScopes(spec.parser, lexedItem);
                 if ("after" in spec.parser) {
                     spec.parser.after(this, lexedItem);
-                }
-            } else {
-                if (lexedItem.subclass === "endTag") {
-                    this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
                 }
             }
         }
@@ -160,7 +162,7 @@ const Parser = class {
     closeActiveScopes(closeLabel) {
         const matchedScopes = this.current.sequence.activeScopes.filter(
             sc => sc.endedBy.includes(closeLabel)
-        );
+        ).reverse();
         this.current.sequence.activeScopes = this.current.sequence.activeScopes.filter(
             sc => !sc.endedBy.includes(closeLabel)
         );

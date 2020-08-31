@@ -163,7 +163,7 @@ const specs = [
             forceNewSequence: true,
             newScopes: [
                 {
-                    label: pt => labelForScope("inline", pt.fullTagName),
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
                     endedBy: ["endTag/f", "endTag/fe", "endBlock"],
                     onEnd: (parser, label) => parser.returnToBaseSequence()
                 }
@@ -185,11 +185,47 @@ const specs = [
             forceNewSequence: true,
             newScopes: [
                 {
-                    label: pt => labelForScope("inline", pt.fullTagName),
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
                     endedBy: ["endTag/x", "endBlock"],
                     onEnd: (parser, label) => parser.returnToBaseSequence()
                 }
             ]
+        }
+    },
+    {
+        contexts: [
+            ["chapter"]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("chapter", [pt.number]),
+                    endedBy: ["chapter"]
+                }
+            ]
+        }
+    },
+    {
+        contexts: [
+            ["verses"]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("verses", [pt.numberString]),
+                    endedBy: ["verses", "chapter"]
+                }
+            ],
+            during: (parser, pt) => {
+                pt.numbers.map(n => {
+                        const verseScope = {
+                            label: pt => labelForScope("verse", [n]),
+                            endedBy: ["verses", "chapter"]
+                        };
+                        parser.openNewScope(pt, verseScope);
+                    }
+                );
+            }
         }
     },
     {
