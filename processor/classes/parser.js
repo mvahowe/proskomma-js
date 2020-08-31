@@ -220,12 +220,16 @@ const Parser = class {
         }
         const newScope = {
             label: sc.label(pt),
-            endedBy: sc.endedBy
+            endedBy: this.substituteEndedBys(sc.endedBy, pt)
         };
         if ("onEnd" in sc) {
             newScope.onEnd = sc.onEnd;
         }
         this.current.sequence.activeScopes.push(newScope);
+    }
+
+    substituteEndedBys(endedBy, pt) {
+        return endedBy.map(eb => eb.replace("$fullTagName$", pt.fullTagName))
     }
 
     addToken(pt) {
@@ -234,6 +238,11 @@ const Parser = class {
 
     addScope(sOrE, label) {
         this.current.sequence.addItem(new Scope(sOrE, label));
+    }
+
+    addEmptyMilestone(label) {
+        this.current.sequence.addItem(new Scope("start", label));
+        this.current.sequence.addItem(new Scope("end", label));
     }
 
 }

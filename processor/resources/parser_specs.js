@@ -230,6 +230,56 @@ const specs = [
     },
     {
         contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "qs",
+                    "qac",
+                    "litl",
+                    "lik",
+                    "liv",
+                    "fv",
+                    "fdc",
+                    "fm",
+                    "xop",
+                    "xot",
+                    "xnt",
+                    "xdc",
+                    "add",
+                    "bk",
+                    "dc",
+                    "k",
+                    "nd",
+                    "ord",
+                    "pn",
+                    "png",
+                    "qt",
+                    "sig",
+                    "sls",
+                    "tl",
+                    "wj",
+                    "em",
+                    "bd",
+                    "it",
+                    "bdit",
+                    "no",
+                    "sc",
+                    "sup"
+                ]
+            ]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("span", [pt.fullTagName]),
+                    endedBy: ["endBlock", "endTag/$fullTagName$"]
+                }
+            ]
+        }
+    },
+    {
+        contexts: [
             ["wordLike"],
             ["lineSpace"],
             ["punctuation"],
