@@ -63,7 +63,7 @@ const Parser = class {
         for (const seq of this.allSequences()) {
             seq.close(this);
         }
-        console.log(JSON.stringify(this.sequences.footnote, null, 2));
+        console.log(JSON.stringify(this.sequences.main, null, 2));
     }
 
     parseFirstPass(lexedItems) {
@@ -88,7 +88,7 @@ const Parser = class {
                             label: pt => labelForScope("blockTag", [pt.fullTagName]),
                             endedBy: ["endBlock"]
                         };
-                        this.openNewScope(lexedItem, blockScope);
+                        this.openNewScope(lexedItem, blockScope, false);
                     }
                 } else if (spec.parser.inlineSequenceType) {
                     this.current.inlineSequenceType = spec.parser.inlineSequenceType;
@@ -100,9 +100,7 @@ const Parser = class {
                 if ("during" in spec.parser) {
                     spec.parser.during(this, lexedItem);
                 }
-                if (changeBaseSequence || spec.parser.inlineSequenceType) {
-                    this.openNewScopes(spec.parser, lexedItem);
-                }
+                this.openNewScopes(spec.parser, lexedItem);
                 if ("after" in spec.parser) {
                     spec.parser.after(this, lexedItem);
                 }
@@ -208,11 +206,16 @@ const Parser = class {
     }
 
     openNewScopes(parserSpec, pt) {
-        parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc));
+        if (parserSpec.newScopes) {
+            parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc));
+        }
     }
 
-    openNewScope(pt, sc) {
-        this.current.sequence.addItem(new Scope("start", sc.label(pt)));
+    openNewScope(pt, sc, addItem) {
+        if (addItem === undefined) {addItem = true};
+        if (addItem) {
+            this.current.sequence.addItem(new Scope("start", sc.label(pt)));
+        }
         const newScope = {
             label: sc.label(pt),
             endedBy: sc.endedBy

@@ -54,12 +54,7 @@ const specs = [
             baseSequenceType: "heading",
             forceNewSequence: true,
             newBlock: true,
-            newScopes: [
-                {
-                    label: pt => pt.fullTagName,
-                    endedBy: ["baseSequenceChange"],
-                }
-            ]
+            newScopes: []
         }
     },
     {
@@ -75,12 +70,7 @@ const specs = [
         parser: {
             baseSequenceType: "title",
             newBlock: true,
-            newScopes: [
-                {
-                    label: pt => pt.fullTagName,
-                    endedBy: ["baseSequenceChange"],
-                }
-            ]
+            newScopes: []
         }
     },
     {
@@ -96,12 +86,7 @@ const specs = [
         parser: {
             baseSequenceType: "endTitle",
             newBlock: true,
-            newScopes: [
-                {
-                    label: pt => pt.fullTagName,
-                    endedBy: ["baseSequenceChange"],
-                }
-            ]
+            newScopes: []
         }
     },
     {
@@ -117,12 +102,7 @@ const specs = [
         parser: {
             baseSequenceType: "remark",
             forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => pt.fullTagName,
-                    endedBy: ["baseSequenceChange"],
-                }
-            ]
+            newScopes: []
         }
     },
     {
