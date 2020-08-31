@@ -14,6 +14,8 @@ const labelForScope = (scopeType, scopeFields) => {
             return `span/${scopeFields[0]}`;
         case "milestone":
             return `milestone/${scopeFields[0]}`
+        case "attribute":
+            return `attribute/${scopeFields[0]}/${scopeFields[1]}/${scopeFields[2]}`
         default:
             throw new Error(`Unknown scope type '${scopeType}' in labelForScope`);
     }

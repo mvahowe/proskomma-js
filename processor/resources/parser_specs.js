@@ -314,6 +314,23 @@ const specs = [
     },
     {
         contexts: [
+            ["attribute"]
+        ],
+        parser: {
+            during: (parser, pt) => {
+                pt.values.map(v => {
+                        const verseScope = {
+                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, v]),
+                            endedBy: [`$attributeContext$`]
+                        };
+                        parser.openNewScope(pt, verseScope);
+                    }
+                );
+            }
+        }
+    },
+    {
+        contexts: [
             ["wordLike"],
             ["lineSpace"],
             ["punctuation"],

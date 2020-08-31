@@ -234,10 +234,19 @@ const Parser = class {
 
     substituteEndedBys(endedBy, pt) {
         return endedBy.map(
-            eb => eb
-                .replace("$fullTagName$", pt.fullTagName)
-                .replace("$tagName$", pt.tagName)
-        )
+            eb => {
+                let ret = eb
+                    .replace("$fullTagName$", pt.fullTagName)
+                    .replace("$tagName$", pt.tagName);
+                if (this.current.attributeContext) {
+                    ret = ret.replace(
+                        "$attributeContext$",
+                        this.current.attributeContext.replace("milestone", "endMilestone")
+                    );
+                }
+                return ret;
+            }
+        );
     }
 
     addToken(pt) {
