@@ -331,6 +331,32 @@ const specs = [
     },
     {
         contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "w",
+                    "rb",
+                    "xt",
+                    "fig"
+                ]
+            ]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("spanWithAtts", [pt.tagName]),
+                    endedBy: ["endBlock", "endTag/$tagName$"],
+                    onEnd: (parser, label) => parser.clearAttributeContext()
+                }
+            ],
+            during: (parser, pt) => {
+                parser.setAttributeContext(labelForScope("spanWithAtts", [pt.tagName]))
+            }
+        }
+    },
+    {
+        contexts: [
             ["wordLike"],
             ["lineSpace"],
             ["punctuation"],
