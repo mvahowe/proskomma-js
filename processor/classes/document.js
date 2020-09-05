@@ -18,7 +18,8 @@ class Document {
         const lexed = lexify(str);
         const parser = new Parser();
         parser.parse(lexed);
-
+        parser.tidy();
+        console.log(JSON.stringify(parser.sequences.main, null, 2));
     }
 
 }

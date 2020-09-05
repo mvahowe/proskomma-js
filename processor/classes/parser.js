@@ -1,6 +1,6 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
-const {Token, Scope} = require("./items");
+const {Token, Scope, Graft} = require("./items");
 const {labelForScope} = require("../label_for_scope");
 
 const Parser = class {
@@ -60,14 +60,6 @@ const Parser = class {
     }
 
     parse(lexedItems) {
-        this.parseFirstPass(lexedItems);
-        for (const seq of this.allSequences()) {
-            seq.close(this);
-        }
-        console.log(JSON.stringify(this.sequences.main, null, 2));
-    }
-
-    parseFirstPass(lexedItems) {
         let changeBaseSequence;
         for (const lexedItem of lexedItems) {
             if (["endTag"].includes(lexedItem.subclass)) {
@@ -106,6 +98,7 @@ const Parser = class {
                     this.current.sequence = new Sequence(this.current.inlineSequenceType);
                     this.current.sequence.newBlock();
                     this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
+                    this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id))
                 }
                 if ("during" in spec.parser) {
                     spec.parser.during(this, lexedItem);
@@ -118,7 +111,14 @@ const Parser = class {
         }
     }
 
-    allSequences() {
+    tidy() {
+        for (const seq of this.allSequences()) {
+            seq.trim();
+            seq.close(this);
+        }
+    }
+
+allSequences() {
         const ret = [];
         for (const [seqName, seqArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
             switch (seqArity) {
@@ -181,6 +181,7 @@ const Parser = class {
     }
 
     changeBaseSequence(parserSpec) {
+        const previousSequence = this.current.sequence;
         const newType = parserSpec.baseSequenceType
         this.current.baseSequenceType = newType;
         const arity = this.baseSequenceTypes[newType];
@@ -202,6 +203,9 @@ const Parser = class {
                 break;
             default:
                 throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
+        }
+        if (!parserSpec.useTempSequence) {
+            previousSequence.addItem(new Graft(this.current.baseSequenceType, this.current.sequence.id))
         }
     }
 

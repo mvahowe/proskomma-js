@@ -36,8 +36,12 @@ const Sequence = class {
         }
     }
 
+    trim() {
+        this.blocks.forEach(b => b.trim())
+    }
+
     close(parser) {
-        for (const activeScope of this.activeScopes) {
+        for (const activeScope of this.activeScopes.filter(x => true).reverse()) {
             this.closeActiveScope(parser, activeScope);
         }
         this.activeScopes = [];
