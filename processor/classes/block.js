@@ -1,5 +1,5 @@
 const { generateId } = require("../generate_id");
-const { Token } = require("./items");
+const { Token, Scope } = require("./items");
 
 const Block = class {
 
@@ -20,6 +20,45 @@ const Block = class {
         this.items = this.trimEnd(this.trimStart(this.items))
     }
 
+    reorderSpanWithAtts() {
+        const swaStarts = [];
+        for (const [pos, item] of this.items.entries()) {
+            if (item.itemType === "startScope" && item.label.startsWith("spanWithAtts")) {
+                swaStarts.push(pos + 1);
+            }
+        }
+        for (const swaStart of swaStarts) {
+            let pos = swaStart;
+            let tokens = [];
+            let scopes = [];
+            while (true) {
+                if (pos >= this.items.length) {
+                    break;
+                }
+                const item = this.items[pos];
+                if (item instanceof Token) {
+                    tokens.push(item);
+                } else if (item.itemType === "startScope" && item.label.startsWith("attribute/spanWithAtts")) {
+                    scopes.push(item);
+                } else {
+                    break;
+                }
+                pos++;
+            }
+            if (tokens.length !== 0 && scopes.length !== 0) {
+                let pos = swaStart;
+                for (const s of scopes) {
+                    this.items[pos] = s;
+                    pos++;
+                }
+                for (const t of tokens) {
+                    this.items[pos] = t;
+                    pos++;
+                }
+            }
+        }
+    }
+
     trimStart(items) {
         if (items.length === 0) {
             return items;
@@ -27,11 +66,11 @@ const Block = class {
         const firstItem = items[0];
         if (["lineSpace", "eol"].includes(firstItem.itemType)) {
             return this.trimStart(items.slice(1));
-        } else if (firstItem instanceof Token) {
-            return items;
-        } else {
-            return [firstItem, ...this.trimStart(items.slice(1))];
         }
+        if (firstItem instanceof Token) {
+            return items;
+        }
+        return [firstItem, ...this.trimStart(items.slice(1))];
     }
 
     trimEnd(items) {
@@ -41,11 +80,11 @@ const Block = class {
         const lastItem = items[items.length - 1];
         if (["lineSpace", "eol"].includes(lastItem.itemType)) {
             return this.trimEnd(items.slice(0, items.length - 1));
-        } else if (lastItem instanceof Token) {
-            return items;
-        } else {
-            return [...this.trimEnd(items.slice(0, items.length - 1)), lastItem];
         }
+        if (lastItem instanceof Token) {
+            return items;
+        }
+        return [...this.trimEnd(items.slice(0, items.length - 1)), lastItem];
     }
 
 }

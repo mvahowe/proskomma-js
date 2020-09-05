@@ -114,6 +114,7 @@ const Parser = class {
     tidy() {
         for (const seq of this.allSequences()) {
             seq.trim();
+            seq.reorderSpanWithAtts();
             seq.close(this);
         }
     }

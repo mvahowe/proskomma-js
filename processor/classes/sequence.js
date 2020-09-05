@@ -37,7 +37,11 @@ const Sequence = class {
     }
 
     trim() {
-        this.blocks.forEach(b => b.trim())
+        this.blocks.forEach(b => b.trim());
+    }
+
+    reorderSpanWithAtts() {
+        this.blocks.forEach(b => b.reorderSpanWithAtts());
     }
 
     close(parser) {
