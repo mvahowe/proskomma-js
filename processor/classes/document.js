@@ -4,22 +4,24 @@ const { Parser } = require("./parser");
 
 class Document {
 
-    constructor(processor, lang, abbr, docSetId, usfmString) {
+    constructor(processor, lang, abbr, docSetId, usfmString, filterOptions) {
         this.id = generateId();
         this.processor = processor;
         this.docSetId = docSetId;
         this.enums = {};
         this.headers = {};
         this.sequences = {};
-        this.processUsfm(usfmString);
+        this.processUsfm(usfmString, filterOptions);
     }
 
-    processUsfm(str) {
-        const lexed = lexify(str);
+    processUsfm(usfmString, filterOptions) {
+        const lexed = lexify(usfmString);
         const parser = new Parser();
         parser.parse(lexed);
         parser.tidy();
-        console.log(JSON.stringify(parser.sequences.main, null, 2));
+        parser.filter(filterOptions)
+        // console.log(JSON.stringify(parser.sequences.main.blocks, null, 2));
+        console.log(parser.allSequences().length, "sequence(s)")
     }
 
 }

@@ -8,16 +8,12 @@ class ProsKomma {
         this.docSets = {};
     }
 
-    importDocument(lang, abbr, usfmString) {
+    importDocument(lang, abbr, usfmString, filterOptions) {
         const docSetId = this.findOrMakeDocSet(lang, abbr);
         let doc;
-        try {
-            doc = new Document(this, lang, abbr, docSetId, usfmString);
-            this.documents[doc.id] = doc;
-            this.docSets[docSetId].docIds.push(doc.id);
-        } catch (err) {
-            throw new Error(`importDocument('${lang}', '${abbr}'): ${err}`);
-        }
+        doc = new Document(this, lang, abbr, docSetId, usfmString, filterOptions);
+        this.documents[doc.id] = doc;
+        this.docSets[docSetId].docIds.push(doc.id);
         return doc;
     }
 

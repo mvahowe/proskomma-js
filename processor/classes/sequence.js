@@ -56,7 +56,10 @@ const Sequence = class {
         if (sc.onEnd) {
             sc.onEnd(parser, sc.label);
         }
+    }
 
+    filterGrafts(options) {
+        return this.blocks.map( b => b.filterGrafts(options)).reduce((acc, current) => acc.concat(current));
     }
 
 }

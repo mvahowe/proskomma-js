@@ -119,7 +119,7 @@ const Parser = class {
         }
     }
 
-allSequences() {
+    allSequences() {
         const ret = [];
         for (const [seqName, seqArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
             switch (seqArity) {
@@ -139,6 +139,56 @@ allSequences() {
             }
         }
         return ret;
+    }
+
+    sequenceById() {
+        const ret = {};
+        this.allSequences().forEach(s => ret[s.id] = s);
+        return ret;
+    }
+
+    filter(options) {
+        const usedSequences = [];
+        const sequenceById = this.sequenceById();
+        this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, options)
+        this.removeUnusedSequences(usedSequences)
+        this.filterScopes(options)
+    }
+
+    filterGrafts(seqId, seqById, used, options) {
+        used.push(seqId);
+        const childSequences = seqById[seqId].filterGrafts(options);
+        for (const si of childSequences) {
+            if (seqById[si].type === "main") {
+                console.log("MAIN is child!");
+                console.log(JSON.stringify(seqById[seqId], null, 2));
+                process.exit(1);
+            }
+            this.filterGrafts(si, seqById, used, options);
+        }
+    }
+
+    removeUnusedSequences(usedSequences) {
+        for (const seq of this.allSequences()) {
+            if (!usedSequences.includes(seq.id)) {
+                switch ({...this.baseSequenceTypes, ...this.inlineSequenceTypes}[seq.type]) {
+                    case "1":
+                        throw new Error("Attempting to remove sequence with arity of 1");
+                    case "?":
+                        this.sequences[seq.type] = null;
+                        break;
+                    case "*":
+                        this.sequences[seq.type] = this.sequences[seq.type].filter(s => s.id !== seq.id);
+                        break;
+                    default:
+                        throw new Error(`Unexpected sequence arity '${seqArity}' for '${seqName}'`);
+                }
+            }
+        }
+    }
+
+    filterScopes(options) {
+
     }
 
     specForItem(item) {
@@ -205,7 +255,7 @@ allSequences() {
             default:
                 throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
         }
-        if (!parserSpec.useTempSequence) {
+        if (!parserSpec.useTempSequence && this.current.sequence.type !== "main") {
             previousSequence.addItem(new Graft(this.current.baseSequenceType, this.current.sequence.id))
         }
     }

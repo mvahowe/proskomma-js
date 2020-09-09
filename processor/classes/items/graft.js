@@ -2,9 +2,9 @@ const { Item } = require("./item");
 
 const Graft = class extends Item {
 
-    constructor(label, seqId) {
+    constructor(graftType, seqId) {
         super("graft");
-        this.label = label;
+        this.graftType = graftType;
         this.seqId = seqId;
     }
 
