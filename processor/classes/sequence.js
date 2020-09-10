@@ -62,6 +62,43 @@ const Sequence = class {
         return this.blocks.map( b => b.filterGrafts(options)).reduce((acc, current) => acc.concat(current));
     }
 
+    grafts() {
+        return this.blocks.map( b => b.grafts()).reduce((acc, current) => acc.concat(current));
+    }
+
+    scopes() {
+        return this.blocks.map( b => b.scopes()).reduce((acc, current) => acc.concat(current));
+    }
+
+    describe(seqById, indent) {
+        indent = indent || 1
+        const grafts = this.grafts()
+        const scopes = this.scopes()
+        const maybeS = function(prompt, n) {
+            if (n === 1) {
+                return `1 ${prompt}`;
+            } else {
+                return `${n} ${prompt}s`;
+            }
+        }
+        console.log(`${"   ".repeat(indent)}${this.type} seq ${this.id} has ${maybeS("block", this.blocks.length)}, ${maybeS("graft", grafts.length)}, ${maybeS("scope", scopes.length)}`)
+        if (scopes.length > 0) {
+            console.log(`${"   ".repeat(indent + 1)}Scopes:`)
+        }
+        for (const scope of scopes.slice(0, 5)) {
+            console.log(`${"   ".repeat(indent + 2)}${scope[1].label}`)
+        }
+        if (scopes.length > 5) {
+            console.log(`${"   ".repeat(indent + 2)}[plus ${scopes.length - 5} more]`)
+        }
+        if (grafts.length > 0) {
+            console.log(`${"   ".repeat(indent + 1)}Grafts:`)
+            for (const graft of grafts) {
+                seqById[graft[1].seqId].describe(seqById, indent + 2)
+            }
+        }
+    }
+
 }
 
 module.exports = {Sequence};

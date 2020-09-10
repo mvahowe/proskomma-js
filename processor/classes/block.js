@@ -90,9 +90,8 @@ const Block = class {
     filterGrafts(options) {
         // Each graft should be removed or returned
         const ret = [];
-        const grafts = Array.from(this.items.entries()).filter(ip => ip[1].itemType === "graft");
         const toRemove = [];
-        for (const [pos, item] of grafts) {
+        for (const [pos, item] of this.grafts()) {
             if (this.graftPassesOptions(item, options)) {
                 ret.push(item.seqId);
             } else {
@@ -106,9 +105,16 @@ const Block = class {
     }
 
     graftPassesOptions(item, options) {
-        return false;
+        return true;
     }
 
+    grafts() {
+        return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "graft");
+    }
+
+    scopes() {
+        return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "startScope");
+    }
 }
 
 module.exports = { Block };

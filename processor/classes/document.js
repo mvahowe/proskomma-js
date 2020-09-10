@@ -20,8 +20,7 @@ class Document {
         parser.parse(lexed);
         parser.tidy();
         parser.filter(filterOptions)
-        // console.log(JSON.stringify(parser.sequences.main.blocks, null, 2));
-        console.log(parser.allSequences().length, "sequence(s)")
+        parser.describe()
     }
 
 }
