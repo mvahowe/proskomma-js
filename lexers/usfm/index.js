@@ -1,6 +1,6 @@
 const xre = require('xregexp');
 
-const ptClasses = require('./preTokenClasses');
+const ptClasses = require('../preTokenClasses');
 const lexingRegexes = require('./resources/lexingRegexes');
 
 const mainRegex = xre.union(
@@ -29,8 +29,8 @@ const preTokenClassForFragment = (fragment) => {
     throw new Error(`Could not match preToken fragment '${fragment}'`);
 }
 
-const lexify = (str) => {
+const lexifyUsfm = (str) => {
     return xre.match(str, mainRegex, "all").map(f => preTokenClassForFragment(f));
 }
 
-module.exports = { lexify };
+module.exports = { lexifyUsfm };

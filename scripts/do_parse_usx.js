@@ -7,6 +7,7 @@ const pk = new ProsKomma();
 pk.importDocument(
     "eng",
     "ust",
+    "usx",
     usfm,
     {}
 );

@@ -59,19 +59,19 @@ const Sequence = class {
     }
 
     filterGrafts(options) {
-        return this.blocks.map( b => b.filterGrafts(options)).reduce((acc, current) => acc.concat(current));
+        return this.blocks.map( b => b.filterGrafts(options)).reduce((acc, current, idx, arr) => acc.concat(current), []);
     }
 
     grafts() {
-        return this.blocks.map( b => b.grafts()).reduce((acc, current) => acc.concat(current));
+        return this.blocks.map( b => b.grafts()).reduce((acc, current) => acc.concat(current), []);
     }
 
     scopes() {
-        return this.blocks.map( b => b.scopes()).reduce((acc, current) => acc.concat(current));
+        return this.blocks.map( b => b.scopes()).reduce((acc, current) => acc.concat(current), []);
     }
 
     items() {
-        return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current));
+        return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current), []);
     }
 
     describe(seqById, indent) {
