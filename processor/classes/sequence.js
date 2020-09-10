@@ -1,6 +1,6 @@
 const { generateId } = require("../generate_id");
 const { Block } = require("./block");
-const { Scope } = require("./items");
+const { Token, Scope } = require("./items");
 
 const Sequence = class {
 
@@ -70,10 +70,15 @@ const Sequence = class {
         return this.blocks.map( b => b.scopes()).reduce((acc, current) => acc.concat(current));
     }
 
+    items() {
+        return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current));
+    }
+
     describe(seqById, indent) {
         indent = indent || 1
         const grafts = this.grafts()
         const scopes = this.scopes()
+        const items = this.items()
         const maybeS = function(prompt, n) {
             if (n === 1) {
                 return `1 ${prompt}`;
@@ -81,7 +86,14 @@ const Sequence = class {
                 return `${n} ${prompt}s`;
             }
         }
-        console.log(`${"   ".repeat(indent)}${this.type} seq ${this.id} has ${maybeS("block", this.blocks.length)}, ${maybeS("graft", grafts.length)}, ${maybeS("scope", scopes.length)}`)
+        console.log(`${"   ".repeat(indent)}${this.type} seq ${this.id} has ${maybeS("block", this.blocks.length)} with ${maybeS("item", items.length)}, ${maybeS("graft", grafts.length)}, ${maybeS("scope", scopes.length)}`)
+        if (items.length > (scopes.length * 2 + grafts.length)) {
+            let tokensText = items.filter(i => i instanceof Token).map(t => t.chars).join('');
+            if (tokensText.length > 80) {
+                tokensText = tokensText.substring(0, 80) + "...";
+            }
+            console.log(`${"   ".repeat(indent + 1)}Tokens: ${tokensText}`)
+        }
         if (scopes.length > 0) {
             console.log(`${"   ".repeat(indent + 1)}Scopes:`)
         }
