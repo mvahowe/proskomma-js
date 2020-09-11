@@ -1,6 +1,6 @@
 const xre = require('xregexp');
 
-module.exports = [
+const lexingRegexes = [
     [
         "chapter",
         "chapter",
@@ -82,3 +82,9 @@ module.exports = [
         xre("(.)")
     ]
 ];
+
+const mainRegex = xre.union(
+    lexingRegexes.map(x => x[2])
+);
+
+module.exports = { lexingRegexes, mainRegex }

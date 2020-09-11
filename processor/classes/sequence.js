@@ -20,11 +20,10 @@ const Sequence = class {
     }
 
     lastBlock() {
-        if (this.blocks.length > 0) {
-            return this.blocks[this.blocks.length - 1];
-        } else {
-            throw new Error(`lastBlock when no blocks present in ${this.type} sequence`);
+        if (this.blocks.length === 0) {
+            this.newBlock("orphanTokens");
         }
+        return this.blocks[this.blocks.length - 1];
     }
 
     newBlock(label) {

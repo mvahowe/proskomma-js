@@ -1,17 +1,30 @@
 const sax = require("sax");
+const xre = require('xregexp');
+
+const ptClasses = require('../preTokenClasses');
+const { lexingRegexes, mainRegex } = require('../lexingRegexes');
+const { preTokenClassForFragment } = require("../class_for_fragment");
 
 class UsxParser {
 
     constructor() {
         this.lexed = [];
         this.sax = sax.parser(true);
-        this.sax.ontext = t => this.handleText(t);
+        this.sax.ontext = text => this.handleText(text);
         this.sax.onopentag = t => this.handleOpenTag(t);
         this.sax.onclosetag = t => this.handleCloseTag(t);
     }
 
-    handleText(t) {
-        console.log(t);
+    parse(str) {
+        this.lexed = [];
+        this.sax.write(str).close();
+        return this.lexed;
+    }
+
+    handleText(text) {
+        xre.match(text, mainRegex, "all")
+            .map(f => preTokenClassForFragment(f, lexingRegexes))
+            .forEach(t => this.lexed.push(t));
     }
 
     handleOpenTag(t) {
@@ -28,11 +41,6 @@ class UsxParser {
         console.log(`</${t}>`);
     }
 
-    parse(str) {
-        this.lexed = [];
-        this.sax.write(str).close();
-        return this.lexed;
-    }
 }
 
-module.exports = { UsxParser }
+module.exports = {UsxParser}
