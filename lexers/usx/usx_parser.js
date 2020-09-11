@@ -8,11 +8,47 @@ const { preTokenClassForFragment } = require("../class_for_fragment");
 class UsxParser {
 
     constructor() {
-        this.lexed = [];
         this.sax = sax.parser(true);
         this.sax.ontext = text => this.handleText(text);
-        this.sax.onopentag = t => this.handleOpenTag(t);
-        this.sax.onclosetag = t => this.handleCloseTag(t);
+        this.sax.onopentag = ot => this.handleOpenTag(ot);
+        this.sax.onclosetag = ct => this.handleCloseTag(ct);
+        this.lexed = [];
+        this.openTagHandlers = {
+            usx: this.ignoreHandler,
+            book: this.notHandledHandler,
+            chapter: this.notHandledHandler,
+            verse: this.notHandledHandler,
+            para: this.notHandledHandler,
+            table: this.notHandledHandler,
+            row: this.notHandledHandler,
+            cell: this.notHandledHandler,
+            char: this.notHandledHandler,
+            ms: this.notHandledHandler,
+            note: this.notHandledHandler,
+            sidebar: this.notHandledHandler,
+            periph: this.notHandledHandler,
+            figure: this.notHandledHandler,
+            optbreak: this.notHandledHandler,
+            ref: this.notHandledHandler
+        }
+        this.closeTagHandlers = {
+            usx: this.ignoreHandler,
+            book: this.notHandledHandler,
+            chapter: this.notHandledHandler,
+            verse: this.notHandledHandler,
+            para: this.notHandledHandler,
+            table: this.notHandledHandler,
+            row: this.notHandledHandler,
+            cell: this.notHandledHandler,
+            char: this.notHandledHandler,
+            ms: this.notHandledHandler,
+            note: this.notHandledHandler,
+            sidebar: this.notHandledHandler,
+            periph: this.notHandledHandler,
+            figure: this.notHandledHandler,
+            optbreak: this.notHandledHandler,
+            ref: this.notHandledHandler
+        }
     }
 
     parse(str) {
@@ -22,23 +58,42 @@ class UsxParser {
     }
 
     handleText(text) {
-        xre.match(text, mainRegex, "all")
+        xre.match(this.replaceEntities(text), mainRegex, "all")
             .map(f => preTokenClassForFragment(f, lexingRegexes))
             .forEach(t => this.lexed.push(t));
     }
 
-    handleOpenTag(t) {
-        const name = t.name;
-        const atts = t.attributes
-        console.log(`<${name} ${this.printAtts(t.attributes)}>`);
+    replaceEntities(text) {
+        return text.replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&apos;", "'")
+            .replace("&quot;", "\"")
+            .replace("&amp;", "&");
     }
 
-    printAtts(atts) {
-        return Object.entries(atts).map(kv => ` ${kv[0]}="${kv[1]}"`).join("");
+    handleOpenTag(tagOb) {
+        const name = tagOb.name;
+        const atts = tagOb.attributes
+        if (name in this.openTagHandlers) {
+            this.openTagHandlers[name]("open", name, atts);
+        } else {
+            throw new Error(`Unexpected open element tag '${name}' in UsxParser`)
+        }
     }
 
-    handleCloseTag(t) {
-        console.log(`</${t}>`);
+    handleCloseTag(name) {
+        if (name in this.closeTagHandlers) {
+            this.closeTagHandlers[name]("close", name);
+        } else {
+            throw new Error(`Unexpected close element tag '${name}' in UsxParser`)
+        }
+    }
+
+    notHandledHandler(oOrC, tag) {
+        console.log(`WARNING: ${oOrC} element tag '${tag}' is not handled by UsxParser`)
+    }
+
+    ignoreHandler(oOrC, tag) {
     }
 
 }
