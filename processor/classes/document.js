@@ -30,7 +30,7 @@ class Document {
 
     processUsx(usxString, filterOptions) {
         const lexed = lexifyUsx(usxString);
-        console.log(JSON.stringify(lexed, null, 2))
+        // console.log(JSON.stringify(lexed, null, 2))
         this.processLexed(lexed, filterOptions);
     }
 
@@ -39,6 +39,7 @@ class Document {
         parser.parse(lexed);
         parser.tidy();
         parser.filter(filterOptions)
+        // console.log(JSON.stringify(parser.sequences.main.blocks, null, 2))
         parser.describe()
     }
 
