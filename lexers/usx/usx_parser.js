@@ -5,16 +5,13 @@ class UsxParser {
     constructor() {
         this.lexed = [];
         this.sax = sax.parser(true);
+        this.sax.ontext = t => this.handleText(t);
+        this.sax.onopentag = t => this.handleOpenTag(t);
+        this.sax.onclosetag = t => this.handleCloseTag(t);
     }
 
     handleText(t) {
         console.log(t);
-    }
-
-    init() {
-        this.sax.ontext = t => this.handleText(t);
-        this.sax.onopentag = t => this.handleOpenTag(t);
-        this.sax.onclosetag = t => this.handleCloseTag(t);
     }
 
     handleOpenTag(t) {
