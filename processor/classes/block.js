@@ -124,7 +124,23 @@ const Block = class {
         return ret;
     }
 
+    filterScopes(options) {
+        const toRemove = [];
+        for (const [pos, item] of this.scopes()) {
+            if (!this.scopePassesOptions(item, options)) {
+                toRemove.push(pos);
+            }
+        }
+        for (const [count, pos] of Array.from(toRemove.entries())) {
+            this.items.splice(pos - count, 1);
+        }
+    }
+
     graftPassesOptions(item, options) {
+        return true;
+    }
+
+    scopePassesOptions(item, options) {
         return true;
     }
 

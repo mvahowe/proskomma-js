@@ -62,7 +62,11 @@ const Sequence = class {
     }
 
     filterGrafts(options) {
-        return this.blocks.map( b => b.filterGrafts(options)).reduce((acc, current, idx, arr) => acc.concat(current), []);
+        return this.blocks.map(b => b.filterGrafts(options)).reduce((acc, current, idx, arr) => acc.concat(current), []);
+    }
+
+    filterScopes(options) {
+        this.blocks.forEach(b => b.filterScopes(options));
     }
 
     grafts() {

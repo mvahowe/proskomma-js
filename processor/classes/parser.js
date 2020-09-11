@@ -156,7 +156,7 @@ const Parser = class {
         const sequenceById = this.sequenceById();
         this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, options)
         this.removeUnusedSequences(usedSequences)
-        this.filterScopes(options)
+        this.filterScopes(Object.values(sequenceById), options)
     }
 
     filterGrafts(seqId, seqById, used, options) {
@@ -191,8 +191,8 @@ const Parser = class {
         }
     }
 
-    filterScopes(options) {
-
+    filterScopes(sequences, options) {
+        sequences.forEach(s => s.filterScopes(options));
     }
 
     specForItem(item) {
