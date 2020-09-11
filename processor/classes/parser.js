@@ -21,10 +21,11 @@ const Parser = class {
             endTitle: "?",
             heading: "*",
             header: "*",
-            remark: "*",
-            footnote: "*"
+            remark: "*"
         };
         this.inlineSequenceTypes = {
+            footnote: "*",
+            noteCaller: "*",
             xref: "*",
             temp: "?"
         };
@@ -117,6 +118,7 @@ const Parser = class {
         for (const seq of this.allSequences()) {
             seq.trim();
             seq.reorderSpanWithAtts();
+            seq.makeNoteGrafts(this);
             seq.close(this);
         }
     }

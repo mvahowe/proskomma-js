@@ -43,6 +43,10 @@ const Sequence = class {
         this.blocks.forEach(b => b.reorderSpanWithAtts());
     }
 
+    makeNoteGrafts(parser) {
+        this.blocks.forEach(b => b.makeNoteGrafts(parser));
+    }
+
     close(parser) {
         for (const activeScope of this.activeScopes.filter(x => true).reverse()) {
             this.closeActiveScope(parser, activeScope);

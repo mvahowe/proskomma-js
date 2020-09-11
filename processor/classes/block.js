@@ -1,5 +1,5 @@
 const { generateId } = require("../generate_id");
-const { Token, Scope } = require("./items");
+const { Token, Scope, Graft } = require("./items");
 
 const Block = class {
 
@@ -55,6 +55,26 @@ const Block = class {
                     this.items[pos] = t;
                     pos++;
                 }
+            }
+        }
+    }
+
+    makeNoteGrafts(parser) {
+        const { Sequence } = require("./sequence");
+        const noteStarts = [];
+        for (const [pos, item] of this.items.entries()) {
+            if (item.itemType === "startScope" && item.label.startsWith("inline/f")) {
+                noteStarts.push(pos);
+            }
+        }
+        for (const noteStart of noteStarts) {
+            const callerToken = this.items[noteStart + 1];
+            if (callerToken instanceof Token && callerToken.chars.length === 1) {
+                const callerSequence = new Sequence("noteCaller");
+                callerSequence.newBlock();
+                callerSequence.addItem(callerToken);
+                parser.sequences.noteCaller.push(callerSequence);
+                this.items[noteStart + 1] = new Graft("noteCaller", callerSequence.id);
             }
         }
     }
