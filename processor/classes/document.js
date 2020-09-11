@@ -30,6 +30,7 @@ class Document {
 
     processUsx(usxString, filterOptions) {
         const lexed = lexifyUsx(usxString);
+        console.log(JSON.stringify(lexed, null, 2))
         this.processLexed(lexed, filterOptions);
     }
 
