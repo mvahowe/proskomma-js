@@ -5,7 +5,7 @@ const ptClasses = require('../preTokenClasses');
 const {lexingRegexes, mainRegex} = require('../lexingRegexes');
 const {preTokenClassForFragment} = require("../class_for_fragment");
 
-class UsxParser {
+class UsxLexer {
 
     constructor() {
         this.sax = sax.parser(true);
@@ -52,7 +52,7 @@ class UsxParser {
         }
     }
 
-    parse(str) {
+    lex(str) {
         this.lexed = [];
         this.elementStack = [];
         this.sax.write(str).close();
@@ -152,4 +152,4 @@ class UsxParser {
 
 }
 
-module.exports = {UsxParser}
+module.exports = { UsxLexer }
