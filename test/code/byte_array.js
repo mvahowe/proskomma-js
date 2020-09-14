@@ -1,8 +1,9 @@
 const test = require('tape');
 
+const testGroup = "Byte Array";
 
 test(
-    'Construct',
+    `Construct (${testGroup})`,
     function (t) {
         const ByteArray = require('../../lib/byte_array');
         t.plan(2);
@@ -12,7 +13,7 @@ test(
 );
 
 test(
-    'Push, Read Byte',
+    `Push, Read Byte (${testGroup})`,
     function (t) {
         t.plan(2);
         const ByteArray = require('../../lib/byte_array');
@@ -24,7 +25,7 @@ test(
 );
 
 test(
-    'Write Byte',
+    `Write Byte (${testGroup})`,
     function (t) {
         t.plan(2);
         const ByteArray = require('../../lib/byte_array');
@@ -37,7 +38,7 @@ test(
 );
 
 test(
-    'Push, Read Bytes',
+    `Push, Read Bytes (${testGroup})`,
     function (t) {
         t.plan(3);
         const ByteArray = require('../../lib/byte_array');
@@ -50,7 +51,7 @@ test(
 );
 
 test(
-    'Write Bytes',
+    `Write Bytes (${testGroup})`,
     function (t) {
         const ByteArray = require('../../lib/byte_array');
         t.plan(2);
@@ -63,7 +64,7 @@ test(
 );
 
 test(
-    'Grow',
+    `Grow (${testGroup})`,
     function (t) {
         const ByteArray = require('../../lib/byte_array');
         t.plan(6);
