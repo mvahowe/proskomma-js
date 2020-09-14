@@ -4,7 +4,7 @@
   "description": "A Model for Complex Text Documents",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/code/*.js | tap-summary"
   },
   "repository": {
     "type": "git",

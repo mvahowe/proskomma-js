@@ -61,3 +61,20 @@ test(
         t.equal(ba.byte(2), 5);
     }
 );
+
+test(
+    'Grow',
+    function (t) {
+        const ByteArray = require('../../lib/byte_array');
+        t.plan(6);
+        const ba = new ByteArray(5);
+        ba.pushBytes([2, 4, 6, 8, 10]);
+        t.equal(ba.length, 5);
+        t.equal(ba.byteArray.length, 5);
+        ba.pushByte(12);
+        t.equal(ba.byteArray.length, 10);
+        t.equal(ba.length, 6);
+        t.equal(ba.byte(0), 2);
+        t.equal(ba.byte(5), 12);
+    }
+);
