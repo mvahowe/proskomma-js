@@ -94,4 +94,27 @@ test(
             t.equal(ba.byte(2), 1 + 128);
             t.equal(ba.nByte(1), 130);
     }
-)
+);
+
+test(
+    `Counted String (${testGroup})`,
+    function (t) {
+        const ByteArray = require('../../lib/byte_array');
+        t.plan(8);
+        let ba = new ByteArray();
+        ba.pushCountedString("abc");
+        t.equal(ba.byte(0), 3);
+        t.equal(ba.byte(1), "a".charCodeAt(0));
+        t.equal(ba.countedString(0), "abc");
+        ba = new ByteArray();
+        ba.pushCountedString("égale");
+        t.equal(ba.byte(0), 6);
+        t.equal(ba.byte(3), "g".charCodeAt(0));
+        t.equal(ba.countedString(0), "égale");
+        ba = new ByteArray();
+        const musicalChar = String.fromCodePoint(0x1D11E);
+        ba.pushCountedString(musicalChar);
+        t.equal(ba.byte(0), 4);
+        t.equal(ba.countedString(0), musicalChar);
+    }
+);

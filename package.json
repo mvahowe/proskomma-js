@@ -26,6 +26,7 @@
   "dependencies": {
     "fs-extra": "^9.0.1",
     "sax": "^1.2.4",
+    "utf8-string-bytes": "^1.0.3",
     "uuid-base64": "^1.0.0",
     "xregexp": "^4.3.0"
   },
