@@ -1,7 +1,7 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
 const {Token, Scope, Graft} = require("./items");
-const {labelForScope} = require("../label_for_scope");
+const {labelForScope} = require("../scope_defs");
 
 const Parser = class {
 

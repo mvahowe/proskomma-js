@@ -1,4 +1,4 @@
-const { labelForScope } = require("../label_for_scope");
+const { labelForScope } = require("../scope_defs");
 
 const specs = [
     {
