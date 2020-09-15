@@ -79,3 +79,19 @@ test(
         t.equal(ba.byte(5), 12);
     }
 );
+
+test(
+    `NByte (${testGroup})`,
+    function (t) {
+            const ByteArray = require('../../lib/byte_array');
+            t.plan(5);
+            const ba = new ByteArray();
+            ba.pushNByte(127);
+            t.equal(ba.byte(0), 127 + 128);
+            t.equal(ba.nByte(0), 127);
+            ba.pushNByte(130);
+            t.equal(ba.byte(1), 2);
+            t.equal(ba.byte(2), 1 + 128);
+            t.equal(ba.nByte(1), 130);
+    }
+)
