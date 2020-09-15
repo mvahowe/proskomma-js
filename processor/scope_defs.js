@@ -7,13 +7,14 @@ const scopeEnum = {
     "span": 5,
     "milestone": 6,
     "spanWithAtts": 7,
-    "attribute": 8
+    "attribute": 8,
+    "orphanTokens": 9
 };
 
 const labelForScope = (scopeType, scopeFields) => {
     switch (scopeType) {
         case "blockTag":
-            return `block/${scopeFields[0]}`;
+            return `blockTag/${scopeFields[0]}`;
         case "inline":
             return `inline/${scopeFields[0]}`;
         case "chapter":
@@ -30,6 +31,8 @@ const labelForScope = (scopeType, scopeFields) => {
             return `spanWithAtts/${scopeFields[0]}`
         case "attribute":
             return `attribute/${scopeFields[0]}/${scopeFields[1]}/${scopeFields[2]}`
+        case "orphanTokens":
+            return `orphanTokens`
         default:
             throw new Error(`Unknown scope type '${scopeType}' in labelForScope`);
     }
@@ -48,6 +51,8 @@ const nComponentsForScope = (scopeType) => {
             return 2;
         case "attribute":
             return 4;
+        case "orphanTokens":
+            return 1;
         default:
             throw new Error(`Unknown scope type '${scopeType}' in nComponentsForScope`);
     }

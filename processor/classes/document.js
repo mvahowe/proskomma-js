@@ -1,6 +1,7 @@
 const { generateId } = require("../generate_id");
 const { lexifyUsfm, lexifyUsx } = require("../../lexers");
 const { Parser } = require("./parser");
+const { nComponentsForScope } = require('../scope_defs');
 
 class Document {
 
@@ -8,7 +9,6 @@ class Document {
         this.id = generateId();
         this.processor = processor;
         this.docSetId = docSetId;
-        this.enums = {};
         this.headers = {};
         this.sequences = {};
         switch (contentType) {
@@ -30,7 +30,6 @@ class Document {
 
     processUsx(usxString, filterOptions) {
         const lexed = lexifyUsx(usxString);
-        // console.log(JSON.stringify(lexed, null, 2))
         this.processLexed(lexed, filterOptions);
     }
 
@@ -38,9 +37,60 @@ class Document {
         const parser = new Parser();
         parser.parse(lexed);
         parser.tidy();
-        parser.filter(filterOptions)
-        // console.log(JSON.stringify(parser.sequences.main.blocks, null, 2))
-        parser.describe()
+        parser.filter(filterOptions);
+        this.headers = parser.headers;
+        this.succinctPass1(parser);
+        // this.describe();
+    }
+
+    succinctPass1(parser) {
+        const docSet = this.processor.docSets[this.docSetId];
+        docSet.buildPreEnums();
+        for (const seq of parser.allSequences()) {
+            docSet.recordPreEnum("ids", seq.id);
+            this.recordPreEnums(docSet, seq);
+        }
+        if (docSet.enums.wordLike.length === 0) {
+            docSet.sortPreEnums();
+        }
+    }
+
+    recordPreEnums(docSet, seq) {
+        for (const block of seq.blocks) {
+            for (const item of block.items) {
+                if (["wordLike", "punctuation"].includes(item.itemType)) {
+                    docSet.recordPreEnum(item.itemType, item.chars);
+                } else if (["lineSpace", "eol"].includes(item.itemType)) {
+                    docSet.recordPreEnum("whiteSpace", item.chars);
+                } else if (item.itemType === "graft") {
+                    docSet.recordPreEnum("graftTypes", item.graftType);
+                } else if (item.itemType === "startScope") {
+                    const labelBits = item.label.split("/");
+                    if (labelBits.length !== nComponentsForScope(labelBits[0])) {
+                        throw new Error(`Scope ${item.label} has unexpected number of components`);
+                    }
+                    for (const labelBit of labelBits) {
+                        docSet.recordPreEnum("scopeBits", labelBit);
+                    }
+                }
+            }
+        }
+    }
+
+    describe() {
+        console.log(
+            JSON.stringify(
+                this,
+                (k, v) => {
+                    if (["processor"].includes(k)) {
+                        return "(circular)";
+                    } else {
+                        return v;
+                    }
+                },
+                2
+            )
+        );
     }
 
 }
