@@ -100,7 +100,7 @@ test(
     `Counted String (${testGroup})`,
     function (t) {
         const ByteArray = require('../../lib/byte_array');
-        t.plan(8);
+        t.plan(9);
         let ba = new ByteArray();
         ba.pushCountedString("abc");
         t.equal(ba.byte(0), 3);
@@ -116,6 +116,10 @@ test(
         ba.pushCountedString(musicalChar);
         t.equal(ba.byte(0), 4);
         t.equal(ba.countedString(0), musicalChar);
+        ba = new ByteArray();
+        const hebrew = "וּ⁠בְ⁠דֶ֣רֶך";
+        ba.pushCountedString(hebrew);
+        t.equal(ba.countedString(0), hebrew);
     }
 );
 

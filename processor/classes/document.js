@@ -45,7 +45,7 @@ class Document {
         this.headers = parser.headers;
         this.succinctPass1(parser);
         this.succinctPass2(parser);
-        this.describe();
+        // this.describe();
     }
 
     succinctPass1(parser) {
@@ -58,6 +58,7 @@ class Document {
         if (docSet.enums.wordLike.length === 0) {
             docSet.sortPreEnums();
         }
+        docSet.buildEnums();
     }
 
     recordPreEnums(docSet, seq) {
@@ -91,6 +92,7 @@ class Document {
                 blocks: this.succinctifyBlocks(seq.blocks, docSet)
             };
         }
+        docSet.preEnums = {};
     }
 
     succinctifyBlocks(blocks, docSet) {

@@ -12,6 +12,7 @@ class ProsKomma {
         const docSetId = this.findOrMakeDocSet(lang, abbr);
         let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions);
         this.addDocument(doc, docSetId);
+        this.docSets[docSetId].describe();
         return doc;
     }
 

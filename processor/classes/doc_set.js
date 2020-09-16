@@ -73,6 +73,34 @@ class DocSet {
         }
     }
 
+    buildEnums() {
+        for (const [category, catOb] of Object.entries(this.preEnums)) {
+            this.enums[category].clear();
+            this.buildEnum(category, catOb);
+        }
+    }
+
+    buildEnum(category, preEnumOb) {
+        const sortedPreEnums = Object.entries(preEnumOb).sort((a, b) => a[1].enum - b[1].enum);
+        for (const enumText of sortedPreEnums.map(pe => pe[0])) {
+            this.enums[category].pushCountedString(enumText);
+        }
+    }
+
+    unpackEnum(category) {
+        const succinct = this.enums[category];
+        let pos = 0;
+        const ret = [];
+        while (pos < succinct.length) {
+            const stringLength = succinct.byte(pos);
+            const unpacked = succinct.countedString(pos);
+            console.log("unpacked:", unpacked);
+            ret.push(unpacked);
+            pos += stringLength + 1;
+        }
+        return ret;
+    }
+
     describe() {
         console.log(
             JSON.stringify(
@@ -80,9 +108,10 @@ class DocSet {
                 (k, v) => {
                     if (["processor"].includes(k)) {
                         return "(circular)";
-                    } else if (v instanceof ByteArray) {
-                        return `ByteArray(length=${v.length})`
-                    } else {
+                    } else if (k === "enums") {
+                        return Object.keys(v).map(c => [c, this.unpackEnum(c)]);
+                    }
+                     else {
                         return v;
                     }
                 },
