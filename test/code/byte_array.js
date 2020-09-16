@@ -118,3 +118,17 @@ test(
         t.equal(ba.countedString(0), musicalChar);
     }
 );
+
+test(
+    `Clear (${testGroup})`,
+    function (t) {
+        const ByteArray = require('../../lib/byte_array');
+        t.plan(3);
+        let ba = new ByteArray();
+        ba.pushCountedString("abc");
+        t.equal(ba.countedString(0), "abc");
+        ba.clear();
+        t.equal(ba.byteArray[0], 0);
+        t.equal(ba.length, 0);
+    }
+);

@@ -40,7 +40,7 @@ class Document {
         parser.filter(filterOptions);
         this.headers = parser.headers;
         this.succinctPass1(parser);
-        // this.describe();
+        this.describe();
     }
 
     succinctPass1(parser) {
