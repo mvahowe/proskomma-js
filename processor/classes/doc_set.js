@@ -67,7 +67,7 @@ class DocSet {
             throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
         }
         if (value in this.preEnums[category]) {
-            return this.preEnums[category][value];
+            return this.preEnums[category][value].enum;
         } else {
             throw new Error(`Unknown value ${value} for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
         }
