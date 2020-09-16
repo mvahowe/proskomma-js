@@ -12,8 +12,7 @@ class DocSet {
         this.enums = {
             ids: new ByteArray(),
             wordLike: new ByteArray(),
-            whiteSpace: new ByteArray(),
-            punctuation: new ByteArray(),
+            notWordLike: new ByteArray(),
             scopeBits: new ByteArray(),
             graftTypes: new ByteArray(),
         };
@@ -22,18 +21,18 @@ class DocSet {
 
     buildPreEnums() {
         for (const [category, succinct] of Object.entries(this.enums)) {
-            this.preEnums[category] = this.enumReverseLookup(succinct);
+            this.preEnums[category] = this.buildPreEnum(succinct);
         }
     }
 
-    enumReverseLookup(succinct) {
+    buildPreEnum(succinct) {
         const ret = {};
         let pos = 0;
         let enumCount = 0;
         while (pos < succinct.length) {
             ret[succinct.countedString(pos)] = {
                 "enum": enumCount++,
-                frequency: 1
+                frequency: 0
             };
             pos += succinct.byte(pos);
         }

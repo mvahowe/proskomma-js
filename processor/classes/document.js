@@ -53,15 +53,17 @@ class Document {
         if (docSet.enums.wordLike.length === 0) {
             docSet.sortPreEnums();
         }
+        // console.log(JSON.stringify(docSet.preEnums.notWordLike, null, 2));
+        // docSet.describe();
     }
 
     recordPreEnums(docSet, seq) {
         for (const block of seq.blocks) {
             for (const item of block.items) {
-                if (["wordLike", "punctuation"].includes(item.itemType)) {
-                    docSet.recordPreEnum(item.itemType, item.chars);
-                } else if (["lineSpace", "eol"].includes(item.itemType)) {
-                    docSet.recordPreEnum("whiteSpace", item.chars);
+                if (item.itemType === "wordLike") {
+                    docSet.recordPreEnum("wordLike", item.chars);
+                } else if (["lineSpace", "eol", "punctuation"].includes(item.itemType)) {
+                    docSet.recordPreEnum("notWordLike", item.chars);
                 } else if (item.itemType === "graft") {
                     docSet.recordPreEnum("graftTypes", item.graftType);
                 } else if (item.itemType === "startScope") {
