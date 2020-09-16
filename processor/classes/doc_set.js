@@ -10,11 +10,11 @@ class DocSet {
         this.abbr = abbr;
         this.preEnums = {};
         this.enums = {
-            ids: new ByteArray(),
-            wordLike: new ByteArray(),
-            notWordLike: new ByteArray(),
-            scopeBits: new ByteArray(),
-            graftTypes: new ByteArray(),
+            ids: new ByteArray(512),
+            wordLike: new ByteArray(8192),
+            notWordLike: new ByteArray(256),
+            scopeBits: new ByteArray(256),
+            graftTypes: new ByteArray(16),
         };
         this.docIds = [];
     }
