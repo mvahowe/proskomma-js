@@ -1,9 +1,9 @@
 const { generateId } = require("../generate_id");
 const { lexifyUsfm, lexifyUsx } = require("../../lexers");
 const { Parser } = require("./parser");
-const { scopeEnum, nComponentsForScope } = require('../resources/scope_defs');
+const { scopeEnum, scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
 const { tokenEnum, tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
-const { itemEnum } = require('../resources/item_defs');
+const { itemEnum, itemEnumLabels } = require('../resources/item_defs');
 const ByteArray = require("../../lib/byte_array");
 
 class Document {
@@ -113,12 +113,28 @@ class Document {
                 const itemSubtype = succinct.byte(pos + 1);
                 if (itemType === itemEnum.token) {
                     const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
-                    const enumIndexNo = succinct.nByte(pos + 2);
-                    const itemIndex = docSet.enumIndexes[itemCategory][enumIndexNo];
-                    if (!itemIndex) {
-                    }
+                    const itemIndex = docSet.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
                     const chars = docSet.enums[itemCategory].countedString(itemIndex);
                     blockRet.push(`|${chars}`);
+                } else if ([itemEnum.startScope, itemEnum.endScope].includes(itemType)) {
+                    const scopeType = scopeEnumLabels[itemSubtype];
+                    const sOrE = (itemType === itemEnum.startScope) ? "+" : "-";
+                    let nScopeBits = nComponentsForScope(scopeType);
+                    let offset = 2;
+                    let scopeBits = "";
+                    while (nScopeBits > 1) {
+                        const itemIndex = docSet.enumIndexes.scopeBits[succinct.nByte(pos + offset)];
+                        const scopeBitString = docSet.enums.scopeBits.countedString(itemIndex);
+                        scopeBits = `/${scopeBitString}`;
+                        break;
+                    }
+                    blockRet.push(`${sOrE}${scopeType}${scopeBits}${sOrE}`);
+                } else {
+                    const graftIndex = docSet.enumIndexes.graftTypes[itemSubtype];
+                    const graftName = docSet.enums.graftTypes.countedString(graftIndex);
+                    const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
+                    const seqId = docSet.enums.ids.countedString(seqIndex);
+                    blockRet.push(`=${graftName}/${seqId}=`);
                 }
                 pos += itemLength;
             }

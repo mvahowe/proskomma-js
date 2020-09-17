@@ -11,6 +11,8 @@ const scopeEnum = {
     "orphanTokens": 9
 };
 
+const scopeEnumLabels = Object.entries(scopeEnum).sort((a, b) => a[1] - b[1]).map(kv => kv[0]);
+
 const labelForScope = (scopeType, scopeFields) => {
     switch (scopeType) {
         case "blockTag":
@@ -58,4 +60,4 @@ const nComponentsForScope = (scopeType) => {
     }
 }
 
-module.exports = {scopeEnum, labelForScope, nComponentsForScope};
+module.exports = {scopeEnum, scopeEnumLabels, labelForScope, nComponentsForScope};
