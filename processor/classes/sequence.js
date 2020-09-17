@@ -1,6 +1,10 @@
 const { generateId } = require("../generate_id");
+const ByteArray = require("../../lib/byte_array");
 const { Block } = require("./block");
 const { Token, Scope } = require("./items");
+const { scopeEnum } = require('../scope_defs');
+const { tokenEnum, tokenCategory } = require('../token_defs');
+const { itemEnum } = require('../item_defs');
 
 const Sequence = class {
 
@@ -79,6 +83,58 @@ const Sequence = class {
 
     items() {
         return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current), []);
+    }
+
+    succinctifyBlocks(docSet) {
+        const ret = [];
+        for (const block of this.blocks) {
+            const blockBA = new ByteArray(block.length);
+            let lengthPos;
+            let scopeBits;
+            for (const item of block.items) {
+                switch (item.itemType) {
+                    case "wordLike":
+                    case "punctuation":
+                    case "lineSpace":
+                    case "eol":
+                    case "softLineBreak":
+                    case "noBreakSpace":
+                    case "bareSlash":
+                    case "unknown":
+                        const charsEnum = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
+                        lengthPos = blockBA.length;
+                        blockBA.pushByte(0);
+                        blockBA.pushByte(tokenEnum[item.itemType]);
+                        blockBA.pushNByte(charsEnum);
+                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum.token << 6);
+                        break;
+                    case "graft":
+                        const graftTypeEnum = docSet.enumForCategoryValue("graftTypes", item.graftType);
+                        const seqEnum = docSet.enumForCategoryValue("ids", item.seqId);
+                        lengthPos = blockBA.length;
+                        blockBA.pushByte(0);
+                        blockBA.pushByte(graftTypeEnum);
+                        blockBA.pushNByte(seqEnum);
+                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum.graft << 6);
+                        break;
+                    case "startScope":
+                    case "endScope":
+                        scopeBits = item.label.split("/");
+                        lengthPos = blockBA.length;
+                        blockBA.pushByte(0);
+                        blockBA.pushByte(scopeEnum[scopeBits[0]]);
+                        for (const scopeBit of scopeBits.slice(1)) {
+                            blockBA.pushNByte(docSet.enumForCategoryValue("scopeBits", scopeBit));
+                        }
+                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum[item.itemType] << 6);
+                        break;
+                    default:
+                        throw new Error(`Item type ${item.itemType} is not handled in succinctifyBlocks`);
+                }
+            }
+            ret.push({c: blockBA });
+        }
+        return ret;
     }
 
     describe(seqById, indent) {

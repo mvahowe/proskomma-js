@@ -16,6 +16,7 @@ class DocSet {
             scopeBits: new ByteArray(256),
             graftTypes: new ByteArray(16),
         };
+        this.enumIndexes = {};
         this.docIds = [];
     }
 
@@ -87,6 +88,25 @@ class DocSet {
         }
     }
 
+    buildEnumIndexes() {
+        for (const [category, succinct] of Object.entries(this.enums)) {
+            this.buildEnumIndex(category, succinct);
+        }
+    }
+
+    buildEnumIndex(category, enumSuccinct) {
+        const indexSuccinct = new Uint32Array(enumSuccinct.length);
+        let pos = 0;
+        let count = 0;
+        while (pos < enumSuccinct.length) {
+            indexSuccinct[count] = pos;
+            const stringLength = enumSuccinct.byte(pos);
+            pos += (stringLength + 1);
+            count += 1;
+        }
+        this.enumIndexes[category] = indexSuccinct;
+    }
+
     unpackEnum(category) {
         const succinct = this.enums[category];
         let pos = 0;
@@ -94,7 +114,6 @@ class DocSet {
         while (pos < succinct.length) {
             const stringLength = succinct.byte(pos);
             const unpacked = succinct.countedString(pos);
-            console.log("unpacked:", unpacked);
             ret.push(unpacked);
             pos += stringLength + 1;
         }

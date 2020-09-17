@@ -9,6 +9,8 @@ const tokenEnum = {
     unknown: 7
 };
 
+const tokenEnumLabels = Object.entries(tokenEnum).sort((a, b) => a[1] - b[1]).map(kv => kv[0]);
+
 const tokenCategory = {
     wordLike: "wordLike",
     punctuation: "notWordLike",
@@ -21,4 +23,4 @@ const tokenCategory = {
 };
 
 
-module.exports = { tokenEnum, tokenCategory };
+module.exports = { tokenEnum, tokenEnumLabels, tokenCategory };

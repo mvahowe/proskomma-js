@@ -12,7 +12,8 @@ class ProsKomma {
         const docSetId = this.findOrMakeDocSet(lang, abbr);
         let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions);
         this.addDocument(doc, docSetId);
-        this.docSets[docSetId].describe();
+        const unsuccinct = doc.unsuccinctifySequence(doc.mainId, this.docSets[docSetId]);
+        console.log(JSON.stringify(unsuccinct, null, 2));
         return doc;
     }
 
