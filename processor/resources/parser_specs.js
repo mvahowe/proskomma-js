@@ -318,12 +318,12 @@ const specs = [
         ],
         parser: {
             during: (parser, pt) => {
-                pt.values.map(v => {
-                        const verseScope = {
-                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, v]),
+                pt.values.map(a => {
+                        const attScope = {
+                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, a]),
                             endedBy: [`$attributeContext$`]
                         };
-                        parser.openNewScope(pt, verseScope);
+                        parser.openNewScope(pt, attScope);
                     }
                 );
             }

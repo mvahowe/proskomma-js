@@ -136,3 +136,21 @@ test(
         t.equal(ba.length, 0);
     }
 );
+
+test(
+    `nByteLength (${testGroup})`,
+    function (t) {
+        const ByteArray = require('../../lib/byte_array');
+        t.plan(4);
+        let ba = new ByteArray();
+        ba.pushNByte((2 ** 7) - 1);
+        ba.pushNByte(2 ** 7);
+        ba.pushNByte(2 ** 14);
+        ba.pushNByte(2 ** 21);
+        t.equal(ba.nByteLength(ba.nByte(0)), 1);
+        t.equal(ba.nByteLength(ba.nByte(1)), 2);
+        t.equal(ba.nByteLength(ba.nByte(3)), 3);
+        t.equal(ba.nByteLength(ba.nByte(6)), 4);
+    }
+);
+

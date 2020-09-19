@@ -52,7 +52,7 @@ const nComponentsForScope = (scopeType) => {
         case "spanWithAtts":
             return 2;
         case "attribute":
-            return 4;
+            return 5;
         case "orphanTokens":
             return 1;
         default:

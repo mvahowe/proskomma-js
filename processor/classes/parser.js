@@ -292,7 +292,7 @@ const Parser = class {
     }
 
     substituteEndedBys(endedBy, pt) {
-        const r = endedBy.map(
+        return endedBy.map(
             eb => {
                 let ret = eb
                     .replace("$fullTagName$", pt.fullTagName)
@@ -308,7 +308,6 @@ const Parser = class {
                 return ret;
             }
         );
-        return r;
     }
 
     addToken(pt) {

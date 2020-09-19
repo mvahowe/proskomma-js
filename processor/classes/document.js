@@ -96,7 +96,7 @@ class Document {
         docSet.preEnums = {};
     }
 
-    unsuccinctifySequence(seqId, docSet) {
+    unsuccinctifySequence(seqId, docSet, options) {
         if (Object.keys(docSet.enumIndexes).length === 0) {
             docSet.buildEnumIndexes();
         }
@@ -116,20 +116,22 @@ class Document {
                     const itemIndex = docSet.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
                     const chars = docSet.enums[itemCategory].countedString(itemIndex);
                     blockRet.push(`|${chars}`);
-                } else if ([itemEnum.startScope, itemEnum.endScope].includes(itemType)) {
+                } else if ([itemEnum.startScope, itemEnum.endScope].includes(itemType) && (!("scopes" in options) || options.scopes)) {
                     const scopeType = scopeEnumLabels[itemSubtype];
                     const sOrE = (itemType === itemEnum.startScope) ? "+" : "-";
                     let nScopeBits = nComponentsForScope(scopeType);
                     let offset = 2;
                     let scopeBits = "";
                     while (nScopeBits > 1) {
-                        const itemIndex = docSet.enumIndexes.scopeBits[succinct.nByte(pos + offset)];
+                        const itemIndexIndex = succinct.nByte(pos + offset);
+                        const itemIndex = docSet.enumIndexes.scopeBits[itemIndexIndex];
                         const scopeBitString = docSet.enums.scopeBits.countedString(itemIndex);
                         scopeBits = `/${scopeBitString}`;
-                        break;
+                        offset += succinct.nByteLength(itemIndexIndex);
+                        nScopeBits--;
                     }
                     blockRet.push(`${sOrE}${scopeType}${scopeBits}${sOrE}`);
-                } else {
+                } else if (itemType === itemEnum.graft && (!("grafts" in options) || options.grafts)) {
                     const graftIndex = docSet.enumIndexes.graftTypes[itemSubtype];
                     const graftName = docSet.enums.graftTypes.countedString(graftIndex);
                     const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
