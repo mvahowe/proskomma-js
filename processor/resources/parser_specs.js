@@ -197,6 +197,7 @@ const specs = [
             ["chapter"]
         ],
         parser: {
+            mainSequence: true,
             newScopes: [
                 {
                     label: pt => labelForScope("chapter", [pt.number]),
@@ -210,6 +211,7 @@ const specs = [
             ["verses"]
         ],
         parser: {
+            mainSequence: true,
             newScopes: [
                 {
                     label: pt => labelForScope("verses", [pt.numberString]),

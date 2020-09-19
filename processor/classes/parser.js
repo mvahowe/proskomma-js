@@ -1,5 +1,6 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
+const ChapterPT = require('../../lexers/preTokenClasses/chapter_pt');
 const {Token, Scope, Graft} = require("./items");
 const {labelForScope} = require("../resources/scope_defs");
 
@@ -61,7 +62,7 @@ const Parser = class {
     }
 
     parse(lexedItems) {
-        let changeBaseSequence;
+        let changeBaseSequence = false;
         for (const lexedItem of lexedItems) {
             if (["endTag"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
@@ -272,14 +273,19 @@ const Parser = class {
 
     openNewScopes(parserSpec, pt) {
         if (parserSpec.newScopes) {
-            parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc));
+            let targetSequence = this.current.sequence;
+            if ("mainSequence" in parserSpec && parserSpec.mainSequence) {
+                targetSequence = this.sequences.main;
+            }
+            parserSpec.newScopes.forEach(sc => this.openNewScope(pt, sc, true, targetSequence));
         }
     }
 
-    openNewScope(pt, sc, addItem) {
+    openNewScope(pt, sc, addItem, targetSequence) {
         if (addItem === undefined) {addItem = true};
+        if (targetSequence === undefined) {targetSequence = this.current.sequence;};
         if (addItem) {
-            this.current.sequence.addItem(new Scope("start", sc.label(pt)));
+            targetSequence.addItem(new Scope("start", sc.label(pt)));
         }
         const newScope = {
             label: sc.label(pt),
@@ -288,7 +294,7 @@ const Parser = class {
         if ("onEnd" in sc) {
             newScope.onEnd = sc.onEnd;
         }
-        this.current.sequence.activeScopes.push(newScope);
+        targetSequence.activeScopes.push(newScope);
     }
 
     substituteEndedBys(endedBy, pt) {
