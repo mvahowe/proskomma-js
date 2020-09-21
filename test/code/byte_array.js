@@ -154,3 +154,14 @@ test(
     }
 );
 
+test(
+    `Trim (${testGroup})`,
+    function (t) {
+            const ByteArray = require('../../lib/byte_array');
+            t.plan(1);
+            let ba = new ByteArray();
+            ba.pushCountedString("abc");
+            ba.trim();
+            t.equal(ba.length, 4);
+    }
+);

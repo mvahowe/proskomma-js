@@ -1,5 +1,6 @@
 const {generateId} = require("../generate_id");
 const ByteArray = require("../../lib/byte_array");
+const base64 = require("base64-js");
 
 class DocSet {
 
@@ -14,7 +15,7 @@ class DocSet {
             wordLike: new ByteArray(8192),
             notWordLike: new ByteArray(256),
             scopeBits: new ByteArray(256),
-            graftTypes: new ByteArray(16),
+            graftTypes: new ByteArray(10),
         };
         this.enumIndexes = {};
         this.docIds = [];
@@ -86,6 +87,7 @@ class DocSet {
         for (const enumText of sortedPreEnums.map(pe => pe[0])) {
             this.enums[category].pushCountedString(enumText);
         }
+        this.enums[category].trim();
     }
 
     buildEnumIndexes() {
@@ -137,6 +139,22 @@ class DocSet {
                 2
             )
         );
+    }
+
+    serializeSuccinct() {
+        const ret = {
+            id: this.id,
+            metadata: {
+                lang: this.lang,
+                abbr: this.abbr
+            },
+            enums: {},
+            docs: {}
+        };
+        for (const [eK, eV] of Object.entries(this.enums)) {
+            ret.enums[eK] = base64.fromByteArray(eV.byteArray);
+        }
+        return ret;
     }
 
 }
