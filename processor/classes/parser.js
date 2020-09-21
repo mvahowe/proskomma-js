@@ -1,6 +1,5 @@
 const {Sequence} = require("./sequence");
 const {specs} = require("../resources/parser_specs");
-const ChapterPT = require('../../lexers/preTokenClasses/chapter_pt');
 const {Token, Scope, Graft} = require("./items");
 const {labelForScope} = require("../resources/scope_defs");
 

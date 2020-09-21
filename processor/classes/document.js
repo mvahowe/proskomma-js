@@ -1,10 +1,9 @@
 const { generateId } = require("../generate_id");
 const { lexifyUsfm, lexifyUsx } = require("../../lexers");
 const { Parser } = require("./parser");
-const { scopeEnum, scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
-const { tokenEnum, tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
-const { itemEnum, itemEnumLabels } = require('../resources/item_defs');
-const ByteArray = require("../../lib/byte_array");
+const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
+const { tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
+const { itemEnum } = require('../resources/item_defs');
 
 class Document {
 
