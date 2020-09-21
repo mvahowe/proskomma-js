@@ -92,7 +92,6 @@ const Parser = class {
                             label: pt => labelForScope("blockTag", [pt.fullTagName]),
                             endedBy: ["endBlock"]
                         };
-                        // this.openNewScope(lexedItem, blockScope, false);
                     }
                 } else if (spec.parser.inlineSequenceType) {
                     this.current.inlineSequenceType = spec.parser.inlineSequenceType;
