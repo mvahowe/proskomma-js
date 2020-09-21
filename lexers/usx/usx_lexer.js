@@ -16,7 +16,7 @@ class UsxLexer {
         this.elementStack = [];
         this.openTagHandlers = {
             usx: this.ignoreHandler,
-            book: this.ignoreHandler,
+            book: this.handleBookOpen,
             chapter: this.handleChapter,
             verse: this.handleVerses,
             para: this.handleParaOrCharOpen,
@@ -34,7 +34,7 @@ class UsxLexer {
         }
         this.closeTagHandlers = {
             usx: this.ignoreHandler,
-            book: this.ignoreHandler,
+            book: this.handleBookClose,
             chapter: this.ignoreHandler,
             verse: this.ignoreHandler,
             para: this.handleParaOrCharClose,
@@ -125,6 +125,18 @@ class UsxLexer {
         const [sName, sAtts] = lexer.stackPop();
         const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
         lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]))
+    }
+
+    handleBookOpen(lexer, oOrC, name, atts) {
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "id", ""]));
+        lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.code]));
+        lexer.lexed.push(new ptClasses.PrintablePT("lineSpace", [" "]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleBookClose(lexer, oOrC, name) {
+        lexer.stackPop();
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "id", ""]))
     }
 
     handleChapter(lexer, oOrC, name, atts) {
