@@ -105,9 +105,21 @@ class Document {
             const succinctBlockScope = block.bs;
             const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
             const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
+            const succinctBlockGrafts = block.bg;
+            let pos = 0;
+            const blockGrafts = [];
+            while (pos < succinctBlockGrafts.length) {
+                const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockGrafts, pos);
+                blockGrafts.push([
+                    "graft",
+                    this.succinctGraftName(docSet, itemSubtype),
+                    this.succinctGraftSeqId(docSet, succinctBlockGrafts, pos)
+                ]);
+                pos += itemLength;
+            }
             const succinctContent = block.c;
             const blockRet = [];
-            let pos = 0;
+            pos = 0;
             while (pos < succinctContent.length) {
                 const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
                 if (itemType === itemEnum.token) {
@@ -136,7 +148,11 @@ class Document {
                 }
                 pos += itemLength;
             }
-            ret.push([blockScopeLabel, blockRet]);
+            ret.push({
+                bs: blockScopeLabel,
+                bg: blockGrafts,
+                c: blockRet
+            });
         }
         return ret;
     }

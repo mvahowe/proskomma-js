@@ -5,6 +5,8 @@ const { Token, Scope } = require("./items");
 const { scopeEnum } = require('../resources/scope_defs');
 const { tokenEnum, tokenCategory } = require('../resources/token_defs');
 const { itemEnum } = require('../resources/item_defs');
+const { graftLocation } = require('../resources/graft_defs');
+
 
 const Sequence = class {
 
@@ -87,6 +89,7 @@ const Sequence = class {
         const ret = [];
         for (const block of this.blocks) {
             const contentBA = new ByteArray(block.length);
+            const blockGraftsBA = new ByteArray(1);
             for (const item of block.items) {
                 switch (item.itemType) {
                     case "wordLike":
@@ -100,7 +103,11 @@ const Sequence = class {
                         this.pushSuccinctToken(contentBA, docSet, item);
                         break;
                     case "graft":
-                        this.pushSuccinctGraft(contentBA, docSet, item);
+                        if (this.graftLocation(item.graftType) === "inline") {
+                            this.pushSuccinctGraft(contentBA, docSet, item);
+                        } else {
+                            this.pushSuccinctGraft(blockGraftsBA, docSet, item);
+                        }
                         break;
                     case "startScope":
                     case "endScope":
@@ -114,7 +121,8 @@ const Sequence = class {
             this.pushSuccinctScope(blockScopeBA, docSet, block.blockScope);
             ret.push({
                 c: contentBA,
-                bs: blockScopeBA
+                bs: blockScopeBA,
+                bg: blockGraftsBA
             });
         }
         return ret;
@@ -127,6 +135,18 @@ const Sequence = class {
         bA.pushByte(tokenEnum[item.itemType]);
         bA.pushNByte(charsEnum);
         bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.token << 6);
+    }
+
+    graftLocation(graftString) {
+        if (graftString in graftLocation) {
+            return graftLocation[graftString];
+        } else if (graftString.startsWith("zb-")) {
+            return "block";
+        } else if (graftString.startsWith("zi-")) {
+            return "inline";
+        } else {
+            throw new Error(`Could not find graft location for '${graftString}'`);
+        }
     }
 
     pushSuccinctGraft(bA, docSet, item) {
