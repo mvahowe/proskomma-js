@@ -63,7 +63,7 @@ class Document {
 
     recordPreEnums(docSet, seq) {
         for (const block of seq.blocks) {
-            for (const item of block.items) {
+            for (const item of [...block.items, block.blockScope]) {
                 if (item.itemType === "wordLike") {
                     docSet.recordPreEnum("wordLike", item.chars);
                 } else if (["lineSpace", "eol", "punctuation"].includes(item.itemType)) {
@@ -103,46 +103,83 @@ class Document {
         const sequence = this.sequences[seqId];
         const ret = [];
         for (const block of sequence.blocks) {
-            const succinct = block.c;
+            const succinctBlockScope = block.bs;
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
+            const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
+            const succinctContent = block.c;
             const blockRet = [];
             let pos = 0;
-            while (pos < succinct.length) {
-                const headerByte = succinct.byte(pos);
-                const itemType = headerByte >> 6;
-                const itemLength = headerByte & 0x0000003F;
-                const itemSubtype = succinct.byte(pos + 1);
+            while (pos < succinctContent.length) {
+                const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
                 if (itemType === itemEnum.token) {
-                    const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
-                    const itemIndex = docSet.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
-                    const chars = docSet.enums[itemCategory].countedString(itemIndex);
-                    blockRet.push(`|${chars}`);
-                } else if ([itemEnum.startScope, itemEnum.endScope].includes(itemType) && (!("scopes" in options) || options.scopes)) {
-                    const scopeType = scopeEnumLabels[itemSubtype];
-                    const sOrE = (itemType === itemEnum.startScope) ? "+" : "-";
-                    let nScopeBits = nComponentsForScope(scopeType);
-                    let offset = 2;
-                    let scopeBits = "";
-                    while (nScopeBits > 1) {
-                        const itemIndexIndex = succinct.nByte(pos + offset);
-                        const itemIndex = docSet.enumIndexes.scopeBits[itemIndexIndex];
-                        const scopeBitString = docSet.enums.scopeBits.countedString(itemIndex);
-                        scopeBits = `/${scopeBitString}`;
-                        offset += succinct.nByteLength(itemIndexIndex);
-                        nScopeBits--;
-                    }
-                    blockRet.push(`${sOrE}${scopeType}${scopeBits}${sOrE}`);
-                } else if (itemType === itemEnum.graft && (!("grafts" in options) || options.grafts)) {
-                    const graftIndex = docSet.enumIndexes.graftTypes[itemSubtype];
-                    const graftName = docSet.enums.graftTypes.countedString(graftIndex);
-                    const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
-                    const seqId = docSet.enums.ids.countedString(seqIndex);
-                    blockRet.push(`=${graftName}/${seqId}=`);
+                    blockRet.push([
+                        "token",
+                        tokenEnumLabels[itemSubtype],
+                        this.succinctTokenChars(docSet, succinctContent, itemSubtype, pos)
+                    ]);
+                } else if (
+                    [itemEnum.startScope, itemEnum.endScope].includes(itemType) &&
+                    (!("scopes" in options) || options.scopes)
+                ) {
+                    blockRet.push([
+                        (itemType === itemEnum.startScope) ? "startScope" : "endScope",
+                        this.succinctScopeLabel(docSet, succinctContent, itemSubtype, pos)
+                    ]);
+                } else if (
+                    itemType === itemEnum.graft &&
+                    (!("grafts" in options) || options.grafts)
+                ) {
+                    blockRet.push([
+                        "graft",
+                        this.succinctGraftName(docSet, itemSubtype),
+                        this.succinctGraftSeqId(docSet, succinctContent, pos)
+                    ]);
                 }
                 pos += itemLength;
             }
-            ret.push(blockRet.join(""));
+            ret.push([blockScopeLabel, blockRet]);
         }
         return ret;
+    }
+
+    headerBytes(succinct, pos) {
+        const headerByte = succinct.byte(pos);
+        const itemType = headerByte >> 6;
+        const itemLength = headerByte & 0x0000003F;
+        const itemSubtype = succinct.byte(pos + 1);
+        return [itemLength, itemType, itemSubtype];
+    }
+
+    succinctTokenChars(docSet, succinct, itemSubtype, pos) {
+        const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
+        const itemIndex = docSet.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
+        return docSet.enums[itemCategory].countedString(itemIndex);
+    }
+
+    succinctScopeLabel(docSet, succinct, itemSubtype, pos) {
+        const scopeType = scopeEnumLabels[itemSubtype];
+        let nScopeBits = nComponentsForScope(scopeType);
+        let offset = 2;
+        let scopeBits = "";
+        while (nScopeBits > 1) {
+            const itemIndexIndex = succinct.nByte(pos + offset);
+            const itemIndex = docSet.enumIndexes.scopeBits[itemIndexIndex];
+            const scopeBitString = docSet.enums.scopeBits.countedString(itemIndex);
+            scopeBits += `/${scopeBitString}`;
+            offset += succinct.nByteLength(itemIndexIndex);
+            nScopeBits--;
+        }
+        return `${scopeType}${scopeBits}`;
+    }
+
+    succinctGraftName(docSet, itemSubtype) {
+        const graftIndex = docSet.enumIndexes.graftTypes[itemSubtype];
+        return docSet.enums.graftTypes.countedString(graftIndex);
+    }
+
+    succinctGraftSeqId(docSet, succinct, pos) {
+        const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
+        return docSet.enums.ids.countedString(seqIndex);
     }
 
     describe() {

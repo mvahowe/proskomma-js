@@ -98,7 +98,7 @@ const Parser = class {
                     this.current.inlineSequenceType = spec.parser.inlineSequenceType;
                     this.current.parentSequence = this.current.sequence;
                     this.current.sequence = new Sequence(this.current.inlineSequenceType);
-                    this.current.sequence.newBlock();
+                    this.current.sequence.newBlock(labelForScope("inline", spec.parser.inlineSequenceType));
                     this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
                     this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id))
                 } else if ("newBlock" in spec.parser) {

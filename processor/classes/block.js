@@ -3,9 +3,15 @@ const { Token, Scope, Graft } = require("./items");
 
 const Block = class {
 
-    constructor () {
+    constructor (blockScope) {
+        if (!blockScope) {
+            throw new Error("Block constructor now requires block scope");
+        }
         this.id = generateId();
         this.items = [];
+        this.blockGrafts = [];
+        this.blockScope = new Scope("start", blockScope);
+        this.openScopes = [];
     }
 
     addItem(i) {
@@ -68,10 +74,11 @@ const Block = class {
             }
         }
         for (const noteStart of noteStarts) {
+            const noteLabel = this.items[noteStart].label;
             const callerToken = this.items[noteStart + 1];
             if (callerToken instanceof Token && callerToken.chars.length === 1) {
                 const callerSequence = new Sequence("noteCaller");
-                callerSequence.newBlock();
+                callerSequence.newBlock(noteLabel);
                 callerSequence.addItem(callerToken);
                 parser.sequences.noteCaller.push(callerSequence);
                 this.items[noteStart + 1] = new Graft("noteCaller", callerSequence.id);

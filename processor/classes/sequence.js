@@ -31,12 +31,10 @@ const Sequence = class {
     }
 
     newBlock(label) {
-        this.blocks.push(new Block());
-        if (label) {
-            this.lastBlock().addItem(
-                new Scope("start", label)
-            )
+        if (!label) {
+            throw new Error("Sequence.newBlock now requires label");
         }
+        this.blocks.push(new Block(label));
     }
 
     trim() {
@@ -88,9 +86,7 @@ const Sequence = class {
     succinctifyBlocks(docSet) {
         const ret = [];
         for (const block of this.blocks) {
-            const blockBA = new ByteArray(block.length);
-            let lengthPos;
-            let scopeBits;
+            const contentBA = new ByteArray(block.length);
             for (const item of block.items) {
                 switch (item.itemType) {
                     case "wordLike":
@@ -101,40 +97,57 @@ const Sequence = class {
                     case "noBreakSpace":
                     case "bareSlash":
                     case "unknown":
-                        const charsEnum = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
-                        lengthPos = blockBA.length;
-                        blockBA.pushByte(0);
-                        blockBA.pushByte(tokenEnum[item.itemType]);
-                        blockBA.pushNByte(charsEnum);
-                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum.token << 6);
+                        this.pushSuccinctToken(contentBA, docSet, item);
                         break;
                     case "graft":
-                        const graftTypeEnum = docSet.enumForCategoryValue("graftTypes", item.graftType);
-                        const seqEnum = docSet.enumForCategoryValue("ids", item.seqId);
-                        lengthPos = blockBA.length;
-                        blockBA.pushByte(0);
-                        blockBA.pushByte(graftTypeEnum);
-                        blockBA.pushNByte(seqEnum);
-                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum.graft << 6);
+                        this.pushSuccinctGraft(contentBA, docSet, item);
                         break;
                     case "startScope":
                     case "endScope":
-                        scopeBits = item.label.split("/");
-                        lengthPos = blockBA.length;
-                        blockBA.pushByte(0);
-                        blockBA.pushByte(scopeEnum[scopeBits[0]]);
-                        for (const scopeBit of scopeBits.slice(1)) {
-                            blockBA.pushNByte(docSet.enumForCategoryValue("scopeBits", scopeBit));
-                        }
-                        blockBA.setByte(lengthPos, (blockBA.length - lengthPos) | itemEnum[item.itemType] << 6);
+                        this.pushSuccinctScope(contentBA, docSet, item);
                         break;
                     default:
                         throw new Error(`Item type ${item.itemType} is not handled in succinctifyBlocks`);
                 }
             }
-            ret.push({c: blockBA });
+            const blockScopeBA = new ByteArray(10);
+            this.pushSuccinctScope(blockScopeBA, docSet, block.blockScope);
+            ret.push({
+                c: contentBA,
+                bs: blockScopeBA
+            });
         }
         return ret;
+    }
+
+    pushSuccinctToken(bA, docSet, item) {
+        const charsEnum = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
+        const lengthPos = bA.length;
+        bA.pushByte(0);
+        bA.pushByte(tokenEnum[item.itemType]);
+        bA.pushNByte(charsEnum);
+        bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.token << 6);
+    }
+
+    pushSuccinctGraft(bA, docSet, item) {
+        const graftTypeEnum = docSet.enumForCategoryValue("graftTypes", item.graftType);
+        const seqEnum = docSet.enumForCategoryValue("ids", item.seqId);
+        const lengthPos = bA.length;
+        bA.pushByte(0);
+        bA.pushByte(graftTypeEnum);
+        bA.pushNByte(seqEnum);
+        bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.graft << 6);
+    }
+
+    pushSuccinctScope(bA, docSet, item) {
+        const scopeBits = item.label.split("/");
+        const lengthPos = bA.length;
+        bA.pushByte(0);
+        bA.pushByte(scopeEnum[scopeBits[0]]);
+        for (const scopeBit of scopeBits.slice(1)) {
+            bA.pushNByte(docSet.enumForCategoryValue("scopeBits", scopeBit));
+        }
+        bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum[item.itemType] << 6);
     }
 
     describe(seqById, indent) {
