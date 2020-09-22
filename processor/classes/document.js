@@ -74,7 +74,7 @@ class Document {
                     if (labelBits.length !== nComponentsForScope(labelBits[0])) {
                         throw new Error(`Scope ${item.label} has unexpected number of components`);
                     }
-                    for (const labelBit of labelBits) {
+                    for (const labelBit of labelBits.slice(1)) {
                         docSet.recordPreEnum("scopeBits", labelBit);
                     }
                 }
