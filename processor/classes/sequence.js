@@ -119,6 +119,9 @@ const Sequence = class {
             }
             const blockScopeBA = new ByteArray(10);
             this.pushSuccinctScope(blockScopeBA, docSet, block.blockScope);
+            contentBA.trim();
+            blockGraftsBA.trim();
+            blockScopeBA.trim();
             ret.push({
                 c: contentBA,
                 bs: blockScopeBA,

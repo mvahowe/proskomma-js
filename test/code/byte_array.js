@@ -73,7 +73,7 @@ test(
         t.equal(ba.length, 5);
         t.equal(ba.byteArray.length, 5);
         ba.pushByte(12);
-        t.equal(ba.byteArray.length, 10);
+        t.equal(ba.byteArray.length, 21);
         t.equal(ba.length, 6);
         t.equal(ba.byte(0), 2);
         t.equal(ba.byte(5), 12);
@@ -158,10 +158,27 @@ test(
     `Trim (${testGroup})`,
     function (t) {
             const ByteArray = require('../../lib/byte_array');
-            t.plan(1);
-            let ba = new ByteArray();
+            t.plan(2);
+            let ba = new ByteArray(256);
             ba.pushCountedString("abc");
+            t.equal(ba.byteArray.length, 256);
             ba.trim();
-            t.equal(ba.length, 4);
+            t.equal(ba.byteArray.length, 4);
+    }
+);
+
+test(
+    `Base64 (${testGroup})`,
+    function (t) {
+        const ByteArray = require('../../lib/byte_array');
+        t.plan(3);
+        let ba = new ByteArray();
+        ba.pushCountedString("abc");
+        ba.trim();
+        let ba2 = new ByteArray();
+        ba2.fromBase64(ba.base64());
+        t.equal(ba2.byteArray.length, 4);
+        t.equal(ba2.length, 4);
+        t.equal(ba2.countedString(0), "abc");
     }
 );

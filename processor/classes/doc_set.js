@@ -1,6 +1,5 @@
 const {generateId} = require("../generate_id");
 const ByteArray = require("../../lib/byte_array");
-const base64 = require("base64-js");
 
 class DocSet {
 
@@ -152,7 +151,11 @@ class DocSet {
             docs: {}
         };
         for (const [eK, eV] of Object.entries(this.enums)) {
-            ret.enums[eK] = base64.fromByteArray(eV.byteArray);
+            ret.enums[eK] = eV.base64();
+        }
+        ret.docs = {};
+        for (const docId of this.docIds) {
+            ret.docs[docId] = this.processor.documents[docId].serializeSuccinct();
         }
         return ret;
     }

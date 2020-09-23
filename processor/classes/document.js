@@ -12,7 +12,7 @@ class Document {
         this.processor = processor;
         this.docSetId = docSetId;
         this.headers = {};
-        this.mainSequenceId = null;
+        this.mainId = null;
         this.sequences = {};
         switch (contentType) {
             case "usfm":
@@ -195,6 +195,32 @@ class Document {
     succinctGraftSeqId(docSet, succinct, pos) {
         const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
         return docSet.enums.ids.countedString(seqIndex);
+    }
+
+    serializeSuccinct() {
+        const ret = {sequences: {}};
+        ret.headers = this.headers;
+        ret.mainId = this.mainId;
+        for (const [seqId, seqOb] of Object.entries(this.sequences)) {
+            ret.sequences[seqId] = this.serializeSuccinctSequence(seqOb);
+        }
+        return ret;
+    }
+
+    serializeSuccinctSequence(seqOb) {
+        const ret = {
+            type: seqOb.type,
+            blocks: seqOb.blocks.map(b => this.serializeSuccinctBlock(b))
+        }
+        return ret;
+    }
+
+    serializeSuccinctBlock(blockOb) {
+        return {
+            bs: blockOb.bs.base64(),
+            bg: blockOb.bg.base64(),
+            c: blockOb.c.base64()
+        };
     }
 
     describe() {
