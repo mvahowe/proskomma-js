@@ -26,6 +26,7 @@ const Sequence = class {
     }
 
     addBlockGraft(g) {
+        this.newBlock("hangingGraft");
         this.lastBlock().blockGrafts.push(g);
     }
 
@@ -40,7 +41,7 @@ const Sequence = class {
         if (!label) {
             throw new Error("Sequence.newBlock now requires label");
         }
-        if (this.blocks.length > 0 && this.blocks[this.blocks.length - 1].blockScope.label === "orphanTokens") {
+        if (this.blocks.length > 0 && ["orphanTokens", "hangingGraft"].includes(this.blocks[this.blocks.length - 1].blockScope.label)) {
             this.lastBlock().blockScope = new Scope("start", label);
         } else {
             this.blocks.push(new Block(label));
