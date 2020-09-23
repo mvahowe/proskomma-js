@@ -12,9 +12,9 @@ class ProsKomma {
         const docSetId = this.findOrMakeDocSet(lang, abbr);
         let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions);
         this.addDocument(doc, docSetId);
-        const unsuccinct = doc.unsuccinctifySequence(doc.mainId, this.docSets[docSetId], {scopes: true, grafts: true});
-        // console.log(JSON.stringify(unsuccinct));
-        console.log(JSON.stringify(this.docSets[docSetId].serializeSuccinct(), null, 2));
+        const unsuccinct = doc.unsuccinctifySequence(doc.mainId, this.docSets[docSetId], {scopes: true, grafts: false});
+        console.log(JSON.stringify(unsuccinct, null, 2));
+        // console.log(JSON.stringify(this.docSets[docSetId].serializeSuccinct(), null, 2));
         return doc;
     }
 

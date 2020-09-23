@@ -118,6 +118,8 @@ const Parser = class {
             seq.trim();
             seq.reorderSpanWithAtts();
             seq.makeNoteGrafts(this);
+            seq.moveOrphanScopes();
+            // seq.removeEmptyBlocks();
             seq.close(this);
         }
     }

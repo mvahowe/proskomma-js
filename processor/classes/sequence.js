@@ -85,6 +85,45 @@ const Sequence = class {
         return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current), []);
     }
 
+    moveOrphanScopes() {
+        if (this.blocks.length > 1) {
+            this.moveOrphanStartScopes();
+            this.moveOrphanEndScopes();
+        }
+    }
+
+    moveOrphanStartScopes() {
+        for (const [blockNo, block] of this.blocks.entries()) {
+            if (blockNo === this.blocks.length - 2) {
+                continue;
+            }
+            for (const item of [...block.items].reverse()) {
+                if (item.itemType !== "startScope") {
+                    break;
+                }
+                this.blocks[blockNo + 1].items.unshift(this.blocks[blockNo].items.pop());
+            }
+        }
+    }
+
+    moveOrphanEndScopes(blocks) {
+        for (const [blockNo, block] of this.blocks.entries()) {
+            if (blockNo === 0) {
+                continue;
+            }
+            for (const item of [...block.items]) {
+                if (item.itemType !== "endScope") {
+                    break;
+                }
+                this.blocks[blockNo - 1].items.push(this.blocks[blockNo].items.shift());
+            }
+        }
+    }
+
+    removeEmptyBlocks() {
+        this.blocks = this.blocks.filter(b => b.items.length > 0);
+    }
+
     succinctifyBlocks(docSet) {
         const ret = [];
         for (const block of this.blocks) {
