@@ -1,5 +1,5 @@
-const { generateId } = require("../generate_id");
-const ByteArray = require("../../lib/byte_array");
+const { generateId } = require("../../generate_id");
+const ByteArray = require("../../../lib/byte_array");
 const { Block } = require("./block");
 const { Token, Scope } = require("./items");
 const { scopeEnum } = require('../resources/scope_defs');

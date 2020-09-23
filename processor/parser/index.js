@@ -1,7 +1,7 @@
-const {Sequence} = require("./sequence");
-const {specs} = require("../resources/parser_specs");
-const {Token, Scope, Graft} = require("./items");
-const {labelForScope} = require("../resources/scope_defs");
+const {Sequence} = require("./model/sequence");
+const {specs} = require("./resources/parser_specs");
+const {Token, Scope, Graft} = require("./model/items");
+const {labelForScope} = require("./resources/scope_defs");
 
 const Parser = class {
 
@@ -172,7 +172,6 @@ const Parser = class {
     removeUnusedSequences(usedSequences) {
         for (const seq of this.allSequences()) {
             if (!usedSequences.includes(seq.id)) {
-                console.log("REMOVE", seq.id);
                 switch ({...this.baseSequenceTypes, ...this.inlineSequenceTypes}[seq.type]) {
                     case "1":
                         throw new Error("Attempting to remove sequence with arity of 1");
@@ -342,4 +341,4 @@ const Parser = class {
 
 }
 
-module.exports = {Parser};
+module.exports = { Parser };

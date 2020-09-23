@@ -1,6 +1,6 @@
-const { generateId } = require("../generate_id");
-const { lexifyUsfm, lexifyUsx } = require("../../lexers");
-const { Parser } = require("./parser");
+const { generateId } = require("../../generate_id");
+const { lexifyUsfm, lexifyUsx } = require("../../../lexers");
+const { Parser } = require("../index");
 const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
 const { tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
 const { itemEnum } = require('../resources/item_defs');
