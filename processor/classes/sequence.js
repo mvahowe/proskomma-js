@@ -25,6 +25,10 @@ const Sequence = class {
         this.lastBlock().addItem(i);
     }
 
+    addBlockGraft(g) {
+        this.lastBlock().blockGrafts.push(g);
+    }
+
     lastBlock() {
         if (this.blocks.length === 0) {
             this.newBlock("orphanTokens");
@@ -133,6 +137,9 @@ const Sequence = class {
         for (const block of this.blocks) {
             const contentBA = new ByteArray(block.length);
             const blockGraftsBA = new ByteArray(1);
+            for (const bg of block.blockGrafts) {
+                this.pushSuccinctGraft(blockGraftsBA, docSet, bg);
+            }
             for (const item of block.items) {
                 switch (item.itemType) {
                     case "wordLike":
@@ -146,12 +153,8 @@ const Sequence = class {
                         this.pushSuccinctToken(contentBA, docSet, item);
                         break;
                     case "graft":
-                        if (this.graftLocation(item.graftType) === "inline") {
-                            this.pushSuccinctGraft(contentBA, docSet, item);
-                        } else {
-                            this.pushSuccinctGraft(blockGraftsBA, docSet, item);
-                        }
-                        break;
+                        this.pushSuccinctGraft(contentBA, docSet, item);
+                         break;
                     case "startScope":
                     case "endScope":
                         this.pushSuccinctScope(contentBA, docSet, item);

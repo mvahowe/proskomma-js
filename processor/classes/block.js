@@ -117,7 +117,7 @@ const Block = class {
     filterGrafts(options) {
         // Each graft should be removed or returned
         const ret = [];
-        const toRemove = [];
+        let toRemove = [];
         for (const [pos, item] of this.grafts()) {
             if (this.graftPassesOptions(item, options)) {
                 ret.push(item.seqId);
@@ -127,6 +127,17 @@ const Block = class {
         }
         for (const [count, pos] of Array.from(toRemove.entries())) {
             this.items.splice(pos - count, 1);
+        }
+        toRemove = [];
+        for (const [pos, item] of this.blockGrafts.entries()) {
+            if (this.graftPassesOptions(item, options)) {
+                ret.push(item.seqId);
+            } else {
+                toRemove.push(pos);
+            }
+        }
+        for (const [count, pos] of Array.from(toRemove.entries())) {
+            this.blockGrafts.splice(pos - count, 1);
         }
         return ret;
     }

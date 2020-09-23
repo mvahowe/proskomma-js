@@ -172,6 +172,7 @@ const Parser = class {
     removeUnusedSequences(usedSequences) {
         for (const seq of this.allSequences()) {
             if (!usedSequences.includes(seq.id)) {
+                console.log("REMOVE", seq.id);
                 switch ({...this.baseSequenceTypes, ...this.inlineSequenceTypes}[seq.type]) {
                     case "1":
                         throw new Error("Attempting to remove sequence with arity of 1");
@@ -257,7 +258,7 @@ const Parser = class {
                 throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
         }
         if (!parserSpec.useTempSequence && this.current.sequence.type !== "main") {
-            previousSequence.addItem(new Graft(this.current.baseSequenceType, this.current.sequence.id))
+            this.sequences.main.addBlockGraft(new Graft(this.current.baseSequenceType, this.current.sequence.id))
         }
     }
 

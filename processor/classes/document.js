@@ -62,7 +62,7 @@ class Document {
 
     recordPreEnums(docSet, seq) {
         for (const block of seq.blocks) {
-            for (const item of [...block.items, block.blockScope]) {
+            for (const item of [...block.items, block.blockScope, ...block.blockGrafts]) {
                 if (item.itemType === "wordLike") {
                     docSet.recordPreEnum("wordLike", item.chars);
                 } else if (["lineSpace", "eol", "punctuation"].includes(item.itemType)) {
