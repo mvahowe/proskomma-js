@@ -106,7 +106,7 @@ const Sequence = class {
         }
     }
 
-    moveOrphanEndScopes(blocks) {
+    moveOrphanEndScopes() {
         for (const [blockNo, block] of this.blocks.entries()) {
             if (blockNo === 0) {
                 continue;

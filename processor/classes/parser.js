@@ -87,10 +87,6 @@ const Parser = class {
                     if ("newBlock" in spec.parser) {
                         this.closeActiveScopes("endBlock");
                         this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
-                        const blockScope = {
-                            label: pt => labelForScope("blockTag", [pt.fullTagName]),
-                            endedBy: ["endBlock"]
-                        };
                     }
                 } else if (spec.parser.inlineSequenceType) {
                     this.current.inlineSequenceType = spec.parser.inlineSequenceType;
@@ -282,8 +278,8 @@ const Parser = class {
     }
 
     openNewScope(pt, sc, addItem, targetSequence) {
-        if (addItem === undefined) {addItem = true};
-        if (targetSequence === undefined) {targetSequence = this.current.sequence;};
+        if (addItem === undefined) {addItem = true}
+        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
         if (addItem) {
             targetSequence.addItem(new Scope("start", sc.label(pt)));
         }
