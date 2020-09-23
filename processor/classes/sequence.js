@@ -36,7 +36,11 @@ const Sequence = class {
         if (!label) {
             throw new Error("Sequence.newBlock now requires label");
         }
-        this.blocks.push(new Block(label));
+        if (this.blocks.length > 0 && this.blocks[this.blocks.length - 1].blockScope.label === "orphanTokens") {
+            this.lastBlock().blockScope = new Scope("start", label);
+        } else {
+            this.blocks.push(new Block(label));
+        }
     }
 
     trim() {
