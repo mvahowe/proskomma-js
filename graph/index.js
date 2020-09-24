@@ -1,34 +1,20 @@
-const {
-    graphql,
-    GraphQLSchema,
-    GraphQLObjectType,
-    GraphQLString,
-} = require('graphql');
-const packageJson = require('../package.json');
+const {graphql, GraphQLSchema, GraphQLObjectType} = require('graphql');
+
+const { systemQuery } = require('./schema/');
 
 const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-        name: 'RootQueryType',
-        fields: {
-            processor: {
-                type: GraphQLString,
-                resolve() {
-                    return "Proskomma";
-                },
-            },
-            version: {
-                type: GraphQLString,
-                resolve() {
-                    return packageJson.version;
+        query: new GraphQLObjectType({
+                name: "Root",
+                fields: {
+                    system: systemQuery
                 }
             }
-        },
-    }),
-});
+        )
+    }
+)
 
 const runQuery = async (query) => {
-    let ret = await graphql(schema, query);
-    return Promise.resolve(ret);
+    return await graphql(schema, query);
 }
 
-module.exports = { runQuery }
+module.exports = {runQuery}
