@@ -15,6 +15,10 @@ class System {
         return Object.keys(args.proskomma.docSets).length;
     }
 
+    nDocuments(obj, args, context, info) {
+        return Object.keys(args.proskomma.documents).length;
+    }
+
 }
 
 const systemType = new GraphQLObjectType({
@@ -22,7 +26,8 @@ const systemType = new GraphQLObjectType({
     fields: () => ({
         processor: {type: GraphQLString},
         packageVersion: {type: GraphQLString},
-        nDocSets: {type: GraphQLInt}
+        nDocSets: {type: GraphQLInt},
+        nDocuments: {type: GraphQLInt}
     }),
     resolve: () => new System()
 })
