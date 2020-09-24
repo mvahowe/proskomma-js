@@ -7,12 +7,8 @@ class System {
         return "Proskomma"
     };
 
-    processorVersion(obj, args, context, info) {
-        return "0.1.0"
-    };
-
-    succinctVersion(obj, args, context, info) {
-        return "0.1.0"
+    packageVersion(obj, args, context, info) {
+        return packageJson.version;
     };
 
 }
@@ -21,8 +17,7 @@ const systemType = new GraphQLObjectType({
     name: "System",
     fields: () => ({
         processor: {type: GraphQLString},
-        processorVersion: {type: GraphQLString},
-        succinctVersion: {type: GraphQLString}
+        packageVersion: {type: GraphQLString}
     }),
     resolve: () => new System()
 })
