@@ -4,7 +4,7 @@ const { systemQuery } = require('./schema/');
 
 const schema = new GraphQLSchema({
         query: new GraphQLObjectType({
-                name: "Root",
+            name: "Root",
                 fields: {
                     system: systemQuery
                 }
@@ -13,8 +13,9 @@ const schema = new GraphQLSchema({
     }
 )
 
-const runQuery = async (query) => {
-    return await graphql(schema, query);
+const runQuery = async (query, context) => {
+    if (!context) {context = {}};
+    return await graphql(schema, query, null, context);
 }
 
 module.exports = {runQuery}
