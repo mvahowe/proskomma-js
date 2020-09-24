@@ -3,19 +3,19 @@ const packageJson = require('../../package.json');
 
 class System {
 
-    processor(obj, args, context, info) {
+    processor() {
         return "Proskomma"
     };
 
-    packageVersion(obj, args, context, info) {
+    packageVersion() {
         return packageJson.version;
     };
 
-    nDocSets(obj, args, context, info) {
+    nDocSets(obj, args) {
         return Object.keys(args.proskomma.docSets).length;
     }
 
-    nDocuments(obj, args, context, info) {
+    nDocuments(obj, args) {
         return Object.keys(args.proskomma.documents).length;
     }
 
