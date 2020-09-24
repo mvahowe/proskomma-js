@@ -1,5 +1,3 @@
-const systemQuery = require('./system');
+const { pkType, pkResolve, docSetType } = require('./pk');
 
-module.exports = {
-    systemQuery
-}
+module.exports = { pkType, pkResolve, docSetType }

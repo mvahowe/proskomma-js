@@ -1,21 +1,19 @@
-const {graphql, GraphQLSchema, GraphQLObjectType} = require('graphql');
+const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
-const { systemQuery } = require('./schema/');
+const {docSetType} = require('./schema');
 
-const schema = new GraphQLSchema({
-        query: new GraphQLObjectType({
+const gqlSchema = new GraphQLSchema({
+    query: new GraphQLObjectType({
             name: "Root",
-                fields: {
-                    system: systemQuery
-                }
+            fields: {
+                processor: {type: GraphQLString},
+                packageVersion: {type: GraphQLString},
+                nDocSets: {type: GraphQLInt},
+                docSetList: {type: GraphQLList(docSetType)},
+                nDocuments: {type: GraphQLInt}
             }
-        )
-    }
-)
+        }
+    )
+});
 
-const runQuery = async (query, context) => {
-    if (!context) {context = {}};
-    return await graphql(schema, query, null, context);
-}
-
-module.exports = {runQuery}
+module.exports = {gqlSchema}
