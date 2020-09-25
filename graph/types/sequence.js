@@ -7,6 +7,7 @@ const sequenceType = new GraphQLObjectType({
     fields: () => ({
         id: {type: GraphQLString},
         type: {type: GraphQLString},
+        nBlocks: {type: GraphQLInt, resolve: obj => obj.blocks.length},
         blocks: {type: GraphQLList(blockType)}
     })
 })
