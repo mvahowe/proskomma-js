@@ -39,7 +39,7 @@ test(
     `DocSets (${testGroup})`,
     async function (t) {
         t.plan(1);
-        const query = '{ docSetList { id } }';
+        const query = '{ docSetList { id lang abbr } }';
         const result = await pk.gqlQuery(query);
         console.log(JSON.stringify(result, null, 2));
         t.ok(result);
@@ -50,7 +50,7 @@ test(
     `DocSetById (${testGroup})`,
     async function (t) {
         t.plan(1);
-        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id } }`;
+        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang abbr } }`;
         const result = await pk.gqlQuery(query);
         console.log(JSON.stringify(result, null, 2));
         t.ok(result);
@@ -78,3 +78,15 @@ test(
         t.ok(result);
     }
 );
+
+test(
+    `DocSet Documents (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id documents { id } } }`;
+        const result = await pk.gqlQuery(query);
+        console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+    }
+);
+

@@ -20,6 +20,10 @@ class DocSet {
         this.docIds = [];
     }
 
+    documents() {
+        return this.docIds.map(did => this.processor.documents[did]);
+    }
+
     buildPreEnums() {
         for (const [category, succinct] of Object.entries(this.enums)) {
             this.preEnums[category] = this.buildPreEnum(succinct);
