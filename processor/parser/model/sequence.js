@@ -135,11 +135,26 @@ const Sequence = class {
 
     succinctifyBlocks(docSet) {
         const ret = [];
+        let openScopes = [];
+        const updateOpenScopes = item => {
+            if (item.itemType === "startScope") {
+                const existingScopes = openScopes.filter(s => s.label === item.label);
+                if (existingScopes.length === 0) {
+                    openScopes.push(item);
+                }
+            } else {
+                openScopes = openScopes.filter(s => s.label !== item.label);
+            }
+        }
         for (const block of this.blocks) {
             const contentBA = new ByteArray(block.length);
             const blockGraftsBA = new ByteArray(1);
+            const openScopesBA = new ByteArray(1);
             for (const bg of block.blockGrafts) {
                 this.pushSuccinctGraft(blockGraftsBA, docSet, bg);
+            }
+            for (const os of openScopes) {
+                this.pushSuccinctScope(openScopesBA, docSet, os);
             }
             for (const item of block.items) {
                 switch (item.itemType) {
@@ -159,6 +174,7 @@ const Sequence = class {
                     case "startScope":
                     case "endScope":
                         this.pushSuccinctScope(contentBA, docSet, item);
+                        updateOpenScopes(item);
                         break;
                     default:
                         throw new Error(`Item type ${item.itemType} is not handled in succinctifyBlocks`);
@@ -169,10 +185,12 @@ const Sequence = class {
             contentBA.trim();
             blockGraftsBA.trim();
             blockScopeBA.trim();
+            openScopesBA.trim();
             ret.push({
                 c: contentBA,
                 bs: blockScopeBA,
-                bg: blockGraftsBA
+                bg: blockGraftsBA,
+                os: openScopesBA
             });
         }
         return ret;

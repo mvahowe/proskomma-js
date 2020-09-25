@@ -12,6 +12,4 @@ const documentType = new GraphQLObjectType({
     })
 })
 
-
-
 module.exports = documentType;

@@ -11,7 +11,5 @@ const docSetType = new GraphQLObjectType({
     })
 })
 
-
-
 module.exports = docSetType;
 
