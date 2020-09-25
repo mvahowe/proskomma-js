@@ -107,59 +107,63 @@ class Document {
         const sequence = this.sequences[seqId];
         const ret = [];
         for (const block of sequence.blocks) {
-            const succinctBlockScope = block.bs;
-            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
-            const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
-            const succinctBlockGrafts = block.bg;
-            let pos = 0;
-            const blockGrafts = [];
-            while (pos < succinctBlockGrafts.length) {
-                const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockGrafts, pos);
-                blockGrafts.push([
-                    "graft",
-                    this.succinctGraftName(docSet, itemSubtype),
-                    this.succinctGraftSeqId(docSet, succinctBlockGrafts, pos)
-                ]);
-                pos += itemLength;
-            }
-            const succinctContent = block.c;
-            const blockRet = [];
-            pos = 0;
-            while (pos < succinctContent.length) {
-                const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
-                if (itemType === itemEnum.token) {
-                    blockRet.push([
-                        "token",
-                        tokenEnumLabels[itemSubtype],
-                        this.succinctTokenChars(docSet, succinctContent, itemSubtype, pos)
-                    ]);
-                } else if (
-                    [itemEnum.startScope, itemEnum.endScope].includes(itemType) &&
-                    (!("scopes" in options) || options.scopes)
-                ) {
-                    blockRet.push([
-                        (itemType === itemEnum.startScope) ? "startScope" : "endScope",
-                        this.succinctScopeLabel(docSet, succinctContent, itemSubtype, pos)
-                    ]);
-                } else if (
-                    itemType === itemEnum.graft &&
-                    (!("grafts" in options) || options.grafts)
-                ) {
-                    blockRet.push([
-                        "graft",
-                        this.succinctGraftName(docSet, itemSubtype),
-                        this.succinctGraftSeqId(docSet, succinctContent, pos)
-                    ]);
-                }
-                pos += itemLength;
-            }
-            ret.push({
-                bs: blockScopeLabel,
-                bg: blockGrafts,
-                c: blockRet
-            });
+            ret.push(this.unsuccinctifyBlock(block, docSet, options));
         }
         return ret;
+    }
+
+    unsuccinctifyBlock(block, docSet, options) {
+        const succinctBlockScope = block.bs;
+        const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
+        const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
+        const succinctBlockGrafts = block.bg;
+        let pos = 0;
+        const blockGrafts = [];
+        while (pos < succinctBlockGrafts.length) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockGrafts, pos);
+            blockGrafts.push([
+                "graft",
+                this.succinctGraftName(docSet, itemSubtype),
+                this.succinctGraftSeqId(docSet, succinctBlockGrafts, pos)
+            ]);
+            pos += itemLength;
+        }
+        const succinctContent = block.c;
+        const blockRet = [];
+        pos = 0;
+        while (pos < succinctContent.length) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
+            if (itemType === itemEnum.token) {
+                blockRet.push([
+                    "token",
+                    tokenEnumLabels[itemSubtype],
+                    this.succinctTokenChars(docSet, succinctContent, itemSubtype, pos)
+                ]);
+            } else if (
+                [itemEnum.startScope, itemEnum.endScope].includes(itemType) &&
+                (!("scopes" in options) || options.scopes)
+            ) {
+                blockRet.push([
+                    (itemType === itemEnum.startScope) ? "startScope" : "endScope",
+                    this.succinctScopeLabel(docSet, succinctContent, itemSubtype, pos)
+                ]);
+            } else if (
+                itemType === itemEnum.graft &&
+                (!("grafts" in options) || options.grafts)
+            ) {
+                blockRet.push([
+                    "graft",
+                    this.succinctGraftName(docSet, itemSubtype),
+                    this.succinctGraftSeqId(docSet, succinctContent, pos)
+                ]);
+            }
+            pos += itemLength;
+        }
+        return {
+            bs: blockScopeLabel,
+            bg: blockGrafts,
+            c: blockRet
+        };
     }
 
     headerBytes(succinct, pos) {
