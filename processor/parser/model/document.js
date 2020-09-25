@@ -26,6 +26,10 @@ class Document {
         }
     }
 
+    mainSequence() {
+        return this.sequences[this.mainId];
+    }
+
     processUsfm(usfmString, filterOptions) {
         const lexed = lexifyUsfm(usfmString);
         this.processLexed(lexed, filterOptions);
@@ -87,6 +91,7 @@ class Document {
         this.mainId = parser.sequences.main.id;
         for (const seq of parser.allSequences()) {
             this.sequences[seq.id] = {
+                id: seq.id,
                 type: seq.type,
                 isBaseType: (seq.type in parser.baseSequenceTypes),
                 blocks: seq.succinctifyBlocks(docSet)
