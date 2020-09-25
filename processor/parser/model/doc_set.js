@@ -93,6 +93,12 @@ class DocSet {
         this.enums[category].trim();
     }
 
+    maybeBuildEnumIndexes() {
+        if (Object.keys(this.enumIndexes).length === 0) {
+            this.buildEnumIndexes();
+        }
+    }
+
     buildEnumIndexes() {
         for (const [category, succinct] of Object.entries(this.enums)) {
             this.buildEnumIndex(category, succinct);

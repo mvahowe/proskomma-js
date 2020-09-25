@@ -101,9 +101,6 @@ class Document {
     }
 
     unsuccinctifySequence(seqId, docSet, options) {
-        if (Object.keys(docSet.enumIndexes).length === 0) {
-            docSet.buildEnumIndexes();
-        }
         const sequence = this.sequences[seqId];
         const ret = [];
         for (const block of sequence.blocks) {
@@ -113,6 +110,7 @@ class Document {
     }
 
     unsuccinctifyBlock(block, docSet, options) {
+        docSet.maybeBuildEnumIndexes();
         const succinctBlockScope = block.bs;
         const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
         const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
