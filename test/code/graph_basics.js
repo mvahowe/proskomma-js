@@ -8,7 +8,7 @@ const {ProsKomma} = require('../../');
 const testGroup = "Graph Basics";
 
 test(
-    `System (${testGroup})`,
+    `Root (${testGroup})`,
     async function (t) {
         t.plan(7);
         const query = '{ packageVersion nDocSets nDocuments }';
@@ -83,7 +83,7 @@ test(
     `DocSet Documents (${testGroup})`,
     async function (t) {
         t.plan(1);
-        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id documents { id mainSequence { id type nBlocks blocks { osByteLength }} docSetId } } }`;
+        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id documents { id mainSequence { id type nBlocks blocks { cByteLength }} docSetId } } }`;
         const result = await pk.gqlQuery(query);
         console.log(JSON.stringify(result, null, 2));
         t.ok(result);

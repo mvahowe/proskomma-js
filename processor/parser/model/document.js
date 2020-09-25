@@ -100,16 +100,17 @@ class Document {
         docSet.preEnums = {};
     }
 
-    unsuccinctifySequence(seqId, docSet, options) {
+    unsuccinctifySequence(seqId, options) {
         const sequence = this.sequences[seqId];
         const ret = [];
         for (const block of sequence.blocks) {
-            ret.push(this.unsuccinctifyBlock(block, docSet, options));
+            ret.push(this.unsuccinctifyBlock(block, options));
         }
         return ret;
     }
 
-    unsuccinctifyBlock(block, docSet, options) {
+    unsuccinctifyBlock(block, options) {
+        const docSet = this.processor.docSets[this.docSetId];
         docSet.maybeBuildEnumIndexes();
         const succinctBlockScope = block.bs;
         const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
