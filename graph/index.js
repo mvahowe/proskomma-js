@@ -1,6 +1,6 @@
 const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
-const {docSetType} = require('./types');
+const {docSetType, documentType} = require('./types');
 
 const gqlSchema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -10,7 +10,20 @@ const gqlSchema = new GraphQLSchema({
                 packageVersion: {type: GraphQLString},
                 nDocSets: {type: GraphQLInt},
                 docSetList: {type: GraphQLList(docSetType)},
-                nDocuments: {type: GraphQLInt}
+                docSetById: {
+                  type: docSetType,
+                  args: {
+                      id: {type: GraphQLString}
+                  }
+                },
+                nDocuments: {type: GraphQLInt},
+                documentList: {type: GraphQLList(documentType)},
+                documentById: {
+                    type: documentType,
+                    args: {
+                        id: {type: GraphQLString}
+                    }
+                }
             }
         }
     )

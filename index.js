@@ -19,6 +19,10 @@ class ProsKomma {
         return Object.values(this.docSets);
     }
 
+    docSetById(args) {
+        return this.docSets[args.id]
+    }
+
     nDocSets() {
         return this.docSetList().length;
     }
@@ -29,6 +33,10 @@ class ProsKomma {
 
     documentList() {
         return Object.values(this.documents);
+    }
+
+    documentById(args) {
+        return this.documents[args.id]
     }
 
     importDocument(lang, abbr, contentType, contentString, filterOptions) {

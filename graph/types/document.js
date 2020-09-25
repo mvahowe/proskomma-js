@@ -1,7 +1,7 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
-const docSetType = new GraphQLObjectType({
-    name: "DocSet",
+const documentType = new GraphQLObjectType({
+    name: "Document",
     fields: () => ({
         id: {type: GraphQLString}
     })
@@ -9,5 +9,4 @@ const docSetType = new GraphQLObjectType({
 
 
 
-module.exports = docSetType;
-
+module.exports = documentType;

@@ -1,3 +1,4 @@
 const docSetType = require('./doc_set');
+const documentType = require('./document');
 
-module.exports = { docSetType }
+module.exports = { docSetType, documentType }

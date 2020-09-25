@@ -25,22 +25,56 @@ test(
     }
 );
 
+const usx = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_psa.usx'));
+const pk = new ProsKomma();
+const pkDoc = pk.importDocument(
+    "eng",
+    "ust",
+    "usx",
+    usx,
+    {}
+);
+
 test(
     `DocSets (${testGroup})`,
     async function (t) {
-            const usx = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_psa.usx'));
-            const pk = new ProsKomma();
-            pk.importDocument(
-                "eng",
-                "ust",
-                "usx",
-                usx,
-                {}
-            );
-            t.plan(1);
-            const query = '{ docSetList { id } }';
-            const result = await pk.gqlQuery(query);
-            console.log(JSON.stringify(result, null, 2));
-            t.ok(result);
+        t.plan(1);
+        const query = '{ docSetList { id } }';
+        const result = await pk.gqlQuery(query);
+        console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+    }
+);
+
+test(
+    `DocSetById (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id } }`;
+        const result = await pk.gqlQuery(query);
+        console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+    }
+);
+
+test(
+    `Documents (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        const query = '{ documentList { id } }';
+        const result = await pk.gqlQuery(query);
+        console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+    }
+);
+
+test(
+    `DocumentById (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        const query = `{ documentById(id: "${pkDoc.id}") { id } }`;
+        const result = await pk.gqlQuery(query);
+        console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
     }
 );
