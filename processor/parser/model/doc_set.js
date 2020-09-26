@@ -1,4 +1,4 @@
-const {generateId} = require("../../generate_id");
+const {generateId} = require("../../../lib/generate_id");
 const ByteArray = require("../../../lib/byte_array");
 
 class DocSet {

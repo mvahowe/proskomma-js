@@ -1,4 +1,4 @@
-const { generateId } = require("../../generate_id");
+const { generateId } = require("../../../lib/generate_id");
 const { lexifyUsfm, lexifyUsx } = require("../../../lexers");
 const { Parser } = require("../index");
 const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
