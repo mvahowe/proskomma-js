@@ -69,7 +69,7 @@ class ProsKomma {
     }
 
     async gqlQuery(query) {
-        return await graphql(gqlSchema, query, this);
+        return await graphql(gqlSchema, query, this, {});
     }
 
 }
