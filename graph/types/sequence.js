@@ -7,8 +7,12 @@ const sequenceType = new GraphQLObjectType({
     fields: () => ({
         id: {type: GraphQLString},
         type: {type: GraphQLString},
-        nBlocks: {type: GraphQLInt, resolve: obj => obj.blocks.length},
-        blocks: {type: GraphQLList(blockType)}
+        nBlocks: {type: GraphQLInt, resolve: root => root.blocks.length},
+        blocks: {
+            type: GraphQLList(blockType),
+            resolve:
+                (root, args, context) => root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {}))
+        }
     })
 })
 

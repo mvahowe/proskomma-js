@@ -3,7 +3,9 @@ const {GraphQLObjectType, GraphQLString} = require('graphql');
 const scopeType = new GraphQLObjectType({
     name: "Scope",
     fields: () => ({
-        label: {type: GraphQLString, resolve: obj => obj[1]}
+        subType: {type: GraphQLString, resolve: root => root[0]},
+        label: {type: GraphQLString, resolve: root => root[1]},
+        dump: {type: GraphQLString, resolve: (root) => `${root[0]} ${root[1]}`}
     })
 })
 

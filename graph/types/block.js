@@ -8,10 +8,10 @@ const blockType = new GraphQLObjectType({
         bsByteLength: {type: GraphQLInt, resolve: root => root.bs.length},
         bgByteLength: {type: GraphQLInt, resolve: root => root.bg.length},
         osByteLength: {type: GraphQLInt, resolve: root => root.os.length},
-        cItems: {type: GraphQLList(itemType)}, // root, args, CONTEXT for docSet
-        bsItems: {type: GraphQLList(itemType)},
-        bgItems: {type: GraphQLList(itemType)},
-        osItems: {type: GraphQLList(itemType)}
+        c: {type: GraphQLList(itemType), resolve: root => root.c},
+        bs: {type: GraphQLList(itemType)},
+        bg: {type: GraphQLList(itemType)},
+        os: {type: GraphQLList(itemType)}
     })
 })
 

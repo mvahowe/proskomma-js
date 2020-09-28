@@ -185,7 +185,8 @@ class DocSet {
         return {
             bs: blockScopeLabel,
             bg: blockGrafts,
-            c: blockRet
+            c: blockRet,
+            os: []
         };
     }
 

@@ -83,7 +83,25 @@ test(
     `DocSet Documents (${testGroup})`,
     async function (t) {
         t.plan(1);
-        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id documents { id mainSequence { id type nBlocks } docSetId } } }`;
+        const query = `{ docSetById(id: "${pkDoc.docSetId}")
+           { id documents 
+              { id mainSequence 
+                 { id type nBlocks blocks 
+                    { c 
+                       {
+                          ... on Token
+                             { dump }
+                          ... on Scope
+                             { dump }
+                          ... on Graft
+                             { dump }
+                       }
+                    }
+                 }
+              docSetId
+              }
+           }
+        }`;
         const result = await pk.gqlQuery(query);
         console.log(JSON.stringify(result, null, 2));
         t.ok(result);
