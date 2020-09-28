@@ -1,9 +1,7 @@
 const { generateId } = require("../../../lib/generate_id");
 const { lexifyUsfm, lexifyUsx } = require("../../../lexers");
 const { Parser } = require("../index");
-const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
-const { tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
-const { itemEnum } = require('../resources/item_defs');
+const { nComponentsForScope } = require('../resources/scope_defs');
 
 class Document {
 
@@ -111,98 +109,7 @@ class Document {
 
     unsuccinctifyBlock(block, options) {
         const docSet = this.processor.docSets[this.docSetId];
-        docSet.maybeBuildEnumIndexes();
-        const succinctBlockScope = block.bs;
-        const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
-        const blockScopeLabel = this.succinctScopeLabel(docSet, succinctBlockScope, itemSubtype, 0);
-        const succinctBlockGrafts = block.bg;
-        let pos = 0;
-        const blockGrafts = [];
-        while (pos < succinctBlockGrafts.length) {
-            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockGrafts, pos);
-            blockGrafts.push([
-                "graft",
-                this.succinctGraftName(docSet, itemSubtype),
-                this.succinctGraftSeqId(docSet, succinctBlockGrafts, pos)
-            ]);
-            pos += itemLength;
-        }
-        const succinctContent = block.c;
-        const blockRet = [];
-        pos = 0;
-        while (pos < succinctContent.length) {
-            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
-            if (itemType === itemEnum.token) {
-                blockRet.push([
-                    "token",
-                    tokenEnumLabels[itemSubtype],
-                    this.succinctTokenChars(docSet, succinctContent, itemSubtype, pos)
-                ]);
-            } else if (
-                [itemEnum.startScope, itemEnum.endScope].includes(itemType) &&
-                (!("scopes" in options) || options.scopes)
-            ) {
-                blockRet.push([
-                    (itemType === itemEnum.startScope) ? "startScope" : "endScope",
-                    this.succinctScopeLabel(docSet, succinctContent, itemSubtype, pos)
-                ]);
-            } else if (
-                itemType === itemEnum.graft &&
-                (!("grafts" in options) || options.grafts)
-            ) {
-                blockRet.push([
-                    "graft",
-                    this.succinctGraftName(docSet, itemSubtype),
-                    this.succinctGraftSeqId(docSet, succinctContent, pos)
-                ]);
-            }
-            pos += itemLength;
-        }
-        return {
-            bs: blockScopeLabel,
-            bg: blockGrafts,
-            c: blockRet
-        };
-    }
-
-    headerBytes(succinct, pos) {
-        const headerByte = succinct.byte(pos);
-        const itemType = headerByte >> 6;
-        const itemLength = headerByte & 0x0000003F;
-        const itemSubtype = succinct.byte(pos + 1);
-        return [itemLength, itemType, itemSubtype];
-    }
-
-    succinctTokenChars(docSet, succinct, itemSubtype, pos) {
-        const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
-        const itemIndex = docSet.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
-        return docSet.enums[itemCategory].countedString(itemIndex);
-    }
-
-    succinctScopeLabel(docSet, succinct, itemSubtype, pos) {
-        const scopeType = scopeEnumLabels[itemSubtype];
-        let nScopeBits = nComponentsForScope(scopeType);
-        let offset = 2;
-        let scopeBits = "";
-        while (nScopeBits > 1) {
-            const itemIndexIndex = succinct.nByte(pos + offset);
-            const itemIndex = docSet.enumIndexes.scopeBits[itemIndexIndex];
-            const scopeBitString = docSet.enums.scopeBits.countedString(itemIndex);
-            scopeBits += `/${scopeBitString}`;
-            offset += succinct.nByteLength(itemIndexIndex);
-            nScopeBits--;
-        }
-        return `${scopeType}${scopeBits}`;
-    }
-
-    succinctGraftName(docSet, itemSubtype) {
-        const graftIndex = docSet.enumIndexes.graftTypes[itemSubtype];
-        return docSet.enums.graftTypes.countedString(graftIndex);
-    }
-
-    succinctGraftSeqId(docSet, succinct, pos) {
-        const seqIndex = docSet.enumIndexes.ids[succinct.nByte(pos + 2)];
-        return docSet.enums.ids.countedString(seqIndex);
+        docSet.unsuccinctifyBlock(block, options);
     }
 
     serializeSuccinct() {

@@ -1,5 +1,8 @@
 const {generateId} = require("../../../lib/generate_id");
 const ByteArray = require("../../../lib/byte_array");
+const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
+const { tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
+const { itemEnum } = require('../resources/item_defs');
 
 class DocSet {
 
@@ -129,6 +132,101 @@ class DocSet {
             pos += stringLength + 1;
         }
         return ret;
+    }
+
+    unsuccinctifyBlock(block, options) {
+        this.maybeBuildEnumIndexes();
+        const succinctBlockScope = block.bs;
+        const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
+        const blockScopeLabel = this.succinctScopeLabel(succinctBlockScope, itemSubtype, 0);
+        const succinctBlockGrafts = block.bg;
+        let pos = 0;
+        const blockGrafts = [];
+        while (pos < succinctBlockGrafts.length) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockGrafts, pos);
+            blockGrafts.push([
+                "graft",
+                this.succinctGraftName(itemSubtype),
+                this.succinctGraftSeqId(succinctBlockGrafts, pos)
+            ]);
+            pos += itemLength;
+        }
+        const succinctContent = block.c;
+        const blockRet = [];
+        pos = 0;
+        while (pos < succinctContent.length) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctContent, pos);
+            if (itemType === itemEnum.token) {
+                blockRet.push([
+                    "token",
+                    tokenEnumLabels[itemSubtype],
+                    this.succinctTokenChars(succinctContent, itemSubtype, pos)
+                ]);
+            } else if (
+                [itemEnum.startScope, itemEnum.endScope].includes(itemType) &&
+                (!("scopes" in options) || options.scopes)
+            ) {
+                blockRet.push([
+                    (itemType === itemEnum.startScope) ? "startScope" : "endScope",
+                    this.succinctScopeLabel(succinctContent, itemSubtype, pos)
+                ]);
+            } else if (
+                itemType === itemEnum.graft &&
+                (!("grafts" in options) || options.grafts)
+            ) {
+                blockRet.push([
+                    "graft",
+                    this.succinctGraftName(itemSubtype),
+                    this.succinctGraftSeqId(succinctContent, pos)
+                ]);
+            }
+            pos += itemLength;
+        }
+        return {
+            bs: blockScopeLabel,
+            bg: blockGrafts,
+            c: blockRet
+        };
+    }
+
+    headerBytes(succinct, pos) {
+        const headerByte = succinct.byte(pos);
+        const itemType = headerByte >> 6;
+        const itemLength = headerByte & 0x0000003F;
+        const itemSubtype = succinct.byte(pos + 1);
+        return [itemLength, itemType, itemSubtype];
+    }
+
+    succinctTokenChars(succinct, itemSubtype, pos) {
+        const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
+        const itemIndex = this.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
+        return this.enums[itemCategory].countedString(itemIndex);
+    }
+
+    succinctScopeLabel(succinct, itemSubtype, pos) {
+        const scopeType = scopeEnumLabels[itemSubtype];
+        let nScopeBits = nComponentsForScope(scopeType);
+        let offset = 2;
+        let scopeBits = "";
+        while (nScopeBits > 1) {
+            const itemIndexIndex = succinct.nByte(pos + offset);
+            const itemIndex = this.enumIndexes.scopeBits[itemIndexIndex];
+            const scopeBitString = this.enums.scopeBits.countedString(itemIndex);
+            scopeBits += `/${scopeBitString}`;
+            offset += succinct.nByteLength(itemIndexIndex);
+            nScopeBits--;
+        }
+        return `${scopeType}${scopeBits}`;
+    }
+
+    succinctGraftName(itemSubtype) {
+        const graftIndex = this.enumIndexes.graftTypes[itemSubtype];
+        return this.enums.graftTypes.countedString(graftIndex);
+    }
+
+    succinctGraftSeqId(succinct, pos) {
+        const seqIndex = this.enumIndexes.ids[succinct.nByte(pos + 2)];
+        return this.enums.ids.countedString(seqIndex);
     }
 
     describe() {
