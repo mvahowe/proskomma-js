@@ -1,0 +1,414 @@
+{
+  "headers": [
+    {
+      "properties": {
+        "id": "jUEbzLcAIUqr",
+        "type": "header",
+        "subtype": "id"
+      },
+      "tokens": [
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "OBA"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "EN"
+        },
+        {
+          "properties": {
+            "type": "punctuation"
+          },
+          "chars": "_"
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "ULT"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "unfoldingWord"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Literal"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Text"
+        },
+        {
+          "properties": {
+            "type": "punctuation"
+          },
+          "chars": ","
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "abbreviated"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "by"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Mark"
+        }
+      ]
+    },
+    {
+      "properties": {
+        "id": "qIl31NJ4HUa.",
+        "type": "header",
+        "subtype": "h"
+      },
+      "tokens": [
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Obadiah"
+        }
+      ]
+    },
+    {
+      "properties": {
+        "id": "Z0vt0RUjHa58",
+        "type": "header",
+        "subtype": "toc1"
+      },
+      "tokens": [
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "The"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Book"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "of"
+        },
+        {
+          "properties": {
+            "type": "lineSpace"
+          },
+          "chars": " "
+        },
+        {
+          "properties": {
+            "type": "wordLike"
+          },
+          "chars": "Obadiah"
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "sequences": [
+    {
+      "properties": {
+        "id": "xFADIzbUHIun",
+        "type": "main"
+      },
+      "blocks": [
+        {
+          "properties": {
+            "id": "CrYjcKsWGM5j",
+            "type": "main",
+            "subtype": "p"
+          },
+          "tokens": [
+            {
+              "properties": {
+                "type": "wordLike",
+                "grafts": [
+                  "attribute/w/x-occurrence/G5h7mZVKFZLj",
+                  "attribute/w/x-occurrences/mdfAs9m0F5XW",
+                  "attribute/zaln/start/x-strong/.HY22o.nGPHQ",
+                  "attribute/zaln/start/x-lemma/OvnlzFrEFiut",
+                  "attribute/zaln/start/x-morph/GeEOtiZjFB5Z",
+                  "attribute/zaln/start/x-occurrence/IHXXvPJ8FCD9",
+                  "attribute/zaln/start/x-occurrences/WQy.suHgI2Pc",
+                  "attribute/zaln/start/x-content/1IO.pOARFceo"
+                ],
+                "ranges": {
+                  "start": [
+                    "emptyMilestone/ts",
+                    "milestone/chapter/1",
+                    "milestone/verses/1",
+                    "milestone/verse/1",
+                    "spanWithAtts/w",
+                    "milestone/zaln"
+                  ],
+                  "end": [
+                    "emptyMilestone/ts",
+                    "spanWithAtts/w"
+                  ]
+                }
+              },
+              "chars": "The"
+            },
+            {
+              "properties": {
+                "type": "eol"
+              },
+              "chars": "\n"
+            },
+            {
+              "properties": {
+                "type": "wordLike",
+                "grafts": [
+                  "attribute/w/x-occurrence/7STjIL_wHtTr",
+                  "attribute/w/x-occurrences/8UlpXaYgIh9Q"
+                ],
+                "ranges": {
+                  "start": [
+                    "spanWithAtts/w"
+                  ],
+                  "end": [
+                    "spanWithAtts/w"
+                  ]
+                }
+              },
+              "chars": "vision"
+            },
+            {
+              "properties": {
+                "type": "eol"
+              },
+              "chars": "\n"
+            },
+            {
+              "properties": {
+                "type": "wordLike",
+                "grafts": [
+                  "attribute/w/x-occurrence/GHYpefptIDeM",
+                  "attribute/w/x-occurrences/ETgxwt_PIY5A"
+                ],
+                "ranges": {
+                  "start": [
+                    "spanWithAtts/w"
+                  ],
+                  "end": [
+                    "spanWithAtts/w",
+                    "milestone/zaln"
+                  ]
+                }
+              },
+              "chars": "of"
+            },
+            {
+              "properties": {
+                "type": "eol",
+                "grafts": [
+                  "attribute/zaln/start/x-strong/sGtEvwdVF.92",
+                  "attribute/zaln/start/x-lemma/.ruFsbQTFieT",
+                  "attribute/zaln/start/x-morph/nE6pa7TVImex",
+                  "attribute/zaln/start/x-occurrence/w8OuYb3tFo5B",
+                  "attribute/zaln/start/x-occurrences/TfKCTBv0G2TG",
+                  "attribute/zaln/start/x-content/FzrgD6PxIPDS"
+                ],
+                "ranges": {
+                  "start": [
+                    "milestone/zaln"
+                  ]
+                }
+              },
+              "chars": "\n"
+            },
+            {
+              "properties": {
+                "type": "wordLike",
+                "grafts": [
+                  "attribute/w/x-occurrence/TC5ORq6_Hqqj",
+                  "attribute/w/x-occurrences/wS7SMBWvIGex"
+                ],
+                "ranges": {
+                  "start": [
+                    "spanWithAtts/w"
+                  ],
+                  "end": [
+                    "spanWithAtts/w",
+                    "milestone/zaln"
+                  ]
+                }
+              },
+              "chars": "Obadiah"
+            },
+            {
+              "properties": {
+                "type": "punctuation"
+              },
+              "chars": "."
+            },
+            {
+              "properties": {
+                "type": "punctuation"
+              },
+              "chars": "."
+            },
+            {
+              "properties": {
+                "type": "punctuation",
+                "ranges": {
+                  "end": [
+                    "milestone/chapter/1",
+                    "milestone/verses/1",
+                    "milestone/verse/1"
+                  ]
+                }
+              },
+              "chars": "."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "attributes": {
+    ".HY22o.nGPHQ": [
+      "H2377"
+    ],
+    "OvnlzFrEFiut": [
+      "חָזוֹן"
+    ],
+    "GeEOtiZjFB5Z": [
+      "He",
+      "Ncmsc"
+    ],
+    "IHXXvPJ8FCD9": [
+      "1"
+    ],
+    "WQy.suHgI2Pc": [
+      "1"
+    ],
+    "1IO.pOARFceo": [
+      "חֲז֖וֹן"
+    ],
+    "G5h7mZVKFZLj": [
+      "1"
+    ],
+    "mdfAs9m0F5XW": [
+      "1"
+    ],
+    "7STjIL_wHtTr": [
+      "1"
+    ],
+    "8UlpXaYgIh9Q": [
+      "1"
+    ],
+    "GHYpefptIDeM": [
+      "1"
+    ],
+    "ETgxwt_PIY5A": [
+      "1"
+    ],
+    "sGtEvwdVF.92": [
+      "H5662"
+    ],
+    ".ruFsbQTFieT": [
+      "עֹבַדְיָה"
+    ],
+    "nE6pa7TVImex": [
+      "He",
+      "Np"
+    ],
+    "w8OuYb3tFo5B": [
+      "1"
+    ],
+    "TfKCTBv0G2TG": [
+      "1"
+    ],
+    "FzrgD6PxIPDS": [
+      "עֹֽבַדְיָ֑ה"
+    ],
+    "TC5ORq6_Hqqj": [
+      "1"
+    ],
+    "wS7SMBWvIGex": [
+      "1"
+    ]
+  },
+  "errors": []
+}
