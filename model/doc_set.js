@@ -183,7 +183,7 @@ class DocSet {
             pos += itemLength;
         }
         return {
-            bs: blockScopeLabel,
+            bs: ["startScope", blockScopeLabel],
             bg: blockGrafts,
             c: blockRet,
             os: []
