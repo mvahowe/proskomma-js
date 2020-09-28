@@ -1,6 +1,7 @@
 const { graphql } = require('graphql');
 const packageJson = require('./package.json');
-const { DocSet, Document } = require('./processor');
+const { DocSet } = require('./model/doc_set');
+const { Document } = require('./model/document');
 const { gqlSchema } = require('./graph');
 
 class ProsKomma {

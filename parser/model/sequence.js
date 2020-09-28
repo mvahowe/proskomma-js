@@ -1,11 +1,11 @@
-const { generateId } = require("../../../lib/generate_id");
-const ByteArray = require("../../../lib/byte_array");
+const { generateId } = require("../../lib/generate_id");
+const ByteArray = require("../../lib/byte_array");
 const { Block } = require("./block");
 const { Token, Scope } = require("./items");
-const { scopeEnum } = require('../resources/scope_defs');
-const { tokenEnum, tokenCategory } = require('../resources/token_defs');
-const { itemEnum } = require('../resources/item_defs');
-const { graftLocation } = require('../resources/graft_defs');
+const { scopeEnum } = require('../../resources/scope_defs');
+const { tokenEnum, tokenCategory } = require('../../resources/token_defs');
+const { itemEnum } = require('../../resources/item_defs');
+const { graftLocation } = require('../../resources/graft_defs');
 
 
 const Sequence = class {
