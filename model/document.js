@@ -1,7 +1,7 @@
 const { generateId } = require("../lib/generate_id");
-const { lexifyUsfm, lexifyUsx } = require("../lexers");
+const { lexifyUsfm, lexifyUsx } = require("../parser/lexers");
 const { Parser } = require("../parser");
-const { nComponentsForScope } = require('../resources/scope_defs');
+const { nComponentsForScope } = require('../lib/scope_defs');
 
 class Document {
 

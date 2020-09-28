@@ -1,8 +1,8 @@
 const {generateId} = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
-const { scopeEnumLabels, nComponentsForScope } = require('../resources/scope_defs');
-const { tokenEnumLabels, tokenCategory } = require('../resources/token_defs');
-const { itemEnum } = require('../resources/item_defs');
+const { scopeEnumLabels, nComponentsForScope } = require('../lib/scope_defs');
+const { tokenEnumLabels, tokenCategory } = require('../lib/token_defs');
+const { itemEnum } = require('../lib/item_defs');
 
 class DocSet {
 
