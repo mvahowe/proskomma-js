@@ -1,5 +1,7 @@
 const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString} = require('graphql');
 const itemType = require('./item');
+const scopeType = require('./scope');
+const graftType = require('./graft');
 
 const dumpItem = i => {
     switch (i[0]) {
@@ -15,13 +17,38 @@ const dumpItem = i => {
 }
 
 const dumpBlock = b => {
-    ret = ["Block:"];
+    const ret = ["Block:"];
     if (b.bg.length > 0) {
         b.bg.forEach(bbg => ret.push(`   ${bbg[1]} graft to ${bbg[2]}`));
     }
     ret.push(`   Scope ${b.bs[1]}`);
     ret.push(`   ${b.c.map(bci => dumpItem(bci)).join("")}`);
     return ret.join("\n");
+}
+
+const scope2class = c => c.replace("/", "-").toLowerCase();
+
+const html4Item = i => {
+    if (i[0] === "token") {
+        return i[2];
+    } else if (i[0].startsWith("start") && i[1].startsWith("chapter/")) {
+        const chNo = i[1].split("/")[1];
+        return `<span class="chapter">${chNo}</span>`;
+    } else if (i[0].startsWith("start") && i[1].startsWith("verses/")) {
+        const vNo = i[1].split("/")[1];
+        if (vNo !== "1") {
+            return `<span class="verses">${vNo}</span>`;
+        }
+    }
+}
+
+const html4Block = b => {
+    const ret = [];
+    b.bg.forEach(bgi => ret.push(`<h3>Graft ${bgi[1]} ${bgi[2]}</h3>\n`));
+    ret.push(`<div class="${scope2class(b.bs[1])}">`);
+    b.c.filter(ci => ci[0] !== 'graft').forEach(i => ret.push(html4Item(i)));
+    ret.push("</div>\n")
+    return ret.join('');
 }
 
 const blockType = new GraphQLObjectType({
@@ -31,10 +58,11 @@ const blockType = new GraphQLObjectType({
         bgByteLength: {type: GraphQLInt, resolve: root => root.bg.length},
         osByteLength: {type: GraphQLInt, resolve: root => root.os.length},
         c: {type: GraphQLList(itemType), resolve: root => root.c},
-        bs: { type: itemType},
-        bg: {type: GraphQLList(itemType), resolve: root => root.bg},
+        bs: { type: scopeType},
+        bg: {type: GraphQLList(graftType), resolve: root => root.bg},
         os: {type: GraphQLList(itemType), resolve: root => root.os},
-        dump: {type: GraphQLString, resolve: root => dumpBlock(root)}
+        dump: {type: GraphQLString, resolve: root => dumpBlock(root)},
+        html: {type: GraphQLString, resolve: root => html4Block(root)}
     })
 })
 

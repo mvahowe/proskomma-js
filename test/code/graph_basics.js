@@ -2,7 +2,6 @@ const test = require('tape');
 const fse = require('fs-extra');
 const path = require('path');
 
-const {runQuery} = require('../../graph');
 const {ProsKomma} = require('../../');
 
 const testGroup = "Graph Basics";
@@ -82,33 +81,70 @@ test(
 test(
     `DocSet Documents (${testGroup})`,
     async function (t) {
-        t.plan(1);
-        const query = `{ docSetById(id: "${pkDoc.docSetId}")
-           { id documents 
+        t.plan(2);
+        let query = `{ docSetById(id: "${pkDoc.docSetId}")
+           { documents 
               { id mainSequence 
-                 { id type nBlocks blocks 
+                 { blocks 
                     {
                        dump
                     }
                  }
-              docSetId
               }
            }
         }`;
-        const result = await pk.gqlQuery(query);
-        console.log(JSON.stringify(result, null, 2));
+        let result = await pk.gqlQuery(query);
+        // console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+        query = `{ docSetById(id: "${pkDoc.docSetId}")
+           { documents 
+              { id mainSequence 
+                 { blocks 
+                    {
+                       bg { type sequenceId }
+                       bs { subType label }
+                       c
+                       {
+                          ... on Token
+                             { subType chars }
+                          ... on Scope
+                             { subType label }
+                          ... on Graft
+                             { type sequenceId }
+                       }
+                    }
+                 }
+              }
+           }
+        }`;
+        result = await pk.gqlQuery(query);
+        // console.log(JSON.stringify(result, null, 2));
         t.ok(result);
     }
 );
 
-/*
-c
-                       {
-                          ... on Token
-                             { dump }
-                          ... on Scope
-                             { dump }
-                          ... on Graft
-                             { dump }
-                       }
-* */
+test(
+    `HTML (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        let query = `{ docSetById(id: "${pkDoc.docSetId}")
+           { documents 
+              { mainSequence 
+                 { htmlHead
+                   blocks {
+                      html
+                   }
+                   htmlFoot
+                 }
+              }
+           }
+        }`;
+        let result = await pk.gqlQuery(query);
+        // console.log(JSON.stringify(result, null, 2));
+        let sequence = result.data.docSetById.documents[0].mainSequence;
+        // console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+        let html = `${sequence.htmlHead}${sequence.blocks.map(b => b.html).join('')}${sequence.htmlFoot}`;
+        console.log(html);
+    }
+);
