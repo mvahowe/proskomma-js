@@ -87,15 +87,8 @@ test(
            { id documents 
               { id mainSequence 
                  { id type nBlocks blocks 
-                    { c 
-                       {
-                          ... on Token
-                             { dump }
-                          ... on Scope
-                             { dump }
-                          ... on Graft
-                             { dump }
-                       }
+                    {
+                       dump
                     }
                  }
               docSetId
@@ -108,3 +101,14 @@ test(
     }
 );
 
+/*
+c
+                       {
+                          ... on Token
+                             { dump }
+                          ... on Scope
+                             { dump }
+                          ... on Graft
+                             { dump }
+                       }
+* */
