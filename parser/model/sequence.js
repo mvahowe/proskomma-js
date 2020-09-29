@@ -136,6 +136,7 @@ const Sequence = class {
     succinctifyBlocks(docSet) {
         const ret = [];
         let openScopes = [];
+
         const updateOpenScopes = item => {
             if (item.itemType === "startScope") {
                 const existingScopes = openScopes.filter(s => s.label === item.label);
@@ -146,16 +147,19 @@ const Sequence = class {
                 openScopes = openScopes.filter(s => s.label !== item.label);
             }
         }
+
         for (const block of this.blocks) {
             const contentBA = new ByteArray(block.length);
             const blockGraftsBA = new ByteArray(1);
             const openScopesBA = new ByteArray(1);
+            const includedScopesBA = new ByteArray(1);
             for (const bg of block.blockGrafts) {
                 this.pushSuccinctGraft(blockGraftsBA, docSet, bg);
             }
             for (const os of openScopes) {
                 this.pushSuccinctScope(openScopesBA, docSet, os);
             }
+            const includedScopes = [];
             for (const item of block.items) {
                 switch (item.itemType) {
                     case "wordLike":
@@ -175,6 +179,9 @@ const Sequence = class {
                     case "endScope":
                         this.pushSuccinctScope(contentBA, docSet, item);
                         updateOpenScopes(item);
+                        if (item.itemType === "startScope") {
+                            includedScopes.push(item);
+                        }
                         break;
                     default:
                         throw new Error(`Item type ${item.itemType} is not handled in succinctifyBlocks`);
@@ -182,15 +189,20 @@ const Sequence = class {
             }
             const blockScopeBA = new ByteArray(10);
             this.pushSuccinctScope(blockScopeBA, docSet, block.blockScope);
+            for (const is of includedScopes) {
+                this.pushSuccinctScope(includedScopesBA, docSet, is);
+            }
             contentBA.trim();
             blockGraftsBA.trim();
             blockScopeBA.trim();
             openScopesBA.trim();
+            includedScopesBA.trim();
             ret.push({
                 c: contentBA,
                 bs: blockScopeBA,
                 bg: blockGraftsBA,
-                os: openScopesBA
+                os: openScopesBA,
+                is: includedScopesBA
             });
         }
         return ret;

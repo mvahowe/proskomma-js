@@ -102,8 +102,10 @@ test(
                  { blocks 
                     {
                        bg { type sequenceId }
-                       bs { subType label }
+                       bs { label }
                        os { label }
+                       is { label }
+                       scopeLabels
                        c
                        {
                           ... on Token
