@@ -151,6 +151,17 @@ class DocSet {
             ]);
             pos += itemLength;
         }
+        const openScopes = [];
+        const succinctOpenScopes = block.os;
+        pos = 0;
+        while (pos < succinctOpenScopes.length) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctOpenScopes, pos);
+            openScopes.push([
+                "startScope",
+                this.succinctScopeLabel(succinctOpenScopes, itemSubtype, pos)
+            ]);
+            pos += itemLength;
+        }
         const succinctContent = block.c;
         const blockRet = [];
         pos = 0;
@@ -186,7 +197,7 @@ class DocSet {
             bs: ["startScope", blockScopeLabel],
             bg: blockGrafts,
             c: blockRet,
-            os: []
+            os: openScopes
         };
     }
 

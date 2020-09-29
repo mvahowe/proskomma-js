@@ -13,9 +13,9 @@ const htmlHead = (s => {
     return `<html>\n<head>\n<title>Sequence ${s.id}</title>\n<style>${htmlStyles}</style></head>\n<body>\n<h1>Sequence ${s.id}</h1>`;
 })
 
-const htmlFoot = (s => {
+const htmlFoot = s => {
     return "</body>\n</html>\n";
-})
+}
 
 const sequenceType = new GraphQLObjectType({
     name: "Sequence",

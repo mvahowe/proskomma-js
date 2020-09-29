@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLList} = require('graphql');
 
 const sequenceType = require('./sequence');
 

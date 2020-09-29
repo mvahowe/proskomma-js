@@ -103,6 +103,7 @@ test(
                     {
                        bg { type sequenceId }
                        bs { subType label }
+                       os { label }
                        c
                        {
                           ... on Token
@@ -118,7 +119,7 @@ test(
            }
         }`;
         result = await pk.gqlQuery(query);
-        // console.log(JSON.stringify(result, null, 2));
+        console.log(JSON.stringify(result, null, 2));
         t.ok(result);
     }
 );
@@ -145,6 +146,6 @@ test(
         // console.log(JSON.stringify(result, null, 2));
         t.ok(result);
         let html = `${sequence.htmlHead}${sequence.blocks.map(b => b.html).join('')}${sequence.htmlFoot}`;
-        console.log(html);
+        // console.log(html);
     }
 );

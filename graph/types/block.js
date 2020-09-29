@@ -60,7 +60,7 @@ const blockType = new GraphQLObjectType({
         c: {type: GraphQLList(itemType), resolve: root => root.c},
         bs: { type: scopeType},
         bg: {type: GraphQLList(graftType), resolve: root => root.bg},
-        os: {type: GraphQLList(itemType), resolve: root => root.os},
+        os: {type: GraphQLList(scopeType), resolve: root => root.os},
         dump: {type: GraphQLString, resolve: root => dumpBlock(root)},
         html: {type: GraphQLString, resolve: root => html4Block(root)}
     })
