@@ -51,6 +51,10 @@ const html4Block = b => {
     return ret.join('');
 }
 
+const blockText = b => {
+    return b.c.filter(i => i[0] === 'token').map(t => t[2]).join('');
+}
+
 const scopeLabels = r => {
     return [...new Set([...r.os, ...r.is].map(ri => ri[1]))];
 }
@@ -68,6 +72,7 @@ const blockType = new GraphQLObjectType({
         os: {type: GraphQLList(scopeType), resolve: root => root.os},
         is: {type: GraphQLList(scopeType), resolve: root => root.is},
         dump: {type: GraphQLString, resolve: root => dumpBlock(root)},
+        text: {type: GraphQLString, resolve: root => blockText(root)},
         html: {type: GraphQLString, resolve: root => html4Block(root)},
         scopeLabels: {type: GraphQLList(GraphQLString), resolve: root=> scopeLabels(root)}
     })

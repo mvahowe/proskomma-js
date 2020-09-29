@@ -1,10 +1,11 @@
 const test = require('tape');
-const fse = require('fs-extra');
-const path = require('path');
 
 const {ProsKomma} = require('../../');
+const { pkWithDoc } = require('../lib/load');
 
 const testGroup = "Graph Basics";
+
+const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_psa.usx","eng", "ust");
 
 test(
     `Root (${testGroup})`,
@@ -22,16 +23,6 @@ test(
         t.ok("nDocuments" in result.data);
         t.equal(result.data.nDocuments, 0);
     }
-);
-
-const usx = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_psa.usx'));
-const pk = new ProsKomma();
-const pkDoc = pk.importDocument(
-    "eng",
-    "ust",
-    "usx",
-    usx,
-    {}
 );
 
 test(

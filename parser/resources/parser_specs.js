@@ -224,7 +224,7 @@ const specs = [
                             label: pt => labelForScope("verse", [n]),
                             endedBy: ["verses", "chapter"]
                         };
-                        parser.openNewScope(pt, verseScope);
+                        parser.openNewScope(pt, verseScope, true, parser.sequences.main);
                     }
                 );
             }
