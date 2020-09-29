@@ -17,6 +17,16 @@ const htmlFoot = s => {
     return "</body>\n</html>\n";
 }
 
+const scopesInBlock = (block, scopes) => {
+    const allBlockScopes = [...new Set([...block.os.map(s => s[1]), ...block.is.map(s => s[1])])];
+    for (const scope of scopes) {
+        if (!allBlockScopes.includes(scope)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 const sequenceType = new GraphQLObjectType({
     name: "Sequence",
     fields: () => ({
@@ -28,7 +38,16 @@ const sequenceType = new GraphQLObjectType({
         blocks: {
             type: GraphQLList(blockType),
             resolve:
-                (root, args, context) => root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {}))
+                (root, args, context) =>
+                    root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {}))
+        },
+        blocksForScopes: {
+            type: GraphQLList(blockType),
+            args: {
+                scopes: {type: GraphQLList(GraphQLString)}
+            },
+            resolve: (root, args, context) =>
+                root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {})).filter(b => scopesInBlock(b, args.scopes))
         }
     })
 })

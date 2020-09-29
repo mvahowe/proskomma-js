@@ -121,7 +121,7 @@ test(
            }
         }`;
         result = await pk.gqlQuery(query);
-        console.log(JSON.stringify(result, null, 2));
+        // console.log(JSON.stringify(result, null, 2));
         t.ok(result);
     }
 );
@@ -149,5 +149,31 @@ test(
         t.ok(result);
         let html = `${sequence.htmlHead}${sequence.blocks.map(b => b.html).join('')}${sequence.htmlFoot}`;
         // console.log(html);
+    }
+);
+
+test(
+    `Blocks for Scopes (${testGroup})`,
+    async function (t) {
+        t.plan(1);
+        let query = `{ docSetById(id: "${pkDoc.docSetId}")
+           { documents 
+              { mainSequence
+                 { htmlHead
+                   blocksForScopes(scopes:["chapter/23", "verse/4"]) {
+                   html
+                  }
+                  htmlFoot
+                 }
+              }
+           }
+        }`;
+        let result = await pk.gqlQuery(query);
+        // console.log(JSON.stringify(result, null, 2));
+        let sequence = result.data.docSetById.documents[0].mainSequence;
+        // console.log(JSON.stringify(result, null, 2));
+        t.ok(result);
+        let html = `${sequence.htmlHead}${sequence.blocksForScopes.map(b => b.html).join('')}${sequence.htmlFoot}`;
+        console.log(html);
     }
 );
