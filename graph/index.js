@@ -17,7 +17,10 @@ const gqlSchema = new GraphQLSchema({
                   }
                 },
                 nDocuments: {type: GraphQLInt},
-                documentList: {type: GraphQLList(documentType)},
+                documents: {
+                    type: GraphQLList(documentType),
+                    resolve: root => root.documentList()
+                },
                 documentById: {
                     type: documentType,
                     args: {

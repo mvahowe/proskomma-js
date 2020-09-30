@@ -16,10 +16,10 @@ test(
             ["toc3", "Mk"]
         ];
         t.plan(2 + (2 * expectedHeaders.length));
-        const query = '{ documentList { headers { key value } } }';
+        const query = '{ documents { headers { key value } } }';
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
-        const queryHeaders = result.data.documentList[0].headers;
+        const queryHeaders = result.data.documents[0].headers;
         t.equal(queryHeaders.length, expectedHeaders.length);
         for (const [expectedKey, expectedValue] of expectedHeaders) {
             const queryTuple = queryHeaders.filter(kv => kv.key === expectedKey);
@@ -34,10 +34,10 @@ test(
     async function (t) {
         t.plan(6);
         const query =
-            '{ documentList { sequences { type blocks { bs { label } text } } } }';
+            '{ documents { sequences { type blocks { bs { label } text } } } }';
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
-        const sequences = result.data.documentList[0].sequences;
+        const sequences = result.data.documents[0].sequences;
         t.equal(sequences.length, 1);
         t.equal(sequences[0].type, "main");
         t.equal(sequences[0].blocks.length, 1);
@@ -52,10 +52,10 @@ test(
     async function (t) {
         t.plan(6);
         const query =
-            '{ documentList { sequences { type blocks { os { label } is { label } } } } }';
+            '{ documents { sequences { type blocks { os { label } is { label } } } } }';
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
-        const block = result.data.documentList[0].sequences[0].blocks[0];
+        const block = result.data.documents[0].sequences[0].blocks[0];
         t.equal(block.os.length, 0);
         t.equal(block.is.length, 3);
         t.equal(block.is[0].label, "chapter/1");
