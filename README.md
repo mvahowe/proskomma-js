@@ -1,5 +1,5 @@
 # proskomma-js
-A Javascript Implementation of the **Proskomma** document model.
+A Javascript Implementation of the Proskomma document model.
 
 # Running the code (provisionally)
 There are two scripts in scripts/ which process a USFM or USX file respectively.
