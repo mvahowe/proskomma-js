@@ -24,7 +24,14 @@ const documentType = new GraphQLObjectType({
             },
             resolve: (root, args) => root.headers[args.id]
         },
-        mainSequence: {type: sequenceType},
+        mainSequence: {
+            type: sequenceType,
+            resolve: (root, args, context, info) => {
+                context.docSet = root.processor.docSets[root.docSetId];
+                return root.sequences[root.mainId];
+            }
+
+        },
         sequences: {
             type: GraphQLList(sequenceType),
             resolve: (root, args, context, info) => {
