@@ -63,5 +63,4 @@ const mainTextAfterCpVp = (tokenized) => {
     return allPassed;
 }
 
-
 module.exports = {cpAsBlock, vpAsBlock, mainTextAfterCpVp};
