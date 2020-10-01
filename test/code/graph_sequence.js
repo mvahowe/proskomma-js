@@ -2,59 +2,53 @@ const test = require('tape');
 
 const {pkWithDoc} = require('../lib/load');
 
-const testGroup = "Graph Document";
+const testGroup = "Graph Sequence";
 
-const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust");
+const [pk, pkDoc] = pkWithDoc("../test_data/usfm/hello.usfm", "eng", "ust");
 
 test(
-    `DocSetId (${testGroup})`,
+    `Scalars (${testGroup})`,
     async function (t) {
-        t.plan(3);
-        const query = '{ documents { docSetId } }';
+        t.plan(7);
+        const query = '{ documents { mainSequence { id type nBlocks htmlHead htmlFoot } } }';
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
-        t.ok("documents" in result.data);
-        t.ok("docSetId" in result.data.documents[0]);
+        t.ok("mainSequence" in result.data.documents[0]);
+        t.ok("id" in result.data.documents[0].mainSequence);
+        t.equal(result.data.documents[0].mainSequence.type, "main");
+        t.equal(result.data.documents[0].mainSequence.nBlocks, 1);
+        t.ok(result.data.documents[0].mainSequence.htmlHead.startsWith("<html"));
+        t.ok(result.data.documents[0].mainSequence.htmlFoot.endsWith("/html>\n"));
     }
 );
 
 test(
-    `Headers (${testGroup})`,
+    `Blocks (${testGroup})`,
     async function (t) {
-            t.plan(6);
-            const query = '{ documents { headers { key value }  toc1: header(id:"toc1") } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            t.ok("documents" in result.data);
-            t.ok("headers" in result.data.documents[0]);
-            t.equal(result.data.documents[0].headers.length, 6);
-            t.equal(result.data.documents[0].headers.filter(h => h.key === "toc1")[0].value, "The Book of Ruth");
-            t.equal(result.data.documents[0].toc1, "The Book of Ruth");
+        t.plan(4);
+        const query = '{ documents { mainSequence { blocks { text } } } }';
+        const result = await pk.gqlQuery(query);
+        t.ok("data" in result);
+        t.ok("blocks" in result.data.documents[0].mainSequence);
+        t.ok("text" in result.data.documents[0].mainSequence.blocks[0]);
+        t.equal(result.data.documents[0].mainSequence.blocks[0].text, "This is how the Good News of JC began...");
     }
 );
 
 test(
-    `mainSequence (${testGroup})`,
+    `BlocksForScopes (${testGroup})`,
     async function (t) {
-            t.plan(4);
-            const query = '{ documents { mainSequence { id } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            t.ok("documents" in result.data);
-            t.ok("mainSequence" in result.data.documents[0]);
-            t.ok("id" in result.data.documents[0].mainSequence);
-    }
-);
-
-test(
-    `Sequences (${testGroup})`,
-    async function (t) {
-            t.plan(4);
-            const query = '{ documents { sequences { id } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            t.ok("documents" in result.data);
-            t.ok("sequences" in result.data.documents[0]);
-            t.ok("id" in result.data.documents[0].sequences[0]);
+        t.plan(7);
+        let query = '{ documents { mainSequence { blocksForScopes(scopes:["chapter/1", "verse/1"]) { text } } } }';
+        let result = await pk.gqlQuery(query);
+        t.ok("data" in result);
+        t.ok("blocksForScopes" in result.data.documents[0].mainSequence);
+        t.equal(result.data.documents[0].mainSequence.blocksForScopes.length, 1);
+        t.equal(result.data.documents[0].mainSequence.blocksForScopes[0].text, "This is how the Good News of JC began...");
+        query = '{ documents { mainSequence { blocksForScopes(scopes:["chapter/1", "verse/2"]) { text } } } }';
+        result = await pk.gqlQuery(query);
+        t.ok("data" in result);
+        t.ok("blocksForScopes" in result.data.documents[0].mainSequence);
+        t.equal(result.data.documents[0].mainSequence.blocksForScopes.length, 0);
     }
 );
