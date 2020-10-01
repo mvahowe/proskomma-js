@@ -9,7 +9,10 @@ const gqlSchema = new GraphQLSchema({
                 processor: {type: GraphQLString},
                 packageVersion: {type: GraphQLString},
                 nDocSets: {type: GraphQLInt},
-                docSetList: {type: GraphQLList(docSetType)},
+                docSets: {
+                    type: GraphQLList(docSetType),
+                    resolve: root => Object.values(root.docSets)
+                },
                 docSetById: {
                   type: docSetType,
                   args: {

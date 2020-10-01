@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <usx version="3.0">
-  <book code="PSA" style="id">World Messianic Bible (WMB)</book>
+  <book code="PSA" style="id">World English Bible British Edition (WEBBE)</book>
   <para style="ide">UTF-8</para>
   <para style="h">Psalms</para>
   <para style="toc1">The Psalms</para>
@@ -11,12 +11,12 @@
   <chapter number="1" style="c" sid="PSA 1" />
   <para style="ms1">BOOK 1</para>
   <para style="q1">
-    <verse number="1" style="v" sid="PSA 1:1"/>Blessed is the man who doesn’t walk in the counsel of the wicked,</para>
+    <verse number="1" style="v" sid="PSA 1:1" />Blessed is the man who doesn’t walk in the counsel of the wicked,</para>
   <para style="q2" vid="PSA 1:1">nor stand on the path of sinners,</para>
   <para style="q2" vid="PSA 1:1">nor sit in the seat of scoffers;<verse eid="PSA 1:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 1:2" />but his delight is in the LORD’s<note caller="+" style="f"><char style="fr" closed="false">1:2 </char><char style="ft" closed="false">When rendered in ALL CAPITAL LETTERS, “LORD” or “GOD” is the translation of God’s Proper Name.</char></note> law.</para>
-  <para style="q2" vid="PSA 1:2">On his Torah he meditates day and night.<verse eid="PSA 1:2" /></para>
+  <para style="q2" vid="PSA 1:2">On his law he meditates day and night.<verse eid="PSA 1:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 1:3" />He will be like a tree planted by the streams of water,</para>
   <para style="q2" vid="PSA 1:3">that produces its fruit in its season,</para>
@@ -26,7 +26,7 @@
     <verse number="4" style="v" sid="PSA 1:4" />The wicked are not so,</para>
   <para style="q2" vid="PSA 1:4">but are like the chaff which the wind drives away.<verse eid="PSA 1:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 1:5" />Therefore the wicked shall not stand in the judgment,</para>
+    <verse number="5" style="v" sid="PSA 1:5" />Therefore the wicked shall not stand in the judgement,</para>
   <para style="q2" vid="PSA 1:5">nor sinners in the congregation of the righteous.<verse eid="PSA 1:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 1:6" />For the LORD knows the way of the righteous,</para>
@@ -45,7 +45,7 @@
   <para style="q2" vid="PSA 2:3">and cast their cords from us.”<verse eid="PSA 2:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 2:4" />He who sits in the heavens will laugh.</para>
-  <para style="q2" vid="PSA 2:4">The Lord<note caller="+" style="f"><char style="fr" closed="false">2:4 </char><char style="ft" closed="false">The word translated “Lord” (mixed case) is “Adonai.”</char></note> will have them in derision.<verse eid="PSA 2:4" /></para>
+  <para style="q2" vid="PSA 2:4">The Lord<note caller="+" style="f"><char style="fr" closed="false">2:4 </char><char style="ft" closed="false">The word translated “Lord” is “Adonai.”</char></note> will have them in derision.<verse eid="PSA 2:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 2:5" />Then he will speak to them in his anger,</para>
   <para style="q2" vid="PSA 2:5">and terrify them in his wrath:<verse eid="PSA 2:5" /></para>
@@ -108,7 +108,7 @@
   <para style="q2" vid="PSA 4:1">Give me relief from my distress.</para>
   <para style="q2" vid="PSA 4:1">Have mercy on me, and hear my prayer.<verse eid="PSA 4:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 4:2" />You sons of men, how long shall my glory be turned into dishonor?</para>
+    <verse number="2" style="v" sid="PSA 4:2" />You sons of men, how long shall my glory be turned into dishonour?</para>
   <para style="q2" vid="PSA 4:2">Will you love vanity and seek after falsehood? <char style="qs">Selah.</char><verse eid="PSA 4:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 4:3" />But know that the LORD has set apart for himself him who is godly;</para>
@@ -151,7 +151,7 @@
   <para style="q2" vid="PSA 5:6">The LORD abhors the bloodthirsty and deceitful man.<verse eid="PSA 5:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 5:7" />But as for me, in the abundance of your loving kindness I will come into your house.</para>
-  <para style="q2" vid="PSA 5:7">I will bow toward your holy temple in reverence of you.<verse eid="PSA 5:7" /></para>
+  <para style="q2" vid="PSA 5:7">I will bow towards your holy temple in reverence of you.<verse eid="PSA 5:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 5:8" />Lead me, LORD, in your righteousness because of my enemies.</para>
   <para style="q2" vid="PSA 5:8">Make your way straight before my face.<verse eid="PSA 5:8" /></para>
@@ -171,7 +171,7 @@
   <para style="q1" vid="PSA 5:11">Let them also who love your name be joyful in you.<verse eid="PSA 5:11" /></para>
   <para style="q2">
     <verse number="12" style="v" sid="PSA 5:12" />For you will bless the righteous.</para>
-  <para style="q1" vid="PSA 5:12">LORD, you will surround him with favor as with a shield.<verse eid="PSA 5:12" /></para>
+  <para style="q1" vid="PSA 5:12">LORD, you will surround him with favour as with a shield.<verse eid="PSA 5:12" /></para>
   <chapter eid="PSA 5" />
   <chapter number="6" style="c" sid="PSA 6" />
   <para style="d">For the Chief Musician; on stringed instruments, upon the eight-stringed lyre. A Psalm by David.</para>
@@ -228,12 +228,12 @@
   <para style="q1">
     <verse number="6" style="v" sid="PSA 7:6" />Arise, LORD, in your anger.</para>
   <para style="q2" vid="PSA 7:6">Lift up yourself against the rage of my adversaries.</para>
-  <para style="q1" vid="PSA 7:6">Awake for me. You have commanded judgment.<verse eid="PSA 7:6" /></para>
+  <para style="q1" vid="PSA 7:6">Awake for me. You have commanded judgement.<verse eid="PSA 7:6" /></para>
   <para style="q2">
     <verse number="7" style="v" sid="PSA 7:7" />Let the congregation of the peoples surround you.</para>
   <para style="q2" vid="PSA 7:7">Rule over them on high.<verse eid="PSA 7:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 7:8" />The LORD administers judgment to the peoples.</para>
+    <verse number="8" style="v" sid="PSA 7:8" />The LORD administers judgement to the peoples.</para>
   <para style="q2" vid="PSA 7:8">Judge me, LORD, according to my righteousness,</para>
   <para style="q2" vid="PSA 7:8">and to my integrity that is in me.<verse eid="PSA 7:8" /></para>
   <para style="q1">
@@ -282,7 +282,7 @@
   <para style="q2" vid="PSA 8:4">What is the son of man, that you care for him?<verse eid="PSA 8:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 8:5" />For you have made him a little lower than the angels,<note caller="+" style="f"><char style="fr" closed="false">8:5 </char><char style="ft" closed="false">Hebrew: Elohim. The word Elohim, used here, usually means “God”, but can also mean “gods”, “princes”, or “angels”. The Septuagint reads “angels” here. See also the quote from the Septuagint in Hebrews 2:7.</char></note></para>
-  <para style="q2" vid="PSA 8:5">and crowned him with glory and honor.<verse eid="PSA 8:5" /></para>
+  <para style="q2" vid="PSA 8:5">and crowned him with glory and honour.<verse eid="PSA 8:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 8:6" />You make him ruler over the works of your hands.</para>
   <para style="q2" vid="PSA 8:6">You have put all things under his feet:<verse eid="PSA 8:6" /></para>
@@ -300,7 +300,7 @@
   <para style="d">For the Chief Musician. Set to “The Death of the Son.” A Psalm by David.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 9:1" />I will give thanks to the LORD with my whole heart.</para>
-  <para style="q2" vid="PSA 9:1">I will tell of all your marvelous works.<verse eid="PSA 9:1" /></para>
+  <para style="q2" vid="PSA 9:1">I will tell of all your marvellous works.<verse eid="PSA 9:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 9:2" />I will be glad and rejoice in you.</para>
   <para style="q2" vid="PSA 9:2">I will sing praise to your name, O Most High.<verse eid="PSA 9:2" /></para>
@@ -319,10 +319,10 @@
   <para style="q2" vid="PSA 9:6">The very memory of the cities which you have overthrown has perished.<verse eid="PSA 9:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 9:7" />But the LORD reigns forever.</para>
-  <para style="q2" vid="PSA 9:7">He has prepared his throne for judgment.<verse eid="PSA 9:7" /></para>
+  <para style="q2" vid="PSA 9:7">He has prepared his throne for judgement.<verse eid="PSA 9:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 9:8" />He will judge the world in righteousness.</para>
-  <para style="q2" vid="PSA 9:8">He will administer judgment to the peoples in uprightness.<verse eid="PSA 9:8" /></para>
+  <para style="q2" vid="PSA 9:8">He will administer judgement to the peoples in uprightness.<verse eid="PSA 9:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 9:9" />The LORD will also be a high tower for the oppressed;</para>
   <para style="q2" vid="PSA 9:9">a high tower in times of trouble.<verse eid="PSA 9:9" /></para>
@@ -331,7 +331,7 @@
   <para style="q2" vid="PSA 9:10">for you, LORD, have not forsaken those who seek you.<verse eid="PSA 9:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 9:11" />Sing praises to the LORD, who dwells in Zion,</para>
-  <para style="q2" vid="PSA 9:11">and declare among the people what he has done.<verse eid="PSA 9:11" /></para>
+  <para style="q2" vid="PSA 9:11">and declare amongst the people what he has done.<verse eid="PSA 9:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 9:12" />For he who avenges blood remembers them.</para>
   <para style="q2" vid="PSA 9:12">He doesn’t forget the cry of the afflicted.<verse eid="PSA 9:12" /></para>
@@ -347,7 +347,7 @@
   <para style="q2" vid="PSA 9:15">In the net which they hid, their own foot is taken.<verse eid="PSA 9:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 9:16" />The LORD has made himself known.</para>
-  <para style="q2" vid="PSA 9:16">He has executed judgment.</para>
+  <para style="q2" vid="PSA 9:16">He has executed judgement.</para>
   <para style="q2" vid="PSA 9:16">The wicked is snared by the work of his own hands. <char style="qs">Meditation. Selah.</char><verse eid="PSA 9:16" /></para>
   <para style="q1">
     <verse number="17" style="v" sid="PSA 9:17" />The wicked shall be turned back to Sheol,<note caller="+" style="f"><char style="fr" closed="false">9:17 </char><char style="ft" closed="false">Sheol is the place of the dead.</char></note></para>
@@ -449,7 +449,7 @@
   <para style="q2" vid="PSA 11:5">but his soul hates the wicked and him who loves violence.<verse eid="PSA 11:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 11:6" />On the wicked he will rain blazing coals;</para>
-  <para style="q2" vid="PSA 11:6">fire, sulfur, and scorching wind shall be the portion of their cup.<verse eid="PSA 11:6" /></para>
+  <para style="q2" vid="PSA 11:6">fire, sulphur, and scorching wind shall be the portion of their cup.<verse eid="PSA 11:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 11:7" />For the LORD is righteous.</para>
   <para style="q2" vid="PSA 11:7">He loves righteousness.</para>
@@ -459,9 +459,9 @@
   <para style="d">For the Chief Musician; upon an eight-stringed lyre. A Psalm of David.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 12:1" />Help, LORD; for the godly man ceases.</para>
-  <para style="q2" vid="PSA 12:1">For the faithful fail from among the children of men.<verse eid="PSA 12:1" /></para>
+  <para style="q2" vid="PSA 12:1">For the faithful fail from amongst the children of men.<verse eid="PSA 12:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 12:2" />Everyone lies to his neighbor.</para>
+    <verse number="2" style="v" sid="PSA 12:2" />Everyone lies to his neighbour.</para>
   <para style="q2" vid="PSA 12:2">They speak with flattering lips, and with a double heart.<verse eid="PSA 12:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 12:3" />May the LORD cut off all flattering lips,</para>
@@ -482,7 +482,7 @@
   <para style="q2" vid="PSA 12:7">You will preserve them from this generation forever.<verse eid="PSA 12:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 12:8" />The wicked walk on every side,</para>
-  <para style="q2" vid="PSA 12:8">when what is vile is exalted among the sons of men.<verse eid="PSA 12:8" /></para>
+  <para style="q2" vid="PSA 12:8">when what is vile is exalted amongst the sons of men.<verse eid="PSA 12:8" /></para>
   <chapter eid="PSA 12" />
   <chapter number="13" style="c" sid="PSA 13" />
   <para style="d">For the Chief Musician. A Psalm by David.</para>
@@ -534,7 +534,7 @@
     <verse number="6" style="v" sid="PSA 14:6" />You frustrate the plan of the poor,</para>
   <para style="q2" vid="PSA 14:6">because the LORD is his refuge.<verse eid="PSA 14:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 14:7" />Oh that the salvation [yeshuat] of Israel would come out of Zion!</para>
+    <verse number="7" style="v" sid="PSA 14:7" />Oh that the salvation of Israel would come out of Zion!</para>
   <para style="q2" vid="PSA 14:7">When the LORD restores the fortunes of his people,</para>
   <para style="q2" vid="PSA 14:7">then Jacob shall rejoice, and Israel shall be glad.<verse eid="PSA 14:7" /></para>
   <chapter eid="PSA 14" />
@@ -552,7 +552,7 @@
   <para style="q2" vid="PSA 15:3">nor casts slurs against his fellow man;<verse eid="PSA 15:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 15:4" />in whose eyes a vile man is despised,</para>
-  <para style="q2" vid="PSA 15:4">but who honors those who fear the LORD;</para>
+  <para style="q2" vid="PSA 15:4">but who honours those who fear the LORD;</para>
   <para style="q2" vid="PSA 15:4">he who keeps an oath even when it hurts, and doesn’t change;<verse eid="PSA 15:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 15:5" />he who doesn’t lend out his money for usury,</para>
@@ -568,7 +568,7 @@
     <verse number="2" style="v" sid="PSA 16:2" />My soul, you have said to the LORD, “You are my Lord.</para>
   <para style="q2" vid="PSA 16:2">Apart from you I have no good thing.”<verse eid="PSA 16:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 16:3" />As for the holy ones who are in the earth,</para>
+    <verse number="3" style="v" sid="PSA 16:3" />As for the saints who are in the earth,</para>
   <para style="q2" vid="PSA 16:3">they are the excellent ones in whom is all my delight.<verse eid="PSA 16:3" /></para>
   <para style="b" />
   <para style="q1">
@@ -623,7 +623,7 @@
   <para style="q2" vid="PSA 17:6">Turn your ear to me.</para>
   <para style="q2" vid="PSA 17:6">Hear my speech.<verse eid="PSA 17:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 17:7" />Show your marvelous loving kindness,</para>
+    <verse number="7" style="v" sid="PSA 17:7" />Show your marvellous loving kindness,</para>
   <para style="q2" vid="PSA 17:7">you who save those who take refuge by your right hand from their enemies.<verse eid="PSA 17:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 17:8" />Keep me as the apple of your eye.</para>
@@ -811,7 +811,7 @@
   <para style="q2" vid="PSA 18:48">Yes, you lift me up above those who rise up against me.</para>
   <para style="q2" vid="PSA 18:48">You deliver me from the violent man.<verse eid="PSA 18:48" /></para>
   <para style="q1">
-    <verse number="49" style="v" sid="PSA 18:49" />Therefore I will give thanks to you, LORD, among the nations,</para>
+    <verse number="49" style="v" sid="PSA 18:49" />Therefore I will give thanks to you, LORD, amongst the nations,</para>
   <para style="q2" vid="PSA 18:49">and will sing praises to your name.<verse eid="PSA 18:49" /></para>
   <para style="q1">
     <verse number="50" style="v" sid="PSA 18:50" />He gives great deliverance to his king,</para>
@@ -880,10 +880,10 @@
   <para style="q2" vid="PSA 20:2">grant you support from Zion,<verse eid="PSA 20:2" /></para>
   <para style="q2">
     <verse number="3" style="v" sid="PSA 20:3" />remember all your offerings,</para>
-  <para style="q2" vid="PSA 20:3">and accept your burned sacrifice. <char style="qs">Selah.</char><verse eid="PSA 20:3" /></para>
+  <para style="q2" vid="PSA 20:3">and accept your burnt sacrifice. <char style="qs">Selah.</char><verse eid="PSA 20:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 20:4" />May he grant you your heart’s desire,</para>
-  <para style="q2" vid="PSA 20:4">and fulfill all your counsel.<verse eid="PSA 20:4" /></para>
+  <para style="q2" vid="PSA 20:4">and fulfil all your counsel.<verse eid="PSA 20:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 20:5" />We will triumph in your salvation.</para>
   <para style="q2" vid="PSA 20:5">In the name of our God, we will set up our banners.</para>
@@ -918,7 +918,7 @@
   <para style="q2" vid="PSA 21:4">even length of days forever and ever.<verse eid="PSA 21:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 21:5" />His glory is great in your salvation.</para>
-  <para style="q2" vid="PSA 21:5">You lay honor and majesty on him.<verse eid="PSA 21:5" /></para>
+  <para style="q2" vid="PSA 21:5">You lay honour and majesty on him.<verse eid="PSA 21:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 21:6" />For you make him most blessed forever.</para>
   <para style="q2" vid="PSA 21:6">You make him glad with joy in your presence.<verse eid="PSA 21:6" /></para>
@@ -934,7 +934,7 @@
   <para style="q2" vid="PSA 21:9">The fire shall devour them.<verse eid="PSA 21:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 21:10" />You will destroy their descendants from the earth,</para>
-  <para style="q2" vid="PSA 21:10">their posterity from among the children of men.<verse eid="PSA 21:10" /></para>
+  <para style="q2" vid="PSA 21:10">their posterity from amongst the children of men.<verse eid="PSA 21:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 21:11" />For they intended evil against you.</para>
   <para style="q2" vid="PSA 21:11">They plotted evil against you which cannot succeed.<verse eid="PSA 21:11" /></para>
@@ -1004,7 +1004,7 @@
     <verse number="17" style="v" sid="PSA 22:17" />I can count all of my bones.</para>
   <para style="q1" vid="PSA 22:17">They look and stare at me.<verse eid="PSA 22:17" /></para>
   <para style="q1">
-    <verse number="18" style="v" sid="PSA 22:18" />They divide my garments among them.</para>
+    <verse number="18" style="v" sid="PSA 22:18" />They divide my garments amongst them.</para>
   <para style="q2" vid="PSA 22:18">They cast lots for my clothing.<verse eid="PSA 22:18" /></para>
   <para style="b" />
   <para style="q1">
@@ -1019,7 +1019,7 @@
   <para style="b" />
   <para style="q1">
     <verse number="22" style="v" sid="PSA 22:22" />I will declare your name to my brothers.</para>
-  <para style="q2" vid="PSA 22:22">Among the assembly, I will praise you.<verse eid="PSA 22:22" /></para>
+  <para style="q2" vid="PSA 22:22">Amongst the assembly, I will praise you.<verse eid="PSA 22:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 22:23" />You who fear the LORD, praise him!</para>
   <para style="q2" vid="PSA 22:23">All you descendants of Jacob, glorify him!</para>
@@ -1115,7 +1115,7 @@
   <para style="q2" vid="PSA 24:9">and the King of glory will come in.<verse eid="PSA 24:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 24:10" />Who is this King of glory?</para>
-  <para style="q2" vid="PSA 24:10">The LORD of Hosts is the King of glory! <char style="qs">Selah.</char><verse eid="PSA 24:10" /></para>
+  <para style="q2" vid="PSA 24:10">The LORD of Armies is the King of glory! <char style="qs">Selah.</char><verse eid="PSA 24:10" /></para>
   <chapter eid="PSA 24" />
   <chapter number="25" style="c" sid="PSA 25" />
   <para style="d">By David.</para>
@@ -1194,7 +1194,7 @@
   <para style="d">By David.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 26:1" />Judge me, LORD, for I have walked in my integrity.</para>
-  <para style="q2" vid="PSA 26:1">I have trusted also in LORD without wavering.<verse eid="PSA 26:1" /></para>
+  <para style="q2" vid="PSA 26:1">I have trusted also in the LORD without wavering.<verse eid="PSA 26:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 26:2" />Examine me, LORD, and prove me.</para>
   <para style="q2" vid="PSA 26:2">Try my heart and my mind.<verse eid="PSA 26:2" /></para>
@@ -1249,7 +1249,7 @@
     <verse number="4" style="v" sid="PSA 27:4" />One thing I have asked of the LORD, that I will seek after:</para>
   <para style="q2" vid="PSA 27:4">that I may dwell in the LORD’s house all the days of my life,</para>
   <para style="q2" vid="PSA 27:4">to see the LORD’s beauty,</para>
-  <para style="q2" vid="PSA 27:4">and to inquire in his temple.<verse eid="PSA 27:4" /></para>
+  <para style="q2" vid="PSA 27:4">and to enquire in his temple.<verse eid="PSA 27:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 27:5" />For in the day of trouble, he will keep me secretly in his pavilion.</para>
   <para style="q2" vid="PSA 27:5">In the secret place of his tabernacle, he will hide me.</para>
@@ -1298,10 +1298,10 @@
   <para style="q2" vid="PSA 28:1">I would become like those who go down into the pit.<verse eid="PSA 28:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 28:2" />Hear the voice of my petitions, when I cry to you,</para>
-  <para style="q2" vid="PSA 28:2">when I lift up my hands toward your Most Holy Place.<verse eid="PSA 28:2" /></para>
+  <para style="q2" vid="PSA 28:2">when I lift up my hands towards your Most Holy Place.<verse eid="PSA 28:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 28:3" />Don’t draw me away with the wicked,</para>
-  <para style="q2" vid="PSA 28:3">with the workers of iniquity who speak peace with their neighbors,</para>
+  <para style="q2" vid="PSA 28:3">with the workers of iniquity who speak peace with their neighbours,</para>
   <para style="q2" vid="PSA 28:3">but mischief is in their hearts.<verse eid="PSA 28:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 28:4" />Give them according to their work, and according to the wickedness of their doings.</para>
@@ -1379,18 +1379,18 @@
     <verse number="3" style="v" sid="PSA 30:3" />LORD, you have brought up my soul from Sheol.<note caller="+" style="f"><char style="fr" closed="false">30:3 </char><char style="ft" closed="false">Sheol is the place of the dead.</char></note></para>
   <para style="q2" vid="PSA 30:3">You have kept me alive, that I should not go down to the pit.<verse eid="PSA 30:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 30:4" />Sing praise to the LORD, you holy ones of his.</para>
+    <verse number="4" style="v" sid="PSA 30:4" />Sing praise to the LORD, you saints of his.</para>
   <para style="q2" vid="PSA 30:4">Give thanks to his holy name.<verse eid="PSA 30:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 30:5" />For his anger is but for a moment.</para>
-  <para style="q2" vid="PSA 30:5">His favor is for a lifetime.</para>
+  <para style="q2" vid="PSA 30:5">His favour is for a lifetime.</para>
   <para style="q1" vid="PSA 30:5">Weeping may stay for the night,</para>
   <para style="q2" vid="PSA 30:5">but joy comes in the morning.<verse eid="PSA 30:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 30:6" />As for me, I said in my prosperity,</para>
   <para style="q2" vid="PSA 30:6">“I shall never be moved.”<verse eid="PSA 30:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 30:7" />You, LORD, when you favored me, made my mountain stand strong;</para>
+    <verse number="7" style="v" sid="PSA 30:7" />You, LORD, when you favoured me, made my mountain stand strong;</para>
   <para style="q2" vid="PSA 30:7">but when you hid your face, I was troubled.<verse eid="PSA 30:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 30:8" />I cried to you, LORD.</para>
@@ -1419,7 +1419,7 @@
     <verse number="2" style="v" sid="PSA 31:2" />Bow down your ear to me.</para>
   <para style="q2" vid="PSA 31:2">Deliver me speedily.</para>
   <para style="q1" vid="PSA 31:2">Be to me a strong rock,</para>
-  <para style="q2" vid="PSA 31:2">a house of defense to save me.<verse eid="PSA 31:2" /></para>
+  <para style="q2" vid="PSA 31:2">a house of defence to save me.<verse eid="PSA 31:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 31:3" />For you are my rock and my fortress,</para>
   <para style="q2" vid="PSA 31:3">therefore for your name’s sake lead me and guide me.<verse eid="PSA 31:3" /></para>
@@ -1448,7 +1448,7 @@
   <para style="q1" vid="PSA 31:10">My strength fails because of my iniquity.</para>
   <para style="q2" vid="PSA 31:10">My bones are wasted away.<verse eid="PSA 31:10" /></para>
   <para style="q1">
-    <verse number="11" style="v" sid="PSA 31:11" />Because of all my adversaries I have become utterly contemptible to my neighbors,</para>
+    <verse number="11" style="v" sid="PSA 31:11" />Because of all my adversaries I have become utterly contemptible to my neighbours,</para>
   <para style="q2" vid="PSA 31:11">a horror to my acquaintances.</para>
   <para style="q2" vid="PSA 31:11">Those who saw me on the street fled from me.<verse eid="PSA 31:11" /></para>
   <para style="q1">
@@ -1484,12 +1484,12 @@
   <para style="q2" vid="PSA 31:20">You will keep them secretly in a dwelling away from the strife of tongues.<verse eid="PSA 31:20" /></para>
   <para style="q1">
     <verse number="21" style="v" sid="PSA 31:21" />Praise be to the LORD,</para>
-  <para style="q2" vid="PSA 31:21">for he has shown me his marvelous loving kindness in a strong city.<verse eid="PSA 31:21" /></para>
+  <para style="q2" vid="PSA 31:21">for he has shown me his marvellous loving kindness in a strong city.<verse eid="PSA 31:21" /></para>
   <para style="q1">
     <verse number="22" style="v" sid="PSA 31:22" />As for me, I said in my haste, “I am cut off from before your eyes.”</para>
   <para style="q2" vid="PSA 31:22">Nevertheless you heard the voice of my petitions when I cried to you.<verse eid="PSA 31:22" /></para>
   <para style="q1">
-    <verse number="23" style="v" sid="PSA 31:23" />Oh love the LORD, all you his holy ones!</para>
+    <verse number="23" style="v" sid="PSA 31:23" />Oh love the LORD, all you his saints!</para>
   <para style="q2" vid="PSA 31:23">The LORD preserves the faithful,</para>
   <para style="q1" vid="PSA 31:23">and fully recompenses him who behaves arrogantly.<verse eid="PSA 31:23" /></para>
   <para style="q1">
@@ -1543,7 +1543,7 @@
   <para style="q2" vid="PSA 33:2">Sing praises to him with the harp of ten strings.<verse eid="PSA 33:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 33:3" />Sing to him a new song.</para>
-  <para style="q2" vid="PSA 33:3">Play skillfully with a shout of joy!<verse eid="PSA 33:3" /></para>
+  <para style="q2" vid="PSA 33:3">Play skilfully with a shout of joy!<verse eid="PSA 33:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 33:4" />For the LORD’s word is right.</para>
   <para style="q2" vid="PSA 33:4">All his work is done in faithfulness.<verse eid="PSA 33:4" /></para>
@@ -1632,7 +1632,7 @@
     <verse number="8" style="v" sid="PSA 34:8" />Oh taste and see that the LORD is good.</para>
   <para style="q2" vid="PSA 34:8">Blessed is the man who takes refuge in him.<verse eid="PSA 34:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 34:9" />Oh fear the LORD, you his holy ones,</para>
+    <verse number="9" style="v" sid="PSA 34:9" />Oh fear the LORD, you his saints,</para>
   <para style="q2" vid="PSA 34:9">for there is no lack with those who fear him.<verse eid="PSA 34:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 34:10" />The young lions do lack, and suffer hunger,</para>
@@ -1651,7 +1651,7 @@
     <verse number="14" style="v" sid="PSA 34:14" />Depart from evil, and do good.</para>
   <para style="q2" vid="PSA 34:14">Seek peace, and pursue it.<verse eid="PSA 34:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 34:15" />The LORD’s eyes are toward the righteous.</para>
+    <verse number="15" style="v" sid="PSA 34:15" />The LORD’s eyes are towards the righteous.</para>
   <para style="q2" vid="PSA 34:15">His ears listen to their cry.<verse eid="PSA 34:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 34:16" />The LORD’s face is against those who do evil,</para>
@@ -1687,7 +1687,7 @@
     <verse number="3" style="v" sid="PSA 35:3" />Brandish the spear and block those who pursue me.</para>
   <para style="q2" vid="PSA 35:3">Tell my soul, “I am your salvation.”<verse eid="PSA 35:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 35:4" />Let those who seek after my soul be disappointed and brought to dishonor.</para>
+    <verse number="4" style="v" sid="PSA 35:4" />Let those who seek after my soul be disappointed and brought to dishonour.</para>
   <para style="q2" vid="PSA 35:4">Let those who plot my ruin be turned back and confounded.<verse eid="PSA 35:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 35:5" />Let them be as chaff before the wind,</para>
@@ -1737,7 +1737,7 @@
   <para style="q2" vid="PSA 35:17">my precious life from the lions.<verse eid="PSA 35:17" /></para>
   <para style="q1">
     <verse number="18" style="v" sid="PSA 35:18" />I will give you thanks in the great assembly.</para>
-  <para style="q2" vid="PSA 35:18">I will praise you among many people.<verse eid="PSA 35:18" /></para>
+  <para style="q2" vid="PSA 35:18">I will praise you amongst many people.<verse eid="PSA 35:18" /></para>
   <para style="q1">
     <verse number="19" style="v" sid="PSA 35:19" />Don’t let those who are my enemies wrongfully rejoice over me;</para>
   <para style="q2" vid="PSA 35:19">neither let those who hate me without a cause wink their eyes.<verse eid="PSA 35:19" /></para>
@@ -1761,10 +1761,10 @@
   <para style="q2" vid="PSA 35:25">Don’t let them say, “We have swallowed him up!”<verse eid="PSA 35:25" /></para>
   <para style="q1">
     <verse number="26" style="v" sid="PSA 35:26" />Let them be disappointed and confounded together who rejoice at my calamity.</para>
-  <para style="q2" vid="PSA 35:26">Let them be clothed with shame and dishonor who magnify themselves against me.<verse eid="PSA 35:26" /></para>
+  <para style="q2" vid="PSA 35:26">Let them be clothed with shame and dishonour who magnify themselves against me.<verse eid="PSA 35:26" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="27" style="v" sid="PSA 35:27" />Let those who favor my righteous cause shout for joy and be glad.</para>
+    <verse number="27" style="v" sid="PSA 35:27" />Let those who favour my righteous cause shout for joy and be glad.</para>
   <para style="q2" vid="PSA 35:27">Yes, let them say continually, “May The LORD be magnified,</para>
   <para style="q2" vid="PSA 35:27">who has pleasure in the prosperity of his servant!”<verse eid="PSA 35:27" /></para>
   <para style="q1">
@@ -1791,7 +1791,7 @@
   <para style="q2" vid="PSA 36:5">Your faithfulness reaches to the skies.<verse eid="PSA 36:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 36:6" />Your righteousness is like the mountains of God.</para>
-  <para style="q2" vid="PSA 36:6">Your judgments are like a great deep.</para>
+  <para style="q2" vid="PSA 36:6">Your judgements are like a great deep.</para>
   <para style="q2" vid="PSA 36:6">LORD, you preserve man and animal.<verse eid="PSA 36:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 36:7" />How precious is your loving kindness, God!</para>
@@ -1903,7 +1903,7 @@
   <para style="q2" vid="PSA 37:27">Live securely forever.<verse eid="PSA 37:27" /></para>
   <para style="q1">
     <verse number="28" style="v" sid="PSA 37:28" />For the LORD loves justice,</para>
-  <para style="q2" vid="PSA 37:28">and doesn’t forsake his holy ones.</para>
+  <para style="q2" vid="PSA 37:28">and doesn’t forsake his saints.</para>
   <para style="q2" vid="PSA 37:28">They are preserved forever,</para>
   <para style="q2" vid="PSA 37:28">but the children of the wicked shall be cut off.<verse eid="PSA 37:28" /></para>
   <para style="q1">
@@ -2006,7 +2006,7 @@
     <verse number="18" style="v" sid="PSA 38:18" />For I will declare my iniquity.</para>
   <para style="q2" vid="PSA 38:18">I will be sorry for my sin.<verse eid="PSA 38:18" /></para>
   <para style="q1">
-    <verse number="19" style="v" sid="PSA 38:19" />But my enemies are vigorous and many.</para>
+    <verse number="19" style="v" sid="PSA 38:19" />But my enemies are vigourous and many.</para>
   <para style="q2" vid="PSA 38:19">Those who hate me without reason are numerous.<verse eid="PSA 38:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 38:20" />They who render evil for good are also adversaries to me,</para>
@@ -2029,7 +2029,7 @@
   <para style="q2" vid="PSA 39:2">My sorrow was stirred.<verse eid="PSA 39:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 39:3" />My heart was hot within me.</para>
-  <para style="q2" vid="PSA 39:3">While I meditated, the fire burned.</para>
+  <para style="q2" vid="PSA 39:3">While I meditated, the fire burnt.</para>
   <para style="q1" vid="PSA 39:3">I spoke with my tongue:<verse eid="PSA 39:3" /></para>
   <para style="q2">
     <verse number="4" style="v" sid="PSA 39:4" />“LORD, show me my end,</para>
@@ -2087,7 +2087,7 @@
   <para style="q2" vid="PSA 40:4">and doesn’t respect the proud, nor such as turn away to lies.<verse eid="PSA 40:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 40:5" />Many, LORD, my God, are the wonderful works which you have done,</para>
-  <para style="q2" vid="PSA 40:5">and your thoughts which are toward us.</para>
+  <para style="q2" vid="PSA 40:5">and your thoughts which are towards us.</para>
   <para style="q1" vid="PSA 40:5">They can’t be declared back to you.</para>
   <para style="q2" vid="PSA 40:5">If I would declare and speak of them, they are more than can be counted.<verse eid="PSA 40:5" /></para>
   <para style="q1">
@@ -2099,7 +2099,7 @@
   <para style="q2" vid="PSA 40:7">It is written about me in the book in the scroll.<verse eid="PSA 40:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 40:8" />I delight to do your will, my God.</para>
-  <para style="q2" vid="PSA 40:8">Yes, your Torah is within my heart.”<verse eid="PSA 40:8" /></para>
+  <para style="q2" vid="PSA 40:8">Yes, your law is within my heart.”<verse eid="PSA 40:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 40:9" />I have proclaimed glad news of righteousness in the great assembly.</para>
   <para style="q2" vid="PSA 40:9">Behold, I will not seal my lips, LORD, you know.<verse eid="PSA 40:9" /></para>
@@ -2120,7 +2120,7 @@
   <para style="q2" vid="PSA 40:13">Hurry to help me, LORD.<verse eid="PSA 40:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 40:14" />Let them be disappointed and confounded together who seek after my soul to destroy it.</para>
-  <para style="q2" vid="PSA 40:14">Let them be turned backward and brought to dishonor who delight in my hurt.<verse eid="PSA 40:14" /></para>
+  <para style="q2" vid="PSA 40:14">Let them be turned backward and brought to dishonour who delight in my hurt.<verse eid="PSA 40:14" /></para>
   <para style="q1">
     <verse number="15" style="v" sid="PSA 40:15" />Let them be desolate by reason of their shame that tell me, “Aha! Aha!”<verse eid="PSA 40:15" /></para>
   <para style="q1">
@@ -2246,7 +2246,7 @@
   <para style="q2" vid="PSA 43:5">Why are you disturbed within me?</para>
   <para style="q1" vid="PSA 43:5">Hope in God!</para>
   <para style="q2" vid="PSA 43:5">For I shall still praise him:</para>
-  <para style="q2" vid="PSA 43:5">my Savior, my helper, and my God.<verse eid="PSA 43:5" /></para>
+  <para style="q2" vid="PSA 43:5">my Saviour, my helper, and my God.<verse eid="PSA 43:5" /></para>
   <chapter eid="PSA 43" />
   <chapter number="44" style="c" sid="PSA 44" />
   <para style="d">For the Chief Musician. By the sons of Korah. A contemplative psalm.</para>
@@ -2263,7 +2263,7 @@
     <verse number="3" style="v" sid="PSA 44:3" />For they didn’t get the land in possession by their own sword,</para>
   <para style="q2" vid="PSA 44:3">neither did their own arm save them;</para>
   <para style="q1" vid="PSA 44:3">but your right hand, your arm, and the light of your face,</para>
-  <para style="q2" vid="PSA 44:3">because you were favorable to them.<verse eid="PSA 44:3" /></para>
+  <para style="q2" vid="PSA 44:3">because you were favourable to them.<verse eid="PSA 44:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 44:4" />God, you are my King.</para>
   <para style="q2" vid="PSA 44:4">Command victories for Jacob!<verse eid="PSA 44:4" /></para>
@@ -2281,25 +2281,25 @@
   <para style="q2" vid="PSA 44:8">We will give thanks to your name forever. <char style="qs">Selah.</char><verse eid="PSA 44:8" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 44:9" />But now you rejected us, and brought us to dishonor,</para>
+    <verse number="9" style="v" sid="PSA 44:9" />But now you rejected us, and brought us to dishonour,</para>
   <para style="q2" vid="PSA 44:9">and don’t go out with our armies.<verse eid="PSA 44:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 44:10" />You make us turn back from the adversary.</para>
   <para style="q2" vid="PSA 44:10">Those who hate us take plunder for themselves.<verse eid="PSA 44:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 44:11" />You have made us like sheep for food,</para>
-  <para style="q2" vid="PSA 44:11">and have scattered us among the nations.<verse eid="PSA 44:11" /></para>
+  <para style="q2" vid="PSA 44:11">and have scattered us amongst the nations.<verse eid="PSA 44:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 44:12" />You sell your people for nothing,</para>
   <para style="q2" vid="PSA 44:12">and have gained nothing from their sale.<verse eid="PSA 44:12" /></para>
   <para style="q1">
-    <verse number="13" style="v" sid="PSA 44:13" />You make us a reproach to our neighbors,</para>
+    <verse number="13" style="v" sid="PSA 44:13" />You make us a reproach to our neighbours,</para>
   <para style="q2" vid="PSA 44:13">a scoffing and a derision to those who are around us.<verse eid="PSA 44:13" /></para>
   <para style="q1">
-    <verse number="14" style="v" sid="PSA 44:14" />You make us a byword among the nations,</para>
-  <para style="q2" vid="PSA 44:14">a shaking of the head among the peoples.<verse eid="PSA 44:14" /></para>
+    <verse number="14" style="v" sid="PSA 44:14" />You make us a byword amongst the nations,</para>
+  <para style="q2" vid="PSA 44:14">a shaking of the head amongst the peoples.<verse eid="PSA 44:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 44:15" />All day long my dishonor is before me,</para>
+    <verse number="15" style="v" sid="PSA 44:15" />All day long my dishonour is before me,</para>
   <para style="q2" vid="PSA 44:15">and shame covers my face,<verse eid="PSA 44:15" /></para>
   <para style="q2">
     <verse number="16" style="v" sid="PSA 44:16" />at the taunt of one who reproaches and verbally abuses,</para>
@@ -2325,7 +2325,7 @@
   <para style="q2" vid="PSA 44:22">We are regarded as sheep for the slaughter.<verse eid="PSA 44:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 44:23" />Wake up!</para>
-  <para style="q2" vid="PSA 44:23">Why do you sleep, Lord?<note caller="+" style="f"><char style="fr" closed="false">44:23 </char><char style="ft" closed="false">The word translated “Lord” (mixed case) is “Adonai.” </char></note></para>
+  <para style="q2" vid="PSA 44:23">Why do you sleep, Lord?<note caller="+" style="f"><char style="fr" closed="false">44:23 </char><char style="ft" closed="false">The word translated “Lord” is “Adonai.” </char></note></para>
   <para style="q1" vid="PSA 44:23">Arise!</para>
   <para style="q2" vid="PSA 44:23">Don’t reject us forever.<verse eid="PSA 44:23" /></para>
   <para style="q1">
@@ -2343,14 +2343,14 @@
   <para style="q1">
     <verse number="1" style="v" sid="PSA 45:1" />My heart overflows with a noble theme.</para>
   <para style="q2" vid="PSA 45:1">I recite my verses for the king.</para>
-  <para style="q2" vid="PSA 45:1">My tongue is like the pen of a skillful writer.<verse eid="PSA 45:1" /></para>
+  <para style="q2" vid="PSA 45:1">My tongue is like the pen of a skilful writer.<verse eid="PSA 45:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 45:2" />You are the most excellent of the sons of men.</para>
   <para style="q2" vid="PSA 45:2">Grace has anointed your lips,</para>
   <para style="q2" vid="PSA 45:2">therefore God has blessed you forever.<verse eid="PSA 45:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 45:3" />Strap your sword on your thigh, O mighty one,</para>
-  <para style="q2" vid="PSA 45:3">in your splendor and your majesty.<verse eid="PSA 45:3" /></para>
+  <para style="q2" vid="PSA 45:3">in your splendour and your majesty.<verse eid="PSA 45:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 45:4" />In your majesty ride on victoriously on behalf of truth, humility, and righteousness.</para>
   <para style="q2" vid="PSA 45:4">Let your right hand display awesome deeds.<verse eid="PSA 45:4" /></para>
@@ -2359,7 +2359,7 @@
   <para style="q2" vid="PSA 45:5">The nations fall under you, with arrows in the heart of the king’s enemies.<verse eid="PSA 45:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 45:6" />Your throne, God, is forever and ever.</para>
-  <para style="q2" vid="PSA 45:6">A scepter of equity is the scepter of your kingdom.<verse eid="PSA 45:6" /></para>
+  <para style="q2" vid="PSA 45:6">A sceptre of equity is the sceptre of your kingdom.<verse eid="PSA 45:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 45:7" />You have loved righteousness, and hated wickedness.</para>
   <para style="q2" vid="PSA 45:7">Therefore God, your God, has anointed you with the oil of gladness above your fellows.<verse eid="PSA 45:7" /></para>
@@ -2367,17 +2367,17 @@
     <verse number="8" style="v" sid="PSA 45:8" />All your garments smell like myrrh, aloes, and cassia.</para>
   <para style="q2" vid="PSA 45:8">Out of ivory palaces stringed instruments have made you glad.<verse eid="PSA 45:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 45:9" />Kings’ daughters are among your honorable women.</para>
+    <verse number="9" style="v" sid="PSA 45:9" />Kings’ daughters are amongst your honourable women.</para>
   <para style="q2" vid="PSA 45:9">At your right hand the queen stands in gold of Ophir.<verse eid="PSA 45:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 45:10" />Listen, daughter, consider, and turn your ear.</para>
   <para style="q2" vid="PSA 45:10">Forget your own people, and also your father’s house.<verse eid="PSA 45:10" /></para>
   <para style="q2">
     <verse number="11" style="v" sid="PSA 45:11" />So the king will desire your beauty,</para>
-  <para style="q2" vid="PSA 45:11">honor him, for he is your lord.<verse eid="PSA 45:11" /></para>
+  <para style="q2" vid="PSA 45:11">honour him, for he is your lord.<verse eid="PSA 45:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 45:12" />The daughter of Tyre comes with a gift.</para>
-  <para style="q2" vid="PSA 45:12">The rich among the people entreat your favor.<verse eid="PSA 45:12" /></para>
+  <para style="q2" vid="PSA 45:12">The rich amongst the people entreat your favour.<verse eid="PSA 45:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 45:13" />The princess inside is all glorious.</para>
   <para style="q2" vid="PSA 45:13">Her clothing is interwoven with gold.<verse eid="PSA 45:13" /></para>
@@ -2416,7 +2416,7 @@
     <verse number="6" style="v" sid="PSA 46:6" />The nations raged. The kingdoms were moved.</para>
   <para style="q2" vid="PSA 46:6">He lifted his voice and the earth melted.<verse eid="PSA 46:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 46:7" />The LORD of Hosts is with us.</para>
+    <verse number="7" style="v" sid="PSA 46:7" />The LORD of Armies is with us.</para>
   <para style="q2" vid="PSA 46:7">The God of Jacob is our refuge. <char style="qs">Selah.</char><verse eid="PSA 46:7" /></para>
   <para style="b" />
   <para style="q1">
@@ -2428,10 +2428,10 @@
   <para style="q2" vid="PSA 46:9">He burns the chariots in the fire.<verse eid="PSA 46:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 46:10" />“Be still, and know that I am God.</para>
-  <para style="q2" vid="PSA 46:10">I will be exalted among the nations.</para>
+  <para style="q2" vid="PSA 46:10">I will be exalted amongst the nations.</para>
   <para style="q2" vid="PSA 46:10">I will be exalted in the earth.”<verse eid="PSA 46:10" /></para>
   <para style="q1">
-    <verse number="11" style="v" sid="PSA 46:11" />The LORD of Hosts is with us.</para>
+    <verse number="11" style="v" sid="PSA 46:11" />The LORD of Armies is with us.</para>
   <para style="q2" vid="PSA 46:11">The God of Jacob is our refuge. <char style="qs">Selah.</char><verse eid="PSA 46:11" /></para>
   <para style="b" />
   <chapter eid="PSA 46" />
@@ -2451,7 +2451,7 @@
   <para style="q2" vid="PSA 47:4">the glory of Jacob whom he loved. <char style="qs">Selah.</char><verse eid="PSA 47:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 47:5" />God has gone up with a shout,</para>
-  <para style="q2" vid="PSA 47:5">The LORD with the sound of a shofar.<verse eid="PSA 47:5" /></para>
+  <para style="q2" vid="PSA 47:5">The LORD with the sound of a trumpet.<verse eid="PSA 47:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 47:6" />Sing praises to God! Sing praises!</para>
   <para style="q2" vid="PSA 47:6">Sing praises to our King! Sing praises!<verse eid="PSA 47:6" /></para>
@@ -2492,7 +2492,7 @@
     <verse number="7" style="v" sid="PSA 48:7" />With the east wind, you break the ships of Tarshish.<verse eid="PSA 48:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 48:8" />As we have heard, so we have seen,</para>
-  <para style="q2" vid="PSA 48:8">in the city of the LORD of Hosts, in the city of our God.</para>
+  <para style="q2" vid="PSA 48:8">in the city of the LORD of Armies, in the city of our God.</para>
   <para style="q1" vid="PSA 48:8">God will establish it forever. <char style="qs">Selah.</char><verse eid="PSA 48:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 48:9" />We have thought about your loving kindness, God,</para>
@@ -2503,7 +2503,7 @@
   <para style="q2" vid="PSA 48:10">Your right hand is full of righteousness.<verse eid="PSA 48:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 48:11" />Let Mount Zion be glad!</para>
-  <para style="q2" vid="PSA 48:11">Let the daughters of Judah rejoice because of your judgments.<verse eid="PSA 48:11" /></para>
+  <para style="q2" vid="PSA 48:11">Let the daughters of Judah rejoice because of your judgements.<verse eid="PSA 48:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 48:12" />Walk about Zion, and go around her.</para>
   <para style="q2" vid="PSA 48:12">Number its towers.<verse eid="PSA 48:12" /></para>
@@ -2600,7 +2600,7 @@
     <verse number="4" style="v" sid="PSA 50:4" />He calls to the heavens above,</para>
   <para style="q2" vid="PSA 50:4">to the earth, that he may judge his people:<verse eid="PSA 50:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 50:5" />“Gather my holy ones together to me,</para>
+    <verse number="5" style="v" sid="PSA 50:5" />“Gather my saints together to me,</para>
   <para style="q2" vid="PSA 50:5">those who have made a covenant with me by sacrifice.”<verse eid="PSA 50:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 50:6" />The heavens shall declare his righteousness,</para>
@@ -2632,7 +2632,7 @@
   <para style="q2" vid="PSA 50:14">Pay your vows to the Most High.<verse eid="PSA 50:14" /></para>
   <para style="q1">
     <verse number="15" style="v" sid="PSA 50:15" />Call on me in the day of trouble.</para>
-  <para style="q2" vid="PSA 50:15">I will deliver you, and you will honor me.”<verse eid="PSA 50:15" /></para>
+  <para style="q2" vid="PSA 50:15">I will deliver you, and you will honour me.”<verse eid="PSA 50:15" /></para>
   <para style="b" />
   <para style="q1">
     <verse number="16" style="v" sid="PSA 50:16" />But to the wicked God says,</para>
@@ -2758,7 +2758,7 @@
   <para style="q1">
     <verse number="9" style="v" sid="PSA 52:9" />I will give you thanks forever, because you have done it.</para>
   <para style="q2" vid="PSA 52:9">I will hope in your name, for it is good,</para>
-  <para style="q2" vid="PSA 52:9">in the presence of your holy ones.<verse eid="PSA 52:9" /></para>
+  <para style="q2" vid="PSA 52:9">in the presence of your saints.<verse eid="PSA 52:9" /></para>
   <chapter eid="PSA 52" />
   <chapter number="53" style="c" sid="PSA 53" />
   <para style="d">For the Chief Musician. To the tune of “Mahalath.” A contemplation by David.</para>
@@ -2784,13 +2784,13 @@
   <para style="q1" vid="PSA 53:5">You have put them to shame,</para>
   <para style="q2" vid="PSA 53:5">because God has rejected them.<verse eid="PSA 53:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 53:6" />Oh that the salvation [yeshuat] of Israel would come out of Zion!</para>
+    <verse number="6" style="v" sid="PSA 53:6" />Oh that the salvation of Israel would come out of Zion!</para>
   <para style="q2" vid="PSA 53:6">When God brings back his people from captivity,</para>
   <para style="q2" vid="PSA 53:6">then Jacob shall rejoice,</para>
   <para style="q2" vid="PSA 53:6">and Israel shall be glad.<verse eid="PSA 53:6" /></para>
   <chapter eid="PSA 53" />
   <chapter number="54" style="c" sid="PSA 54" />
-  <para style="d">For the Chief Musician. On stringed instruments. A contemplation by David, when the Ziphites came and said to Saul, “Isn’t David hiding himself among us?”</para>
+  <para style="d">For the Chief Musician. On stringed instruments. A contemplation by David, when the Ziphites came and said to Saul, “Isn’t David hiding himself amongst us?”</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 54:1" />Save me, God, by your name.</para>
   <para style="q2" vid="PSA 54:1">Vindicate me in your might.<verse eid="PSA 54:1" /></para>
@@ -2863,7 +2863,7 @@
   <para style="q1">
     <verse number="15" style="v" sid="PSA 55:15" />Let death come suddenly on them.</para>
   <para style="q2" vid="PSA 55:15">Let them go down alive into Sheol.<note caller="+" style="f"><char style="fr" closed="false">55:15 </char><char style="ft" closed="false">Sheol is the place of the dead. </char></note></para>
-  <para style="q2" vid="PSA 55:15">For wickedness is among them, in their dwelling.<verse eid="PSA 55:15" /></para>
+  <para style="q2" vid="PSA 55:15">For wickedness is amongst them, in their dwelling.<verse eid="PSA 55:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 55:16" />As for me, I will call on God.</para>
   <para style="q2" vid="PSA 55:16">The LORD will save me.<verse eid="PSA 55:16" /></para>
@@ -2959,8 +2959,8 @@
   <para style="q2" vid="PSA 57:3">he rebukes the one who is pursuing me. <char style="qs">Selah.</char></para>
   <para style="q1" vid="PSA 57:3">God will send out his loving kindness and his truth.<verse eid="PSA 57:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 57:4" />My soul is among lions.</para>
-  <para style="q2" vid="PSA 57:4">I lie among those who are set on fire,</para>
+    <verse number="4" style="v" sid="PSA 57:4" />My soul is amongst lions.</para>
+  <para style="q2" vid="PSA 57:4">I lie amongst those who are set on fire,</para>
   <para style="q2" vid="PSA 57:4">even the sons of men, whose teeth are spears and arrows,</para>
   <para style="q2" vid="PSA 57:4">and their tongue a sharp sword.<verse eid="PSA 57:4" /></para>
   <para style="q1">
@@ -2980,8 +2980,8 @@
     <verse number="8" style="v" sid="PSA 57:8" />Wake up, my glory! Wake up, lute and harp!</para>
   <para style="q2" vid="PSA 57:8">I will wake up the dawn.<verse eid="PSA 57:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 57:9" />I will give thanks to you, Lord, among the peoples.</para>
-  <para style="q2" vid="PSA 57:9">I will sing praises to you among the nations.<verse eid="PSA 57:9" /></para>
+    <verse number="9" style="v" sid="PSA 57:9" />I will give thanks to you, Lord, amongst the peoples.</para>
+  <para style="q2" vid="PSA 57:9">I will sing praises to you amongst the nations.<verse eid="PSA 57:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 57:10" />For your great loving kindness reaches to the heavens,</para>
   <para style="q2" vid="PSA 57:10">and your truth to the skies.<verse eid="PSA 57:10" /></para>
@@ -3005,7 +3005,7 @@
   <para style="q2" vid="PSA 58:4">like a deaf cobra that stops its ear,<verse eid="PSA 58:4" /></para>
   <para style="q2">
     <verse number="5" style="v" sid="PSA 58:5" />which doesn’t listen to the voice of charmers,</para>
-  <para style="q2" vid="PSA 58:5">no matter how skillful the charmer may be.<verse eid="PSA 58:5" /></para>
+  <para style="q2" vid="PSA 58:5">no matter how skilful the charmer may be.<verse eid="PSA 58:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 58:6" />Break their teeth, God, in their mouth.</para>
   <para style="q2" vid="PSA 58:6">Break out the great teeth of the young lions, LORD.<verse eid="PSA 58:6" /></para>
@@ -3041,7 +3041,7 @@
     <verse number="4" style="v" sid="PSA 59:4" />I have done no wrong, yet they are ready to attack me.</para>
   <para style="q2" vid="PSA 59:4">Rise up, behold, and help me!<verse eid="PSA 59:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 59:5" />You, LORD God of Hosts, the God of Israel,</para>
+    <verse number="5" style="v" sid="PSA 59:5" />You, LORD God of Armies, the God of Israel,</para>
   <para style="q2" vid="PSA 59:5">rouse yourself to punish the nations.</para>
   <para style="q2" vid="PSA 59:5">Show no mercy to the wicked traitors. <char style="qs">Selah.</char><verse eid="PSA 59:5" /></para>
   <para style="q1">
@@ -3117,8 +3117,8 @@
   <para style="q2" vid="PSA 60:6">and measure out the valley of Succoth.<verse eid="PSA 60:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 60:7" />Gilead is mine, and Manasseh is mine.</para>
-  <para style="q2" vid="PSA 60:7">Ephraim also is the defense of my head.</para>
-  <para style="q2" vid="PSA 60:7">Judah is my scepter.<verse eid="PSA 60:7" /></para>
+  <para style="q2" vid="PSA 60:7">Ephraim also is the defence of my head.</para>
+  <para style="q2" vid="PSA 60:7">Judah is my sceptre.<verse eid="PSA 60:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 60:8" />Moab is my wash basin.</para>
   <para style="q2" vid="PSA 60:8">I will throw my sandal on Edom.</para>
@@ -3162,13 +3162,13 @@
   <para style="q2" vid="PSA 61:7">Appoint your loving kindness and truth, that they may preserve him.<verse eid="PSA 61:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 61:8" />So I will sing praise to your name forever,</para>
-  <para style="q2" vid="PSA 61:8">that I may fulfill my vows daily.<verse eid="PSA 61:8" /></para>
+  <para style="q2" vid="PSA 61:8">that I may fulfil my vows daily.<verse eid="PSA 61:8" /></para>
   <chapter eid="PSA 61" />
   <chapter number="62" style="c" sid="PSA 62" />
   <para style="d">For the Chief Musician. To Jeduthun. A Psalm by David.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 62:1" />My soul rests in God alone.</para>
-  <para style="q2" vid="PSA 62:1">My salvation [yeshuah-ti] is from him.<verse eid="PSA 62:1" /></para>
+  <para style="q2" vid="PSA 62:1">My salvation is from him.<verse eid="PSA 62:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 62:2" />He alone is my rock, my salvation, and my fortress.</para>
   <para style="q2" vid="PSA 62:2">I will never be greatly shaken.<verse eid="PSA 62:2" /></para>
@@ -3184,10 +3184,10 @@
     <verse number="5" style="v" sid="PSA 62:5" />My soul, wait in silence for God alone,</para>
   <para style="q2" vid="PSA 62:5">for my expectation is from him.<verse eid="PSA 62:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 62:6" />He alone is my rock and my salvation [yeshuah-ti], my fortress.</para>
+    <verse number="6" style="v" sid="PSA 62:6" />He alone is my rock and my salvation, my fortress.</para>
   <para style="q2" vid="PSA 62:6">I will not be shaken.<verse eid="PSA 62:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 62:7" />My salvation and my honor is with God.</para>
+    <verse number="7" style="v" sid="PSA 62:7" />My salvation and my honour is with God.</para>
   <para style="q2" vid="PSA 62:7">The rock of my strength, and my refuge, is in God.<verse eid="PSA 62:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 62:8" />Trust in him at all times, you people.</para>
@@ -3369,7 +3369,7 @@
     <verse number="8" style="v" sid="PSA 66:8" />Praise our God, you peoples!</para>
   <para style="q2" vid="PSA 66:8">Make the sound of his praise heard,<verse eid="PSA 66:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 66:9" />who preserves our life among the living,</para>
+    <verse number="9" style="v" sid="PSA 66:9" />who preserves our life amongst the living,</para>
   <para style="q2" vid="PSA 66:9">and doesn’t allow our feet to be moved.<verse eid="PSA 66:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 66:10" />For you, God, have tested us.</para>
@@ -3412,7 +3412,7 @@
   <para style="q2" vid="PSA 67:1">and cause his face to shine on us. <char style="qs">Selah.</char><verse eid="PSA 67:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 67:2" />That your way may be known on earth,</para>
-  <para style="q2" vid="PSA 67:2">and your salvation [yeshuat] among all nations,<verse eid="PSA 67:2" /></para>
+  <para style="q2" vid="PSA 67:2">and your salvation amongst all nations,<verse eid="PSA 67:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 67:3" />let the peoples praise you, God.</para>
   <para style="q2" vid="PSA 67:3">Let all the peoples praise you.<verse eid="PSA 67:3" /></para>
@@ -3478,7 +3478,7 @@
     <verse number="12" style="v" sid="PSA 68:12" />“Kings of armies flee! They flee!”</para>
   <para style="q2" vid="PSA 68:12">She who waits at home divides the plunder,<verse eid="PSA 68:12" /></para>
   <para style="q2">
-    <verse number="13" style="v" sid="PSA 68:13" />while you sleep among the camp fires,</para>
+    <verse number="13" style="v" sid="PSA 68:13" />while you sleep amongst the camp fires,</para>
   <para style="q2" vid="PSA 68:13">the wings of a dove sheathed with silver,</para>
   <para style="q2" vid="PSA 68:13">her feathers with shining gold.<verse eid="PSA 68:13" /></para>
   <para style="q1">
@@ -3493,12 +3493,12 @@
   <para style="q2" vid="PSA 68:16">Yes, the LORD will dwell there forever.<verse eid="PSA 68:16" /></para>
   <para style="q1">
     <verse number="17" style="v" sid="PSA 68:17" />The chariots of God are tens of thousands and thousands of thousands.</para>
-  <para style="q2" vid="PSA 68:17">The Lord is among them, from Sinai, into the sanctuary.<verse eid="PSA 68:17" /></para>
+  <para style="q2" vid="PSA 68:17">The Lord is amongst them, from Sinai, into the sanctuary.<verse eid="PSA 68:17" /></para>
   <para style="q1">
     <verse number="18" style="v" sid="PSA 68:18" />You have ascended on high.</para>
   <para style="q2" vid="PSA 68:18">You have led away captives.</para>
-  <para style="q1" vid="PSA 68:18">You have received gifts among people,</para>
-  <para style="q2" vid="PSA 68:18">yes, among the rebellious also, that the LORD God might dwell there.<verse eid="PSA 68:18" /></para>
+  <para style="q1" vid="PSA 68:18">You have received gifts amongst people,</para>
+  <para style="q2" vid="PSA 68:18">yes, amongst the rebellious also, that the LORD God might dwell there.<verse eid="PSA 68:18" /></para>
   <para style="b" />
   <para style="q1">
     <verse number="19" style="v" sid="PSA 68:19" />Blessed be the Lord, who daily bears our burdens,</para>
@@ -3520,7 +3520,7 @@
   <para style="q2" vid="PSA 68:24">even the processions of my God, my King, into the sanctuary.<verse eid="PSA 68:24" /></para>
   <para style="q1">
     <verse number="25" style="v" sid="PSA 68:25" />The singers went before, the minstrels followed after,</para>
-  <para style="q2" vid="PSA 68:25">among the ladies playing with tambourines,<verse eid="PSA 68:25" /></para>
+  <para style="q2" vid="PSA 68:25">amongst the ladies playing with tambourines,<verse eid="PSA 68:25" /></para>
   <para style="q1">
     <verse number="26" style="v" sid="PSA 68:26" />“Bless God in the congregations,</para>
   <para style="q2" vid="PSA 68:26">even the Lord in the assembly of Israel!”<verse eid="PSA 68:26" /></para>
@@ -3578,8 +3578,8 @@
     <verse number="5" style="v" sid="PSA 69:5" />God, you know my foolishness.</para>
   <para style="q2" vid="PSA 69:5">My sins aren’t hidden from you.<verse eid="PSA 69:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 69:6" />Don’t let those who wait for you be shamed through me, Lord GOD of Hosts.</para>
-  <para style="q2" vid="PSA 69:6">Don’t let those who seek you be brought to dishonor through me, God of Israel.<verse eid="PSA 69:6" /></para>
+    <verse number="6" style="v" sid="PSA 69:6" />Don’t let those who wait for you be shamed through me, Lord GOD of Armies.</para>
+  <para style="q2" vid="PSA 69:6">Don’t let those who seek you be brought to dishonour through me, God of Israel.<verse eid="PSA 69:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 69:7" />Because for your sake, I have borne reproach.</para>
   <para style="q2" vid="PSA 69:7">Shame has covered my face.<verse eid="PSA 69:7" /></para>
@@ -3619,7 +3619,7 @@
     <verse number="18" style="v" sid="PSA 69:18" />Draw near to my soul and redeem it.</para>
   <para style="q2" vid="PSA 69:18">Ransom me because of my enemies.<verse eid="PSA 69:18" /></para>
   <para style="q1">
-    <verse number="19" style="v" sid="PSA 69:19" />You know my reproach, my shame, and my dishonor.</para>
+    <verse number="19" style="v" sid="PSA 69:19" />You know my reproach, my shame, and my dishonour.</para>
   <para style="q2" vid="PSA 69:19">My adversaries are all before you.<verse eid="PSA 69:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 69:20" />Reproach has broken my heart, and I am full of heaviness.</para>
@@ -3722,7 +3722,7 @@
   <para style="q2" vid="PSA 71:7">but you are my strong refuge.<verse eid="PSA 71:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 71:8" />My mouth shall be filled with your praise,</para>
-  <para style="q2" vid="PSA 71:8">with your honor all day long.<verse eid="PSA 71:8" /></para>
+  <para style="q2" vid="PSA 71:8">with your honour all day long.<verse eid="PSA 71:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 71:9" />Don’t reject me in my old age.</para>
   <para style="q2" vid="PSA 71:9">Don’t forsake me when my strength fails.<verse eid="PSA 71:9" /></para>
@@ -3752,7 +3752,7 @@
     <verse number="17" style="v" sid="PSA 71:17" />God, you have taught me from my youth.</para>
   <para style="q2" vid="PSA 71:17">Until now, I have declared your wondrous works.<verse eid="PSA 71:17" /></para>
   <para style="q1">
-    <verse number="18" style="v" sid="PSA 71:18" />Yes, even when I am old and gray-haired, God, don’t forsake me,</para>
+    <verse number="18" style="v" sid="PSA 71:18" />Yes, even when I am old and grey-haired, God, don’t forsake me,</para>
   <para style="q2" vid="PSA 71:18">until I have declared your strength to the next generation,</para>
   <para style="q2" vid="PSA 71:18">your might to everyone who is to come.<verse eid="PSA 71:18" /></para>
   <para style="q1">
@@ -3764,7 +3764,7 @@
   <para style="q2" vid="PSA 71:20">you will let me live.</para>
   <para style="q2" vid="PSA 71:20">You will bring us up again from the depths of the earth.<verse eid="PSA 71:20" /></para>
   <para style="q1">
-    <verse number="21" style="v" sid="PSA 71:21" />Increase my honor</para>
+    <verse number="21" style="v" sid="PSA 71:21" />Increase my honour</para>
   <para style="q2" vid="PSA 71:21">and comfort me again.<verse eid="PSA 71:21" /></para>
   <para style="q1">
     <verse number="22" style="v" sid="PSA 71:22" />I will also praise you with the harp for your faithfulness, my God.</para>
@@ -3838,7 +3838,7 @@
   <para style="b" />
   <para style="q1">
     <verse number="18" style="v" sid="PSA 72:18" />Praise be to the LORD God, the God of Israel,</para>
-  <para style="q2" vid="PSA 72:18">who alone does marvelous deeds.<verse eid="PSA 72:18" /></para>
+  <para style="q2" vid="PSA 72:18">who alone does marvellous deeds.<verse eid="PSA 72:18" /></para>
   <para style="q1">
     <verse number="19" style="v" sid="PSA 72:19" />Blessed be his glorious name forever!</para>
   <para style="q2" vid="PSA 72:19">Let the whole earth be filled with his glory!</para>
@@ -3909,7 +3909,7 @@
   <para style="q2" vid="PSA 73:19">They are completely swept away with terrors.<verse eid="PSA 73:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 73:20" />As a dream when one wakes up,</para>
-  <para style="q2" vid="PSA 73:20">so, Lord,<note caller="+" style="f"><char style="fr" closed="false">73:20 </char><char style="ft" closed="false">The word translated “Lord” (mixed case) is “Adonai.”</char></note> when you awake, you will despise their fantasies.<verse eid="PSA 73:20" /></para>
+  <para style="q2" vid="PSA 73:20">so, Lord,<note caller="+" style="f"><char style="fr" closed="false">73:20 </char><char style="ft" closed="false">The word translated “Lord” is “Adonai.”</char></note> when you awake, you will despise their fantasies.<verse eid="PSA 73:20" /></para>
   <para style="q1">
     <verse number="21" style="v" sid="PSA 73:21" />For my soul was grieved.</para>
   <para style="q2" vid="PSA 73:21">I was embittered in my heart.<verse eid="PSA 73:21" /></para>
@@ -3941,7 +3941,7 @@
   <para style="d">A contemplation by Asaph.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 74:1" />God, why have you rejected us forever?</para>
-  <para style="q2" vid="PSA 74:1">Why does your anger smolder against the sheep of your pasture?<verse eid="PSA 74:1" /></para>
+  <para style="q2" vid="PSA 74:1">Why does your anger smoulder against the sheep of your pasture?<verse eid="PSA 74:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 74:2" />Remember your congregation, which you purchased of old,</para>
   <para style="q2" vid="PSA 74:2">which you have redeemed to be the tribe of your inheritance:</para>
@@ -3958,15 +3958,15 @@
   <para style="q1">
     <verse number="6" style="v" sid="PSA 74:6" />Now they break all its carved work down with hatchet and hammers.<verse eid="PSA 74:6" /></para>
   <para style="q2">
-    <verse number="7" style="v" sid="PSA 74:7" />They have burned your sanctuary to the ground.</para>
+    <verse number="7" style="v" sid="PSA 74:7" />They have burnt your sanctuary to the ground.</para>
   <para style="q2" vid="PSA 74:7">They have profaned the dwelling place of your Name.<verse eid="PSA 74:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 74:8" />They said in their heart, “We will crush them completely.”</para>
-  <para style="q2" vid="PSA 74:8">They have burned up all the places in the land where God was worshiped.<verse eid="PSA 74:8" /></para>
+  <para style="q2" vid="PSA 74:8">They have burnt up all the places in the land where God was worshipped.<verse eid="PSA 74:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 74:9" />We see no miraculous signs.</para>
   <para style="q2" vid="PSA 74:9">There is no longer any prophet,</para>
-  <para style="q2" vid="PSA 74:9">neither is there among us anyone who knows how long.<verse eid="PSA 74:9" /></para>
+  <para style="q2" vid="PSA 74:9">neither is there amongst us anyone who knows how long.<verse eid="PSA 74:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 74:10" />How long, God, shall the adversary reproach?</para>
   <para style="q2" vid="PSA 74:10">Shall the enemy blaspheme your name forever?<verse eid="PSA 74:10" /></para>
@@ -4000,7 +4000,7 @@
     <verse number="19" style="v" sid="PSA 74:19" />Don’t deliver the soul of your dove to wild beasts.</para>
   <para style="q2" vid="PSA 74:19">Don’t forget the life of your poor forever.<verse eid="PSA 74:19" /></para>
   <para style="q1">
-    <verse number="20" style="v" sid="PSA 74:20" />Honor your covenant,</para>
+    <verse number="20" style="v" sid="PSA 74:20" />Honour your covenant,</para>
   <para style="q2" vid="PSA 74:20">for haunts of violence fill the dark places of the earth.<verse eid="PSA 74:20" /></para>
   <para style="q1">
     <verse number="21" style="v" sid="PSA 74:21" />Don’t let the oppressed return ashamed.</para>
@@ -4077,17 +4077,17 @@
     <verse number="7" style="v" sid="PSA 76:7" />You, even you, are to be feared.</para>
   <para style="q2" vid="PSA 76:7">Who can stand in your sight when you are angry?<verse eid="PSA 76:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 76:8" />You pronounced judgment from heaven.</para>
+    <verse number="8" style="v" sid="PSA 76:8" />You pronounced judgement from heaven.</para>
   <para style="q2" vid="PSA 76:8">The earth feared, and was silent,<verse eid="PSA 76:8" /></para>
   <para style="q2">
-    <verse number="9" style="v" sid="PSA 76:9" />when God arose to judgment,</para>
+    <verse number="9" style="v" sid="PSA 76:9" />when God arose to judgement,</para>
   <para style="q2" vid="PSA 76:9">to save all the afflicted ones of the earth. <char style="qs">Selah.</char><verse eid="PSA 76:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 76:10" />Surely the wrath of man praises you.</para>
   <para style="q2" vid="PSA 76:10">The survivors of your wrath are restrained.<verse eid="PSA 76:10" /></para>
   <para style="q1">
-    <verse number="11" style="v" sid="PSA 76:11" />Make vows to the LORD your God, and fulfill them!</para>
-  <para style="q2" vid="PSA 76:11">Let all of his neighbors bring presents to him who is to be feared.<verse eid="PSA 76:11" /></para>
+    <verse number="11" style="v" sid="PSA 76:11" />Make vows to the LORD your God, and fulfil them!</para>
+  <para style="q2" vid="PSA 76:11">Let all of his neighbours bring presents to him who is to be feared.<verse eid="PSA 76:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 76:12" />He will cut off the spirit of princes.</para>
   <para style="q2" vid="PSA 76:12">He is feared by the kings of the earth.<verse eid="PSA 76:12" /></para>
@@ -4116,10 +4116,10 @@
   <para style="q1">
     <verse number="6" style="v" sid="PSA 77:6" />I remember my song in the night.</para>
   <para style="q2" vid="PSA 77:6">I consider in my own heart;</para>
-  <para style="q2" vid="PSA 77:6">my spirit diligently inquires:<verse eid="PSA 77:6" /></para>
+  <para style="q2" vid="PSA 77:6">my spirit diligently enquires:<verse eid="PSA 77:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 77:7" />“Will the Lord reject us forever?</para>
-  <para style="q2" vid="PSA 77:7">Will he be favorable no more?<verse eid="PSA 77:7" /></para>
+  <para style="q2" vid="PSA 77:7">Will he be favourable no more?<verse eid="PSA 77:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 77:8" />Has his loving kindness vanished forever?</para>
   <para style="q2" vid="PSA 77:8">Does his promise fail for generations?<verse eid="PSA 77:8" /></para>
@@ -4140,7 +4140,7 @@
   <para style="q2" vid="PSA 77:13">What god is great like God?<verse eid="PSA 77:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 77:14" />You are the God who does wonders.</para>
-  <para style="q2" vid="PSA 77:14">You have made your strength known among the peoples.<verse eid="PSA 77:14" /></para>
+  <para style="q2" vid="PSA 77:14">You have made your strength known amongst the peoples.<verse eid="PSA 77:14" /></para>
   <para style="q1">
     <verse number="15" style="v" sid="PSA 77:15" />You have redeemed your people with your arm,</para>
   <para style="q2" vid="PSA 77:15">the sons of Jacob and Joseph. <char style="qs">Selah.</char><verse eid="PSA 77:15" /></para>
@@ -4202,12 +4202,12 @@
   <para style="q2" vid="PSA 78:9">turned back in the day of battle.<verse eid="PSA 78:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 78:10" />They didn’t keep God’s covenant,</para>
-  <para style="q2" vid="PSA 78:10">and refused to walk by his Torah.<verse eid="PSA 78:10" /></para>
+  <para style="q2" vid="PSA 78:10">and refused to walk in his law.<verse eid="PSA 78:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 78:11" />They forgot his doings,</para>
   <para style="q2" vid="PSA 78:11">his wondrous deeds that he had shown them.<verse eid="PSA 78:11" /></para>
   <para style="q1">
-    <verse number="12" style="v" sid="PSA 78:12" />He did marvelous things in the sight of their fathers,</para>
+    <verse number="12" style="v" sid="PSA 78:12" />He did marvellous things in the sight of their fathers,</para>
   <para style="q2" vid="PSA 78:12">in the land of Egypt, in the field of Zoan.<verse eid="PSA 78:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 78:13" />He split the sea, and caused them to pass through.</para>
@@ -4241,7 +4241,7 @@
   <para style="q2" vid="PSA 78:21">anger also went up against Israel,<verse eid="PSA 78:21" /></para>
   <para style="q1">
     <verse number="22" style="v" sid="PSA 78:22" />because they didn’t believe in God,</para>
-  <para style="q2" vid="PSA 78:22">and didn’t trust in his salvation [yeshuat].<verse eid="PSA 78:22" /></para>
+  <para style="q2" vid="PSA 78:22">and didn’t trust in his salvation.<verse eid="PSA 78:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 78:23" />Yet he commanded the skies above,</para>
   <para style="q2" vid="PSA 78:23">and opened the doors of heaven.<verse eid="PSA 78:23" /></para>
@@ -4277,7 +4277,7 @@
     <verse number="33" style="v" sid="PSA 78:33" />Therefore he consumed their days in vanity,</para>
   <para style="q2" vid="PSA 78:33">and their years in terror.<verse eid="PSA 78:33" /></para>
   <para style="q1">
-    <verse number="34" style="v" sid="PSA 78:34" />When he killed them, then they inquired after him.</para>
+    <verse number="34" style="v" sid="PSA 78:34" />When he killed them, then they enquired after him.</para>
   <para style="q2" vid="PSA 78:34">They returned and sought God earnestly.<verse eid="PSA 78:34" /></para>
   <para style="q1">
     <verse number="35" style="v" sid="PSA 78:35" />They remembered that God was their rock,</para>
@@ -4311,11 +4311,11 @@
     <verse number="44" style="v" sid="PSA 78:44" />he turned their rivers into blood,</para>
   <para style="q2" vid="PSA 78:44">and their streams, so that they could not drink.<verse eid="PSA 78:44" /></para>
   <para style="q1">
-    <verse number="45" style="v" sid="PSA 78:45" />He sent among them swarms of flies, which devoured them;</para>
+    <verse number="45" style="v" sid="PSA 78:45" />He sent amongst them swarms of flies, which devoured them;</para>
   <para style="q2" vid="PSA 78:45">and frogs, which destroyed them.<verse eid="PSA 78:45" /></para>
   <para style="q1">
     <verse number="46" style="v" sid="PSA 78:46" />He also gave their increase to the caterpillar,</para>
-  <para style="q2" vid="PSA 78:46">and their labor to the locust.<verse eid="PSA 78:46" /></para>
+  <para style="q2" vid="PSA 78:46">and their labour to the locust.<verse eid="PSA 78:46" /></para>
   <para style="q1">
     <verse number="47" style="v" sid="PSA 78:47" />He destroyed their vines with hail,</para>
   <para style="q2" vid="PSA 78:47">their sycamore fig trees with frost.<verse eid="PSA 78:47" /></para>
@@ -4360,7 +4360,7 @@
   <para style="q2" vid="PSA 78:59">and greatly abhorred Israel,<verse eid="PSA 78:59" /></para>
   <para style="q1">
     <verse number="60" style="v" sid="PSA 78:60" />so that he abandoned the tent of Shiloh,</para>
-  <para style="q2" vid="PSA 78:60">the tent which he placed among men,<verse eid="PSA 78:60" /></para>
+  <para style="q2" vid="PSA 78:60">the tent which he placed amongst men,<verse eid="PSA 78:60" /></para>
   <para style="q1">
     <verse number="61" style="v" sid="PSA 78:61" />and delivered his strength into captivity,</para>
   <para style="q2" vid="PSA 78:61">his glory into the adversary’s hand.<verse eid="PSA 78:61" /></para>
@@ -4397,7 +4397,7 @@
   <para style="q2" vid="PSA 78:71">and Israel, his inheritance.<verse eid="PSA 78:71" /></para>
   <para style="q1">
     <verse number="72" style="v" sid="PSA 78:72" />So he was their shepherd according to the integrity of his heart,</para>
-  <para style="q2" vid="PSA 78:72">and guided them by the skillfulness of his hands.<verse eid="PSA 78:72" /></para>
+  <para style="q2" vid="PSA 78:72">and guided them by the skilfulness of his hands.<verse eid="PSA 78:72" /></para>
   <para style="b" />
   <chapter eid="PSA 78" />
   <chapter number="79" style="c" sid="PSA 79" />
@@ -4408,12 +4408,12 @@
   <para style="q2" vid="PSA 79:1">They have laid Jerusalem in heaps.<verse eid="PSA 79:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 79:2" />They have given the dead bodies of your servants to be food for the birds of the sky,</para>
-  <para style="q2" vid="PSA 79:2">the flesh of your holy ones to the animals of the earth.<verse eid="PSA 79:2" /></para>
+  <para style="q2" vid="PSA 79:2">the flesh of your saints to the animals of the earth.<verse eid="PSA 79:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 79:3" />They have shed their blood like water around Jerusalem.</para>
   <para style="q2" vid="PSA 79:3">There was no one to bury them.<verse eid="PSA 79:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 79:4" />We have become a reproach to our neighbors,</para>
+    <verse number="4" style="v" sid="PSA 79:4" />We have become a reproach to our neighbours,</para>
   <para style="q2" vid="PSA 79:4">a scoffing and derision to those who are around us.<verse eid="PSA 79:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 79:5" />How long, LORD?</para>
@@ -4434,13 +4434,13 @@
   <para style="q2" vid="PSA 79:9">Deliver us, and forgive our sins, for your name’s sake.<verse eid="PSA 79:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 79:10" />Why should the nations say, “Where is their God?”</para>
-  <para style="q2" vid="PSA 79:10">Let it be known among the nations, before our eyes,</para>
+  <para style="q2" vid="PSA 79:10">Let it be known amongst the nations, before our eyes,</para>
   <para style="q2" vid="PSA 79:10">that vengeance for your servants’ blood is being poured out.<verse eid="PSA 79:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 79:11" />Let the sighing of the prisoner come before you.</para>
   <para style="q2" vid="PSA 79:11">According to the greatness of your power, preserve those who are sentenced to death.<verse eid="PSA 79:11" /></para>
   <para style="q1">
-    <verse number="12" style="v" sid="PSA 79:12" />Pay back to our neighbors seven times into their bosom</para>
+    <verse number="12" style="v" sid="PSA 79:12" />Pay back to our neighbours seven times into their bosom</para>
   <para style="q2" vid="PSA 79:12">their reproach with which they have reproached you, Lord.<verse eid="PSA 79:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 79:13" />So we, your people and sheep of your pasture,</para>
@@ -4463,16 +4463,16 @@
   <para style="q2" vid="PSA 80:3">and we will be saved.<verse eid="PSA 80:3" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 80:4" />LORD God of Hosts,</para>
+    <verse number="4" style="v" sid="PSA 80:4" />LORD God of Armies,</para>
   <para style="q2" vid="PSA 80:4">how long will you be angry against the prayer of your people?<verse eid="PSA 80:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 80:5" />You have fed them with the bread of tears,</para>
   <para style="q2" vid="PSA 80:5">and given them tears to drink in large measure.<verse eid="PSA 80:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 80:6" />You make us a source of contention to our neighbors.</para>
-  <para style="q2" vid="PSA 80:6">Our enemies laugh among themselves.<verse eid="PSA 80:6" /></para>
+    <verse number="6" style="v" sid="PSA 80:6" />You make us a source of contention to our neighbours.</para>
+  <para style="q2" vid="PSA 80:6">Our enemies laugh amongst themselves.<verse eid="PSA 80:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 80:7" />Turn us again, God of Hosts.</para>
+    <verse number="7" style="v" sid="PSA 80:7" />Turn us again, God of Armies.</para>
   <para style="q2" vid="PSA 80:7">Cause your face to shine,</para>
   <para style="q2" vid="PSA 80:7">and we will be saved.<verse eid="PSA 80:7" /></para>
   <para style="b" />
@@ -4495,13 +4495,13 @@
     <verse number="13" style="v" sid="PSA 80:13" />The boar out of the wood ravages it.</para>
   <para style="q2" vid="PSA 80:13">The wild animals of the field feed on it.<verse eid="PSA 80:13" /></para>
   <para style="q1">
-    <verse number="14" style="v" sid="PSA 80:14" />Turn again, we beg you, God of Hosts.</para>
+    <verse number="14" style="v" sid="PSA 80:14" />Turn again, we beg you, God of Armies.</para>
   <para style="q2" vid="PSA 80:14">Look down from heaven, and see, and visit this vine,<verse eid="PSA 80:14" /></para>
   <para style="q1">
     <verse number="15" style="v" sid="PSA 80:15" />the stock which your right hand planted,</para>
   <para style="q2" vid="PSA 80:15">the branch that you made strong for yourself.<verse eid="PSA 80:15" /></para>
   <para style="q1">
-    <verse number="16" style="v" sid="PSA 80:16" />It’s burned with fire.</para>
+    <verse number="16" style="v" sid="PSA 80:16" />It’s burnt with fire.</para>
   <para style="q2" vid="PSA 80:16">It’s cut down.</para>
   <para style="q2" vid="PSA 80:16">They perish at your rebuke.<verse eid="PSA 80:16" /></para>
   <para style="q1">
@@ -4511,7 +4511,7 @@
     <verse number="18" style="v" sid="PSA 80:18" />So we will not turn away from you.</para>
   <para style="q2" vid="PSA 80:18">Revive us, and we will call on your name.<verse eid="PSA 80:18" /></para>
   <para style="q1">
-    <verse number="19" style="v" sid="PSA 80:19" />Turn us again, LORD God of Hosts.</para>
+    <verse number="19" style="v" sid="PSA 80:19" />Turn us again, LORD God of Armies.</para>
   <para style="q2" vid="PSA 80:19">Cause your face to shine, and we will be saved.<verse eid="PSA 80:19" /></para>
   <chapter eid="PSA 80" />
   <chapter number="81" style="c" sid="PSA 81" />
@@ -4523,7 +4523,7 @@
     <verse number="2" style="v" sid="PSA 81:2" />Raise a song, and bring here the tambourine,</para>
   <para style="q2" vid="PSA 81:2">the pleasant lyre with the harp.<verse eid="PSA 81:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 81:3" />Blow the shofar at the New Moon,</para>
+    <verse number="3" style="v" sid="PSA 81:3" />Blow the trumpet at the New Moon,</para>
   <para style="q2" vid="PSA 81:3">at the full moon, on our feast day.<verse eid="PSA 81:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 81:4" />For it is a statute for Israel,</para>
@@ -4573,7 +4573,7 @@
   <para style="d">A Psalm by Asaph.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 82:1" />God presides in the great assembly.</para>
-  <para style="q2" vid="PSA 82:1">He judges among the gods.<verse eid="PSA 82:1" /></para>
+  <para style="q2" vid="PSA 82:1">He judges amongst the gods.<verse eid="PSA 82:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 82:2" />“How long will you judge unjustly,</para>
   <para style="q2" vid="PSA 82:2">and show partiality to the wicked?” <char style="qs">Selah.</char><verse eid="PSA 82:2" /></para>
@@ -4659,14 +4659,14 @@
   <para style="d">For the Chief Musician. On an instrument of Gath. A Psalm by the sons of Korah.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 84:1" />How lovely are your dwellings,</para>
-  <para style="q2" vid="PSA 84:1">LORD of Hosts!<verse eid="PSA 84:1" /></para>
+  <para style="q2" vid="PSA 84:1">LORD of Armies!<verse eid="PSA 84:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 84:2" />My soul longs, and even faints for the courts of the LORD.</para>
   <para style="q2" vid="PSA 84:2">My heart and my flesh cry out for the living God.<verse eid="PSA 84:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 84:3" />Yes, the sparrow has found a home,</para>
   <para style="q2" vid="PSA 84:3">and the swallow a nest for herself, where she may have her young,</para>
-  <para style="q2" vid="PSA 84:3">near your altars, LORD of Hosts, my King, and my God.<verse eid="PSA 84:3" /></para>
+  <para style="q2" vid="PSA 84:3">near your altars, LORD of Armies, my King, and my God.<verse eid="PSA 84:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 84:4" />Blessed are those who dwell in your house.</para>
   <para style="q2" vid="PSA 84:4">They are always praising you. <char style="qs">Selah.</char><verse eid="PSA 84:4" /></para>
@@ -4680,7 +4680,7 @@
     <verse number="7" style="v" sid="PSA 84:7" />They go from strength to strength.</para>
   <para style="q2" vid="PSA 84:7">Every one of them appears before God in Zion.<verse eid="PSA 84:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 84:8" />LORD, God of Hosts, hear my prayer.</para>
+    <verse number="8" style="v" sid="PSA 84:8" />LORD, God of Armies, hear my prayer.</para>
   <para style="q2" vid="PSA 84:8">Listen, God of Jacob. <char style="qs">Selah.</char><verse eid="PSA 84:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 84:9" />Behold, God our shield,</para>
@@ -4694,13 +4694,13 @@
   <para style="q2" vid="PSA 84:11">The LORD will give grace and glory.</para>
   <para style="q2" vid="PSA 84:11">He withholds no good thing from those who walk blamelessly.<verse eid="PSA 84:11" /></para>
   <para style="q1">
-    <verse number="12" style="v" sid="PSA 84:12" />LORD of Hosts,</para>
+    <verse number="12" style="v" sid="PSA 84:12" />LORD of Armies,</para>
   <para style="q2" vid="PSA 84:12">blessed is the man who trusts in you.<verse eid="PSA 84:12" /></para>
   <chapter eid="PSA 84" />
   <chapter number="85" style="c" sid="PSA 85" />
   <para style="d">For the Chief Musician. A Psalm by the sons of Korah.</para>
   <para style="q1">
-    <verse number="1" style="v" sid="PSA 85:1" />LORD, you have been favorable to your land.</para>
+    <verse number="1" style="v" sid="PSA 85:1" />LORD, you have been favourable to your land.</para>
   <para style="q2" vid="PSA 85:1">You have restored the fortunes of Jacob.<verse eid="PSA 85:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 85:2" />You have forgiven the iniquity of your people.</para>
@@ -4710,7 +4710,7 @@
   <para style="q2" vid="PSA 85:3">You have turned from the fierceness of your anger.<verse eid="PSA 85:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 85:4" />Turn us, God of our salvation,</para>
-  <para style="q2" vid="PSA 85:4">and cause your indignation toward us to cease.<verse eid="PSA 85:4" /></para>
+  <para style="q2" vid="PSA 85:4">and cause your indignation towards us to cease.<verse eid="PSA 85:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 85:5" />Will you be angry with us forever?</para>
   <para style="q2" vid="PSA 85:5">Will you draw out your anger to all generations?<verse eid="PSA 85:5" /></para>
@@ -4722,7 +4722,7 @@
   <para style="q2" vid="PSA 85:7">Grant us your salvation.<verse eid="PSA 85:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 85:8" />I will hear what God, the LORD, will speak,</para>
-  <para style="q2" vid="PSA 85:8">for he will speak peace to his people, his holy ones;</para>
+  <para style="q2" vid="PSA 85:8">for he will speak peace to his people, his saints;</para>
   <para style="q2" vid="PSA 85:8">but let them not turn again to folly.<verse eid="PSA 85:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 85:9" />Surely his salvation is near those who fear him,</para>
@@ -4764,7 +4764,7 @@
     <verse number="7" style="v" sid="PSA 86:7" />In the day of my trouble I will call on you,</para>
   <para style="q2" vid="PSA 86:7">for you will answer me.<verse eid="PSA 86:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 86:8" />There is no one like you among the gods, Lord,</para>
+    <verse number="8" style="v" sid="PSA 86:8" />There is no one like you amongst the gods, Lord,</para>
   <para style="q2" vid="PSA 86:8">nor any deeds like your deeds.<verse eid="PSA 86:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 86:9" />All nations you have made will come and worship before you, Lord.</para>
@@ -4780,7 +4780,7 @@
     <verse number="12" style="v" sid="PSA 86:12" />I will praise you, Lord my God, with my whole heart.</para>
   <para style="q2" vid="PSA 86:12">I will glorify your name forever more.<verse eid="PSA 86:12" /></para>
   <para style="q1">
-    <verse number="13" style="v" sid="PSA 86:13" />For your loving kindness is great toward me.</para>
+    <verse number="13" style="v" sid="PSA 86:13" />For your loving kindness is great towards me.</para>
   <para style="q2" vid="PSA 86:13">You have delivered my soul from the lowest Sheol.<note caller="+" style="f"><char style="fr" closed="false">86:13 </char><char style="ft" closed="false">Sheol is the place of the dead.</char></note><verse eid="PSA 86:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 86:14" />God, the proud have risen up against me.</para>
@@ -4807,7 +4807,7 @@
   <para style="q1">
     <verse number="3" style="v" sid="PSA 87:3" />Glorious things are spoken about you, city of God. <char style="qs">Selah.</char><verse eid="PSA 87:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 87:4" />I will record Rahab<note caller="+" style="f"><char style="fr" closed="false">87:4 </char><char style="ft" closed="false">Rahab is a reference to Egypt.</char></note> and Babylon among those who acknowledge me.</para>
+    <verse number="4" style="v" sid="PSA 87:4" />I will record Rahab<note caller="+" style="f"><char style="fr" closed="false">87:4 </char><char style="ft" closed="false">Rahab is a reference to Egypt.</char></note> and Babylon amongst those who acknowledge me.</para>
   <para style="q2" vid="PSA 87:4">Behold, Philistia, Tyre, and also Ethiopia:</para>
   <para style="q2" vid="PSA 87:4">“This one was born there.”<verse eid="PSA 87:4" /></para>
   <para style="q1">
@@ -4832,10 +4832,10 @@
     <verse number="3" style="v" sid="PSA 88:3" />For my soul is full of troubles.</para>
   <para style="q2" vid="PSA 88:3">My life draws near to Sheol.<note caller="+" style="f"><char style="fr" closed="false">88:3 </char><char style="ft" closed="false">Sheol is the place of the dead.</char></note><verse eid="PSA 88:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 88:4" />I am counted among those who go down into the pit.</para>
+    <verse number="4" style="v" sid="PSA 88:4" />I am counted amongst those who go down into the pit.</para>
   <para style="q2" vid="PSA 88:4">I am like a man who has no help,<verse eid="PSA 88:4" /></para>
   <para style="q2">
-    <verse number="5" style="v" sid="PSA 88:5" />set apart among the dead,</para>
+    <verse number="5" style="v" sid="PSA 88:5" />set apart amongst the dead,</para>
   <para style="q2" vid="PSA 88:5">like the slain who lie in the grave,</para>
   <para style="q2" vid="PSA 88:5">whom you remember no more.</para>
   <para style="q2" vid="PSA 88:5">They are cut off from your hand.<verse eid="PSA 88:5" /></para>
@@ -4902,12 +4902,12 @@
   <para style="q2" vid="PSA 89:5">your faithfulness also in the assembly of the holy ones.<verse eid="PSA 89:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 89:6" />For who in the skies can be compared to the LORD?</para>
-  <para style="q2" vid="PSA 89:6">Who among the sons of the heavenly beings is like the LORD,<verse eid="PSA 89:6" /></para>
+  <para style="q2" vid="PSA 89:6">Who amongst the sons of the heavenly beings is like the LORD,<verse eid="PSA 89:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 89:7" />a very awesome God in the council of the holy ones,</para>
   <para style="q2" vid="PSA 89:7">to be feared above all those who are around him?<verse eid="PSA 89:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 89:8" />LORD, God of Hosts, who is a mighty one, like you?</para>
+    <verse number="8" style="v" sid="PSA 89:8" />LORD, God of Armies, who is a mighty one, like you?</para>
   <para style="q2" vid="PSA 89:8">The LORD, your faithfulness is around you.<verse eid="PSA 89:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 89:9" />You rule the pride of the sea.</para>
@@ -4937,13 +4937,13 @@
   <para style="q2" vid="PSA 89:16">In your righteousness, they are exalted.<verse eid="PSA 89:16" /></para>
   <para style="q1">
     <verse number="17" style="v" sid="PSA 89:17" />For you are the glory of their strength.</para>
-  <para style="q2" vid="PSA 89:17">In your favor, our horn will be exalted.<verse eid="PSA 89:17" /></para>
+  <para style="q2" vid="PSA 89:17">In your favour, our horn will be exalted.<verse eid="PSA 89:17" /></para>
   <para style="q1">
     <verse number="18" style="v" sid="PSA 89:18" />For our shield belongs to the LORD,</para>
   <para style="q2" vid="PSA 89:18">our king to the Holy One of Israel.<verse eid="PSA 89:18" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="19" style="v" sid="PSA 89:19" />Then you spoke in vision to your holy ones,</para>
+    <verse number="19" style="v" sid="PSA 89:19" />Then you spoke in vision to your saints,</para>
   <para style="q2" vid="PSA 89:19">and said, “I have given strength to the warrior.</para>
   <para style="q2" vid="PSA 89:19">I have exalted a young man from the people.<verse eid="PSA 89:19" /></para>
   <para style="q1">
@@ -4977,7 +4977,7 @@
     <verse number="29" style="v" sid="PSA 89:29" />I will also make his offspring endure forever,</para>
   <para style="q2" vid="PSA 89:29">and his throne as the days of heaven.<verse eid="PSA 89:29" /></para>
   <para style="q1">
-    <verse number="30" style="v" sid="PSA 89:30" />If his children forsake my Torah,</para>
+    <verse number="30" style="v" sid="PSA 89:30" />If his children forsake my law,</para>
   <para style="q2" vid="PSA 89:30">and don’t walk in my ordinances;<verse eid="PSA 89:30" /></para>
   <para style="q1">
     <verse number="31" style="v" sid="PSA 89:31" />if they break my statutes,</para>
@@ -5012,7 +5012,7 @@
   <para style="q2" vid="PSA 89:40">You have brought his strongholds to ruin.<verse eid="PSA 89:40" /></para>
   <para style="q1">
     <verse number="41" style="v" sid="PSA 89:41" />All who pass by the way rob him.</para>
-  <para style="q1" vid="PSA 89:41">He has become a reproach to his neighbors.<verse eid="PSA 89:41" /></para>
+  <para style="q1" vid="PSA 89:41">He has become a reproach to his neighbours.<verse eid="PSA 89:41" /></para>
   <para style="q1">
     <verse number="42" style="v" sid="PSA 89:42" />You have exalted the right hand of his adversaries.</para>
   <para style="q2" vid="PSA 89:42">You have made all of his enemies rejoice.<verse eid="PSA 89:42" /></para>
@@ -5020,7 +5020,7 @@
     <verse number="43" style="v" sid="PSA 89:43" />Yes, you turn back the edge of his sword,</para>
   <para style="q2" vid="PSA 89:43">and haven’t supported him in battle.<verse eid="PSA 89:43" /></para>
   <para style="q1">
-    <verse number="44" style="v" sid="PSA 89:44" />You have ended his splendor,</para>
+    <verse number="44" style="v" sid="PSA 89:44" />You have ended his splendour,</para>
   <para style="q2" vid="PSA 89:44">and thrown his throne down to the ground.<verse eid="PSA 89:44" /></para>
   <para style="q1">
     <verse number="45" style="v" sid="PSA 89:45" />You have shortened the days of his youth.</para>
@@ -5053,7 +5053,7 @@
   <para style="ms1">BOOK 4</para>
   <para style="d">A Prayer by Moses, the man of God.<note caller="+" style="f"><char style="fr" closed="false">90:0 </char><char style="ft" closed="false">The Hebrew word rendered “God” is “אֱלֹהִ֑ים” (Elohim).</char></note></para>
   <para style="q1">
-    <verse number="1" style="v" sid="PSA 90:1" />Lord,<note caller="+" style="f"><char style="fr" closed="false">90:1 </char><char style="ft" closed="false">The word translated “Lord” (mixed case) is “Adonai.”</char></note> you have been our dwelling place for all generations.<verse eid="PSA 90:1" /></para>
+    <verse number="1" style="v" sid="PSA 90:1" />Lord,<note caller="+" style="f"><char style="fr" closed="false">90:1 </char><char style="ft" closed="false">The word translated “Lord” is “Adonai.”</char></note> you have been our dwelling place for all generations.<verse eid="PSA 90:1" /></para>
   <para style="q2">
     <verse number="2" style="v" sid="PSA 90:2" />Before the mountains were born,</para>
   <para style="q2" vid="PSA 90:2">before you had formed the earth and the world,</para>
@@ -5082,7 +5082,7 @@
   <para style="q1">
     <verse number="10" style="v" sid="PSA 90:10" />The days of our years are seventy,</para>
   <para style="q2" vid="PSA 90:10">or even by reason of strength eighty years;</para>
-  <para style="q2" vid="PSA 90:10">yet their pride is but labor and sorrow,</para>
+  <para style="q2" vid="PSA 90:10">yet their pride is but labour and sorrow,</para>
   <para style="q2" vid="PSA 90:10">for it passes quickly, and we fly away.<verse eid="PSA 90:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 90:11" />Who knows the power of your anger,</para>
@@ -5104,7 +5104,7 @@
     <verse number="16" style="v" sid="PSA 90:16" />Let your work appear to your servants,</para>
   <para style="q2" vid="PSA 90:16">your glory to their children.<verse eid="PSA 90:16" /></para>
   <para style="q1">
-    <verse number="17" style="v" sid="PSA 90:17" />Let the favor of the Lord our God be on us.</para>
+    <verse number="17" style="v" sid="PSA 90:17" />Let the favour of the Lord our God be on us.</para>
   <para style="q2" vid="PSA 90:17">Establish the work of our hands for us.</para>
   <para style="q2" vid="PSA 90:17">Yes, establish the work of our hands.<verse eid="PSA 90:17" /></para>
   <chapter eid="PSA 90" />
@@ -5156,10 +5156,10 @@
   <para style="q1">
     <verse number="15" style="v" sid="PSA 91:15" />He will call on me, and I will answer him.</para>
   <para style="q2" vid="PSA 91:15">I will be with him in trouble.</para>
-  <para style="q2" vid="PSA 91:15">I will deliver him, and honor him.<verse eid="PSA 91:15" /></para>
+  <para style="q2" vid="PSA 91:15">I will deliver him, and honour him.<verse eid="PSA 91:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 91:16" />I will satisfy him with long life,</para>
-  <para style="q2" vid="PSA 91:16">and show him my salvation [yeshuah-ti].”<verse eid="PSA 91:16" /></para>
+  <para style="q2" vid="PSA 91:16">and show him my salvation.”<verse eid="PSA 91:16" /></para>
   <chapter eid="PSA 91" />
   <chapter number="92" style="c" sid="PSA 92" />
   <para style="d">A Psalm. A song for the Sabbath day.</para>
@@ -5257,7 +5257,7 @@
     <verse number="7" style="v" sid="PSA 94:7" />They say, “The LORD will not see,</para>
   <para style="q2" vid="PSA 94:7">neither will Jacob’s God consider.”<verse eid="PSA 94:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 94:8" />Consider, you senseless among the people;</para>
+    <verse number="8" style="v" sid="PSA 94:8" />Consider, you senseless amongst the people;</para>
   <para style="q2" vid="PSA 94:8">you fools, when will you be wise?<verse eid="PSA 94:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 94:9" />He who implanted the ear, won’t he hear?</para>
@@ -5270,7 +5270,7 @@
   <para style="q2" vid="PSA 94:11">that they are futile.<verse eid="PSA 94:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 94:12" />Blessed is the man whom you discipline, LORD,</para>
-  <para style="q2" vid="PSA 94:12">and teach out of your Torah,<verse eid="PSA 94:12" /></para>
+  <para style="q2" vid="PSA 94:12">and teach out of your law,<verse eid="PSA 94:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 94:13" />that you may give him rest from the days of adversity,</para>
   <para style="q2" vid="PSA 94:13">until the pit is dug for the wicked.<verse eid="PSA 94:13" /></para>
@@ -5278,7 +5278,7 @@
     <verse number="14" style="v" sid="PSA 94:14" />For the LORD won’t reject his people,</para>
   <para style="q2" vid="PSA 94:14">neither will he forsake his inheritance.<verse eid="PSA 94:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 94:15" />For judgment will return to righteousness.</para>
+    <verse number="15" style="v" sid="PSA 94:15" />For judgement will return to righteousness.</para>
   <para style="q2" vid="PSA 94:15">All the upright in heart shall follow it.<verse eid="PSA 94:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 94:16" />Who will rise up for me against the wicked?</para>
@@ -5353,8 +5353,8 @@
   <para style="q2" vid="PSA 96:2">Bless his name!</para>
   <para style="q2" vid="PSA 96:2">Proclaim his salvation from day to day!<verse eid="PSA 96:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 96:3" />Declare his glory among the nations,</para>
-  <para style="q2" vid="PSA 96:3">his marvelous works among all the peoples.<verse eid="PSA 96:3" /></para>
+    <verse number="3" style="v" sid="PSA 96:3" />Declare his glory amongst the nations,</para>
+  <para style="q2" vid="PSA 96:3">his marvellous works amongst all the peoples.<verse eid="PSA 96:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 96:4" />For the LORD is great, and greatly to be praised!</para>
   <para style="q2" vid="PSA 96:4">He is to be feared above all gods.<verse eid="PSA 96:4" /></para>
@@ -5362,7 +5362,7 @@
     <verse number="5" style="v" sid="PSA 96:5" />For all the gods of the peoples are idols,</para>
   <para style="q2" vid="PSA 96:5">but the LORD made the heavens.<verse eid="PSA 96:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 96:6" />Honor and majesty are before him.</para>
+    <verse number="6" style="v" sid="PSA 96:6" />Honour and majesty are before him.</para>
   <para style="q2" vid="PSA 96:6">Strength and beauty are in his sanctuary.<verse eid="PSA 96:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 96:7" />Ascribe to the LORD, you families of nations,</para>
@@ -5374,7 +5374,7 @@
     <verse number="9" style="v" sid="PSA 96:9" />Worship the LORD in holy array.</para>
   <para style="q2" vid="PSA 96:9">Tremble before him, all the earth.<verse eid="PSA 96:9" /></para>
   <para style="q1">
-    <verse number="10" style="v" sid="PSA 96:10" />Say among the nations, “The LORD reigns.”</para>
+    <verse number="10" style="v" sid="PSA 96:10" />Say amongst the nations, “The LORD reigns.”</para>
   <para style="q2" vid="PSA 96:10">The world is also established.</para>
   <para style="q2" vid="PSA 96:10">It can’t be moved.</para>
   <para style="q2" vid="PSA 96:10">He will judge the peoples with equity.<verse eid="PSA 96:10" /></para>
@@ -5417,13 +5417,13 @@
   <para style="q1">
     <verse number="8" style="v" sid="PSA 97:8" />Zion heard and was glad.</para>
   <para style="q2" vid="PSA 97:8">The daughters of Judah rejoiced</para>
-  <para style="q2" vid="PSA 97:8">because of your judgments, LORD.<verse eid="PSA 97:8" /></para>
+  <para style="q2" vid="PSA 97:8">because of your judgements, LORD.<verse eid="PSA 97:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 97:9" />For you, LORD, are most high above all the earth.</para>
   <para style="q2" vid="PSA 97:9">You are exalted far above all gods.<verse eid="PSA 97:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 97:10" />You who love the LORD, hate evil!</para>
-  <para style="q2" vid="PSA 97:10">He preserves the souls of his holy ones.</para>
+  <para style="q2" vid="PSA 97:10">He preserves the souls of his saints.</para>
   <para style="q2" vid="PSA 97:10">He delivers them out of the hand of the wicked.<verse eid="PSA 97:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 97:11" />Light is sown for the righteous,</para>
@@ -5436,13 +5436,13 @@
   <para style="d">A Psalm.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 98:1" />Sing to the LORD a new song,</para>
-  <para style="q2" vid="PSA 98:1">for he has done marvelous things!</para>
+  <para style="q2" vid="PSA 98:1">for he has done marvellous things!</para>
   <para style="q2" vid="PSA 98:1">His right hand and his holy arm have worked salvation for him.<verse eid="PSA 98:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 98:2" />The LORD has made known his salvation.</para>
   <para style="q2" vid="PSA 98:2">He has openly shown his righteousness in the sight of the nations.<verse eid="PSA 98:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 98:3" />He has remembered his loving kindness and his faithfulness toward the house of Israel.</para>
+    <verse number="3" style="v" sid="PSA 98:3" />He has remembered his loving kindness and his faithfulness towards the house of Israel.</para>
   <para style="q2" vid="PSA 98:3">All the ends of the earth have seen the salvation of our God.<verse eid="PSA 98:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 98:4" />Make a joyful noise to the LORD, all the earth!</para>
@@ -5451,7 +5451,7 @@
     <verse number="5" style="v" sid="PSA 98:5" />Sing praises to the LORD with the harp,</para>
   <para style="q2" vid="PSA 98:5">with the harp and the voice of melody.<verse eid="PSA 98:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 98:6" />With shofars<note caller="+" style="f"><char style="fr" closed="false">98:6 </char><char style="ft" closed="false">or, trumpets</char></note> and sound of the ram’s horn,</para>
+    <verse number="6" style="v" sid="PSA 98:6" />With trumpets and sound of the ram’s horn,</para>
   <para style="q2" vid="PSA 98:6">make a joyful noise before the King, the LORD.<verse eid="PSA 98:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 98:7" />Let the sea roar with its fullness;</para>
@@ -5468,7 +5468,7 @@
   <chapter number="99" style="c" sid="PSA 99" />
   <para style="q1">
     <verse number="1" style="v" sid="PSA 99:1" />The LORD reigns! Let the peoples tremble.</para>
-  <para style="q2" vid="PSA 99:1">He sits enthroned among the cherubim.</para>
+  <para style="q2" vid="PSA 99:1">He sits enthroned amongst the cherubim.</para>
   <para style="q2" vid="PSA 99:1">Let the earth be moved.<verse eid="PSA 99:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 99:2" />The LORD is great in Zion.</para>
@@ -5487,8 +5487,8 @@
   <para style="q2" vid="PSA 99:5">He is Holy!<verse eid="PSA 99:5" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 99:6" />Moses and Aaron were among his priests,</para>
-  <para style="q2" vid="PSA 99:6">Samuel was among those who call on his name.</para>
+    <verse number="6" style="v" sid="PSA 99:6" />Moses and Aaron were amongst his priests,</para>
+  <para style="q2" vid="PSA 99:6">Samuel was amongst those who call on his name.</para>
   <para style="q2" vid="PSA 99:6">They called on the LORD, and he answered them.<verse eid="PSA 99:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 99:7" />He spoke to them in the pillar of cloud.</para>
@@ -5540,7 +5540,7 @@
     <verse number="4" style="v" sid="PSA 101:4" />A perverse heart will be far from me.</para>
   <para style="q2" vid="PSA 101:4">I will have nothing to do with evil.<verse eid="PSA 101:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 101:5" />I will silence whoever secretly slanders his neighbor.</para>
+    <verse number="5" style="v" sid="PSA 101:5" />I will silence whoever secretly slanders his neighbour.</para>
   <para style="q2" vid="PSA 101:5">I won’t tolerate one who is arrogant and conceited.<verse eid="PSA 101:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 101:6" />My eyes will be on the faithful of the land,</para>
@@ -5565,7 +5565,7 @@
   <para style="q2" vid="PSA 102:2">Answer me quickly in the day when I call.<verse eid="PSA 102:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 102:3" />For my days consume away like smoke.</para>
-  <para style="q2" vid="PSA 102:3">My bones are burned as a torch.<verse eid="PSA 102:3" /></para>
+  <para style="q2" vid="PSA 102:3">My bones are burnt as a torch.<verse eid="PSA 102:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 102:4" />My heart is blighted like grass, and withered,</para>
   <para style="q2" vid="PSA 102:4">for I forget to eat my bread.<verse eid="PSA 102:4" /></para>
@@ -5679,7 +5679,7 @@
   <para style="q2" vid="PSA 103:10">nor repaid us for our iniquities.<verse eid="PSA 103:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 103:11" />For as the heavens are high above the earth,</para>
-  <para style="q2" vid="PSA 103:11">so great is his loving kindness toward those who fear him.<verse eid="PSA 103:11" /></para>
+  <para style="q2" vid="PSA 103:11">so great is his loving kindness towards those who fear him.<verse eid="PSA 103:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 103:12" />As far as the east is from the west,</para>
   <para style="q2" vid="PSA 103:12">so far has he removed our transgressions from us.<verse eid="PSA 103:12" /></para>
@@ -5706,7 +5706,7 @@
   <para style="q2" vid="PSA 103:19">His kingdom rules over all.<verse eid="PSA 103:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 103:20" />Praise the LORD, you angels of his,</para>
-  <para style="q2" vid="PSA 103:20">who are mighty in strength, who fulfill his word,</para>
+  <para style="q2" vid="PSA 103:20">who are mighty in strength, who fulfil his word,</para>
   <para style="q2" vid="PSA 103:20">obeying the voice of his word.<verse eid="PSA 103:20" /></para>
   <para style="q1">
     <verse number="21" style="v" sid="PSA 103:21" />Praise the LORD, all you armies of his,</para>
@@ -5720,7 +5720,7 @@
   <para style="q1">
     <verse number="1" style="v" sid="PSA 104:1" />Bless the LORD, my soul.</para>
   <para style="q2" vid="PSA 104:1">The LORD, my God, you are very great.</para>
-  <para style="q2" vid="PSA 104:1">You are clothed with honor and majesty.<verse eid="PSA 104:1" /></para>
+  <para style="q2" vid="PSA 104:1">You are clothed with honour and majesty.<verse eid="PSA 104:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 104:2" />He covers himself with light as with a garment.</para>
   <para style="q2" vid="PSA 104:2">He stretches out the heavens like a curtain.<verse eid="PSA 104:2" /></para>
@@ -5749,13 +5749,13 @@
   <para style="q2" vid="PSA 104:9">that they don’t turn again to cover the earth.<verse eid="PSA 104:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 104:10" />He sends springs into the valleys.</para>
-  <para style="q2" vid="PSA 104:10">They run among the mountains.<verse eid="PSA 104:10" /></para>
+  <para style="q2" vid="PSA 104:10">They run amongst the mountains.<verse eid="PSA 104:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 104:11" />They give drink to every animal of the field.</para>
   <para style="q2" vid="PSA 104:11">The wild donkeys quench their thirst.<verse eid="PSA 104:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 104:12" />The birds of the sky nest by them.</para>
-  <para style="q2" vid="PSA 104:12">They sing among the branches.<verse eid="PSA 104:12" /></para>
+  <para style="q2" vid="PSA 104:12">They sing amongst the branches.<verse eid="PSA 104:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 104:13" />He waters the mountains from his rooms.</para>
   <para style="q2" vid="PSA 104:13">The earth is filled with the fruit of your works.<verse eid="PSA 104:13" /></para>
@@ -5790,7 +5790,7 @@
   <para style="q2" vid="PSA 104:22">and lie down in their dens.<verse eid="PSA 104:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 104:23" />Man goes out to his work,</para>
-  <para style="q2" vid="PSA 104:23">to his labor until the evening.<verse eid="PSA 104:23" /></para>
+  <para style="q2" vid="PSA 104:23">to his labour until the evening.<verse eid="PSA 104:23" /></para>
   <para style="q1">
     <verse number="24" style="v" sid="PSA 104:24" />The LORD, how many are your works!</para>
   <para style="q2" vid="PSA 104:24">In wisdom, you have made them all.</para>
@@ -5835,10 +5835,10 @@
   <chapter number="105" style="c" sid="PSA 105" />
   <para style="q1">
     <verse number="1" style="v" sid="PSA 105:1" />Give thanks to the LORD! Call on his name!</para>
-  <para style="q2" vid="PSA 105:1">Make his doings known among the peoples.<verse eid="PSA 105:1" /></para>
+  <para style="q2" vid="PSA 105:1">Make his doings known amongst the peoples.<verse eid="PSA 105:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 105:2" />Sing to him, sing praises to him!</para>
-  <para style="q2" vid="PSA 105:2">Tell of all his marvelous works.<verse eid="PSA 105:2" /></para>
+  <para style="q2" vid="PSA 105:2">Tell of all his marvellous works.<verse eid="PSA 105:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 105:3" />Glory in his holy name.</para>
   <para style="q2" vid="PSA 105:3">Let the heart of those who seek the LORD rejoice.<verse eid="PSA 105:3" /></para>
@@ -5846,14 +5846,14 @@
     <verse number="4" style="v" sid="PSA 105:4" />Seek the LORD and his strength.</para>
   <para style="q2" vid="PSA 105:4">Seek his face forever more.<verse eid="PSA 105:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 105:5" />Remember his marvelous works that he has done:</para>
-  <para style="q2" vid="PSA 105:5">his wonders, and the judgments of his mouth,<verse eid="PSA 105:5" /></para>
+    <verse number="5" style="v" sid="PSA 105:5" />Remember his marvellous works that he has done:</para>
+  <para style="q2" vid="PSA 105:5">his wonders, and the judgements of his mouth,<verse eid="PSA 105:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 105:6" />you offspring of Abraham, his servant,</para>
   <para style="q2" vid="PSA 105:6">you children of Jacob, his chosen ones.<verse eid="PSA 105:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 105:7" />He is the LORD, our God.</para>
-  <para style="q2" vid="PSA 105:7">His judgments are in all the earth.<verse eid="PSA 105:7" /></para>
+  <para style="q2" vid="PSA 105:7">His judgements are in all the earth.<verse eid="PSA 105:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 105:8" />He has remembered his covenant forever,</para>
   <para style="q2" vid="PSA 105:8">the word which he commanded to a thousand generations,<verse eid="PSA 105:8" /></para>
@@ -5912,7 +5912,7 @@
     <verse number="26" style="v" sid="PSA 105:26" />He sent Moses, his servant,</para>
   <para style="q2" vid="PSA 105:26">and Aaron, whom he had chosen.<verse eid="PSA 105:26" /></para>
   <para style="q1">
-    <verse number="27" style="v" sid="PSA 105:27" />They performed miracles among them,</para>
+    <verse number="27" style="v" sid="PSA 105:27" />They performed miracles amongst them,</para>
   <para style="q2" vid="PSA 105:27">and wonders in the land of Ham.<verse eid="PSA 105:27" /></para>
   <para style="q1">
     <verse number="28" style="v" sid="PSA 105:28" />He sent darkness, and made it dark.</para>
@@ -5943,7 +5943,7 @@
   <para style="q2" vid="PSA 105:36">the first fruits of all their manhood.<verse eid="PSA 105:36" /></para>
   <para style="q1">
     <verse number="37" style="v" sid="PSA 105:37" />He brought them out with silver and gold.</para>
-  <para style="q2" vid="PSA 105:37">There was not one feeble person among his tribes.<verse eid="PSA 105:37" /></para>
+  <para style="q2" vid="PSA 105:37">There was not one feeble person amongst his tribes.<verse eid="PSA 105:37" /></para>
   <para style="q1">
     <verse number="38" style="v" sid="PSA 105:38" />Egypt was glad when they departed,</para>
   <para style="q2" vid="PSA 105:38">for the fear of them had fallen on them.<verse eid="PSA 105:38" /></para>
@@ -5964,7 +5964,7 @@
   <para style="q2" vid="PSA 105:43">his chosen with singing.<verse eid="PSA 105:43" /></para>
   <para style="q1">
     <verse number="44" style="v" sid="PSA 105:44" />He gave them the lands of the nations.</para>
-  <para style="q2" vid="PSA 105:44">They took the labor of the peoples in possession,<verse eid="PSA 105:44" /></para>
+  <para style="q2" vid="PSA 105:44">They took the labour of the peoples in possession,<verse eid="PSA 105:44" /></para>
   <para style="q1">
     <verse number="45" style="v" sid="PSA 105:45" />that they might keep his statutes,</para>
   <para style="q2" vid="PSA 105:45">and observe his laws.</para>
@@ -5982,7 +5982,7 @@
     <verse number="3" style="v" sid="PSA 106:3" />Blessed are those who keep justice.</para>
   <para style="q2" vid="PSA 106:3">Blessed is one who does what is right at all times.<verse eid="PSA 106:3" /></para>
   <para style="q1">
-    <verse number="4" style="v" sid="PSA 106:4" />Remember me, LORD, with the favor that you show to your people.</para>
+    <verse number="4" style="v" sid="PSA 106:4" />Remember me, LORD, with the favour that you show to your people.</para>
   <para style="q2" vid="PSA 106:4">Visit me with your salvation,<verse eid="PSA 106:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 106:5" />that I may see the prosperity of your chosen,</para>
@@ -5996,12 +5996,12 @@
   <para style="q1">
     <verse number="7" style="v" sid="PSA 106:7" />Our fathers didn’t understand your wonders in Egypt.</para>
   <para style="q2" vid="PSA 106:7">They didn’t remember the multitude of your loving kindnesses,</para>
-  <para style="q2" vid="PSA 106:7">but were rebellious at the sea, even at the Sea of Suf.<verse eid="PSA 106:7" /></para>
+  <para style="q2" vid="PSA 106:7">but were rebellious at the sea, even at the Red Sea.<verse eid="PSA 106:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 106:8" />Nevertheless he saved them for his name’s sake,</para>
   <para style="q2" vid="PSA 106:8">that he might make his mighty power known.<verse eid="PSA 106:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 106:9" />He rebuked the Sea of Suf also, and it was dried up;</para>
+    <verse number="9" style="v" sid="PSA 106:9" />He rebuked the Red Sea also, and it was dried up;</para>
   <para style="q2" vid="PSA 106:9">so he led them through the depths, as through a desert.<verse eid="PSA 106:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 106:10" />He saved them from the hand of him who hated them,</para>
@@ -6024,25 +6024,25 @@
   <para style="q2" vid="PSA 106:15">but sent leanness into their soul.<verse eid="PSA 106:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 106:16" />They envied Moses also in the camp,</para>
-  <para style="q2" vid="PSA 106:16">and Aaron, the LORD’s holy one.<verse eid="PSA 106:16" /></para>
+  <para style="q2" vid="PSA 106:16">and Aaron, the LORD’s saint.<verse eid="PSA 106:16" /></para>
   <para style="q1">
     <verse number="17" style="v" sid="PSA 106:17" />The earth opened and swallowed up Dathan,</para>
   <para style="q2" vid="PSA 106:17">and covered the company of Abiram.<verse eid="PSA 106:17" /></para>
   <para style="q1">
     <verse number="18" style="v" sid="PSA 106:18" />A fire was kindled in their company.</para>
-  <para style="q2" vid="PSA 106:18">The flame burned up the wicked.<verse eid="PSA 106:18" /></para>
+  <para style="q2" vid="PSA 106:18">The flame burnt up the wicked.<verse eid="PSA 106:18" /></para>
   <para style="q1">
     <verse number="19" style="v" sid="PSA 106:19" />They made a calf in Horeb,</para>
-  <para style="q2" vid="PSA 106:19">and worshiped a molten image.<verse eid="PSA 106:19" /></para>
+  <para style="q2" vid="PSA 106:19">and worshipped a molten image.<verse eid="PSA 106:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 106:20" />Thus they exchanged their glory</para>
   <para style="q2" vid="PSA 106:20">for an image of a bull that eats grass.<verse eid="PSA 106:20" /></para>
   <para style="q1">
-    <verse number="21" style="v" sid="PSA 106:21" />They forgot God, their Savior,</para>
+    <verse number="21" style="v" sid="PSA 106:21" />They forgot God, their Saviour,</para>
   <para style="q2" vid="PSA 106:21">who had done great things in Egypt,<verse eid="PSA 106:21" /></para>
   <para style="q2">
     <verse number="22" style="v" sid="PSA 106:22" />wondrous works in the land of Ham,</para>
-  <para style="q2" vid="PSA 106:22">and awesome things by the Sea of Suf.<verse eid="PSA 106:22" /></para>
+  <para style="q2" vid="PSA 106:22">and awesome things by the Red Sea.<verse eid="PSA 106:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 106:23" />Therefore he said that he would destroy them,</para>
   <para style="q2" vid="PSA 106:23">had Moses, his chosen, not stood before him in the breach,</para>
@@ -6057,7 +6057,7 @@
     <verse number="26" style="v" sid="PSA 106:26" />Therefore he swore to them</para>
   <para style="q2" vid="PSA 106:26">that he would overthrow them in the wilderness,<verse eid="PSA 106:26" /></para>
   <para style="q2">
-    <verse number="27" style="v" sid="PSA 106:27" />that he would overthrow their offspring among the nations,</para>
+    <verse number="27" style="v" sid="PSA 106:27" />that he would overthrow their offspring amongst the nations,</para>
   <para style="q2" vid="PSA 106:27">and scatter them in the lands.<verse eid="PSA 106:27" /></para>
   <para style="q1">
     <verse number="28" style="v" sid="PSA 106:28" />They joined themselves also to Baal Peor,</para>
@@ -6066,7 +6066,7 @@
     <verse number="29" style="v" sid="PSA 106:29" />Thus they provoked him to anger with their deeds.</para>
   <para style="q2" vid="PSA 106:29">The plague broke in on them.<verse eid="PSA 106:29" /></para>
   <para style="q1">
-    <verse number="30" style="v" sid="PSA 106:30" />Then Phinehas stood up and executed judgment,</para>
+    <verse number="30" style="v" sid="PSA 106:30" />Then Phinehas stood up and executed judgement,</para>
   <para style="q2" vid="PSA 106:30">so the plague was stopped.<verse eid="PSA 106:30" /></para>
   <para style="q1">
     <verse number="31" style="v" sid="PSA 106:31" />That was credited to him for righteousness,</para>
@@ -6082,7 +6082,7 @@
   <para style="q2" vid="PSA 106:34">as the LORD commanded them,<verse eid="PSA 106:34" /></para>
   <para style="q2">
     <verse number="35" style="v" sid="PSA 106:35" />but mixed themselves with the nations,</para>
-  <para style="q2" vid="PSA 106:35">and learned their works.<verse eid="PSA 106:35" /></para>
+  <para style="q2" vid="PSA 106:35">and learnt their works.<verse eid="PSA 106:35" /></para>
   <para style="q1">
     <verse number="36" style="v" sid="PSA 106:36" />They served their idols,</para>
   <para style="q2" vid="PSA 106:36">which became a snare to them.<verse eid="PSA 106:36" /></para>
@@ -6097,7 +6097,7 @@
     <verse number="39" style="v" sid="PSA 106:39" />Thus they were defiled with their works,</para>
   <para style="q2" vid="PSA 106:39">and prostituted themselves in their deeds.<verse eid="PSA 106:39" /></para>
   <para style="q1">
-    <verse number="40" style="v" sid="PSA 106:40" />Therefore the LORD burned with anger against his people.</para>
+    <verse number="40" style="v" sid="PSA 106:40" />Therefore the LORD burnt with anger against his people.</para>
   <para style="q2" vid="PSA 106:40">He abhorred his inheritance.<verse eid="PSA 106:40" /></para>
   <para style="q1">
     <verse number="41" style="v" sid="PSA 106:41" />He gave them into the hand of the nations.</para>
@@ -6121,7 +6121,7 @@
   <para style="b" />
   <para style="q1">
     <verse number="47" style="v" sid="PSA 106:47" />Save us, LORD, our God,</para>
-  <para style="q2" vid="PSA 106:47">gather us from among the nations,</para>
+  <para style="q2" vid="PSA 106:47">gather us from amongst the nations,</para>
   <para style="q2" vid="PSA 106:47">to give thanks to your holy name,</para>
   <para style="q2" vid="PSA 106:47">to triumph in your praise!<verse eid="PSA 106:47" /></para>
   <para style="b" />
@@ -6171,7 +6171,7 @@
     <verse number="11" style="v" sid="PSA 107:11" />because they rebelled against the words of God,<note caller="+" style="f"><char style="fr" closed="false">107:11 </char><char style="ft" closed="false">The Hebrew word rendered “God” is “אֱלֹהִ֑ים” (Elohim).</char></note></para>
   <para style="q2" vid="PSA 107:11">and condemned the counsel of the Most High.<verse eid="PSA 107:11" /></para>
   <para style="q1">
-    <verse number="12" style="v" sid="PSA 107:12" />Therefore he brought down their heart with labor.</para>
+    <verse number="12" style="v" sid="PSA 107:12" />Therefore he brought down their heart with labour.</para>
   <para style="q2" vid="PSA 107:12">They fell down, and there was no one to help.<verse eid="PSA 107:12" /></para>
   <para style="q1">
     <verse number="13" style="v" sid="PSA 107:13" />Then they cried to the LORD in their trouble,</para>
@@ -6282,8 +6282,8 @@
     <verse number="2" style="v" sid="PSA 108:2" />Wake up, harp and lyre!</para>
   <para style="q2" vid="PSA 108:2">I will wake up the dawn.<verse eid="PSA 108:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 108:3" />I will give thanks to you, LORD, among the nations.</para>
-  <para style="q2" vid="PSA 108:3">I will sing praises to you among the peoples.<verse eid="PSA 108:3" /></para>
+    <verse number="3" style="v" sid="PSA 108:3" />I will give thanks to you, LORD, amongst the nations.</para>
+  <para style="q2" vid="PSA 108:3">I will sing praises to you amongst the peoples.<verse eid="PSA 108:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 108:4" />For your loving kindness is great above the heavens.</para>
   <para style="q2" vid="PSA 108:4">Your faithfulness reaches to the skies.<verse eid="PSA 108:4" /></para>
@@ -6299,7 +6299,7 @@
   <para style="q1">
     <verse number="8" style="v" sid="PSA 108:8" />Gilead is mine. Manasseh is mine.</para>
   <para style="q2" vid="PSA 108:8">Ephraim also is my helmet.</para>
-  <para style="q2" vid="PSA 108:8">Judah is my scepter.<verse eid="PSA 108:8" /></para>
+  <para style="q2" vid="PSA 108:8">Judah is my sceptre.<verse eid="PSA 108:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 108:9" />Moab is my wash pot.</para>
   <para style="q2" vid="PSA 108:9">I will toss my sandal on Edom.</para>
@@ -6350,7 +6350,7 @@
   <para style="q2" vid="PSA 109:10">Let them be sought from their ruins.<verse eid="PSA 109:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 109:11" />Let the creditor seize all that he has.</para>
-  <para style="q2" vid="PSA 109:11">Let strangers plunder the fruit of his labor.<verse eid="PSA 109:11" /></para>
+  <para style="q2" vid="PSA 109:11">Let strangers plunder the fruit of his labour.<verse eid="PSA 109:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 109:12" />Let there be no one to extend kindness to him,</para>
   <para style="q2" vid="PSA 109:12">neither let there be anyone to have pity on his fatherless children.<verse eid="PSA 109:12" /></para>
@@ -6382,7 +6382,7 @@
   <para style="q2" vid="PSA 109:20">of those who speak evil against my soul.<verse eid="PSA 109:20" /></para>
   <para style="b" />
   <para style="q1">
-    <verse number="21" style="v" sid="PSA 109:21" />But deal with me, GOD the Lord,<note caller="+" style="f"><char style="fr" closed="false">109:21 </char><char style="ft" closed="false">The word translated “Lord” (mixed case) is “Adonai.”</char></note> for your name’s sake,</para>
+    <verse number="21" style="v" sid="PSA 109:21" />But deal with me, GOD the Lord,<note caller="+" style="f"><char style="fr" closed="false">109:21 </char><char style="ft" closed="false">The word translated “Lord” is “Adonai.”</char></note> for your name’s sake,</para>
   <para style="q2" vid="PSA 109:21">because your loving kindness is good, deliver me;<verse eid="PSA 109:21" /></para>
   <para style="q2">
     <verse number="22" style="v" sid="PSA 109:22" />for I am poor and needy.</para>
@@ -6407,11 +6407,11 @@
   <para style="q2" vid="PSA 109:28">When they arise, they will be shamed,</para>
   <para style="q2" vid="PSA 109:28">but your servant shall rejoice.<verse eid="PSA 109:28" /></para>
   <para style="q1">
-    <verse number="29" style="v" sid="PSA 109:29" />Let my adversaries be clothed with dishonor.</para>
+    <verse number="29" style="v" sid="PSA 109:29" />Let my adversaries be clothed with dishonour.</para>
   <para style="q2" vid="PSA 109:29">Let them cover themselves with their own shame as with a robe.<verse eid="PSA 109:29" /></para>
   <para style="q1">
     <verse number="30" style="v" sid="PSA 109:30" />I will give great thanks to the LORD with my mouth.</para>
-  <para style="q2" vid="PSA 109:30">Yes, I will praise him among the multitude.<verse eid="PSA 109:30" /></para>
+  <para style="q2" vid="PSA 109:30">Yes, I will praise him amongst the multitude.<verse eid="PSA 109:30" /></para>
   <para style="q1">
     <verse number="31" style="v" sid="PSA 109:31" />For he will stand at the right hand of the needy,</para>
   <para style="q2" vid="PSA 109:31">to save him from those who judge his soul.<verse eid="PSA 109:31" /></para>
@@ -6423,7 +6423,7 @@
   <para style="q2" vid="PSA 110:1">until I make your enemies your footstool for your feet.”<verse eid="PSA 110:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 110:2" />The LORD will send out the rod of your strength out of Zion.</para>
-  <para style="q2" vid="PSA 110:2">Rule among your enemies.<verse eid="PSA 110:2" /></para>
+  <para style="q2" vid="PSA 110:2">Rule amongst your enemies.<verse eid="PSA 110:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 110:3" />Your people offer themselves willingly in the day of your power, in holy array.</para>
   <para style="q2" vid="PSA 110:3">Out of the womb of the morning, you have the dew of your youth.<verse eid="PSA 110:3" /></para>
@@ -6434,7 +6434,7 @@
     <verse number="5" style="v" sid="PSA 110:5" />The Lord is at your right hand.</para>
   <para style="q2" vid="PSA 110:5">He will crush kings in the day of his wrath.<verse eid="PSA 110:5" /></para>
   <para style="q1">
-    <verse number="6" style="v" sid="PSA 110:6" />He will judge among the nations.</para>
+    <verse number="6" style="v" sid="PSA 110:6" />He will judge amongst the nations.</para>
   <para style="q2" vid="PSA 110:6">He will heap up dead bodies.</para>
   <para style="q2" vid="PSA 110:6">He will crush the ruler of the whole earth.<verse eid="PSA 110:6" /></para>
   <para style="q1">
@@ -6450,7 +6450,7 @@
     <verse number="2" style="v" sid="PSA 111:2" />The LORD’s works are great,</para>
   <para style="q2" vid="PSA 111:2">pondered by all those who delight in them.<verse eid="PSA 111:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 111:3" />His work is honor and majesty.</para>
+    <verse number="3" style="v" sid="PSA 111:3" />His work is honour and majesty.</para>
   <para style="q2" vid="PSA 111:3">His righteousness endures forever.<verse eid="PSA 111:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 111:4" />He has caused his wonderful works to be remembered.</para>
@@ -6492,7 +6492,7 @@
   <para style="q2" vid="PSA 112:4">gracious, merciful, and righteous.<verse eid="PSA 112:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 112:5" />It is well with the man who deals graciously and lends.</para>
-  <para style="q2" vid="PSA 112:5">He will maintain his cause in judgment.<verse eid="PSA 112:5" /></para>
+  <para style="q2" vid="PSA 112:5">He will maintain his cause in judgement.<verse eid="PSA 112:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 112:6" />For he will never be shaken.</para>
   <para style="q2" vid="PSA 112:6">The righteous will be remembered forever.<verse eid="PSA 112:6" /></para>
@@ -6505,7 +6505,7 @@
   <para style="q1">
     <verse number="9" style="v" sid="PSA 112:9" />He has dispersed, he has given to the poor.</para>
   <para style="q2" vid="PSA 112:9">His righteousness endures forever.</para>
-  <para style="q2" vid="PSA 112:9">His horn will be exalted with honor.<verse eid="PSA 112:9" /></para>
+  <para style="q2" vid="PSA 112:9">His horn will be exalted with honour.<verse eid="PSA 112:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 112:10" />The wicked will see it, and be grieved.</para>
   <para style="q2" vid="PSA 112:10">He shall gnash with his teeth, and melt away.</para>
@@ -6663,14 +6663,14 @@
     <verse number="11" style="v" sid="PSA 116:11" />I said in my haste,</para>
   <para style="q2" vid="PSA 116:11">“All people are liars.”<verse eid="PSA 116:11" /></para>
   <para style="q1">
-    <verse number="12" style="v" sid="PSA 116:12" />What will I give to the LORD for all his benefits toward me?<verse eid="PSA 116:12" /></para>
+    <verse number="12" style="v" sid="PSA 116:12" />What will I give to the LORD for all his benefits towards me?<verse eid="PSA 116:12" /></para>
   <para style="q2">
     <verse number="13" style="v" sid="PSA 116:13" />I will take the cup of salvation, and call on the LORD’s name.<verse eid="PSA 116:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 116:14" />I will pay my vows to the LORD,</para>
   <para style="q2" vid="PSA 116:14">yes, in the presence of all his people.<verse eid="PSA 116:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 116:15" />Precious in the LORD’s sight is the death of his holy ones.<verse eid="PSA 116:15" /></para>
+    <verse number="15" style="v" sid="PSA 116:15" />Precious in the LORD’s sight is the death of his saints.<verse eid="PSA 116:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 116:16" />LORD, truly I am your servant.</para>
   <para style="q2" vid="PSA 116:16">I am your servant, the son of your servant girl.</para>
@@ -6691,7 +6691,7 @@
     <verse number="1" style="v" sid="PSA 117:1" />Praise the LORD, all you nations!</para>
   <para style="q2" vid="PSA 117:1">Extol him, all you peoples!<verse eid="PSA 117:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 117:2" />For his loving kindness is great toward us.</para>
+    <verse number="2" style="v" sid="PSA 117:2" />For his loving kindness is great towards us.</para>
   <para style="q2" vid="PSA 117:2">The LORD’s faithfulness endures forever.</para>
   <para style="q1" vid="PSA 117:2">Praise the LORD!<verse eid="PSA 117:2" /></para>
   <chapter eid="PSA 117" />
@@ -6715,7 +6715,7 @@
     <verse number="6" style="v" sid="PSA 118:6" />The LORD is on my side. I will not be afraid.</para>
   <para style="q2" vid="PSA 118:6">What can man do to me?<verse eid="PSA 118:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 118:7" />The LORD is on my side among those who help me.</para>
+    <verse number="7" style="v" sid="PSA 118:7" />The LORD is on my side amongst those who help me.</para>
   <para style="q2" vid="PSA 118:7">Therefore I will look in triumph at those who hate me.<verse eid="PSA 118:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 118:8" />It is better to take refuge in the LORD,</para>
@@ -6738,9 +6738,9 @@
   <para style="q2" vid="PSA 118:13">but the LORD helped me.<verse eid="PSA 118:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 118:14" />The LORD is my strength and song.</para>
-  <para style="q2" vid="PSA 118:14">He has become my salvation [yeshu`ah].<verse eid="PSA 118:14" /></para>
+  <para style="q2" vid="PSA 118:14">He has become my salvation.<verse eid="PSA 118:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 118:15" />The voice of rejoicing and salvation [yeshu`ah] is in the tents of the righteous.</para>
+    <verse number="15" style="v" sid="PSA 118:15" />The voice of rejoicing and salvation is in the tents of the righteous.</para>
   <para style="q2" vid="PSA 118:15">“The right hand of the LORD does valiantly.<verse eid="PSA 118:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 118:16" />The right hand of the LORD is exalted!</para>
@@ -6760,13 +6760,13 @@
   <para style="q2" vid="PSA 118:20">the righteous will enter into it.<verse eid="PSA 118:20" /></para>
   <para style="q1">
     <verse number="21" style="v" sid="PSA 118:21" />I will give thanks to you, for you have answered me,</para>
-  <para style="q2" vid="PSA 118:21">and have become my salvation [yeshu`ah].<verse eid="PSA 118:21" /></para>
+  <para style="q2" vid="PSA 118:21">and have become my salvation.<verse eid="PSA 118:21" /></para>
   <para style="q1">
     <verse number="22" style="v" sid="PSA 118:22" />The stone which the builders rejected</para>
   <para style="q2" vid="PSA 118:22">has become the cornerstone.<note caller="+" style="f"><char style="fr" closed="false">118:22 </char><char style="ft" closed="false">Literally, </char><char style="fqa" closed="false">head of the corner</char></note><verse eid="PSA 118:22" /></para>
   <para style="q1">
     <verse number="23" style="v" sid="PSA 118:23" />This is the LORD’s doing.</para>
-  <para style="q2" vid="PSA 118:23">It is marvelous in our eyes.<verse eid="PSA 118:23" /></para>
+  <para style="q2" vid="PSA 118:23">It is marvellous in our eyes.<verse eid="PSA 118:23" /></para>
   <para style="q1">
     <verse number="24" style="v" sid="PSA 118:24" />This is the day that the LORD has made.</para>
   <para style="q2" vid="PSA 118:24">We will rejoice and be glad in it!<verse eid="PSA 118:24" /></para>
@@ -6808,7 +6808,7 @@
   <para style="q2" vid="PSA 119:6">when I consider all of your commandments.<verse eid="PSA 119:6" /></para>
   <para style="q1">
     <verse number="7" style="v" sid="PSA 119:7" />I will give thanks to you with uprightness of heart,</para>
-  <para style="q2" vid="PSA 119:7">when I learn your righteous judgments.<verse eid="PSA 119:7" /></para>
+  <para style="q2" vid="PSA 119:7">when I learn your righteous judgements.<verse eid="PSA 119:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 119:8" />I will observe your statutes.</para>
   <para style="q2" vid="PSA 119:8">Don’t utterly forsake me.</para>
@@ -6843,7 +6843,7 @@
   <para style="q2" vid="PSA 119:17">I will live and I will obey your word.<verse eid="PSA 119:17" /></para>
   <para style="q1">
     <verse number="18" style="v" sid="PSA 119:18" />Open my eyes,</para>
-  <para style="q2" vid="PSA 119:18">that I may see wondrous things out of your Torah.<verse eid="PSA 119:18" /></para>
+  <para style="q2" vid="PSA 119:18">that I may see wondrous things out of your law.<verse eid="PSA 119:18" /></para>
   <para style="q1">
     <verse number="19" style="v" sid="PSA 119:19" />I am a stranger on the earth.</para>
   <para style="q2" vid="PSA 119:19">Don’t hide your commandments from me.<verse eid="PSA 119:19" /></para>
@@ -6860,7 +6860,7 @@
   <para style="q2" vid="PSA 119:23">your servant will meditate on your statutes.<verse eid="PSA 119:23" /></para>
   <para style="q1">
     <verse number="24" style="v" sid="PSA 119:24" />Indeed your statutes are my delight,</para>
-  <para style="q2" vid="PSA 119:24">and my counselors.</para>
+  <para style="q2" vid="PSA 119:24">and my counsellors.</para>
   <para style="d" vid="PSA 119:24">DALETH<verse eid="PSA 119:24" /></para>
   <para style="q1">
     <verse number="25" style="v" sid="PSA 119:25" />My soul is laid low in the dust.</para>
@@ -6876,7 +6876,7 @@
   <para style="q2" vid="PSA 119:28">strengthen me according to your word.<verse eid="PSA 119:28" /></para>
   <para style="q1">
     <verse number="29" style="v" sid="PSA 119:29" />Keep me from the way of deceit.</para>
-  <para style="q2" vid="PSA 119:29">Grant me your Torah graciously!<verse eid="PSA 119:29" /></para>
+  <para style="q2" vid="PSA 119:29">Grant me your law graciously!<verse eid="PSA 119:29" /></para>
   <para style="q1">
     <verse number="30" style="v" sid="PSA 119:30" />I have chosen the way of truth.</para>
   <para style="q2" vid="PSA 119:30">I have set your ordinances before me.<verse eid="PSA 119:30" /></para>
@@ -6891,19 +6891,19 @@
     <verse number="33" style="v" sid="PSA 119:33" />Teach me, LORD, the way of your statutes.</para>
   <para style="q2" vid="PSA 119:33">I will keep them to the end.<verse eid="PSA 119:33" /></para>
   <para style="q1">
-    <verse number="34" style="v" sid="PSA 119:34" />Give me understanding, and I will keep your Torah.</para>
+    <verse number="34" style="v" sid="PSA 119:34" />Give me understanding, and I will keep your law.</para>
   <para style="q2" vid="PSA 119:34">Yes, I will obey it with my whole heart.<verse eid="PSA 119:34" /></para>
   <para style="q1">
     <verse number="35" style="v" sid="PSA 119:35" />Direct me in the path of your commandments,</para>
   <para style="q2" vid="PSA 119:35">for I delight in them.<verse eid="PSA 119:35" /></para>
   <para style="q1">
-    <verse number="36" style="v" sid="PSA 119:36" />Turn my heart toward your statutes,</para>
-  <para style="q2" vid="PSA 119:36">not toward selfish gain.<verse eid="PSA 119:36" /></para>
+    <verse number="36" style="v" sid="PSA 119:36" />Turn my heart towards your statutes,</para>
+  <para style="q2" vid="PSA 119:36">not towards selfish gain.<verse eid="PSA 119:36" /></para>
   <para style="q1">
     <verse number="37" style="v" sid="PSA 119:37" />Turn my eyes away from looking at worthless things.</para>
   <para style="q2" vid="PSA 119:37">Revive me in your ways.<verse eid="PSA 119:37" /></para>
   <para style="q1">
-    <verse number="38" style="v" sid="PSA 119:38" />Fulfill your promise to your servant,</para>
+    <verse number="38" style="v" sid="PSA 119:38" />Fulfil your promise to your servant,</para>
   <para style="q2" vid="PSA 119:38">that you may be feared.<verse eid="PSA 119:38" /></para>
   <para style="q1">
     <verse number="39" style="v" sid="PSA 119:39" />Take away my disgrace that I dread,</para>
@@ -6922,7 +6922,7 @@
     <verse number="43" style="v" sid="PSA 119:43" />Don’t snatch the word of truth out of my mouth,</para>
   <para style="q2" vid="PSA 119:43">for I put my hope in your ordinances.<verse eid="PSA 119:43" /></para>
   <para style="q1">
-    <verse number="44" style="v" sid="PSA 119:44" />So I will obey your Torah continually,</para>
+    <verse number="44" style="v" sid="PSA 119:44" />So I will obey your law continually,</para>
   <para style="q2" vid="PSA 119:44">forever and ever.<verse eid="PSA 119:44" /></para>
   <para style="q1">
     <verse number="45" style="v" sid="PSA 119:45" />I will walk in liberty,</para>
@@ -6945,19 +6945,19 @@
   <para style="q2" vid="PSA 119:50">for your word has revived me.<verse eid="PSA 119:50" /></para>
   <para style="q1">
     <verse number="51" style="v" sid="PSA 119:51" />The arrogant mock me excessively,</para>
-  <para style="q2" vid="PSA 119:51">but I don’t swerve from your Torah.<verse eid="PSA 119:51" /></para>
+  <para style="q2" vid="PSA 119:51">but I don’t swerve from your law.<verse eid="PSA 119:51" /></para>
   <para style="q1">
     <verse number="52" style="v" sid="PSA 119:52" />I remember your ordinances of old, LORD,</para>
   <para style="q2" vid="PSA 119:52">and have comforted myself.<verse eid="PSA 119:52" /></para>
   <para style="q1">
     <verse number="53" style="v" sid="PSA 119:53" />Indignation has taken hold on me,</para>
-  <para style="q2" vid="PSA 119:53">because of the wicked who forsake your Torah.<verse eid="PSA 119:53" /></para>
+  <para style="q2" vid="PSA 119:53">because of the wicked who forsake your law.<verse eid="PSA 119:53" /></para>
   <para style="q1">
     <verse number="54" style="v" sid="PSA 119:54" />Your statutes have been my songs</para>
   <para style="q2" vid="PSA 119:54">in the house where I live.<verse eid="PSA 119:54" /></para>
   <para style="q1">
     <verse number="55" style="v" sid="PSA 119:55" />I have remembered your name, LORD, in the night,</para>
-  <para style="q2" vid="PSA 119:55">and I obey your Torah.<verse eid="PSA 119:55" /></para>
+  <para style="q2" vid="PSA 119:55">and I obey your law.<verse eid="PSA 119:55" /></para>
   <para style="q1">
     <verse number="56" style="v" sid="PSA 119:56" />This is my way,</para>
   <para style="q2" vid="PSA 119:56">that I keep your precepts.</para>
@@ -6966,7 +6966,7 @@
     <verse number="57" style="v" sid="PSA 119:57" />The LORD is my portion.</para>
   <para style="q2" vid="PSA 119:57">I promised to obey your words.<verse eid="PSA 119:57" /></para>
   <para style="q1">
-    <verse number="58" style="v" sid="PSA 119:58" />I sought your favor with my whole heart.</para>
+    <verse number="58" style="v" sid="PSA 119:58" />I sought your favour with my whole heart.</para>
   <para style="q2" vid="PSA 119:58">Be merciful to me according to your word.<verse eid="PSA 119:58" /></para>
   <para style="q1">
     <verse number="59" style="v" sid="PSA 119:59" />I considered my ways,</para>
@@ -6976,7 +6976,7 @@
   <para style="q2" vid="PSA 119:60">to obey your commandments.<verse eid="PSA 119:60" /></para>
   <para style="q1">
     <verse number="61" style="v" sid="PSA 119:61" />The ropes of the wicked bind me,</para>
-  <para style="q2" vid="PSA 119:61">but I won’t forget your Torah.<verse eid="PSA 119:61" /></para>
+  <para style="q2" vid="PSA 119:61">but I won’t forget your law.<verse eid="PSA 119:61" /></para>
   <para style="q1">
     <verse number="62" style="v" sid="PSA 119:62" />At midnight I will rise to give thanks to you,</para>
   <para style="q2" vid="PSA 119:62">because of your righteous ordinances.<verse eid="PSA 119:62" /></para>
@@ -6991,7 +6991,7 @@
     <verse number="65" style="v" sid="PSA 119:65" />You have treated your servant well,</para>
   <para style="q2" vid="PSA 119:65">according to your word, LORD.<verse eid="PSA 119:65" /></para>
   <para style="q1">
-    <verse number="66" style="v" sid="PSA 119:66" />Teach me good judgment and knowledge,</para>
+    <verse number="66" style="v" sid="PSA 119:66" />Teach me good judgement and knowledge,</para>
   <para style="q2" vid="PSA 119:66">for I believe in your commandments.<verse eid="PSA 119:66" /></para>
   <para style="q1">
     <verse number="67" style="v" sid="PSA 119:67" />Before I was afflicted, I went astray;</para>
@@ -7004,12 +7004,12 @@
   <para style="q2" vid="PSA 119:69">With my whole heart, I will keep your precepts.<verse eid="PSA 119:69" /></para>
   <para style="q1">
     <verse number="70" style="v" sid="PSA 119:70" />Their heart is as callous as the fat,</para>
-  <para style="q2" vid="PSA 119:70">but I delight in your Torah.<verse eid="PSA 119:70" /></para>
+  <para style="q2" vid="PSA 119:70">but I delight in your law.<verse eid="PSA 119:70" /></para>
   <para style="q1">
     <verse number="71" style="v" sid="PSA 119:71" />It is good for me that I have been afflicted,</para>
   <para style="q2" vid="PSA 119:71">that I may learn your statutes.<verse eid="PSA 119:71" /></para>
   <para style="q1">
-    <verse number="72" style="v" sid="PSA 119:72" />The Torah you have spoken is better to me than thousands of pieces of gold and silver.</para>
+    <verse number="72" style="v" sid="PSA 119:72" />The law of your mouth is better to me than thousands of pieces of gold and silver.</para>
   <para style="d" vid="PSA 119:72">YODH<verse eid="PSA 119:72" /></para>
   <para style="q1">
     <verse number="73" style="v" sid="PSA 119:73" />Your hands have made me and formed me.</para>
@@ -7018,14 +7018,14 @@
     <verse number="74" style="v" sid="PSA 119:74" />Those who fear you will see me and be glad,</para>
   <para style="q2" vid="PSA 119:74">because I have put my hope in your word.<verse eid="PSA 119:74" /></para>
   <para style="q1">
-    <verse number="75" style="v" sid="PSA 119:75" />LORD, I know that your judgments are righteous,</para>
+    <verse number="75" style="v" sid="PSA 119:75" />LORD, I know that your judgements are righteous,</para>
   <para style="q2" vid="PSA 119:75">that in faithfulness you have afflicted me.<verse eid="PSA 119:75" /></para>
   <para style="q1">
     <verse number="76" style="v" sid="PSA 119:76" />Please let your loving kindness be for my comfort,</para>
   <para style="q2" vid="PSA 119:76">according to your word to your servant.<verse eid="PSA 119:76" /></para>
   <para style="q1">
     <verse number="77" style="v" sid="PSA 119:77" />Let your tender mercies come to me, that I may live;</para>
-  <para style="q2" vid="PSA 119:77">for your Torah is my delight.<verse eid="PSA 119:77" /></para>
+  <para style="q2" vid="PSA 119:77">for your law is my delight.<verse eid="PSA 119:77" /></para>
   <para style="q1">
     <verse number="78" style="v" sid="PSA 119:78" />Let the proud be disappointed, for they have overthrown me wrongfully.</para>
   <para style="q2" vid="PSA 119:78">I will meditate on your precepts.<verse eid="PSA 119:78" /></para>
@@ -7033,7 +7033,7 @@
     <verse number="79" style="v" sid="PSA 119:79" />Let those who fear you turn to me.</para>
   <para style="q2" vid="PSA 119:79">They will know your statutes.<verse eid="PSA 119:79" /></para>
   <para style="q1">
-    <verse number="80" style="v" sid="PSA 119:80" />Let my heart be blameless toward your decrees,</para>
+    <verse number="80" style="v" sid="PSA 119:80" />Let my heart be blameless towards your decrees,</para>
   <para style="q2" vid="PSA 119:80">that I may not be disappointed.</para>
   <para style="d" vid="PSA 119:80">KAPF<verse eid="PSA 119:80" /></para>
   <para style="q1">
@@ -7047,10 +7047,10 @@
   <para style="q2" vid="PSA 119:83">I don’t forget your statutes.<verse eid="PSA 119:83" /></para>
   <para style="q1">
     <verse number="84" style="v" sid="PSA 119:84" />How many are the days of your servant?</para>
-  <para style="q2" vid="PSA 119:84">When will you execute judgment on those who persecute me?<verse eid="PSA 119:84" /></para>
+  <para style="q2" vid="PSA 119:84">When will you execute judgement on those who persecute me?<verse eid="PSA 119:84" /></para>
   <para style="q1">
     <verse number="85" style="v" sid="PSA 119:85" />The proud have dug pits for me,</para>
-  <para style="q2" vid="PSA 119:85">contrary to your Torah.<verse eid="PSA 119:85" /></para>
+  <para style="q2" vid="PSA 119:85">contrary to your law.<verse eid="PSA 119:85" /></para>
   <para style="q1">
     <verse number="86" style="v" sid="PSA 119:86" />All of your commandments are faithful.</para>
   <para style="q2" vid="PSA 119:86">They persecute me wrongfully.</para>
@@ -7071,7 +7071,7 @@
     <verse number="91" style="v" sid="PSA 119:91" />Your laws remain to this day,</para>
   <para style="q2" vid="PSA 119:91">for all things serve you.<verse eid="PSA 119:91" /></para>
   <para style="q1">
-    <verse number="92" style="v" sid="PSA 119:92" />Unless your Torah had been my delight,</para>
+    <verse number="92" style="v" sid="PSA 119:92" />Unless your law had been my delight,</para>
   <para style="q2" vid="PSA 119:92">I would have perished in my affliction.<verse eid="PSA 119:92" /></para>
   <para style="q1">
     <verse number="93" style="v" sid="PSA 119:93" />I will never forget your precepts,</para>
@@ -7087,7 +7087,7 @@
   <para style="q2" vid="PSA 119:96">but your commands are boundless.</para>
   <para style="d" vid="PSA 119:96">MEM<verse eid="PSA 119:96" /></para>
   <para style="q1">
-    <verse number="97" style="v" sid="PSA 119:97" />How I love your Torah!</para>
+    <verse number="97" style="v" sid="PSA 119:97" />How I love your law!</para>
   <para style="q2" vid="PSA 119:97">It is my meditation all day.<verse eid="PSA 119:97" /></para>
   <para style="q1">
     <verse number="98" style="v" sid="PSA 119:98" />Your commandments make me wiser than my enemies,</para>
@@ -7125,7 +7125,7 @@
   <para style="q2" vid="PSA 119:108">LORD, teach me your ordinances.<verse eid="PSA 119:108" /></para>
   <para style="q1">
     <verse number="109" style="v" sid="PSA 119:109" />My soul is continually in my hand,</para>
-  <para style="q2" vid="PSA 119:109">yet I won’t forget your Torah.<verse eid="PSA 119:109" /></para>
+  <para style="q2" vid="PSA 119:109">yet I won’t forget your law.<verse eid="PSA 119:109" /></para>
   <para style="q1">
     <verse number="110" style="v" sid="PSA 119:110" />The wicked have laid a snare for me,</para>
   <para style="q2" vid="PSA 119:110">yet I haven’t gone astray from your precepts.<verse eid="PSA 119:110" /></para>
@@ -7138,7 +7138,7 @@
   <para style="d" vid="PSA 119:112">SAMEKH<verse eid="PSA 119:112" /></para>
   <para style="q1">
     <verse number="113" style="v" sid="PSA 119:113" />I hate double-minded men,</para>
-  <para style="q2" vid="PSA 119:113">but I love your Torah.<verse eid="PSA 119:113" /></para>
+  <para style="q2" vid="PSA 119:113">but I love your law.<verse eid="PSA 119:113" /></para>
   <para style="q1">
     <verse number="114" style="v" sid="PSA 119:114" />You are my hiding place and my shield.</para>
   <para style="q2" vid="PSA 119:114">I hope in your word.<verse eid="PSA 119:114" /></para>
@@ -7159,7 +7159,7 @@
   <para style="q2" vid="PSA 119:119">Therefore I love your testimonies.<verse eid="PSA 119:119" /></para>
   <para style="q1">
     <verse number="120" style="v" sid="PSA 119:120" />My flesh trembles for fear of you.</para>
-  <para style="q2" vid="PSA 119:120">I am afraid of your judgments.</para>
+  <para style="q2" vid="PSA 119:120">I am afraid of your judgements.</para>
   <para style="d" vid="PSA 119:120">AYIN<verse eid="PSA 119:120" /></para>
   <para style="q1">
     <verse number="121" style="v" sid="PSA 119:121" />I have done what is just and righteous.</para>
@@ -7178,7 +7178,7 @@
   <para style="q2" vid="PSA 119:125">that I may know your testimonies.<verse eid="PSA 119:125" /></para>
   <para style="q1">
     <verse number="126" style="v" sid="PSA 119:126" />It is time to act, LORD,</para>
-  <para style="q2" vid="PSA 119:126">for they break your Torah.<verse eid="PSA 119:126" /></para>
+  <para style="q2" vid="PSA 119:126">for they break your law.<verse eid="PSA 119:126" /></para>
   <para style="q1">
     <verse number="127" style="v" sid="PSA 119:127" />Therefore I love your commandments more than gold,</para>
   <para style="q2" vid="PSA 119:127">yes, more than pure gold.<verse eid="PSA 119:127" /></para>
@@ -7209,11 +7209,11 @@
   <para style="q2" vid="PSA 119:135">Teach me your statutes.<verse eid="PSA 119:135" /></para>
   <para style="q1">
     <verse number="136" style="v" sid="PSA 119:136" />Streams of tears run down my eyes,</para>
-  <para style="q2" vid="PSA 119:136">because they don’t observe your Torah.</para>
+  <para style="q2" vid="PSA 119:136">because they don’t observe your law.</para>
   <para style="d" vid="PSA 119:136">TZADHE<verse eid="PSA 119:136" /></para>
   <para style="q1">
     <verse number="137" style="v" sid="PSA 119:137" />You are righteous, LORD.</para>
-  <para style="q2" vid="PSA 119:137">Your judgments are upright.<verse eid="PSA 119:137" /></para>
+  <para style="q2" vid="PSA 119:137">Your judgements are upright.<verse eid="PSA 119:137" /></para>
   <para style="q1">
     <verse number="138" style="v" sid="PSA 119:138" />You have commanded your statutes in righteousness.</para>
   <para style="q2" vid="PSA 119:138">They are fully trustworthy.<verse eid="PSA 119:138" /></para>
@@ -7228,7 +7228,7 @@
   <para style="q2" vid="PSA 119:141">I don’t forget your precepts.<verse eid="PSA 119:141" /></para>
   <para style="q1">
     <verse number="142" style="v" sid="PSA 119:142" />Your righteousness is an everlasting righteousness.</para>
-  <para style="q2" vid="PSA 119:142">Your Torah is truth.<verse eid="PSA 119:142" /></para>
+  <para style="q2" vid="PSA 119:142">Your law is truth.<verse eid="PSA 119:142" /></para>
   <para style="q1">
     <verse number="143" style="v" sid="PSA 119:143" />Trouble and anguish have taken hold of me.</para>
   <para style="q2" vid="PSA 119:143">Your commandments are my delight.<verse eid="PSA 119:143" /></para>
@@ -7254,7 +7254,7 @@
   <para style="q2" vid="PSA 119:149">Revive me, LORD, according to your ordinances.<verse eid="PSA 119:149" /></para>
   <para style="q1">
     <verse number="150" style="v" sid="PSA 119:150" />They draw near who follow after wickedness.</para>
-  <para style="q2" vid="PSA 119:150">They are far from your Torah.<verse eid="PSA 119:150" /></para>
+  <para style="q2" vid="PSA 119:150">They are far from your law.<verse eid="PSA 119:150" /></para>
   <para style="q1">
     <verse number="151" style="v" sid="PSA 119:151" />You are near, LORD.</para>
   <para style="q2" vid="PSA 119:151">All your commandments are truth.<verse eid="PSA 119:151" /></para>
@@ -7264,7 +7264,7 @@
   <para style="d" vid="PSA 119:152">RESH<verse eid="PSA 119:152" /></para>
   <para style="q1">
     <verse number="153" style="v" sid="PSA 119:153" />Consider my affliction, and deliver me,</para>
-  <para style="q2" vid="PSA 119:153">for I don’t forget your Torah.<verse eid="PSA 119:153" /></para>
+  <para style="q2" vid="PSA 119:153">for I don’t forget your law.<verse eid="PSA 119:153" /></para>
   <para style="q1">
     <verse number="154" style="v" sid="PSA 119:154" />Plead my cause, and redeem me!</para>
   <para style="q2" vid="PSA 119:154">Revive me according to your promise.<verse eid="PSA 119:154" /></para>
@@ -7295,12 +7295,12 @@
   <para style="q2" vid="PSA 119:162">as one who finds great plunder.<verse eid="PSA 119:162" /></para>
   <para style="q1">
     <verse number="163" style="v" sid="PSA 119:163" />I hate and abhor falsehood.</para>
-  <para style="q2" vid="PSA 119:163">I love your Torah.<verse eid="PSA 119:163" /></para>
+  <para style="q2" vid="PSA 119:163">I love your law.<verse eid="PSA 119:163" /></para>
   <para style="q1">
     <verse number="164" style="v" sid="PSA 119:164" />Seven times a day, I praise you,</para>
   <para style="q2" vid="PSA 119:164">because of your righteous ordinances.<verse eid="PSA 119:164" /></para>
   <para style="q1">
-    <verse number="165" style="v" sid="PSA 119:165" />Those who love your Torah have great peace.</para>
+    <verse number="165" style="v" sid="PSA 119:165" />Those who love your law have great peace.</para>
   <para style="q2" vid="PSA 119:165">Nothing causes them to stumble.<verse eid="PSA 119:165" /></para>
   <para style="q1">
     <verse number="166" style="v" sid="PSA 119:166" />I have hoped for your salvation, LORD.</para>
@@ -7328,8 +7328,8 @@
     <verse number="173" style="v" sid="PSA 119:173" />Let your hand be ready to help me,</para>
   <para style="q2" vid="PSA 119:173">for I have chosen your precepts.<verse eid="PSA 119:173" /></para>
   <para style="q1">
-    <verse number="174" style="v" sid="PSA 119:174" />I have longed for your salvation [yeshuat], LORD.</para>
-  <para style="q2" vid="PSA 119:174">Your Torah is my delight.<verse eid="PSA 119:174" /></para>
+    <verse number="174" style="v" sid="PSA 119:174" />I have longed for your salvation, LORD.</para>
+  <para style="q2" vid="PSA 119:174">Your law is my delight.<verse eid="PSA 119:174" /></para>
   <para style="q1">
     <verse number="175" style="v" sid="PSA 119:175" />Let my soul live, that I may praise you.</para>
   <para style="q2" vid="PSA 119:175">Let your ordinances help me.<verse eid="PSA 119:175" /></para>
@@ -7353,7 +7353,7 @@
   <para style="q2" vid="PSA 120:4">with coals of juniper.<verse eid="PSA 120:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 120:5" />Woe is me, that I live in Meshech,</para>
-  <para style="q2" vid="PSA 120:5">that I dwell among the tents of Kedar!<verse eid="PSA 120:5" /></para>
+  <para style="q2" vid="PSA 120:5">that I dwell amongst the tents of Kedar!<verse eid="PSA 120:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 120:6" />My soul has had her dwelling too long</para>
   <para style="q2" vid="PSA 120:6">with him who hates peace.<verse eid="PSA 120:6" /></para>
@@ -7403,7 +7403,7 @@
   <para style="q2" vid="PSA 122:4">according to an ordinance for Israel,</para>
   <para style="q2" vid="PSA 122:4">to give thanks to the LORD’s name.<verse eid="PSA 122:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 122:5" />For there are set thrones for judgment,</para>
+    <verse number="5" style="v" sid="PSA 122:5" />For there are set thrones for judgement,</para>
   <para style="q2" vid="PSA 122:5">the thrones of David’s house.<verse eid="PSA 122:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 122:6" />Pray for the peace of Jerusalem.</para>
@@ -7470,7 +7470,7 @@
     <verse number="2" style="v" sid="PSA 125:2" />As the mountains surround Jerusalem,</para>
   <para style="q2" vid="PSA 125:2">so the LORD surrounds his people from this time forward and forever more.<verse eid="PSA 125:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 125:3" />For the scepter of wickedness won’t remain over the allotment of the righteous,</para>
+    <verse number="3" style="v" sid="PSA 125:3" />For the sceptre of wickedness won’t remain over the allotment of the righteous,</para>
   <para style="q2" vid="PSA 125:3">so that the righteous won’t use their hands to do evil.<verse eid="PSA 125:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 125:4" />Do good, LORD, to those who are good,</para>
@@ -7488,7 +7488,7 @@
   <para style="q1">
     <verse number="2" style="v" sid="PSA 126:2" />Then our mouth was filled with laughter,</para>
   <para style="q2" vid="PSA 126:2">and our tongue with singing.</para>
-  <para style="q1" vid="PSA 126:2">Then they said among the nations,</para>
+  <para style="q1" vid="PSA 126:2">Then they said amongst the nations,</para>
   <para style="q2" vid="PSA 126:2">“The LORD has done great things for them.”<verse eid="PSA 126:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 126:3" />The LORD has done great things for us,</para>
@@ -7506,7 +7506,7 @@
   <para style="d">A Song of Ascents. By Solomon.</para>
   <para style="q1">
     <verse number="1" style="v" sid="PSA 127:1" />Unless the LORD builds the house,</para>
-  <para style="q2" vid="PSA 127:1">they who build it labor in vain.</para>
+  <para style="q2" vid="PSA 127:1">they who build it labour in vain.</para>
   <para style="q1" vid="PSA 127:1">Unless the LORD watches over the city,</para>
   <para style="q2" vid="PSA 127:1">the watchman guards it in vain.<verse eid="PSA 127:1" /></para>
   <para style="q1">
@@ -7530,7 +7530,7 @@
     <verse number="1" style="v" sid="PSA 128:1" />Blessed is everyone who fears the LORD,</para>
   <para style="q2" vid="PSA 128:1">who walks in his ways.<verse eid="PSA 128:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 128:2" />For you will eat the labor of your hands.</para>
+    <verse number="2" style="v" sid="PSA 128:2" />For you will eat the labour of your hands.</para>
   <para style="q2" vid="PSA 128:2">You will be happy, and it will be well with you.<verse eid="PSA 128:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 128:3" />Your wife will be as a fruitful vine in the innermost parts of your house,</para>
@@ -7553,7 +7553,7 @@
     <verse number="2" style="v" sid="PSA 129:2" />many times they have afflicted me from my youth up,</para>
   <para style="q2" vid="PSA 129:2">yet they have not prevailed against me.<verse eid="PSA 129:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 129:3" />The plowers plowed on my back.</para>
+    <verse number="3" style="v" sid="PSA 129:3" />The ploughers ploughed on my back.</para>
   <para style="q2" vid="PSA 129:3">They made their furrows long.<verse eid="PSA 129:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 129:4" />The LORD is righteous.</para>
@@ -7640,7 +7640,7 @@
   <para style="q2" vid="PSA 132:8">you, and the ark of your strength.<verse eid="PSA 132:8" /></para>
   <para style="q1">
     <verse number="9" style="v" sid="PSA 132:9" />Let your priests be clothed with righteousness.</para>
-  <para style="q2" vid="PSA 132:9">Let your holy ones shout for joy!<verse eid="PSA 132:9" /></para>
+  <para style="q2" vid="PSA 132:9">Let your saints shout for joy!<verse eid="PSA 132:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 132:10" />For your servant David’s sake,</para>
   <para style="q2" vid="PSA 132:10">don’t turn away the face of your anointed one.<verse eid="PSA 132:10" /></para>
@@ -7663,7 +7663,7 @@
   <para style="q2" vid="PSA 132:15">I will satisfy her poor with bread.<verse eid="PSA 132:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 132:16" />I will also clothe her priests with salvation.</para>
-  <para style="q2" vid="PSA 132:16">Her holy ones will shout aloud for joy.<verse eid="PSA 132:16" /></para>
+  <para style="q2" vid="PSA 132:16">Her saints will shout aloud for joy.<verse eid="PSA 132:16" /></para>
   <para style="q1">
     <verse number="17" style="v" sid="PSA 132:17" />I will make the horn of David to bud there.</para>
   <para style="q2" vid="PSA 132:17">I have ordained a lamp for my anointed.<verse eid="PSA 132:17" /></para>
@@ -7801,19 +7801,19 @@
     <verse number="10" style="v" sid="PSA 136:10" />to him who struck down the Egyptian firstborn,</para>
   <para style="q2" vid="PSA 136:10">for his loving kindness endures forever;<verse eid="PSA 136:10" /></para>
   <para style="q1">
-    <verse number="11" style="v" sid="PSA 136:11" />and brought out Israel from among them,</para>
+    <verse number="11" style="v" sid="PSA 136:11" />and brought out Israel from amongst them,</para>
   <para style="q2" vid="PSA 136:11">for his loving kindness endures forever;<verse eid="PSA 136:11" /></para>
   <para style="q1">
     <verse number="12" style="v" sid="PSA 136:12" />with a strong hand, and with an outstretched arm,</para>
   <para style="q2" vid="PSA 136:12">for his loving kindness endures forever;<verse eid="PSA 136:12" /></para>
   <para style="q1">
-    <verse number="13" style="v" sid="PSA 136:13" />to him who divided the Sea of Suf apart,</para>
+    <verse number="13" style="v" sid="PSA 136:13" />to him who divided the Red Sea apart,</para>
   <para style="q2" vid="PSA 136:13">for his loving kindness endures forever;<verse eid="PSA 136:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 136:14" />and made Israel to pass through the middle of it,</para>
   <para style="q2" vid="PSA 136:14">for his loving kindness endures forever;<verse eid="PSA 136:14" /></para>
   <para style="q1">
-    <verse number="15" style="v" sid="PSA 136:15" />but overthrew Pharaoh and his army in the Sea of Suf,</para>
+    <verse number="15" style="v" sid="PSA 136:15" />but overthrew Pharaoh and his army in the Red Sea,</para>
   <para style="q2" vid="PSA 136:15">for his loving kindness endures forever;<verse eid="PSA 136:15" /></para>
   <para style="q1">
     <verse number="16" style="v" sid="PSA 136:16" />to him who led his people through the wilderness,</para>
@@ -7886,7 +7886,7 @@
     <verse number="1" style="v" sid="PSA 138:1" />I will give you thanks with my whole heart.</para>
   <para style="q2" vid="PSA 138:1">Before the gods,<note caller="+" style="f"><char style="fr" closed="false">138:1 </char><char style="ft" closed="false">The word elohim, used here, usually means “God” but can also mean “gods”, “princes”, or “angels”.</char></note> I will sing praises to you.<verse eid="PSA 138:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 138:2" />I will bow down toward your holy temple,</para>
+    <verse number="2" style="v" sid="PSA 138:2" />I will bow down towards your holy temple,</para>
   <para style="q2" vid="PSA 138:2">and give thanks to your Name for your loving kindness and for your truth;</para>
   <para style="q2" vid="PSA 138:2">for you have exalted your Name and your Word above all.<verse eid="PSA 138:2" /></para>
   <para style="q1">
@@ -7906,7 +7906,7 @@
   <para style="q2" vid="PSA 138:7">You will stretch out your hand against the wrath of my enemies.</para>
   <para style="q2" vid="PSA 138:7">Your right hand will save me.<verse eid="PSA 138:7" /></para>
   <para style="q1">
-    <verse number="8" style="v" sid="PSA 138:8" />The LORD will fulfill that which concerns me.</para>
+    <verse number="8" style="v" sid="PSA 138:8" />The LORD will fulfil that which concerns me.</para>
   <para style="q2" vid="PSA 138:8">Your loving kindness, LORD, endures forever.</para>
   <para style="q2" vid="PSA 138:8">Don’t forsake the works of your own hands.<verse eid="PSA 138:8" /></para>
   <chapter eid="PSA 138" />
@@ -8050,7 +8050,7 @@
   <para style="q2" vid="PSA 141:3">Keep the door of my lips.<verse eid="PSA 141:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 141:4" />Don’t incline my heart to any evil thing,</para>
-  <para style="q2" vid="PSA 141:4">to practice deeds of wickedness with men who work iniquity.</para>
+  <para style="q2" vid="PSA 141:4">to practise deeds of wickedness with men who work iniquity.</para>
   <para style="q2" vid="PSA 141:4">Don’t let me eat of their delicacies.<verse eid="PSA 141:4" /></para>
   <para style="q1">
     <verse number="5" style="v" sid="PSA 141:5" />Let the righteous strike me, it is kindness;</para>
@@ -8061,7 +8061,7 @@
     <verse number="6" style="v" sid="PSA 141:6" />Their judges are thrown down by the sides of the rock.</para>
   <para style="q2" vid="PSA 141:6">They will hear my words, for they are well spoken.<verse eid="PSA 141:6" /></para>
   <para style="q1">
-    <verse number="7" style="v" sid="PSA 141:7" />“As when one plows and breaks up the earth,</para>
+    <verse number="7" style="v" sid="PSA 141:7" />“As when one ploughs and breaks up the earth,</para>
   <para style="q2" vid="PSA 141:7">our bones are scattered at the mouth of Sheol.”<note caller="+" style="f"><char style="fr" closed="false">141:7 </char><char style="ft" closed="false">Sheol is the place of the dead.</char></note><verse eid="PSA 141:7" /></para>
   <para style="q1">
     <verse number="8" style="v" sid="PSA 141:8" />For my eyes are on you, LORD, the Lord.</para>
@@ -8114,7 +8114,7 @@
   <para style="q2" vid="PSA 143:1">Listen to my petitions.</para>
   <para style="q2" vid="PSA 143:1">In your faithfulness and righteousness, relieve me.<verse eid="PSA 143:1" /></para>
   <para style="q1">
-    <verse number="2" style="v" sid="PSA 143:2" />Don’t enter into judgment with your servant,</para>
+    <verse number="2" style="v" sid="PSA 143:2" />Don’t enter into judgement with your servant,</para>
   <para style="q2" vid="PSA 143:2">for in your sight no man living is righteous.<verse eid="PSA 143:2" /></para>
   <para style="q1">
     <verse number="3" style="v" sid="PSA 143:3" />For the enemy pursues my soul.</para>
@@ -8226,7 +8226,7 @@
     <verse number="4" style="v" sid="PSA 145:4" />One generation will commend your works to another,</para>
   <para style="q2" vid="PSA 145:4">and will declare your mighty acts.<verse eid="PSA 145:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 145:5" />I will meditate on the glorious majesty of your honor,</para>
+    <verse number="5" style="v" sid="PSA 145:5" />I will meditate on the glorious majesty of your honour,</para>
   <para style="q2" vid="PSA 145:5">on your wondrous works.<verse eid="PSA 145:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 145:6" />Men will speak of the might of your awesome acts.</para>
@@ -8242,7 +8242,7 @@
   <para style="q2" vid="PSA 145:9">His tender mercies are over all his works.<verse eid="PSA 145:9" /></para>
   <para style="q1">
     <verse number="10" style="v" sid="PSA 145:10" />All your works will give thanks to you, LORD.</para>
-  <para style="q2" vid="PSA 145:10">Your holy ones will extol you.<verse eid="PSA 145:10" /></para>
+  <para style="q2" vid="PSA 145:10">Your saints will extol you.<verse eid="PSA 145:10" /></para>
   <para style="q1">
     <verse number="11" style="v" sid="PSA 145:11" />They will speak of the glory of your kingdom,</para>
   <para style="q2" vid="PSA 145:11">and talk about your power,<verse eid="PSA 145:11" /></para>
@@ -8270,7 +8270,7 @@
     <verse number="18" style="v" sid="PSA 145:18" />The LORD is near to all those who call on him,</para>
   <para style="q2" vid="PSA 145:18">to all who call on him in truth.<verse eid="PSA 145:18" /></para>
   <para style="q1">
-    <verse number="19" style="v" sid="PSA 145:19" />He will fulfill the desire of those who fear him.</para>
+    <verse number="19" style="v" sid="PSA 145:19" />He will fulfil the desire of those who fear him.</para>
   <para style="q2" vid="PSA 145:19">He also will hear their cry, and will save them.<verse eid="PSA 145:19" /></para>
   <para style="q1">
     <verse number="20" style="v" sid="PSA 145:20" />The LORD preserves all those who love him,</para>
@@ -8428,7 +8428,7 @@
   <para style="q2" vid="PSA 148:13">His glory is above the earth and the heavens.<verse eid="PSA 148:13" /></para>
   <para style="q1">
     <verse number="14" style="v" sid="PSA 148:14" />He has lifted up the horn of his people,</para>
-  <para style="q2" vid="PSA 148:14">the praise of all his holy ones,</para>
+  <para style="q2" vid="PSA 148:14">the praise of all his saints,</para>
   <para style="q2" vid="PSA 148:14">even of the children of Israel, a people near to him.</para>
   <para style="q1" vid="PSA 148:14">Praise the LORD!<verse eid="PSA 148:14" /></para>
   <para style="b" />
@@ -8437,7 +8437,7 @@
   <para style="q1">
     <verse number="1" style="v" sid="PSA 149:1" />Praise the LORD!</para>
   <para style="q2" vid="PSA 149:1">Sing to the LORD a new song,</para>
-  <para style="q2" vid="PSA 149:1">his praise in the assembly of the holy ones.<verse eid="PSA 149:1" /></para>
+  <para style="q2" vid="PSA 149:1">his praise in the assembly of the saints.<verse eid="PSA 149:1" /></para>
   <para style="q1">
     <verse number="2" style="v" sid="PSA 149:2" />Let Israel rejoice in him who made them.</para>
   <para style="q2" vid="PSA 149:2">Let the children of Zion be joyful in their King.<verse eid="PSA 149:2" /></para>
@@ -8446,9 +8446,9 @@
   <para style="q2" vid="PSA 149:3">Let them sing praises to him with tambourine and harp!<verse eid="PSA 149:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 149:4" />For the LORD takes pleasure in his people.</para>
-  <para style="q2" vid="PSA 149:4">He crowns the humble with salvation [yeshu`ah].<verse eid="PSA 149:4" /></para>
+  <para style="q2" vid="PSA 149:4">He crowns the humble with salvation.<verse eid="PSA 149:4" /></para>
   <para style="q1">
-    <verse number="5" style="v" sid="PSA 149:5" />Let the holy ones rejoice in honor.</para>
+    <verse number="5" style="v" sid="PSA 149:5" />Let the saints rejoice in honour.</para>
   <para style="q2" vid="PSA 149:5">Let them sing for joy on their beds.<verse eid="PSA 149:5" /></para>
   <para style="q1">
     <verse number="6" style="v" sid="PSA 149:6" />May the high praises of God be in their mouths,</para>
@@ -8460,8 +8460,8 @@
     <verse number="8" style="v" sid="PSA 149:8" />to bind their kings with chains,</para>
   <para style="q2" vid="PSA 149:8">and their nobles with fetters of iron;<verse eid="PSA 149:8" /></para>
   <para style="q1">
-    <verse number="9" style="v" sid="PSA 149:9" />to execute on them the written judgment.</para>
-  <para style="q2" vid="PSA 149:9">All his holy ones have this honor.</para>
+    <verse number="9" style="v" sid="PSA 149:9" />to execute on them the written judgement.</para>
+  <para style="q2" vid="PSA 149:9">All his saints have this honour.</para>
   <para style="q1" vid="PSA 149:9">Praise the LORD!<verse eid="PSA 149:9" /></para>
   <para style="b" />
   <chapter eid="PSA 149" />
@@ -8474,7 +8474,7 @@
     <verse number="2" style="v" sid="PSA 150:2" />Praise him for his mighty acts!</para>
   <para style="q2" vid="PSA 150:2">Praise him according to his excellent greatness!<verse eid="PSA 150:2" /></para>
   <para style="q1">
-    <verse number="3" style="v" sid="PSA 150:3" />Praise him with the sounding of the shofar!</para>
+    <verse number="3" style="v" sid="PSA 150:3" />Praise him with the sounding of the trumpet!</para>
   <para style="q2" vid="PSA 150:3">Praise him with harp and lyre!<verse eid="PSA 150:3" /></para>
   <para style="q1">
     <verse number="4" style="v" sid="PSA 150:4" />Praise him with tambourine and dancing!</para>
