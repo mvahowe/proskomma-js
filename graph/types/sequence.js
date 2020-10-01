@@ -1,6 +1,7 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
 const blockType = require('./block');
+const succinctBlockType = require('./succinct_block');
 
 const htmlStyles = ".blocktag-q1 {font-family: italic}" +
     ".blocktag-q2 {font-family: italic; padding-left: 2em}" +
@@ -48,6 +49,10 @@ const sequenceType = new GraphQLObjectType({
             },
             resolve: (root, args, context) =>
                 root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {})).filter(b => scopesInBlock(b, args.scopes))
+        },
+        succinctBlocks: {
+            type: GraphQLList(succinctBlockType),
+            resolve: (root) => root.blocks
         }
     })
 })
