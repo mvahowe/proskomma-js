@@ -62,10 +62,10 @@ const scopeLabels = r => {
 const blockType = new GraphQLObjectType({
     name: "Block",
     fields: () => ({
-        cByteLength: {type: GraphQLInt, resolve: root => root.c.length},
-        bgByteLength: {type: GraphQLInt, resolve: root => root.bg.length},
-        osByteLength: {type: GraphQLInt, resolve: root => root.os.length},
-        isByteLength: {type: GraphQLInt, resolve: root => root.is.length},
+        cLength: {type: GraphQLInt, resolve: root => root.c.length},
+        bgLength: {type: GraphQLInt, resolve: root => root.bg.length},
+        osLength: {type: GraphQLInt, resolve: root => root.os.length},
+        isLength: {type: GraphQLInt, resolve: root => root.is.length},
         c: {type: GraphQLList(itemType), resolve: root => root.c},
         bs: { type: scopeType},
         bg: {type: GraphQLList(graftType), resolve: root => root.bg},
