@@ -27,6 +27,7 @@ const Parser = class {
             footnote: "*",
             noteCaller: "*",
             xref: "*",
+            printNumber: "*",
             temp: "?"
         };
     }
@@ -63,6 +64,9 @@ const Parser = class {
     parse(lexedItems) {
         let changeBaseSequence = false;
         for (const lexedItem of lexedItems) {
+            if (["startTag"].includes(lexedItem.subclass)) {
+                this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`)
+            }
             if (["endTag"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
             }
@@ -91,6 +95,9 @@ const Parser = class {
                 } else if (spec.parser.inlineSequenceType) {
                     this.current.inlineSequenceType = spec.parser.inlineSequenceType;
                     this.current.parentSequence = this.current.sequence;
+                    if (this.current.parentSequence.type === "header") { // Not lovely, needed for \cp before first content
+                        this.current.parentSequence = this.sequences.main;
+                    }
                     this.current.sequence = new Sequence(this.current.inlineSequenceType);
                     this.current.sequence.newBlock(labelForScope("inline", spec.parser.inlineSequenceType));
                     this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
@@ -117,6 +124,36 @@ const Parser = class {
             seq.moveOrphanScopes();
             // seq.removeEmptyBlocks();
             seq.close(this);
+            this.reorderPrintNumbers(seq);
+        }
+    }
+
+    reorderPrintNumbers(seq) {
+        const scopeToGraftContent = {};
+        const sequenceById = this.sequenceById();
+        for (const block of seq.blocks) {
+            let spliceCount = 0;
+            const itItems = [...block.items];
+            for (const [n, item] of itItems.entries()) {
+                if (item.itemType === "graft" && item.graftType === "printNumber") {
+                    const graftContent = sequenceById[item.seqId].text().trim();
+                    const scopeId = itItems[n + 1].label.split("/")[1];
+                    scopeToGraftContent[scopeId] = graftContent;
+                    block.items.splice(n - spliceCount, 1);
+                    spliceCount++;
+                }
+            }
+        }
+        // Substitute scopeIds for graft content
+        if (Object.keys(scopeToGraftContent).length > 0) {
+            for (const block of seq.blocks) {
+                for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
+                    if (scope.label.startsWith("printChapter") || scope.label.startsWith("printVerse")) {
+                        const scopeParts = scope.label.split("/");
+                        scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
+                    }
+                }
+            }
         }
     }
 
@@ -233,7 +270,6 @@ const Parser = class {
     }
 
     changeBaseSequence(parserSpec) {
-        const previousSequence = this.current.sequence;
         const newType = parserSpec.baseSequenceType
         this.current.baseSequenceType = newType;
         const arity = this.baseSequenceTypes[newType];

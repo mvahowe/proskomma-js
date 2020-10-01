@@ -169,6 +169,14 @@ const Block = class {
     scopes() {
         return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "startScope");
     }
+
+    tokens() {
+        return Array.from(this.items.entries()).filter(ip => !["startScope", "endScope", "graft"].includes(ip[1].itemType));
+    }
+
+    text() {
+        return this.tokens().map(t => t[1].chars).join('');
+    }
 }
 
 module.exports = { Block };

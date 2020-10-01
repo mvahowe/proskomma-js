@@ -61,7 +61,7 @@ const Sequence = class {
     }
 
     close(parser) {
-        for (const activeScope of this.activeScopes.filter(x => true).reverse()) {
+        for (const activeScope of this.activeScopes.filter(() => true).reverse()) {
             this.closeActiveScope(parser, activeScope);
         }
         this.activeScopes = [];
@@ -75,7 +75,7 @@ const Sequence = class {
     }
 
     filterGrafts(options) {
-        return this.blocks.map(b => b.filterGrafts(options)).reduce((acc, current, idx, arr) => acc.concat(current), []);
+        return this.blocks.map(b => b.filterGrafts(options)).reduce((acc, current) => acc.concat(current), []);
     }
 
     filterScopes(options) {
@@ -92,6 +92,10 @@ const Sequence = class {
 
     items() {
         return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current), []);
+    }
+
+    text() {
+        return this.blocks.map(b => b.text()).join('');
     }
 
     moveOrphanScopes() {

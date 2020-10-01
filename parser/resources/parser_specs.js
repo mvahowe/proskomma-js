@@ -1,7 +1,9 @@
 const { labelForScope } = require("../../lib/scope_defs");
+const { generateId } = require("../../lib/generate_id");
 
 const specs = [
     {
+        // HEADERS - make temp sequence, then add to headers object
         contexts: [
             [
                 "startTag",
@@ -34,6 +36,7 @@ const specs = [
         }
     },
     {
+        // HEADINGS - Start new sequence
         contexts: [
             [
                 "startTag",
@@ -58,6 +61,7 @@ const specs = [
         }
     },
     {
+        // TITLE - make new sequence
         contexts: [
             [
                 "startTag",
@@ -74,6 +78,7 @@ const specs = [
         }
     },
     {
+        // END TITLE - make new sequence
         contexts: [
             [
                 "startTag",
@@ -90,6 +95,7 @@ const specs = [
         }
     },
     {
+        // REMARK - make new sequence
         contexts: [
             [
                 "startTag",
@@ -106,6 +112,7 @@ const specs = [
         }
     },
     {
+        // PARAGRAPH STYLES - Make new block on main (for now)
         contexts: [
             [
                 "startTag",
@@ -148,6 +155,7 @@ const specs = [
         }
     },
     {
+        // FOOTNOTE/ENDNOTE - new inline sequence
         contexts: [
             [
                 "startTag",
@@ -165,12 +173,13 @@ const specs = [
                 {
                     label: pt => labelForScope("inline", [pt.fullTagName]),
                     endedBy: ["endTag/f", "endTag/fe", "endBlock"],
-                    onEnd: (parser, label) => parser.returnToBaseSequence()
+                    onEnd: (parser) => parser.returnToBaseSequence()
                 }
             ]
         }
     },
     {
+        // CROSS REFERENCE - make new inline sequence
         contexts: [
             [
                 "startTag",
@@ -187,12 +196,13 @@ const specs = [
                 {
                     label: pt => labelForScope("inline", [pt.fullTagName]),
                     endedBy: ["endTag/x", "endBlock"],
-                    onEnd: (parser, label) => parser.returnToBaseSequence()
+                    onEnd: (parser) => parser.returnToBaseSequence()
                 }
             ]
         }
     },
     {
+        // CHAPTER - chapter scope
         contexts: [
             ["chapter"]
         ],
@@ -207,6 +217,7 @@ const specs = [
         }
     },
     {
+        // VERSES - verse and verses scopes
         contexts: [
             ["verses"]
         ],
@@ -221,7 +232,7 @@ const specs = [
             during: (parser, pt) => {
                 pt.numbers.map(n => {
                         const verseScope = {
-                            label: pt => labelForScope("verse", [n]),
+                            label: () => labelForScope("verse", [n]),
                             endedBy: ["verses", "chapter"]
                         };
                         parser.openNewScope(pt, verseScope, true, parser.sequences.main);
@@ -231,6 +242,36 @@ const specs = [
         }
     },
     {
+        // VP - graft label and add stub scope, then remove graft and modify scope at tidy stage
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                ["vp"]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "printNumber",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
+                    endedBy: ["endTag/vp", "endBlock"],
+                    onEnd: (parser) => parser.returnToBaseSequence()
+                }
+            ],
+            during: (parser, pt) => {
+                const scopeId = generateId();
+                const vpScope = {
+                    label: () => labelForScope("printVerse", [scopeId]),
+                    endedBy: ["startTag/vp", "verse", "chapter"]
+                };
+                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+            }
+        }
+    },
+    {
+        // CHARACTER MARKUP - add scope
         contexts: [
             [
                 "startTag",
@@ -281,6 +322,7 @@ const specs = [
         }
     },
     {
+        // EMPTY MILESTONE - add open and close scope
         contexts: [
             ["emptyMilestone"]
         ],
@@ -289,6 +331,7 @@ const specs = [
         }
     },
     {
+        // START MILESTONE - open scope, set attribute context
         contexts: [
             ["startMilestoneTag", "sOrE", "s"]
         ],
@@ -307,14 +350,16 @@ const specs = [
         }
     },
     {
+        // END MILESTONE - close scope, clear attribute context
         contexts: [
             ["endMilestoneMarker"]
         ],
         parser: {
-            during: (parser, pt) => parser.clearAttributeContext()
+            during: (parser) => parser.clearAttributeContext()
         }
     },
     {
+        // ATTRIBUTE - open scope based on attribute context
         contexts: [
             ["attribute"]
         ],
@@ -332,6 +377,7 @@ const specs = [
         }
     },
     {
+        // WORD-LEVEL MARKUP - open scope and set attribute context
         contexts: [
             [
                 "startTag",
@@ -349,7 +395,7 @@ const specs = [
                 {
                     label: pt => labelForScope("spanWithAtts", [pt.tagName]),
                     endedBy: ["endBlock", "endTag/$tagName$"],
-                    onEnd: (parser, label) => parser.clearAttributeContext()
+                    onEnd: (parser) => parser.clearAttributeContext()
                 }
             ],
             during: (parser, pt) => {
@@ -358,6 +404,7 @@ const specs = [
         }
     },
     {
+        // TOKEN - add a token!
         contexts: [
             ["wordLike"],
             ["lineSpace"],
