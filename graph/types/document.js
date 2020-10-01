@@ -22,7 +22,7 @@ const documentType = new GraphQLObjectType({
                     type: GraphQLString
                 }
             },
-            resolve: (root, args) => root.headers[args.id]
+            resolve: (root, args) => headerById(root, args.id)
         },
         mainSequence: {
             type: sequenceType,
