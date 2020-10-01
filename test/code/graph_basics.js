@@ -40,13 +40,14 @@ test(
 test(
     `DocSetById (${testGroup})`,
     async function (t) {
-        t.plan(4);
-        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang abbr } }`;
+        t.plan(5);
+        const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang abbr documents { id } } }`;
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
         t.ok("id" in result.data.docSetById);
         t.equal(result.data.docSetById.lang, "eng");
         t.equal(result.data.docSetById.abbr, "ust");
+        t.ok("id" in result.data.docSetById.documents[0]);
     }
 );
 

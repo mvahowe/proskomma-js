@@ -1,6 +1,5 @@
 const test = require('tape');
 
-const {ProsKomma} = require('../../');
 const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graph Document";
@@ -14,7 +13,6 @@ test(
         const query = '{ documents { docSetId } }';
         const result = await pk.gqlQuery(query);
         t.ok("data" in result);
-        console.log(JSON.stringify(result, null, 2))
         t.ok("documents" in result.data);
         t.ok("docSetId" in result.data.documents[0]);
     }
