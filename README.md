@@ -1,23 +1,34 @@
 # proskomma-js
 A Javascript Implementation of the Proskomma Scripture Processing Model.
 
-# Running the code (provisionally)
-There are two scripts in scripts/ which process a USFM or USX file respectively.
+# Installing and testing the code
+```
+npm install
+npm test
+npm run coverage
+```
+
+# Running the code
+```
+cd scripts
+node do_graph.js ../test/test_data/usx/web_rut_1.usx example_query.txt
+node do_graph.js ../test/test_data/usfm/hello.usfm example_query.txt
+```
 
 # Documentation
 ## Big ideas
 - docSet => bundle
-- document => book document (USFM or USX)
+- document => book document (created from USFM or USX)
 - each document has >= 1 sequence
 - a sequence contains flowable text
-- every document has a "main" sequene with canonical content
+- every document has a "main" sequence with canonical content
 - other sequences may contain headers, introductions, footnotes...
 - sequences contain blocks (~= USFM paragraphs such as \p, \q...)
 - blocks contain tokens, scopes and grafts
 - tokens are printable text
 - scopes are markup around tokens
 - grafts are anchors for inserting another sequence
-- blocks are stored in a succinct (compact but queriable) format
+- blocks are stored in a succinct (compact but queryable) format
 - queries are expressed in GraphQL
 ## Block items
 ### Tokens

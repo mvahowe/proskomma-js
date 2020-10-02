@@ -1,0 +1,1 @@
+{ documents { mainSequence { id type blocks { text } } } }
