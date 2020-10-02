@@ -2,7 +2,7 @@ const test = require('tape');
 
 const {pkWithDoc} = require('../lib/load');
 
-const testGroup = "Hello";
+const testGroup = "Hello USFM";
 
 const pk = pkWithDoc("../test_data/usfm/hello.usfm", "fra", "hello")[0];
 
