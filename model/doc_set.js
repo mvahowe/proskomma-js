@@ -272,24 +272,6 @@ class DocSet {
         return this.enums.ids.countedString(seqIndex);
     }
 
-    describe() {
-        console.log(
-            JSON.stringify(
-                this,
-                (k, v) => {
-                    if (["processor"].includes(k)) {
-                        return "(circular)";
-                    } else if (k === "enums") {
-                        return Object.keys(v).map(c => [c, this.unpackEnum(c)]);
-                    } else {
-                        return v;
-                    }
-                },
-                2
-            )
-        );
-    }
-
     serializeSuccinct() {
         const ret = {
             id: this.id,

@@ -98,15 +98,6 @@ class Document {
         docSet.preEnums = {};
     }
 
-    unsuccinctifySequence(seqId, options) {
-        const sequence = this.sequences[seqId];
-        const ret = [];
-        for (const block of sequence.blocks) {
-            ret.push(this.unsuccinctifyBlock(block, options));
-        }
-        return ret;
-    }
-
     unsuccinctifyBlock(block, options) {
         const docSet = this.processor.docSets[this.docSetId];
         docSet.unsuccinctifyBlock(block, options);
@@ -136,24 +127,6 @@ class Document {
             bg: blockOb.bg.base64(),
             c: blockOb.c.base64()
         };
-    }
-
-    describe() {
-        console.log(
-            JSON.stringify(
-                this,
-                (k, v) => {
-                    if (["processor"].includes(k)) {
-                        return "(circular)";
-                    } else if (k === "blocks") {
-                        return v.map(b => `ByteArray(length=${b.c.length})`)
-                    } else {
-                        return v;
-                    }
-                },
-                2
-            )
-        );
     }
 
 }

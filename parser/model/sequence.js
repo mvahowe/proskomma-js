@@ -221,18 +221,6 @@ const Sequence = class {
         bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.token << 6);
     }
 
-    graftLocation(graftString) {
-        if (graftString in graftLocation) {
-            return graftLocation[graftString];
-        } else if (graftString.startsWith("zb-")) {
-            return "block";
-        } else if (graftString.startsWith("zi-")) {
-            return "inline";
-        } else {
-            throw new Error(`Could not find graft location for '${graftString}'`);
-        }
-    }
-
     pushSuccinctGraft(bA, docSet, item) {
         const graftTypeEnum = docSet.enumForCategoryValue("graftTypes", item.graftType);
         const seqEnum = docSet.enumForCategoryValue("ids", item.seqId);
@@ -252,43 +240,6 @@ const Sequence = class {
             bA.pushNByte(docSet.enumForCategoryValue("scopeBits", scopeBit));
         }
         bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum[item.itemType] << 6);
-    }
-
-    describe(seqById, indent) {
-        indent = indent || 1
-        const grafts = this.grafts()
-        const scopes = this.scopes()
-        const items = this.items()
-        const maybeS = function(prompt, n) {
-            if (n === 1) {
-                return `1 ${prompt}`;
-            } else {
-                return `${n} ${prompt}s`;
-            }
-        }
-        console.log(`${"   ".repeat(indent)}${this.type} seq ${this.id} has ${maybeS("block", this.blocks.length)} with ${maybeS("item", items.length)}, ${maybeS("graft", grafts.length)}, ${maybeS("scope", scopes.length)}`)
-        if (items.length > (scopes.length * 2 + grafts.length)) {
-            let tokensText = items.filter(i => i instanceof Token).map(t => t.chars).join('');
-            if (tokensText.length > 80) {
-                tokensText = tokensText.substring(0, 80) + "...";
-            }
-            console.log(`${"   ".repeat(indent + 1)}Tokens: ${tokensText}`)
-        }
-        if (scopes.length > 0) {
-            console.log(`${"   ".repeat(indent + 1)}Scopes:`)
-        }
-        for (const scope of scopes.slice(0, 5)) {
-            console.log(`${"   ".repeat(indent + 2)}${scope[1].label}`)
-        }
-        if (scopes.length > 5) {
-            console.log(`${"   ".repeat(indent + 2)}[plus ${scopes.length - 5} more]`)
-        }
-        if (grafts.length > 0) {
-            console.log(`${"   ".repeat(indent + 1)}Grafts:`)
-            for (const graft of grafts) {
-                seqById[graft[1].seqId].describe(seqById, indent + 2)
-            }
-        }
     }
 
 }
