@@ -73,6 +73,10 @@ class ProsKomma {
         return await graphql(gqlSchema, query, this, {});
     }
 
+    serializeSuccinct(docSetId) {
+        return this.docSets[docSetId].serializeSuccinct();
+    }
+
 }
 
 module.exports = {ProsKomma}

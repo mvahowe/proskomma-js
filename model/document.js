@@ -125,7 +125,9 @@ class Document {
         return {
             bs: blockOb.bs.base64(),
             bg: blockOb.bg.base64(),
-            c: blockOb.c.base64()
+            c: blockOb.c.base64(),
+            is: blockOb.is.base64(),
+            os: blockOb.os.base64()
         };
     }
 
