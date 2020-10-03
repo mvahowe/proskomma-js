@@ -4,8 +4,8 @@
   "description": "A Model for Complex Text Documents",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/code/*.js | tap-summary",
-    "coverage": "node_modules/nyc/bin/nyc.js tape test/code/*.js | node_modules/tap-nyc/bin/cmd.js"
+    "test": "node_modules/tape/bin/tape test/code/*.js | node_modules/tap-summary/bin/cmd.js",
+    "coverage": "node_modules/nyc/bin/nyc.js node_modules/tape/bin/tape test/code/*.js | node_modules/tap-nyc/bin/cmd.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,8 @@
   "devDependencies": {
     "fs-extra": "^9.0.1",
     "nyc": "^15.1.0",
-    "tap-nyc": "^1.0.3"
+    "tap-nyc": "^1.0.3",
+    "tap-summary": "^4.0.0",
+    "tape": "^5.0.1"
   }
 }
