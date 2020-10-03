@@ -69,12 +69,12 @@ const lexingRegexes = [
     [
         "printable",
         "wordLike",
-        xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]+)")
+        xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})")
     ],
     [
         "printable",
         "lineSpace",
-        xre("([\\p{Separator}]+)")
+        xre("([\\p{Separator}]{1,127})")
     ],
     [
         "printable",
