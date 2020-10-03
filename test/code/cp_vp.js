@@ -7,11 +7,12 @@ const testGroup = "Print Numbers";
 const pk = pkWithDoc("../test_data/usfm/cp_vp.usfm", "fra", "hello")[0];
 
 test(
-    `CP (${testGroup})`,
+    `VP (${testGroup})`,
     async function (t) {
         try {
             const expectedScopes = [
                 ["s", "chapter/3"],
+                ["s", "printChapter/B"],
                 ["s", "verse/14"],
                 ["s", "verses/14"],
                 ["s", "printVerse/1b"],
@@ -21,7 +22,12 @@ test(
                 ["s", "verses/15"],
                 ["e", "printVerse/1b"],
                 ["s", "printVerse/2b"],
+                ["e", "printChapter/B"],
+                ["s", "printChapter/3bis"],
                 ["e", "printVerse/2b"],
+                ["s", "printVerse/14"],
+                ["e", "printVerse/14"],
+                ["e", "printChapter/3bis"],
                 ["e", "verses/15"],
                 ["e", "verse/15"],
                 ["e", "chapter/3"]

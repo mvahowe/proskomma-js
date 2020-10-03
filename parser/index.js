@@ -73,7 +73,7 @@ const Parser = class {
             if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
                 this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
             }
-            if (["chapter", "verses"].includes(lexedItem.subclass)) {
+            if (["chapter", "printchapter", "verses"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(lexedItem.subclass);
             }
             const spec = this.specForItem(lexedItem);
@@ -148,7 +148,7 @@ const Parser = class {
         if (Object.keys(scopeToGraftContent).length > 0) {
             for (const block of seq.blocks) {
                 for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
-                    if (scope.label.startsWith("printChapter") || scope.label.startsWith("printVerse")) {
+                    if (scope.label.startsWith("printVerse")) {
                         const scopeParts = scope.label.split("/");
                         scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
                     }

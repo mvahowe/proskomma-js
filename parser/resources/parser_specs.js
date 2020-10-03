@@ -203,15 +203,26 @@ const specs = [
     },
     {
         // CHAPTER - chapter scope
-        contexts: [
-            ["chapter"]
-        ],
+        contexts: [ ["chapter"] ],
         parser: {
             mainSequence: true,
             newScopes: [
                 {
                     label: pt => labelForScope("chapter", [pt.number]),
                     endedBy: ["chapter"]
+                }
+            ]
+        }
+    },
+    {
+        // CP - graft label and add stub scope, then remove graft and modify scope at tidy stage
+        contexts: [["printchapter"]],
+        parser: {
+            mainSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("printChapter", [pt.numberString]),
+                    endedBy: ["printchapter", "chapter"]
                 }
             ]
         }

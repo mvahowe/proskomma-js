@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/tape/bin/tape test/code/*.js | node_modules/tap-summary/bin/cmd.js",
+    "rawTest": "node_modules/tape/bin/tape test/code/*.js",
+    "oneTest": "node_modules/tape/bin/tape test/code/$TESTSCRIPT.js",
     "coverage": "node_modules/nyc/bin/nyc.js node_modules/tape/bin/tape test/code/*.js | node_modules/tap-nyc/bin/cmd.js"
   },
   "repository": {

@@ -4,6 +4,7 @@ const xre = require('xregexp');
 const classForFragment = {
     printable: ptClasses.PrintablePT,
     chapter: ptClasses.ChapterPT,
+    printchapter: ptClasses.PrintChapterPT,
     verses: ptClasses.VersesPT,
     tag: ptClasses.TagPT,
     break: ptClasses.BreakPT,

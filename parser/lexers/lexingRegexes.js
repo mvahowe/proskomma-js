@@ -7,6 +7,11 @@ const lexingRegexes = [
         xre("([\\r\\n]*\\\\c[ \\t]+(\\d+)[ \\t\\r\\n]*)")
     ],
     [
+        "printchapter",
+        "printchapter",
+        xre("([\\r\\n]*\\\\cp[ \\t]+([^\\r\\n]+)[ \\t\\r\\n]*)")
+    ],
+    [
         "verses",
         "verses",
         xre("([\\r\\n]*\\\\v[ \\t]+([\\d\\-]+)[ \\t\\r\\n]*)")
