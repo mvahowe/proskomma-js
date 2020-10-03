@@ -92,7 +92,7 @@ class UsxLexer {
     }
 
     notHandledHandler(lexer, oOrC, tag) {
-        console.log(`WARNING: ${oOrC} element tag '${tag}' is not handled by UsxParser`)
+        console.error(`WARNING: ${oOrC} element tag '${tag}' is not handled by UsxParser`)
     }
 
     stackPush(name, atts) {
