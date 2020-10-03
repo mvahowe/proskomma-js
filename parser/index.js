@@ -16,7 +16,7 @@ const Parser = class {
     setSequenceTypes() {
         this.baseSequenceTypes = {
             main: "1",
-            intro: "*",
+            introduction: "?",
             title: "?",
             endTitle: "?",
             heading: "*",

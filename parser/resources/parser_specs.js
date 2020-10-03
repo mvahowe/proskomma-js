@@ -61,7 +61,7 @@ const specs = [
         }
     },
     {
-        // TITLE - make new sequence
+        // TITLE - make a sequence or add to existing one
         contexts: [
             [
                 "startTag",
@@ -78,7 +78,7 @@ const specs = [
         }
     },
     {
-        // END TITLE - make new sequence
+        // END TITLE - make a sequence or add to existing one
         contexts: [
             [
                 "startTag",
@@ -90,6 +90,38 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "endTitle",
+            newBlock: true,
+            newScopes: []
+        }
+    },
+    {
+        // INTRODUCTION - make a sequence or add to existing one
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "imt",
+                    "is",
+                    "ip",
+                    "ipi",
+                    "im",
+                    "imi",
+                    "ipq",
+                    "imq",
+                    "ipr",
+                    "iq",
+                    "ib",
+                    "ili",
+                    "iot",
+                    "io",
+                    "iex",
+                    "imte",
+                ]
+            ]
+        ],
+        parser: {
+            baseSequenceType: "introduction",
             newBlock: true,
             newScopes: []
         }
@@ -319,7 +351,9 @@ const specs = [
                     "bdit",
                     "no",
                     "sc",
-                    "sup"
+                    "sup",
+                    "ior",
+                    "iqt"
                 ]
             ]
         ],
