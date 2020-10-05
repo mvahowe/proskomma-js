@@ -29,14 +29,14 @@ test(
     async function (t) {
         try {
             t.plan(6);
-            const query = '{ documents { headers { key value }  toc1: header(id:"toc1") } }';
+            const query = '{ documents { headers { key value }  toc: header(id:"toc") } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("documents" in result.data);
             t.ok("headers" in result.data.documents[0]);
             t.equal(result.data.documents[0].headers.length, 6);
-            t.equal(result.data.documents[0].headers.filter(h => h.key === "toc1")[0].value, "The Book of Ruth");
-            t.equal(result.data.documents[0].toc1, "The Book of Ruth");
+            t.equal(result.data.documents[0].headers.filter(h => h.key === "toc")[0].value, "The Book of Ruth");
+            t.equal(result.data.documents[0].toc, "The Book of Ruth");
         } catch
             (err) {
             console.log(err)

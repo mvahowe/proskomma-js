@@ -23,10 +23,10 @@ test(
             t.equal(mainSequence.blocks[0].bg[2].type, "heading");
             const introSequence = sequences.filter(s => s.type === "introduction")[0];
             t.equal(introSequence.blocks.length, 4);
-            t.equal(introSequence.blocks[0].bs.label.split("/")[1], "imt1");
-            t.equal(introSequence.blocks[1].bs.label.split("/")[1], "ip1");
-            t.equal(introSequence.blocks[2].bs.label.split("/")[1], "is1");
-            t.equal(introSequence.blocks[3].bs.label.split("/")[1], "ip1");
+            t.equal(introSequence.blocks[0].bs.label.split("/")[1], "imt");
+            t.equal(introSequence.blocks[1].bs.label.split("/")[1], "ip");
+            t.equal(introSequence.blocks[2].bs.label.split("/")[1], "is");
+            t.equal(introSequence.blocks[3].bs.label.split("/")[1], "ip");
         } catch (err) {
             console.log(err)
         }

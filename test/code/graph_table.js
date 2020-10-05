@@ -17,12 +17,12 @@ test(
             t.ok("data" in result);
             const blocks = result.data.documents[0].mainSequence.blocks;
             t.equal(blocks.length, 6);
-            t.equal(blocks[0].bs.label, "blockTag/p1");
-            t.equal(blocks[1].bs.label, "blockTag/tr1");
+            t.equal(blocks[0].bs.label, "blockTag/p");
+            t.equal(blocks[1].bs.label, "blockTag/tr");
             t.ok(blocks[1].scopeLabels.includes("cell/body/left/2"));
             t.ok(blocks[2].scopeLabels.includes("cell/body/left/1"));
             t.ok(blocks[2].scopeLabels.includes("cell/body/right/1"));
-            t.equal(blocks[5].bs.label, "blockTag/p1");
+            t.equal(blocks[5].bs.label, "blockTag/p");
         } catch (err) {
             console.log(err)
         }

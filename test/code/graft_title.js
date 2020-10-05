@@ -20,7 +20,7 @@ test(
             const titleSequence = sequences.filter(s => s.type === "title")[0];
             t.equal(titleSequence.blocks.length, 2);
             t.equal(titleSequence.blocks[0].bs.label.split("/")[1], "mt2");
-            t.equal(titleSequence.blocks[1].bs.label.split("/")[1], "mt1");
+            t.equal(titleSequence.blocks[1].bs.label.split("/")[1], "mt");
         } catch (err) {
             console.log(err)
         }

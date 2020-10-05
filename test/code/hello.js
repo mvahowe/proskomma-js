@@ -12,7 +12,7 @@ test(
         try {
             const expectedHeaders = [
                 ["id", "MRK Mark's Gospel, translated by Mark"],
-                ["toc1", "The Gospel of Mark"],
+                ["toc", "The Gospel of Mark"],
                 ["toc2", "Mark"],
                 ["toc3", "Mk"]
             ];
@@ -27,10 +27,10 @@ test(
                 t.ok(queryTuple.length === 1);
                 t.ok(queryTuple[0].value === expectedValue);
             }
-            const query2 = '{documents { toc1: header(id:"toc1") toc3: header(id:"toc3") } }';
+            const query2 = '{documents { toc: header(id:"toc") toc3: header(id:"toc3") } }';
             const result2 = await pk.gqlQuery(query2);
             t.ok("data" in result2);
-            t.equal(result2.data.documents[0].toc1, "The Gospel of Mark");
+            t.equal(result2.data.documents[0].toc, "The Gospel of Mark");
             t.equal(result2.data.documents[0].toc3, "Mk");
         } catch (err) {
             console.log(err)
