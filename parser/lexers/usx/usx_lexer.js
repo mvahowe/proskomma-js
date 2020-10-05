@@ -20,9 +20,9 @@ class UsxLexer {
             chapter: this.handleChapter,
             verse: this.handleVerses,
             para: this.handleParaOrCharOpen,
-            table: this.notHandledHandler,
-            row: this.notHandledHandler,
-            cell: this.notHandledHandler,
+            table: this.ignoreHandler,
+            row: this.handleRowOpen,
+            cell: this.handleCellOpen,
             char: this.handleParaOrCharOpen,
             ms: this.notHandledHandler,
             note: this.handleNoteOpen,
@@ -38,9 +38,9 @@ class UsxLexer {
             chapter: this.ignoreHandler,
             verse: this.ignoreHandler,
             para: this.handleParaOrCharClose,
-            table: this.notHandledHandler,
-            row: this.notHandledHandler,
-            cell: this.notHandledHandler,
+            table: this.ignoreHandler,
+            row: this.handleRowClose,
+            cell: this.handleCellClose,
             char: this.handleParaOrCharClose,
             ms: this.notHandledHandler,
             note: this.handleNoteClose,
@@ -79,7 +79,7 @@ class UsxLexer {
         if (name in this.openTagHandlers) {
             this.openTagHandlers[name](this, "open", name, atts);
         } else {
-            throw new Error(`Unexpected open element tag '${name}' in UsxParser`)
+            throw new Error(`Unexpected open element tag '${name}' in UsxParser`);
         }
     }
 
@@ -87,12 +87,12 @@ class UsxLexer {
         if (name in this.closeTagHandlers) {
             this.closeTagHandlers[name](this, "close", name);
         } else {
-            throw new Error(`Unexpected close element tag '${name}' in UsxParser`)
+            throw new Error(`Unexpected close element tag '${name}' in UsxParser`);
         }
     }
 
     notHandledHandler(lexer, oOrC, tag) {
-        console.error(`WARNING: ${oOrC} element tag '${tag}' is not handled by UsxParser`)
+        console.error(`WARNING: ${oOrC} element tag '${tag}' is not handled by UsxParser`);
     }
 
     stackPush(name, atts) {
@@ -103,12 +103,10 @@ class UsxLexer {
         return this.elementStack.pop();
     }
 
-    splitTagNumber(tagName) {
-        let tagNo = 1;
-        if (["1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(tagName[tagName.length - 1])) {
-            tagNo = tagName[tagName.length - 1];
-            tagName = tagName.substring(0, tagName.length - 1);
-        }
+    splitTagNumber(fullTagName) {
+        const tagBits = xre.exec(fullTagName, xre("([^1-9]+)(.*)"));
+        const tagName = tagBits[1];
+        const tagNo = tagBits[2].length > 0 ? tagBits[2] : "1";
         return [tagName, tagNo];
     }
 
@@ -121,10 +119,34 @@ class UsxLexer {
         lexer.stackPush(name, atts);
     }
 
-    handleParaOrCharClose(lexer, oOrC, name) {
-        const [sName, sAtts] = lexer.stackPop();
+    handleParaOrCharClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
         const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
-        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]))
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]));
+    }
+
+    handleRowOpen(lexer, oOrC, name, atts) {
+        const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, tagName, tagNo]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleRowClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
+        const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]));
+    }
+
+    handleCellOpen(lexer, oOrC, name, atts) {
+        const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, tagName, tagNo]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleCellClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
+        const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]));
     }
 
     handleBookOpen(lexer, oOrC, name, atts) {
@@ -134,9 +156,9 @@ class UsxLexer {
         lexer.stackPush(name, atts);
     }
 
-    handleBookClose(lexer, oOrC, name) {
+    handleBookClose(lexer) {
         lexer.stackPop();
-        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "id", ""]))
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "id", ""]));
     }
 
     handleChapter(lexer, oOrC, name, atts) {
@@ -157,8 +179,8 @@ class UsxLexer {
         lexer.stackPush(name, atts);
     }
 
-    handleNoteClose(lexer, oOrC, name) {
-        const [sName, sAtts] = lexer.stackPop();
+    handleNoteClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
         lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, sAtts.style, ""]));
     }
 

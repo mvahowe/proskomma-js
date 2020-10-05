@@ -1,5 +1,5 @@
 const {Sequence} = require("./model/sequence");
-const {specs} = require("./resources/parser_specs");
+const {specs} = require("./parser_specs");
 const {Token, Scope, Graft} = require("./model/items");
 const {labelForScope} = require("../lib/scope_defs");
 
@@ -88,7 +88,7 @@ const Parser = class {
                 if (changeBaseSequence) {
                     this.closeActiveScopes("baseSequenceChange");
                     this.changeBaseSequence(spec.parser);
-                    if ("newBlock" in spec.parser) {
+                    if ("newBlock" in spec.parser && spec.parser.newBlock) {
                         this.closeActiveScopes("endBlock");
                         this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
                     }
@@ -102,7 +102,7 @@ const Parser = class {
                     this.current.sequence.newBlock(labelForScope("inline", spec.parser.inlineSequenceType));
                     this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
                     this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id))
-                } else if ("newBlock" in spec.parser) {
+                } else if ("newBlock" in spec.parser && spec.parser.newBlock) {
                     this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
                 }
                 if ("during" in spec.parser) {

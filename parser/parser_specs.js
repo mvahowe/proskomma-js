@@ -1,5 +1,5 @@
-const { labelForScope } = require("../../lib/scope_defs");
-const { generateId } = require("../../lib/generate_id");
+const { labelForScope } = require("../lib/scope_defs");
+const { generateId } = require("../lib/generate_id");
 
 const specs = [
     {
@@ -144,7 +144,7 @@ const specs = [
         }
     },
     {
-        // PARAGRAPH STYLES - Make new block on main (for now)
+        // PARAGRAPH STYLES - Make new block on main
         contexts: [
             [
                 "startTag",
@@ -182,6 +182,20 @@ const specs = [
         ],
         parser: {
             baseSequenceType: "main",
+            newBlock: true,
+            newScopes: []
+        }
+    },
+    {
+        // ROW - Make new block
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                ["tr"]
+            ]
+        ],
+        parser: {
             newBlock: true,
             newScopes: []
         }
@@ -361,6 +375,29 @@ const specs = [
             newScopes: [
                 {
                     label: pt => labelForScope("span", [pt.fullTagName]),
+                    endedBy: ["endBlock", "endTag/$fullTagName$"]
+                }
+            ]
+        }
+    },
+    {
+        // CELL - unpick tagName, add scope
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "th",
+                    "thr",
+                    "tc",
+                    "tcr"
+                ]
+            ]
+        ],
+        parser: {
+            newScopes: [
+                {
+                    label: pt => labelForScope("cell", [pt.fullTagName]),
                     endedBy: ["endBlock", "endTag/$fullTagName$"]
                 }
             ]

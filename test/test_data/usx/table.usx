@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <usx version="2.6">
-  <book code="1CH" style="id">Table example,loosely inspired by NIV®, by Mark</book>
+  <book code="1CH" style="id">Table example, by Mark</book>
   <para style="toc1">1 Chronicles</para>
   <para style="p">Regardless of their age or status, they cast lots to decide who did what.</para>
   <table>
     <row style="tr">
-      <cell style="tc1" align="start">
-        Joseph won the first lot, which was for Asaph, </cell>
-      <cell style="tc2" align="start"/>
+      <cell style="tc1-2" align="start">Joseph won the first lot, which was for Asaph, </cell>
     </row>
     <row style="tr">
       <cell style="tc1" align="start">his sons and relatives </cell>
-      <cell style="tc2" align="start">12</cell>
+      <cell style="tcr2" align="start">12</cell>
     </row>
     <row style="tr">
-      <cell style="tc1" align="start">Gedaliah won the second lot,</cell>
-      <cell style="tc2" align="start"/>
+      <cell style="tc1-2" align="start">Gedaliah won the second lot,</cell>
     </row>
     <row style="tr">
       <cell style="tc1" align="start">for him and his relatives and sons </cell>
-      <cell style="tc2" align="start">12</cell>
+      <cell style="tcr2" align="start">12</cell>
     </row>
   </table>
+  <para style="p">Etc...</para>
 </usx>
