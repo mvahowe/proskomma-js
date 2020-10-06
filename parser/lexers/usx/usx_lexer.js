@@ -164,6 +164,10 @@ class UsxLexer {
     handleChapter(lexer, oOrC, name, atts) {
         if (atts.number) {
             lexer.lexed.push(new ptClasses.ChapterPT("chapter", [null, null, atts.number]));
+            if (atts.pubnumber) {
+                console.log("PUBNUMBER");
+                lexer.lexed.push(new ptClasses.PrintChapterPT("printchapter", [null, null, atts.pubnumber]));
+            }
         }
     }
 

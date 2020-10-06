@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+  <book code="ESG" style="id">pubnumber and altnumber example by Mark</book>
+  <para style="toc1">Greek Esther</para>
+  <chapter number="1" style="c" pubnumber="A" altnumber="(A)" sid="ESG 1" />
+  <para style="p">
+    <verse number="1-2" style="v" pubnumber="1-2" altnumber="1, 2" sid="ESG 1:1-2" /> During the second year of the reign of Artaxerxes the Great, the first day of the month of Nisan, Mordecai had a dream...<verse eid="ESG 1:1-2" /></para>
+  <chapter eid="ESG 1" />
+</usx>

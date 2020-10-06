@@ -5,9 +5,10 @@ const {pkWithDoc} = require('../lib/load');
 const testGroup = "Print Numbers";
 
 const pk = pkWithDoc("../test_data/usfm/cp_vp.usfm", "fra", "hello")[0];
+const pk2 = pkWithDoc("../test_data/usx/pubnumber.usx", "fra", "hello")[0];
 
 test(
-    `VP (${testGroup})`,
+    `USFM (${testGroup})`,
     async function (t) {
         try {
             const expectedScopes = [
@@ -44,6 +45,44 @@ test(
                 t.equal(scopes[count].label, expectedLabel);
                 count++;
             }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `USX (${testGroup})`,
+    async function (t) {
+        try {
+            const expectedScopes = [
+                ["s", "chapter/3"],
+                ["s", "printChapter/B"],
+                ["s", "verse/14"],
+                ["s", "verses/14"],
+                ["s", "printVerse/1b"],
+                ["e", "verses/14"],
+                ["e", "verse/14"],
+                ["s", "verse/15"],
+                ["s", "verses/15"],
+                ["e", "printVerse/1b"],
+                ["s", "printVerse/2b"],
+                ["e", "printChapter/B"],
+                ["s", "printChapter/3bis"],
+                ["e", "printVerse/2b"],
+                ["s", "printVerse/14"],
+                ["e", "printVerse/14"],
+                ["e", "printChapter/3bis"],
+                ["e", "verses/15"],
+                ["e", "verse/15"],
+                ["e", "chapter/3"]
+            ];
+            t.plan(1);
+            const query =
+                '{ documents { mainSequence { blocks { c { ... on Token { subType chars }... on Scope { subType label }... on Graft { type sequenceId } } } } } }';
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            console.log(JSON.stringify(result.data, null, 2));
         } catch (err) {
             console.log(err)
         }
