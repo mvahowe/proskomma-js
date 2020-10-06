@@ -165,8 +165,12 @@ class UsxLexer {
         if (atts.number) {
             lexer.lexed.push(new ptClasses.ChapterPT("chapter", [null, null, atts.number]));
             if (atts.pubnumber) {
-                console.log("PUBNUMBER");
                 lexer.lexed.push(new ptClasses.PrintChapterPT("printchapter", [null, null, atts.pubnumber]));
+            }
+            if (atts.altnumber) {
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "ca", ""]));
+                lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.altnumber]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "ca", ""]));
             }
         }
     }
@@ -174,6 +178,16 @@ class UsxLexer {
     handleVerses(lexer, oOrC, name, atts) {
         if (atts.number) {
             lexer.lexed.push(new ptClasses.VersesPT("verses", [null, null, atts.number]));
+            if (atts.pubnumber) {
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "vp", ""]));
+                lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.pubnumber]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "vp", ""]));
+            }
+            if (atts.altnumber) {
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "va", ""]));
+                lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.altnumber]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "va", ""]));
+            }
         }
     }
 

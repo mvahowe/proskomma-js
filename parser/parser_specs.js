@@ -274,6 +274,35 @@ const specs = [
         }
     },
     {
+        // CA - graft label and add stub scope, then remove graft and modify scope at tidy stage
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                ["ca"]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "altNumber",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
+                    endedBy: ["endTag/ca", "endBlock"],
+                    onEnd: (parser) => parser.returnToBaseSequence()
+                }
+            ],
+            during: (parser, pt) => {
+                const scopeId = generateId();
+                const vpScope = {
+                    label: () => labelForScope("altChapter", [scopeId]),
+                    endedBy: ["startTag/ca", "chapter"]
+                };
+                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+            }
+        }
+    },
+    {
         // VERSES - verse and verses scopes
         contexts: [
             ["verses"]
@@ -321,7 +350,36 @@ const specs = [
                 const scopeId = generateId();
                 const vpScope = {
                     label: () => labelForScope("printVerse", [scopeId]),
-                    endedBy: ["startTag/vp", "verse", "chapter"]
+                    endedBy: ["startTag/vp", "verses", "chapter"]
+                };
+                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+            }
+        }
+    },
+    {
+        // VA - graft label and add stub scope, then remove graft and modify scope at tidy stage
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                ["va"]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "altNumber",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
+                    endedBy: ["endTag/va", "endBlock"],
+                    onEnd: (parser) => parser.returnToBaseSequence()
+                }
+            ],
+            during: (parser, pt) => {
+                const scopeId = generateId();
+                const vpScope = {
+                    label: () => labelForScope("altVerse", [scopeId]),
+                    endedBy: ["startTag/va", "verses", "chapter"]
                 };
                 parser.openNewScope(pt, vpScope, true, parser.sequences.main);
             }

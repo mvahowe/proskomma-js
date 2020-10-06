@@ -28,6 +28,7 @@ const Parser = class {
             noteCaller: "*",
             xref: "*",
             printNumber: "*",
+            altNumber: "*",
             temp: "?"
         };
     }
@@ -135,7 +136,7 @@ const Parser = class {
             let spliceCount = 0;
             const itItems = [...block.items];
             for (const [n, item] of itItems.entries()) {
-                if (item.itemType === "graft" && item.graftType === "printNumber") {
+                if (item.itemType === "graft" && ["printNumber", "altNumber"].includes(item.graftType)) {
                     const graftContent = sequenceById[item.seqId].text().trim();
                     const scopeId = itItems[n + 1].label.split("/")[1];
                     scopeToGraftContent[scopeId] = graftContent;
@@ -148,8 +149,8 @@ const Parser = class {
         if (Object.keys(scopeToGraftContent).length > 0) {
             for (const block of seq.blocks) {
                 for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
-                    if (scope.label.startsWith("printVerse")) {
-                        const scopeParts = scope.label.split("/");
+                    const scopeParts = scope.label.split("/");
+                    if (["altChapter", "printVerse", "altVerse"].includes(scopeParts[0])) {
                         scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
                     }
                 }
