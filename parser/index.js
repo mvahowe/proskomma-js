@@ -27,7 +27,7 @@ const Parser = class {
             footnote: "*",
             noteCaller: "*",
             xref: "*",
-            printNumber: "*",
+            pubNumber: "*",
             altNumber: "*",
             temp: "?"
         };
@@ -74,7 +74,7 @@ const Parser = class {
             if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
                 this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
             }
-            if (["chapter", "printchapter", "verses"].includes(lexedItem.subclass)) {
+            if (["chapter", "pubchapter", "verses"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(lexedItem.subclass);
             }
             const spec = this.specForItem(lexedItem);
@@ -125,18 +125,18 @@ const Parser = class {
             seq.moveOrphanScopes();
             // seq.removeEmptyBlocks();
             seq.close(this);
-            this.reorderPrintNumbers(seq);
+            this.reorderPubNumbers(seq);
         }
     }
 
-    reorderPrintNumbers(seq) {
+    reorderPubNumbers(seq) {
         const scopeToGraftContent = {};
         const sequenceById = this.sequenceById();
         for (const block of seq.blocks) {
             let spliceCount = 0;
             const itItems = [...block.items];
             for (const [n, item] of itItems.entries()) {
-                if (item.itemType === "graft" && ["printNumber", "altNumber"].includes(item.graftType)) {
+                if (item.itemType === "graft" && ["pubNumber", "altNumber"].includes(item.graftType)) {
                     const graftContent = sequenceById[item.seqId].text().trim();
                     const scopeId = itItems[n + 1].label.split("/")[1];
                     scopeToGraftContent[scopeId] = graftContent;
@@ -150,7 +150,7 @@ const Parser = class {
             for (const block of seq.blocks) {
                 for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
                     const scopeParts = scope.label.split("/");
-                    if (["altChapter", "printVerse", "altVerse"].includes(scopeParts[0])) {
+                    if (["altChapter", "pubVerse", "altVerse"].includes(scopeParts[0])) {
                         scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
                     }
                 }

@@ -165,7 +165,7 @@ class UsxLexer {
         if (atts.number) {
             lexer.lexed.push(new ptClasses.ChapterPT("chapter", [null, null, atts.number]));
             if (atts.pubnumber) {
-                lexer.lexed.push(new ptClasses.PrintChapterPT("printchapter", [null, null, atts.pubnumber]));
+                lexer.lexed.push(new ptClasses.PubChapterPT("pubchapter", [null, null, atts.pubnumber]));
             }
             if (atts.altnumber) {
                 lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "ca", ""]));

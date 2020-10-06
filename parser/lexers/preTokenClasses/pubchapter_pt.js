@@ -1,6 +1,6 @@
 const PreToken = require('./pretoken');
 
-class PrintChapterPT extends PreToken {
+class PubChapterPT extends PreToken {
 
     constructor(subclass, matchedBits) {
         super(subclass);
@@ -10,4 +10,4 @@ class PrintChapterPT extends PreToken {
 
 }
 
-module.exports = PrintChapterPT;
+module.exports = PubChapterPT;

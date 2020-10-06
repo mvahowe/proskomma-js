@@ -2,7 +2,7 @@ const test = require('tape');
 
 const {pkWithDoc} = require('../lib/load');
 
-const testGroup = "Print Numbers";
+const testGroup = "Pub Numbers";
 
 const pk = pkWithDoc("../test_data/usfm/cp_vp.usfm", "fra", "hello")[0];
 const pk2 = pkWithDoc("../test_data/usx/pubnumber.usx", "fra", "hello")[0];
@@ -13,22 +13,22 @@ test(
         try {
             const expectedScopes = [
                 ["s", "chapter/3"],
-                ["s", "printChapter/B"],
+                ["s", "pubChapter/B"],
                 ["s", "verse/14"],
                 ["s", "verses/14"],
-                ["s", "printVerse/1b"],
-                ["e", "printVerse/1b"],
+                ["s", "pubVerse/1b"],
+                ["e", "pubVerse/1b"],
                 ["e", "verses/14"],
                 ["e", "verse/14"],
                 ["s", "verse/15"],
                 ["s", "verses/15"],
-                ["s", "printVerse/2b"],
-                ["e", "printChapter/B"],
-                ["s", "printChapter/3bis"],
-                ["e", "printVerse/2b"],
-                ["s", "printVerse/14"],
-                ["e", "printVerse/14"],
-                ["e", "printChapter/3bis"],
+                ["s", "pubVerse/2b"],
+                ["e", "pubChapter/B"],
+                ["s", "pubChapter/3bis"],
+                ["e", "pubVerse/2b"],
+                ["s", "pubVerse/14"],
+                ["e", "pubVerse/14"],
+                ["e", "pubChapter/3bis"],
                 ["e", "verses/15"],
                 ["e", "verse/15"],
                 ["e", "chapter/3"]
@@ -58,15 +58,15 @@ test(
         try {
             const expectedScopes = [
                 ["s", "chapter/1"],
-                ["s", "printChapter/A"],
+                ["s", "pubChapter/A"],
                 ["s", "altChapter/(A)"],
                 ["s", "verse/1"],
                 ["s", "verse/2"],
                 ["s", "verses/1-2"],
-                ["s", "printVerse/1-2"],
+                ["s", "pubVerse/1-2"],
                 ["s", "altVerse/1, 2"],
                 ["e", "altVerse/1, 2"],
-                ["e", "printVerse/1-2"],
+                ["e", "pubVerse/1-2"],
                 ["e", "verses/1-2"],
                 ["e", "verse/2"],
                 ["e", "verse/1"],
@@ -77,7 +77,7 @@ test(
                 ["e", "verses/3"],
                 ["e", "verse/3"],
                 ["e", "altChapter/(A)"],
-                ["e", "printChapter/A"],
+                ["e", "pubChapter/A"],
                 ["e", "chapter/1"]
             ];
             t.plan(1 + (2 * expectedScopes.length));

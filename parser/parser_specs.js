@@ -262,13 +262,13 @@ const specs = [
     },
     {
         // CP - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [["printchapter"]],
+        contexts: [["pubchapter"]],
         parser: {
             mainSequence: true,
             newScopes: [
                 {
-                    label: pt => labelForScope("printChapter", [pt.numberString]),
-                    endedBy: ["printchapter", "chapter"]
+                    label: pt => labelForScope("pubChapter", [pt.numberString]),
+                    endedBy: ["pubchapter", "chapter"]
                 }
             ]
         }
@@ -337,7 +337,7 @@ const specs = [
             ]
         ],
         parser: {
-            inlineSequenceType: "printNumber",
+            inlineSequenceType: "pubNumber",
             forceNewSequence: true,
             newScopes: [
                 {
@@ -349,7 +349,7 @@ const specs = [
             during: (parser, pt) => {
                 const scopeId = generateId();
                 const vpScope = {
-                    label: () => labelForScope("printVerse", [scopeId]),
+                    label: () => labelForScope("pubVerse", [scopeId]),
                     endedBy: ["startTag/vp", "verses", "chapter"]
                 };
                 parser.openNewScope(pt, vpScope, true, parser.sequences.main);
