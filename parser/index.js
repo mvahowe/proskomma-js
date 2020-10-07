@@ -127,6 +127,7 @@ const Parser = class {
             seq.makeNoteGrafts(this);
             seq.moveOrphanScopes();
             // seq.removeEmptyBlocks();
+            seq.addTableScopes();
             seq.close(this);
             this.reorderPubNumbers(seq);
             if (["footnote", "xref"].includes(seq.type)) {

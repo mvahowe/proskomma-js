@@ -2,7 +2,7 @@ const { generateId } = require("../../lib/generate_id");
 const ByteArray = require("../../lib/byte_array");
 const { Block } = require("./block");
 const { Token, Scope } = require("./items");
-const { scopeEnum } = require('../../lib/scope_defs');
+const { scopeEnum, labelForScope } = require('../../lib/scope_defs');
 const { tokenEnum, tokenCategory } = require('../../lib/token_defs');
 const { itemEnum } = require('../../lib/item_defs');
 const { graftLocation } = require('../../lib/graft_defs');
@@ -96,6 +96,22 @@ const Sequence = class {
 
     text() {
         return this.blocks.map(b => b.text()).join('');
+    }
+
+    addTableScopes() {
+        let inTable = false;
+        for (const [blockNo, block] of this.blocks.entries()) {
+            if (!inTable && block.blockScope.label === "blockTag/tr") {
+                inTable = true;
+                this.blocks[blockNo].items.unshift(new Scope("start", labelForScope("table", [])));
+            } else if (inTable && block.blockScope.label !== "blockTag/tr") {
+                inTable = false;
+                this.blocks[(blockNo - 1)].items.push(new Scope("end", labelForScope("table", [])));
+            }
+        }
+        if (inTable) {
+            this.lastBlock().items.push(new Scope("end", labelForScope("table", [])));
+        }
     }
 
     moveOrphanScopes() {
