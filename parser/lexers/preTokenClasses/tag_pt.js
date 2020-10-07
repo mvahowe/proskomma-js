@@ -3,6 +3,7 @@ const PreToken = require('./pretoken');
 class TagPT extends PreToken {
 
     constructor(subclass, matchedBits) {
+        // console.log(matchedBits);
         super(subclass);
         this.tagName = matchedBits[2];
         this.tagLevel = matchedBits[3] !== "" ? parseInt(matchedBits[3]) : 1;
