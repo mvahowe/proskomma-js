@@ -204,14 +204,14 @@ class UsxLexer {
     }
 
     handleNoteOpen(lexer, oOrC, name, atts) {
-        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, `+${atts.style}`, ""]));
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, atts.style, ""]));
         lexer.lexed.push(new ptClasses.PrintablePT("punctuation", [atts.caller]));
         lexer.stackPush(name, atts);
     }
 
     handleNoteClose(lexer) {
         const sAtts = lexer.stackPop()[1];
-        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, `+${sAtts.style}`, ""]));
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, sAtts.style, ""]));
     }
 
 }

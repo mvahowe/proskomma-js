@@ -70,6 +70,9 @@ const Parser = class {
             }
             if (["endTag"].includes(lexedItem.subclass)) {
                 this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+                if (!lexedItem.isNested) {
+                    this.closeActiveScopes(`implicitEnd`);
+                }
             }
             if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
                 this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)

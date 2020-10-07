@@ -288,7 +288,7 @@ const specs = [
             newScopes: [
                 {
                     label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/ca", "endBlock"],
+                    endedBy: ["endTag/ca", "endBlock", "implicitEnd"],
                     onEnd: (parser) => parser.returnToBaseSequence()
                 }
             ],
@@ -342,7 +342,7 @@ const specs = [
             newScopes: [
                 {
                     label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/vp", "endBlock"],
+                    endedBy: ["endTag/vp", "endBlock", "implicitEnd"],
                     onEnd: (parser) => parser.returnToBaseSequence()
                 }
             ],
@@ -371,7 +371,7 @@ const specs = [
             newScopes: [
                 {
                     label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/va", "endBlock"],
+                    endedBy: ["endTag/va", "endBlock", "implicitEnd"],
                     onEnd: (parser) => parser.returnToBaseSequence()
                 }
             ],
@@ -433,7 +433,7 @@ const specs = [
             newScopes: [
                 {
                     label: pt => labelForScope("span", [pt.fullTagName]),
-                    endedBy: ["endBlock", "endTag/$fullTagName$"]
+                    endedBy: ["endBlock", "endTag/$fullTagName$", "implicitEnd"]
                 }
             ]
         }
