@@ -19,11 +19,11 @@ class UsxLexer {
             book: this.handleBookOpen,
             chapter: this.handleChapter,
             verse: this.handleVerses,
-            para: this.handleParaOrCharOpen,
+            para: this.handleParaOpen,
             table: this.ignoreHandler,
             row: this.handleRowOpen,
             cell: this.handleCellOpen,
-            char: this.handleParaOrCharOpen,
+            char: this.handleCharOpen,
             ms: this.notHandledHandler,
             note: this.handleNoteOpen,
             sidebar: this.notHandledHandler,
@@ -37,11 +37,11 @@ class UsxLexer {
             book: this.handleBookClose,
             chapter: this.ignoreHandler,
             verse: this.ignoreHandler,
-            para: this.handleParaOrCharClose,
+            para: this.handleParaClose,
             table: this.ignoreHandler,
             row: this.handleRowClose,
             cell: this.handleCellClose,
-            char: this.handleParaOrCharClose,
+            char: this.handleCharClose,
             ms: this.notHandledHandler,
             note: this.handleNoteClose,
             sidebar: this.notHandledHandler,
@@ -113,16 +113,28 @@ class UsxLexer {
     ignoreHandler(lexer, oOrC, tag) {
     }
 
-    handleParaOrCharOpen(lexer, oOrC, name, atts) {
+    handleParaOpen(lexer, oOrC, name, atts) {
         const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
         lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, tagName, tagNo]));
         lexer.stackPush(name, atts);
     }
 
-    handleParaOrCharClose(lexer) {
+    handleParaClose(lexer) {
         const sAtts = lexer.stackPop()[1];
         const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
         lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, tagName, tagNo]));
+    }
+
+    handleCharOpen(lexer, oOrC, name, atts) {
+        const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, `+${tagName}`, tagNo]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleCharClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
+        const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, `+${tagName}`, tagNo]));
     }
 
     handleRowOpen(lexer, oOrC, name, atts) {
@@ -168,9 +180,9 @@ class UsxLexer {
                 lexer.lexed.push(new ptClasses.PubChapterPT("pubchapter", [null, null, atts.pubnumber]));
             }
             if (atts.altnumber) {
-                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "ca", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "+ca", ""]));
                 lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.altnumber]));
-                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "ca", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "+ca", ""]));
             }
         }
     }
@@ -179,27 +191,27 @@ class UsxLexer {
         if (atts.number) {
             lexer.lexed.push(new ptClasses.VersesPT("verses", [null, null, atts.number]));
             if (atts.pubnumber) {
-                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "vp", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "+vp", ""]));
                 lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.pubnumber]));
-                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "vp", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "+vp", ""]));
             }
             if (atts.altnumber) {
-                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "va", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "+va", ""]));
                 lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.altnumber]));
-                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "va", ""]));
+                lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "+va", ""]));
             }
         }
     }
 
     handleNoteOpen(lexer, oOrC, name, atts) {
-        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, atts.style, ""]));
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, `+${atts.style}`, ""]));
         lexer.lexed.push(new ptClasses.PrintablePT("punctuation", [atts.caller]));
         lexer.stackPush(name, atts);
     }
 
     handleNoteClose(lexer) {
         const sAtts = lexer.stackPop()[1];
-        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, sAtts.style, ""]));
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, `+${sAtts.style}`, ""]));
     }
 
 }
