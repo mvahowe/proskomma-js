@@ -66,13 +66,13 @@ const Parser = class {
         let changeBaseSequence = false;
         for (const lexedItem of lexedItems) {
             if (["startTag"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`)
-            }
-            if (["endTag"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+                this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`);
                 if (!lexedItem.isNested) {
                     this.closeActiveScopes(`implicitEnd`);
                 }
+            }
+            if (["endTag"].includes(lexedItem.subclass)) {
+                this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
             }
             if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
                 this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
