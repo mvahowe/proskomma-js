@@ -5,6 +5,7 @@ const {pkWithDoc} = require('../lib/load');
 const testGroup = "Graft Notes";
 
 const pk = pkWithDoc("../test_data/usfm/footnote.usfm", "fra", "hello")[0];
+const pk2 = pkWithDoc("../test_data/usfm/xref.usfm", "fra", "hello")[0];
 
 test(
     `Footnote (${testGroup})`,
@@ -46,6 +47,46 @@ test(
                 t.equal(scopes[count].label, expectedLabel);
                 count++;
             }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `XRef (${testGroup})`,
+    async function (t) {
+        try {
+            const expectedScopes = [
+                ["s", "inline/x"],
+                ["s", "span/xo"],
+                ["e", "span/xo"],
+                ["s", "span/xt"],
+                ["e", "inline/x"],
+                ["e", "span/xt"]
+            ];
+            t.plan(3 + (2 * expectedScopes.length));
+            const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
+            const query = `{ documents { sequences { id type blocks { c ${itemFragment } } } mainSequence { id } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            const sequences = {};
+            for (const seq of result.data.documents[0].sequences) {
+                sequences[seq.id] = seq;
+            }
+            const mainSequence = sequences[result.data.documents[0].mainSequence.id];
+            t.equal(mainSequence.blocks.length, 1);
+            const xrefCallerBlock = mainSequence.blocks[0];
+            const xrefGrafts = xrefCallerBlock.c.filter(i => i.type === "xref");
+            t.equal(xrefGrafts.length, 1);
+            const xrefItems = sequences[xrefGrafts[0].sequenceId].blocks[0].c;
+            const scopes = xrefItems.filter(i => i.subType && i.subType.endsWith("Scope"));
+            let count = 0;
+            for (const [sOrE, expectedLabel] of expectedScopes) {
+                t.equal(scopes[count].subType, sOrE === "s" ? "startScope" : "endScope");
+                t.equal(scopes[count].label, expectedLabel);
+                count++;
+                            }
         } catch (err) {
             console.log(err)
         }
