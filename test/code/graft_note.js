@@ -12,7 +12,7 @@ test(
     async function (t) {
         try {
             const expectedScopes = [
-              ["s", "inline/f"],
+                ["s", "inline/f"],
                 ["s", "span/ft"],
                 ["e", "span/ft"],
                 ["s", "span/fqa"],
@@ -22,12 +22,12 @@ test(
                 ["s", "span/fqa"],
                 ["e", "span/fqa"],
                 ["s", "span/ft"],
-                ["e", "inline/f"],
-                ["e", "span/ft"]
+                ["e", "span/ft"],
+                ["e", "inline/f"]
             ];
             t.plan(3 + (2 * expectedScopes.length));
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
-            const query = `{ documents { sequences { id type blocks { c ${itemFragment } } } mainSequence { id } } }`;
+            const query = `{ documents { sequences { id type blocks { c ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             const sequences = {};
@@ -62,12 +62,12 @@ test(
                 ["s", "span/xo"],
                 ["e", "span/xo"],
                 ["s", "span/xt"],
-                ["e", "inline/x"],
-                ["e", "span/xt"]
+                ["e", "span/xt"],
+                ["e", "inline/x"]
             ];
             t.plan(3 + (2 * expectedScopes.length));
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
-            const query = `{ documents { sequences { id type blocks { c ${itemFragment } } } mainSequence { id } } }`;
+            const query = `{ documents { sequences { id type blocks { c ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             const sequences = {};
@@ -86,7 +86,7 @@ test(
                 t.equal(scopes[count].subType, sOrE === "s" ? "startScope" : "endScope");
                 t.equal(scopes[count].label, expectedLabel);
                 count++;
-                            }
+            }
         } catch (err) {
             console.log(err)
         }

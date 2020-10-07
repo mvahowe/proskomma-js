@@ -129,6 +129,9 @@ const Parser = class {
             // seq.removeEmptyBlocks();
             seq.close(this);
             this.reorderPubNumbers(seq);
+            if (["footnote", "xref"].includes(seq.type)) {
+                seq.lastBlock().inlineToEnd();
+            }
         }
     }
 

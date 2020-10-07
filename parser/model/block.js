@@ -65,6 +65,20 @@ const Block = class {
         }
     }
 
+    inlineToEnd() {
+        let toAppend = null;
+        for (const [pos, item] of this.items.entries()) {
+            if (item.itemType === "endScope" && ["inline/f", "inline/fe", "inline/x"].includes(item.label)) {
+                toAppend = item;
+                this.items.splice(pos, 1);
+                break;
+            }
+        }
+        if (toAppend) {
+            this.addItem(toAppend);
+        }
+    }
+
     makeNoteGrafts(parser) {
         const { Sequence } = require("./sequence");
         const noteStarts = [];
