@@ -42,7 +42,7 @@ class DocSet {
                 "enum": enumCount++,
                 frequency: 0
             };
-            pos += succinct.byte(pos);
+            pos += succinct.byte(pos) + 1;
         }
         return ret;
     }
