@@ -17,7 +17,7 @@ test(
             const sequences = result.data.documents[0].sequences;
             const mainSequence = sequences.filter(s => s.id === result.data.documents[0].mainSequence.id)[0];
             t.equal(mainSequence.blocks[0].bg[0].type, "title");
-            const titleSequence = sequences.filter(s => s.type === "title")[0];
+            const titleSequence = sequences.filter(s => s.id === mainSequence.blocks[0].bg[0].sequenceId)[0];
             t.equal(titleSequence.blocks.length, 2);
             t.equal(titleSequence.blocks[0].bs.label.split("/")[1], "mt2");
             t.equal(titleSequence.blocks[1].bs.label.split("/")[1], "mt");

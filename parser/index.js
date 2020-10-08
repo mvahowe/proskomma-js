@@ -17,6 +17,8 @@ const Parser = class {
         this.baseSequenceTypes = {
             main: "1",
             introduction: "?",
+            introTitle: "?",
+            introEndTitle: "?",
             title: "?",
             endTitle: "?",
             heading: "*",
@@ -121,6 +123,9 @@ const Parser = class {
     }
 
     tidy() {
+        if (this.sequences.introduction) {
+            this.sequences.introduction.graftifyHeadings(this);
+        }
         for (const seq of this.allSequences()) {
             seq.trim();
             seq.reorderSpanWithAtts();

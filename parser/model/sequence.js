@@ -1,7 +1,7 @@
 const { generateId } = require("../../lib/generate_id");
 const ByteArray = require("../../lib/byte_array");
 const { Block } = require("./block");
-const { Token, Scope } = require("./items");
+const { Graft, Scope } = require("./items");
 const { scopeEnum, labelForScope } = require('../../lib/scope_defs');
 const { tokenEnum, tokenCategory } = require('../../lib/token_defs');
 const { itemEnum } = require('../../lib/item_defs');
@@ -111,6 +111,45 @@ const Sequence = class {
         }
         if (inTable) {
             this.lastBlock().items.push(new Scope("end", labelForScope("table", [])));
+        }
+    }
+
+    graftifyHeadings(parser) {
+        let removed = 0;
+        let blockEntries = [...this.blocks.entries()];
+        blockEntries.reverse();
+        for (const [n, block] of blockEntries) {
+            const blockTag = block.blockScope.label.split("/")[1];
+            if (blockTag.startsWith("is") || blockTag.startsWith("iot")) {
+                const headingSequence = new Sequence("heading");
+                parser.sequences.heading.push(headingSequence);
+                headingSequence.blocks.push(block);
+                const headingGraft = new Graft("heading", headingSequence.id);
+                if (this.blocks.length < n + 2) {
+                    this.newBlock("blockTag/ib");
+                }
+                this.blocks[n + 1].blockGrafts.unshift(headingGraft);
+                this.blocks.splice(n, 1);
+                removed++;
+            } else if (blockTag.startsWith("imt")) {
+                const titleType = (blockTag.startsWith("imte") ? "introEndTitle" : "introTitle");
+                let titleSequence;
+                if (parser.sequences[titleType]) {
+                    titleSequence = parser.sequences[titleType];
+                } else {
+                    const graftType = (blockTag.startsWith("imte") ? "endTitle" : "title");
+                    titleSequence = new Sequence(graftType);
+                    parser.sequences[titleType] = titleSequence;
+                    const titleGraft = new Graft(graftType, titleSequence.id);
+                    if (this.blocks.length < n + 2) {
+                        this.newBlock("blockTag/ib");
+                    }
+                    this.blocks[n + 1].blockGrafts.unshift(titleGraft);
+                }
+                this.blocks.splice(n, 1);
+                titleSequence.blocks.unshift(block);
+                removed++;
+            }
         }
     }
 
