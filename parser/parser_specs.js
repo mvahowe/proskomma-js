@@ -1,5 +1,5 @@
-const { labelForScope } = require("../lib/scope_defs");
-const { generateId } = require("../lib/generate_id");
+const {labelForScope} = require("../lib/scope_defs");
+const {generateId} = require("../lib/generate_id");
 
 const specs = [
     {
@@ -249,7 +249,7 @@ const specs = [
     },
     {
         // CHAPTER - chapter scope
-        contexts: [ ["chapter"] ],
+        contexts: [["chapter"]],
         parser: {
             mainSequence: true,
             newScopes: [
@@ -571,4 +571,4 @@ const specs = [
     }
 ];
 
-module.exports = { specs }
+module.exports = {specs}

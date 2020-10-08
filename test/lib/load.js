@@ -17,4 +17,20 @@ const pkWithDoc = (fp, lang, abbr) => {
     return [pk, pkDoc];
 }
 
-module.exports = { pkWithDoc };
+const pkWithDocs = (contentSpecs) => {
+    const pk = new ProsKomma();
+    for (const [fp, lang, abbr] of contentSpecs) {
+        const content = fse.readFileSync(path.resolve(__dirname, fp));
+        const contentType = fp.split('.').pop();
+        pk.importDocument(
+            lang,
+            abbr,
+            contentType,
+            content,
+            {}
+        );
+    }
+    return pk;
+}
+
+module.exports = { pkWithDoc, pkWithDocs };
