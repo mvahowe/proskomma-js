@@ -10,7 +10,7 @@ test(
     `Title (${testGroup})`,
     async function (t) {
         try {
-            t.plan(5);
+            t.plan(9);
             const query = '{ documents { sequences { id type blocks { bg { type, sequenceId } bs { label } text } } mainSequence { id } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
@@ -21,6 +21,11 @@ test(
             t.equal(titleSequence.blocks.length, 2);
             t.equal(titleSequence.blocks[0].bs.label.split("/")[1], "mt2");
             t.equal(titleSequence.blocks[1].bs.label.split("/")[1], "mt");
+            t.equal(mainSequence.blocks[1].bg[0].type, "endTitle");
+            const endTitleSequence = sequences.filter(s => s.id === mainSequence.blocks[1].bg[0].sequenceId)[0];
+            t.equal(endTitleSequence.blocks.length, 2);
+            t.equal(endTitleSequence.blocks[0].bs.label.split("/")[1], "mte2");
+            t.equal(endTitleSequence.blocks[1].bs.label.split("/")[1], "mte");
         } catch (err) {
             console.log(err)
         }

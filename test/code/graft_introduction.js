@@ -19,7 +19,7 @@ test(
                 sequences[seq.id] = seq;
             }
             const mainSequence = sequences[result.data.documents[0].mainSequence.id];
-            t.equal(Object.keys(sequences).length, 7);
+            t.equal(Object.keys(sequences).length, 8);
             t.equal(mainSequence.blocks[0].bg.length, 3);
             t.equal(mainSequence.blocks[0].bg[0].type, "title");
             t.equal(mainSequence.blocks[0].bg[1].type, "introduction");
@@ -40,7 +40,7 @@ test(
             const headingSequence = sequences[headingGraft.sequenceId];
             t.equal(headingSequence.blocks.length, 1);
             t.equal(headingSequence.blocks[0].bs.label, "blockTag/is");
-            t.equal(introSequence.blocks[2].bs.label.split("/")[1], "ib");
+            t.equal(introSequence.blocks[2].bs.label.split("/")[1], "hangingGraft");
             const endTitleGraft = introSequence.blocks[2].bg[0];
             t.equal(endTitleGraft.type, "endTitle");
             const endTitleSequence = sequences[endTitleGraft.sequenceId];

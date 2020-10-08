@@ -126,7 +126,7 @@ const Sequence = class {
                 headingSequence.blocks.push(block);
                 const headingGraft = new Graft("heading", headingSequence.id);
                 if (this.blocks.length < n + 2) {
-                    this.newBlock("blockTag/ib");
+                    this.newBlock("blockTag/hangingGraft");
                 }
                 this.blocks[n + 1].blockGrafts.unshift(headingGraft);
                 this.blocks.splice(n, 1);
@@ -142,7 +142,7 @@ const Sequence = class {
                     parser.sequences[titleType] = titleSequence;
                     const titleGraft = new Graft(graftType, titleSequence.id);
                     if (this.blocks.length < n + 2) {
-                        this.newBlock("blockTag/ib");
+                        this.newBlock("blockTag/hangingGraft");
                     }
                     this.blocks[n + 1].blockGrafts.unshift(titleGraft);
                 }
