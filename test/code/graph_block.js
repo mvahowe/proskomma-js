@@ -77,6 +77,23 @@ test(
 );
 
 test(
+    `Grafts (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query = '{ documents { mainSequence { blocks { bg { type sequenceId } } } } }';
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            const block = result.data.documents[0].mainSequence.blocks[0];
+            t.equal(block.bg[0].type, "title");
+            t.equal(block.bg[1].type, "heading");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
     `Items (${testGroup})`,
     async function (t) {
         try {

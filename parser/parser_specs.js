@@ -1,5 +1,6 @@
 const {labelForScope} = require("../lib/scope_defs");
 const {generateId} = require("../lib/generate_id");
+const PrintablePT = require("./lexers/preTokenClasses/printable_pt");
 
 const specs = [
     {
@@ -567,6 +568,50 @@ const specs = [
         ],
         parser: {
             during: (parser, pt) => parser.addToken(pt)
+        }
+    },
+    {
+        // NO BREAK SPACE - make a token!
+        contexts: [
+            ["noBreakSpace"]
+        ],
+        parser: {
+            during: (parser) => {
+                parser.addToken(new PrintablePT("lineSpace", ['\xa0']));
+            }
+        }
+    },
+    {
+        // SOFT LINE BREAK - make a token!
+        contexts: [
+            ["softLineBreak"]
+        ],
+        parser: {
+            during: (parser) => {
+                parser.addToken(new PrintablePT("softLineBreak", ["//"]));
+            }
+        }
+    },
+    {
+        // BARESLASH - make a token!
+        contexts: [
+            ["bareSlash"]
+        ],
+        parser: {
+            during: (parser) => {
+                parser.addToken(new PrintablePT("bareSlash", ["\\"]));
+            }
+        }
+    },
+    {
+        // UNKNOWN - make a token!
+        contexts: [
+            ["unknown"]
+        ],
+        parser: {
+            during: (parser, pt) => {
+                parser.addToken(new PrintablePT("unknown", [pt.printValue]));
+            }
         }
     }
 ];

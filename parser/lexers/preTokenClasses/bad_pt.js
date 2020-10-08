@@ -4,7 +4,8 @@ class BadPT extends PreToken {
 
     constructor(subclass, matchedBits) {
         super(subclass);
-        this.printValue = `[BAD ${matchedBits[0]}]`;
+        this.printValue = matchedBits[0];
+        ;
     }
 
 }

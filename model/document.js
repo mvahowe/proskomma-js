@@ -67,7 +67,7 @@ class Document {
             for (const item of [...block.items, block.blockScope, ...block.blockGrafts]) {
                 if (item.itemType === "wordLike") {
                     docSet.recordPreEnum("wordLike", item.chars);
-                } else if (["lineSpace", "eol", "punctuation"].includes(item.itemType)) {
+                } else if (["lineSpace", "eol", "punctuation", "softLineBreak", "bareSlash", "unknown"].includes(item.itemType)) {
                     docSet.recordPreEnum("notWordLike", item.chars);
                 } else if (item.itemType === "graft") {
                     docSet.recordPreEnum("graftTypes", item.graftType);
