@@ -29,7 +29,7 @@ class UsxLexer {
             sidebar: this.notHandledHandler,
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
-            optbreak: this.notHandledHandler,
+            optbreak: this.handleOptBreakOpen,
             ref: this.notHandledHandler
         }
         this.closeTagHandlers = {
@@ -47,7 +47,7 @@ class UsxLexer {
             sidebar: this.notHandledHandler,
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
-            optbreak: this.notHandledHandler,
+            optbreak: this.handleOptBreakClose,
             ref: this.notHandledHandler
         }
     }
@@ -212,6 +212,15 @@ class UsxLexer {
     handleNoteClose(lexer) {
         const sAtts = lexer.stackPop()[1];
         lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, sAtts.style, ""]));
+    }
+
+    handleOptBreakOpen(lexer, oOrC, name, atts) {
+        lexer.lexed.push(new ptClasses.PrintablePT("softLineBreak", ["//"]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleOptBreakClose(lexer) {
+        lexer.stackPop();
     }
 
 }
