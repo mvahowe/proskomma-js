@@ -201,9 +201,9 @@ const Parser = class {
     filter(options) {
         const usedSequences = [];
         const sequenceById = this.sequenceById();
-        this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, options)
-        this.removeUnusedSequences(usedSequences)
-        this.filterScopes(Object.values(sequenceById), options)
+        this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, options);
+        this.removeUnusedSequences(usedSequences);
+        this.filterScopes(Object.values(sequenceById), options);
     }
 
     filterGrafts(seqId, seqById, used, options) {

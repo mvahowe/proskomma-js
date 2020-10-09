@@ -35,7 +35,6 @@ class Document {
     }
 
     processLexed(lexed, filterOptions) {
-        // console.log(JSON.stringify(lexed, null, 2))
         const parser = new Parser();
         parser.parse(lexed);
         parser.tidy();

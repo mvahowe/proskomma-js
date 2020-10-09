@@ -169,19 +169,38 @@ const Block = class {
     }
 
     graftPassesOptions(item, options) {
-        return true;
+        return (
+            (!("includeGrafts" in options) || options.includeGrafts.includes(item.graftType)) &&
+                (!("excludeGrafts" in options) || !options.excludeGrafts.includes(item.graftType))
+        );
     }
 
     scopePassesOptions(item, options) {
-        return true;
+        return (
+            (!("includeScopes" in options) || this.scopeMatchesOptionArray(item.label, options.includeScopes)) &&
+            (!("excludeScopes" in options) || !this.scopeMatchesOptionArray(item.label, options.excludeScopes))
+        );
+    }
+
+    scopeMatchesOptionArray(itemString, optionArray) {
+        for (const optionString of optionArray) {
+            if (itemString.startsWith(optionString)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     grafts() {
         return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "graft");
     }
 
-    scopes() {
+    startScopes() {
         return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "startScope");
+    }
+
+    scopes() {
+        return Array.from(this.items.entries()).filter(ip =>ip[1].itemType.endsWith("Scope"));
     }
 
     tokens() {
