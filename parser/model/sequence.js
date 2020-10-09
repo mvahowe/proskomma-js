@@ -36,9 +36,6 @@ const Sequence = class {
     }
 
     newBlock(label) {
-        if (!label) {
-            throw new Error("Sequence.newBlock now requires label");
-        }
         if (this.blocks.length > 0 && ["orphanTokens", "hangingGraft"].includes(this.blocks[this.blocks.length - 1].blockScope.label)) {
             this.lastBlock().blockScope = new Scope("start", label);
         } else {
@@ -80,6 +77,7 @@ const Sequence = class {
         this.blocks.forEach(b => b.filterScopes(options));
     }
 
+    /*
     grafts() {
         return this.blocks.map( b => b.grafts()).reduce((acc, current) => acc.concat(current), []);
     }
@@ -91,6 +89,7 @@ const Sequence = class {
     items() {
         return this.blocks.map( b => b.items).reduce((acc, current) => acc.concat(current), []);
     }
+    */
 
     text() {
         return this.blocks.map(b => b.text()).join('');
@@ -186,9 +185,12 @@ const Sequence = class {
         }
     }
 
+    /*
     removeEmptyBlocks() {
         this.blocks = this.blocks.filter(b => b.items.length > 0);
     }
+
+     */
 
     succinctifyBlocks(docSet) {
         const ret = [];

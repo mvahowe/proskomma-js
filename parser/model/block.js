@@ -4,9 +4,6 @@ const { Token, Scope, Graft } = require("./items");
 const Block = class {
 
     constructor (blockScope) {
-        if (!blockScope) {
-            throw new Error("Block constructor now requires block scope");
-        }
         this.id = generateId();
         this.items = [];
         this.blockGrafts = [];
@@ -193,10 +190,6 @@ const Block = class {
 
     grafts() {
         return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "graft");
-    }
-
-    startScopes() {
-        return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "startScope");
     }
 
     scopes() {

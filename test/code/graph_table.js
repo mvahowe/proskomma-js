@@ -6,6 +6,7 @@ const testGroup = "Tables";
 
 const pk = pkWithDoc("../test_data/usx/table.usx", "fra", "hello")[0];
 const pk2 = pkWithDoc("../test_data/usfm/table.usfm", "fra", "hello")[0];
+const pk3 = pkWithDoc("../test_data/usfm/table_at_end.usfm", "fra", "hello")[0];
 
 const checkResult = (t, result) => {
     const blocks = result.data.documents[0].mainSequence.blocks;
@@ -46,6 +47,21 @@ test(
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             checkResult(t, result);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `USFM Table at End of Doc (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const result = await pk3.gqlQuery(query);
+            t.ok("data" in result);
+            const lastBlockItems = result.data.documents[0].mainSequence.blocks[2].c;
+            t.equal(lastBlockItems.filter(i => i.subType === "endScope" && i.label === "table").length, 1);
         } catch (err) {
             console.log(err)
         }
