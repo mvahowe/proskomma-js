@@ -35,7 +35,7 @@ test(
             ];
             t.plan(1 + (expectedScopes.length * 2));
             const query =
-                '{ documents { mainSequence { blocks { c { ... on Token { subType chars }... on Scope { subType label }... on Graft { type sequenceId } } } } } }';
+                '{ documents { mainSequence { blocks { html c { ... on Token { subType chars }... on Scope { subType label }... on Graft { type sequenceId } } } } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             const scopes = result.data.documents[0].mainSequence.blocks[0].c.filter(i => ["startScope", "endScope"].includes(i.subType));

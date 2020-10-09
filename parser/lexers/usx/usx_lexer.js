@@ -84,11 +84,7 @@ class UsxLexer {
     }
 
     handleSaxCloseTag(name) {
-        if (name in this.closeTagHandlers) {
-            this.closeTagHandlers[name](this, "close", name);
-        } else {
-            throw new Error(`Unexpected close element tag '${name}' in UsxParser`);
-        }
+        this.closeTagHandlers[name](this, "close", name);
     }
 
     notHandledHandler(lexer, oOrC, tag) {

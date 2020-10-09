@@ -26,8 +26,8 @@ test(
                 ["e", "inline/f"]
             ];
             t.plan(3 + (2 * expectedScopes.length));
-            const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
-            const query = `{ documents { sequences { id type blocks { c ${itemFragment} } } mainSequence { id } } }`;
+            const itemFragment = '{ ... on Token { subType chars dump } ... on Scope { subType label dump } ... on Graft { type sequenceId dump } }';
+            const query = `{ documents { sequences { id type blocks { dump c ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             const sequences = {};

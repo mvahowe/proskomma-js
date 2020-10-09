@@ -24,10 +24,6 @@ class Document {
         }
     }
 
-    mainSequence() {
-        return this.sequences[this.mainId];
-    }
-
     processUsfm(usfmString, filterOptions) {
         const lexed = lexifyUsfm(usfmString);
         this.processLexed(lexed, filterOptions);

@@ -38,14 +38,14 @@ test(
         try {
             t.plan(6);
             const query = '{ documents { mainSequence { blocks { text dump html } } } }';
-            const result = await pk.gqlQuery(query);
+            const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             const block = result.data.documents[0].mainSequence.blocks[0];
-            t.equal(block.text, "This is how the Good News of JC began...");
+            t.equal(block.text, "Dear Theophilus,");
             t.ok(block.dump.includes("+verse/1+"));
-            t.ok(block.html.includes("This is how the Good News of JC began..."));
-            t.ok(block.html.startsWith("<div"));
-            t.ok(block.html.endsWith("div>\n"));
+            t.ok(block.html.includes("Dear Theophilus,"));
+            t.ok(block.html.startsWith("<h3>"));
+            t.ok(block.html.endsWith("</div>\n"));
         } catch (err) {
             console.log(err)
         }

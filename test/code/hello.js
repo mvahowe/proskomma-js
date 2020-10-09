@@ -16,7 +16,7 @@ test(
                 ["toc2", "Mark"],
                 ["toc3", "Mk"]
             ];
-            t.plan(5 + (2 * expectedHeaders.length));
+            t.plan(6 + (2 * expectedHeaders.length));
             const query = '{ documents { headers { key value } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
@@ -27,11 +27,12 @@ test(
                 t.ok(queryTuple.length === 1);
                 t.ok(queryTuple[0].value === expectedValue);
             }
-            const query2 = '{documents { toc: header(id:"toc") toc3: header(id:"toc3") } }';
+            const query2 = '{documents { toc: header(id:"toc") toc3: header(id:"toc3") banana: header(id:"banana")} }';
             const result2 = await pk.gqlQuery(query2);
             t.ok("data" in result2);
             t.equal(result2.data.documents[0].toc, "The Gospel of Mark");
             t.equal(result2.data.documents[0].toc3, "Mk");
+            t.equal(result2.data.documents[0].banana, null);
         } catch (err) {
             console.log(err)
         }

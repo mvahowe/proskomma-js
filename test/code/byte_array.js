@@ -36,13 +36,15 @@ test(
     `Write Byte (${testGroup})`,
     function (t) {
         try {
-            t.plan(2);
+            t.plan(4);
             const ByteArray = require('../../lib/byte_array');
             const ba = new ByteArray(1);
             ba.pushByte(93);
             t.equal(ba.byte(0), 93);
+            t.throws(() => ba.setByte(99, 3));
             ba.setByte(0, 27);
             t.equal(ba.byte(0), 27);
+            t.throws(() => ba.setByte(0, 500));
         } catch (err) {
             console.log(err)
         }
@@ -53,13 +55,15 @@ test(
     `Push, Read Bytes (${testGroup})`,
     function (t) {
         try {
-            t.plan(3);
+            t.plan(5);
             const ByteArray = require('../../lib/byte_array');
             const ba = new ByteArray(10);
+            t.throws(() => ba.pushBytes("banana"));
             ba.pushBytes([2, 4, 6, 8]);
             t.equal(ba.byte(0), 2);
             t.equal(ba.byte(2), 6);
             t.equal(ba.bytes(1, 3)[2], 8);
+            t.throws(() => ba.bytes(1, 99));
         } catch (err) {
             console.log(err)
         }
@@ -71,11 +75,12 @@ test(
     function (t) {
         try {
             const ByteArray = require('../../lib/byte_array');
-            t.plan(2);
+            t.plan(3);
             const ba = new ByteArray(5);
             ba.pushBytes([2, 4, 6, 8]);
             t.equal(ba.byte(0), 2);
             ba.setBytes(1, [3, 5, 7]);
+            t.throws(() => ba.setBytes(99, [1, 2]));
             t.equal(ba.byte(2), 5);
         } catch (err) {
             console.log(err)
@@ -109,7 +114,7 @@ test(
     function (t) {
         try {
             const ByteArray = require('../../lib/byte_array');
-            t.plan(5);
+            t.plan(7);
             const ba = new ByteArray();
             ba.pushNByte(127);
             t.equal(ba.byte(0), 127 + 128);
@@ -118,6 +123,8 @@ test(
             t.equal(ba.byte(1), 2);
             t.equal(ba.byte(2), 1 + 128);
             t.equal(ba.nByte(1), 130);
+            t.throws(() => ba.pushNByte("banana"));
+            t.throws(() => ba.nByte(99));
         } catch (err) {
             console.log(err)
         }
@@ -178,7 +185,7 @@ test(
     function (t) {
         try {
             const ByteArray = require('../../lib/byte_array');
-            t.plan(4);
+            t.plan(5);
             let ba = new ByteArray();
             ba.pushNByte((2 ** 7) - 1);
             ba.pushNByte(2 ** 7);
@@ -188,6 +195,7 @@ test(
             t.equal(ba.nByteLength(ba.nByte(1)), 2);
             t.equal(ba.nByteLength(ba.nByte(3)), 3);
             t.equal(ba.nByteLength(ba.nByte(6)), 4);
+            t.throws(() => ba.nByteLength(128 ** 4));
         } catch (err) {
             console.log(err)
         }

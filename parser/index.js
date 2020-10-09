@@ -382,12 +382,6 @@ const Parser = class {
         this.current.attributeContext = null;
     }
 
-    describe() {
-        const sequenceById = this.sequenceById();
-        console.log(`${this.allSequences().length} Sequence(s)`)
-        this.sequences.main.describe(sequenceById)
-    }
-
 }
 
 module.exports = { Parser };

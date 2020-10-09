@@ -40,3 +40,15 @@ test(
         }
     }
 );
+
+test(
+    `Bad Element in USX (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            t.throws(() => pkWithDoc("../test_data/usx/bad_element.usx", "fra", "hello"), /Unexpected .+bananas/);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

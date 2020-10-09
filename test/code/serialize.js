@@ -10,12 +10,14 @@ test(
     `WEB RUT (${testGroup})`,
     async function (t) {
         try {
-            t.plan(1);
+            t.plan(2);
             const query = '{ docSets { id } }';
             const result = await pk.gqlQuery(query);
             const docSetId = result.data.docSets[0].id;
             const serialized = pk.serializeSuccinct(docSetId);
             t.ok(serialized);
+            const wordLikes = pk.docSets[docSetId].unpackEnum("wordLike");
+            t.ok(wordLikes.includes("Ruth"));
         } catch (err) {
             console.log(err)
         }
