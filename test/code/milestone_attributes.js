@@ -76,3 +76,16 @@ test(
         }
     }
 );
+
+test(
+    `Literal slash in attribute value (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(1);
+            let pk;
+            t.doesNotThrow(pk = pkWithDoc("../test_data/usfm/slash_in_att.usfm", "fra", "hello")[0]);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
