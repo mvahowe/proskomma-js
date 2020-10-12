@@ -4,6 +4,15 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Filter on Parse";
 
+const queryToBlock = async (t, filter) => {
+    const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", filter)[0];
+    const query =
+        '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
+    const result = await pk.gqlQuery(query);
+    t.ok("data" in result);
+    return result.data.documents[0].mainSequence.blocks[0];
+}
+
 test(
     `No Filter (${testGroup})`,
     async function (t) {
@@ -17,12 +26,7 @@ test(
                 "span/bd"
             ];
             t.plan(5 + scopeLabels.length);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello")[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{});
             t.equal(block.bg.length, 2);
             t.equal(block.bg[0].type, "title");
             t.equal(block.bg[1].type, "heading");
@@ -41,12 +45,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {includeScopes: []})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{includeScopes: []});
             t.equal(block.bg.length, 2);
             t.equal(block.scopeLabels.length, 0);
         } catch (err) {
@@ -60,12 +59,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {includeGrafts: []})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{includeGrafts: []});
             t.equal(block.bg.length, 0);
             t.equal(block.scopeLabels.length, 6);
         } catch (err) {
@@ -79,12 +73,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {includeGrafts: [], includeScopes: []})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{includeGrafts: [], includeScopes: []});
             t.equal(block.bg.length, 0);
             t.equal(block.scopeLabels.length, 0);
         } catch (err) {
@@ -98,12 +87,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {excludeGrafts: [], excludeScopes: []})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{excludeGrafts: [], excludeScopes: []});
             t.equal(block.bg.length, 2);
             t.equal(block.scopeLabels.length, 6);
         } catch (err) {
@@ -121,12 +105,7 @@ test(
                 "verse/1"
             ];
             t.plan(2 + scopeLabels.length);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {includeScopes: ["chapter", "verse/"]})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{includeScopes: ["chapter", "verse/"]});
             t.equal(block.scopeLabels.length, 2);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
@@ -148,12 +127,7 @@ test(
                 "span/bd"
             ];
             t.plan(2 + scopeLabels.length);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {excludeScopes: ["chapter", "verse/"]})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{excludeScopes: ["chapter", "verse/"]});
             t.equal(block.scopeLabels.length, 4);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
@@ -169,12 +143,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {includeGrafts: ["title"]})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{includeGrafts: ["title"]});
             t.equal(block.bg.length, 1);
             t.equal(block.bg[0].type, "title");
         } catch (err) {
@@ -188,12 +157,7 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", {excludeGrafts: ["title"]})[0];
-            const query =
-                '{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels } } } }';
-            const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
-            const block = result.data.documents[0].mainSequence.blocks[0];
+            const block = await queryToBlock(t,{excludeGrafts: ["title"]});
             t.equal(block.bg.length, 1);
             t.equal(block.bg[0].type, "heading");
         } catch (err) {
