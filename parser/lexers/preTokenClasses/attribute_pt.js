@@ -6,7 +6,7 @@ class AttributePT extends PreToken {
         super(subclass);
         this.key = matchedBits[2];
         this.valueString = matchedBits[3].trim();
-        this.values = this.valueString.split(",").map(vb => vb.trim());
+        this.values = this.valueString.replace("/","÷").split(",").map(vb => vb.trim());
         this.printValue = `| ${this.key}="${this.valueString}"`;
     }
 

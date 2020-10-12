@@ -83,7 +83,7 @@ test(
         try {
             t.plan(1);
             let pk;
-            t.doesNotThrow(pk = pkWithDoc("../test_data/usfm/slash_in_att.usfm", "fra", "hello")[0]);
+            t.doesNotThrow(() => pk = pkWithDoc("../test_data/usfm/slash_in_att.usfm", "fra", "hello")[0]);
         } catch (err) {
             console.log(err)
         }
