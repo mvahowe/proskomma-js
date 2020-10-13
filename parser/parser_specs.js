@@ -128,6 +128,40 @@ const specs = [
         }
     },
     {
+        // START SIDEBAR - make a new sequence
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "esb",
+                ]
+            ]
+        ],
+        parser: {
+            baseSequenceType: "sidebar",
+            newBlock: true,
+            newScopes: []
+        }
+    },
+    {
+        // END SIDEBAR - return to main
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "esbe",
+                ]
+            ]
+        ],
+        parser: {
+            baseSequenceType: "main",
+            newBlock: true,
+            newScopes: []
+        }
+    },
+    {
         // REMARK - make new sequence
         contexts: [
             [

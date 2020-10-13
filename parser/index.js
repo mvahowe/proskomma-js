@@ -23,7 +23,8 @@ const Parser = class {
             endTitle: "?",
             heading: "*",
             header: "*",
-            remark: "*"
+            remark: "*",
+            sidebar: "*"
         };
         this.inlineSequenceTypes = {
             footnote: "*",
