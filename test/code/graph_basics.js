@@ -17,7 +17,7 @@ test(
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("packageVersion" in result.data);
-            t.equal(result.data.packageVersion, "0.1.0");
+            t.equal(result.data.packageVersion, "0.1.2");
             t.ok("nDocSets" in result.data);
             t.equal(result.data.nDocSets, 0);
             t.ok("nDocuments" in result.data);

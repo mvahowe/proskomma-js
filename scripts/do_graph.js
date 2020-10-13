@@ -24,7 +24,7 @@ try {
     process.exit(1);
 }
 const pk = new ProsKomma();
-try {
+//try {
     pk.importDocument(
         "eng",
         "ust",
@@ -32,10 +32,14 @@ try {
         content,
         {}
     );
+    /*
 } catch (err) {
-    console.log(`ERROR: Could not import document: '${err}'`);
+    console.log(`ERROR: Could not import document: '${err}'\n`);
+    console.trace();
     process.exit(1);
 }
+
+     */
 pk.gqlQuery(query)
     .then(output => console.log(JSON.stringify(output, null, 2)))
     .catch(err => console.log(`ERROR: Could not run query: '${err}'`));

@@ -159,7 +159,7 @@ const Sequence = class {
 
     moveOrphanStartScopes() {
         for (const [blockNo, block] of this.blocks.entries()) {
-            if (blockNo === this.blocks.length - 2) {
+            if (blockNo >= this.blocks.length - 1) {
                 continue;
             }
             for (const item of [...block.items].reverse()) {
