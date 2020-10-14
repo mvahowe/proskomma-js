@@ -29,7 +29,6 @@ const doTest = async (t, pk) => {
     t.equal(sb1Sequence.blocks.length, 1);
     t.equal(sb1Sequence.blocks[0].bg.length, 2);
     t.ok(sb1Sequence.blocks[0].scopeLabels.includes("esbCat/Theme"));
-    console.log(JSON.stringify(sb1Sequence, null, 2));
 }
 
 test(
