@@ -1,4 +1,7 @@
 const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString} = require('graphql');
+const scopeType = require('./scope');
+const graftType = require('./graft');
+const itemType = require('./item');
 
 const succinctBlockType = new GraphQLObjectType({
     name: "SuccinctBlock",
@@ -26,6 +29,47 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLInt,
             resolve:
                 (root, args, context) => context.docSet.countItems(root.is)
+        },
+        is: {
+            type: GraphQLList(scopeType),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyScopes(root.is)
+                }
+        },
+        os: {
+            type: GraphQLList(scopeType),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyScopes(root.os)
+                }
+        },
+        bs: {
+            type: scopeType,
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    const [itemLength, itemType, itemSubtype] = context.docSet.headerBytes(root.bs, 0);
+                    return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
+                }
+        },
+        bg: {
+            type: GraphQLList(graftType),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyGrafts(root.bg)
+                }
+        },
+        c: {
+            type: GraphQLList(itemType),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyGrafts(root.c)
+                }
         },
     })
 })

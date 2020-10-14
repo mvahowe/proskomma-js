@@ -46,7 +46,7 @@ test(
 );
 
 test(
-    `Item Length (${testGroup})`,
+    `Length in Items (${testGroup})`,
     async function (t) {
         try {
             const lengths = [
@@ -66,6 +66,40 @@ test(
             t.plan(2 + (lengths.length * Object.keys(lengths[0]).length));
             const query = '{ documents { mainSequence { succinctBlocks { cL bgL osL isL } } } }';
             await checkLengthResult(t, query, lengths);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Unpacked Scope & Graft Fields (${testGroup})`,
+    async function (t) {
+        try {
+            const lengths = [
+                {
+                    bg: 3,
+                    os: 0,
+                    is: 19
+                },
+                {
+                    bg: 0,
+                    os: 3,
+                    is: 2
+                }
+          ];
+            t.plan(4 + (lengths.length * Object.keys(lengths[0]).length));
+            const query = '{ documents { mainSequence { succinctBlocks { is { label } os { label } bs { label } bg { type }  } } } }';
+            const result = await pk.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            for (const blockNo of [0, 1]) {
+                const block = result.data.documents[0].mainSequence.succinctBlocks[blockNo];
+                t.equal(block.bs.label, "blockTag/p");
+                for (const [field, value] of Object.entries(lengths[blockNo])) {
+                    t.equal(block[field].length, value);
+                }
+            }
         } catch (err) {
             console.log(err)
         }
