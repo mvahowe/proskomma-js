@@ -30,7 +30,7 @@ class UsxLexer {
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
             optbreak: this.handleOptBreakOpen,
-            ref: this.notHandledHandler
+            ref: this.ignoreHandler
         }
         this.closeTagHandlers = {
             usx: this.ignoreHandler,
@@ -48,7 +48,7 @@ class UsxLexer {
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
             optbreak: this.handleOptBreakClose,
-            ref: this.notHandledHandler
+            ref: this.ignoreHandler
         }
     }
 

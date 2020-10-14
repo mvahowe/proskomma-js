@@ -3,10 +3,10 @@ const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString} = require('gra
 const succinctBlockType = new GraphQLObjectType({
     name: "SuccinctBlock",
     fields: () => ({
-        cByteLength: {type: GraphQLInt, resolve: root => root.c.length},
-        bgByteLength: {type: GraphQLInt, resolve: root => root.bg.length},
-        osByteLength: {type: GraphQLInt, resolve: root => root.os.length},
-        isByteLength: {type: GraphQLInt, resolve: root => root.is.length}
+        cBL: {type: GraphQLInt, resolve: root => root.c.length},
+        bgBL: {type: GraphQLInt, resolve: root => root.bg.length},
+        osBL: {type: GraphQLInt, resolve: root => root.os.length},
+        isBL: {type: GraphQLInt, resolve: root => root.is.length}
     })
 })
 

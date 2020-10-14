@@ -12,20 +12,20 @@ test(
         try {
             const lengths = [
                 {
-                    cByteLength: 1734,
-                    bgByteLength: 9,
-                    osByteLength: 0,
-                    isByteLength: 57
+                    cBL: 1734,
+                    bgBL: 9,
+                    osBL: 0,
+                    isBL: 57
                 },
                 {
-                    cByteLength: 198,
-                    bgByteLength: 0,
-                    osByteLength: 9,
-                    isByteLength: 6
+                    cBL: 198,
+                    bgBL: 0,
+                    osBL: 9,
+                    isBL: 6
                 }
             ];
             t.plan(2 + (lengths.length * Object.keys(lengths[0]).length));
-            const query = '{ documents { mainSequence { succinctBlocks { cByteLength bgByteLength osByteLength isByteLength } } } }';
+            const query = '{ documents { mainSequence { succinctBlocks { cBL bgBL osBL isBL } } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
