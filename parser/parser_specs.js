@@ -165,7 +165,35 @@ const specs = [
             after: (parser) => {
                 parser.mainLike = parser.sequences.main;
             }
-
+        }
+    },
+    {
+        // CAT - graft label and add stub scope, then remove graft and modify scope at tidy stage
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                ["cat"]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "esbCat",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("inline", [pt.fullTagName]),
+                    endedBy: ["endTag/cat", "endBlock", "implicitEnd"],
+                    onEnd: (parser) => parser.returnToBaseSequence()
+                }
+            ],
+            during: (parser, pt) => {
+                const scopeId = generateId();
+                const esbScope = {
+                    label: () => labelForScope("esbCat", [scopeId]),
+                    endedBy: ["startTag/esbe"]
+                };
+                parser.openNewScope(pt, esbScope, true, parser.mainLike);
+            }
         }
     },
     {

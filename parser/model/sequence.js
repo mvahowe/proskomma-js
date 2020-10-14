@@ -185,12 +185,34 @@ const Sequence = class {
         }
     }
 
-    /*
     removeEmptyBlocks() {
-        this.blocks = this.blocks.filter(b => b.items.length > 0);
+        const canBeEmpty = ["blockTag/b", "blockTag/ib"];
+        const emptyBlocks = [];
+        let changed= false;
+        for (const blockRecord of this.blocks.entries()) {
+            if (blockRecord[1].tokens().length === 0 && !canBeEmpty.includes(blockRecord[1].blockScope.label)) {
+                emptyBlocks.push(blockRecord);
+            }
+        }
+        for (const [n, block] of emptyBlocks.reverse()) {
+            if (n < this.blocks.length - 1) {
+                for (const bg of [...block.blockGrafts].reverse()) {
+                    this.blocks[n + 1].blockGrafts.unshift(bg);
+                }
+                for (const i of block.items.reverse()) {
+                    this.blocks[n + 1].items.unshift(i);
+                }
+                this.blocks.splice(n, 1);
+                changed = true;
+            } else if (block.blockGrafts.length === 0 && block.items.length === 0) {
+                this.blocks.splice(n, 1);
+                changed = true;
+            }
+        }
+        if (changed) {
+            this.removeEmptyBlocks();
+        }
     }
-
-     */
 
     succinctifyBlocks(docSet) {
         const ret = [];

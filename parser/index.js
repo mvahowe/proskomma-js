@@ -32,6 +32,7 @@ const Parser = class {
             xref: "*",
             pubNumber: "*",
             altNumber: "*",
+            esbCat: "*",
             temp: "?"
         };
     }
@@ -135,17 +136,18 @@ const Parser = class {
             seq.reorderSpanWithAtts();
             seq.makeNoteGrafts(this);
             seq.moveOrphanScopes();
-            // seq.removeEmptyBlocks();
+            seq.removeEmptyBlocks();
             seq.addTableScopes();
             seq.close(this);
-            this.reorderPubNumbers(seq);
+            this.substitutePubNumberScopes(seq);
+            this.substituteEsbCatScopes(seq);
             if (["footnote", "xref"].includes(seq.type)) {
                 seq.lastBlock().inlineToEnd();
             }
         }
     }
 
-    reorderPubNumbers(seq) {
+    substitutePubNumberScopes(seq) {
         const scopeToGraftContent = {};
         const sequenceById = this.sequenceById();
         for (const block of seq.blocks) {
@@ -167,6 +169,35 @@ const Parser = class {
                 for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
                     const scopeParts = scope.label.split("/");
                     if (["altChapter", "pubVerse", "altVerse"].includes(scopeParts[0])) {
+                        scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
+                    }
+                }
+            }
+        }
+    }
+
+    substituteEsbCatScopes(seq) {
+        const scopeToGraftContent = {};
+        const sequenceById = this.sequenceById();
+        for (const block of seq.blocks) {
+            let spliceCount = 0;
+            const itItems = [...block.items];
+            for (const [n, item] of itItems.entries()) {
+                if (item.itemType === "graft" && item.graftType === "esbCat") {
+                    const catContent = sequenceById[item.seqId].text().trim();
+                    const scopeId = itItems[1].label.split("/")[1];
+                    scopeToGraftContent[scopeId] = catContent;
+                    block.items.splice(n - spliceCount, 1);
+                    spliceCount++;
+                }
+            }
+        }
+        // Substitute scopeIds for graft content
+        if (Object.keys(scopeToGraftContent).length > 0) {
+            for (const block of seq.blocks) {
+                for (const scope of block.items.filter(i => ["startScope", "endScope"].includes(i.itemType))) {
+                    const scopeParts = scope.label.split("/");
+                    if (scopeParts[0] === "esbCat") {
                         scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
                     }
                 }
