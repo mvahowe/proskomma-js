@@ -26,7 +26,7 @@ class UsxLexer {
             char: this.handleCharOpen,
             ms: this.notHandledHandler,
             note: this.handleNoteOpen,
-            sidebar: this.notHandledHandler,
+            sidebar: this.handleSidebarOpen,
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
             optbreak: this.handleOptBreakOpen,
@@ -44,7 +44,7 @@ class UsxLexer {
             char: this.handleCharClose,
             ms: this.notHandledHandler,
             note: this.handleNoteClose,
-            sidebar: this.notHandledHandler,
+            sidebar: this.handleSidebarClose,
             periph: this.notHandledHandler,
             figure: this.notHandledHandler,
             optbreak: this.handleOptBreakClose,
@@ -208,6 +208,16 @@ class UsxLexer {
     handleNoteClose(lexer) {
         const sAtts = lexer.stackPop()[1];
         lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, sAtts.style, ""]));
+    }
+
+    handleSidebarOpen(lexer, oOrC, name, atts) {
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "esb", ""]));
+        lexer.stackPush(name, atts);
+    }
+
+    handleSidebarClose(lexer) {
+        lexer.stackPop();
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "esbe", ""]));
     }
 
     handleOptBreakOpen(lexer, oOrC, name, atts) {

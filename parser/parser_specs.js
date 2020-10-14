@@ -141,7 +141,10 @@ const specs = [
         parser: {
             baseSequenceType: "sidebar",
             newBlock: true,
-            newScopes: []
+            newScopes: [],
+            after: (parser) => {
+                parser.mainLike = parser.current.sequence;
+            }
         }
     },
     {
@@ -158,7 +161,11 @@ const specs = [
         parser: {
             baseSequenceType: "main",
             newBlock: true,
-            newScopes: []
+            newScopes: [],
+            after: (parser) => {
+                parser.mainLike = parser.sequences.main;
+            }
+
         }
     },
     {
@@ -216,7 +223,7 @@ const specs = [
             ]
         ],
         parser: {
-            baseSequenceType: "main",
+            baseSequenceType: "mainLike",
             newBlock: true,
             newScopes: []
         }

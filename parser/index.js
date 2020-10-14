@@ -53,6 +53,7 @@ const Parser = class {
                     throw new Error(`Unexpected sequence arity '${sArity}' for '${sType}'`);
             }
         }
+        this.mainLike = this.sequences.main;
     }
 
     setCurrent() {
@@ -88,10 +89,12 @@ const Parser = class {
                 if ("before" in spec.parser) {
                     spec.parser.before(this, lexedItem);
                 }
-                changeBaseSequence = spec.parser.baseSequenceType && (
-                    (spec.parser.baseSequenceType !== this.current.baseSequenceType) ||
-                    spec.parser.forceNewSequence
-                );
+                changeBaseSequence = false;
+                if (spec.parser.baseSequenceType) {
+                    const returnSequenceType = spec.parser.baseSequenceType === "mainLike" ? this.mainLike.type : spec.parser.baseSequenceType;
+                        changeBaseSequence = (returnSequenceType !== this.current.baseSequenceType) ||
+                        spec.parser.forceNewSequence;
+                }
                 if (changeBaseSequence) {
                     this.closeActiveScopes("baseSequenceChange");
                     this.changeBaseSequence(spec.parser);
@@ -284,7 +287,11 @@ const Parser = class {
     }
 
     changeBaseSequence(parserSpec) {
-        const newType = parserSpec.baseSequenceType
+        const newType = parserSpec.baseSequenceType;
+        if (newType === "mainLike") {
+            this.current.sequence = this.mainLike;
+            return;
+        }
         this.current.baseSequenceType = newType;
         const arity = this.baseSequenceTypes[newType];
         switch (arity) {
@@ -307,7 +314,7 @@ const Parser = class {
                 throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
         }
         if (!parserSpec.useTempSequence && this.current.sequence.type !== "main") {
-            this.sequences.main.addBlockGraft(new Graft(this.current.baseSequenceType, this.current.sequence.id))
+            this.mainLike.addBlockGraft(new Graft(this.current.baseSequenceType, this.current.sequence.id))
         }
     }
 
