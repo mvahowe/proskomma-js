@@ -152,6 +152,18 @@ class DocSet {
         };
     }
 
+    countItems(succinct) {
+        let count = 0;
+        let pos = 0;
+        while (pos < succinct.length) {
+            count++;
+            const headerByte = succinct.byte(pos);
+            const itemLength = headerByte & 0x0000003F;
+            pos += itemLength;
+        }
+        return count;
+    }
+
     unsuccinctifyScopes(succinct) {
         const ret = [];
         let pos = 0;
