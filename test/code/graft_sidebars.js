@@ -8,9 +8,8 @@ const pkWithUSX = pkWithDoc("../test_data/usx/sidebars.usx", "fra", "hello")[0];
 const pkWithUSFM = pkWithDoc("../test_data/usfm/sidebars.usfm", "fra", "hello")[0];
 
 const doTest = async (t, pk) => {
-    t.plan(9);
-    const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
-    const query = `{ documents { sequences { id type blocks { bs { label } bg { type, sequenceId } c ${itemFragment} text } } mainSequence { id } } }`;
+    t.plan(12);
+    const query = `{ documents { sequences { id blocks { scopeLabels bg { type, sequenceId } } } mainSequence { id } } }`;
     const result = await pk.gqlQuery(query);
     t.ok("data" in result);
     const sequences = {};
@@ -26,6 +25,11 @@ const doTest = async (t, pk) => {
     t.equal(mainSequence.blocks[0].bg[3].type, "heading");
     t.equal(mainSequence.blocks[1].bg.length, 1);
     t.equal(mainSequence.blocks[1].bg[0].type, "sidebar");
+    const sb1Sequence = sequences[mainSequence.blocks[0].bg[2].sequenceId];
+    t.equal(sb1Sequence.blocks.length, 1);
+    t.equal(sb1Sequence.blocks[0].bg.length, 2);
+    t.ok(sb1Sequence.blocks[0].scopeLabels.includes("esbCat/Theme"));
+    console.log(JSON.stringify(sb1Sequence, null, 2));
 }
 
 test(

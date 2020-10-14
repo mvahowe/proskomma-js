@@ -214,7 +214,7 @@ class UsxLexer {
         lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "esb", ""]));
         if ("category" in atts) {
             lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "cat", ""]));
-            lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.cat]));
+            lexer.lexed.push(new ptClasses.PrintablePT("wordLike", [atts.category]));
             lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, "cat", ""]));
         }
         lexer.stackPush(name, atts);
