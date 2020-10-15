@@ -113,12 +113,16 @@ test(
     `Items (${testGroup})`,
     async function (t) {
         try {
-            t.plan(2);
+            t.plan(5);
             const query = `{ documents { mainSequence { succinctBlocks { items ${itemFragment} } } } }`;
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
-            // console.log(JSON.stringify(result.data, null, 2));
+            const succinctBlocks = result.data.documents[0].mainSequence.succinctBlocks;
+            t.equal(succinctBlocks[2].items.filter(i => i.itemType === "graft" && i.subType === "footnote").length, 1);
+            t.equal(succinctBlocks[0].items.filter(i => i.itemType === "startScope" && i.label === "chapter/8").length, 1);
+            t.equal(succinctBlocks[0].items.filter(i => i.itemType === "token" && i.subType === "wordLike")[0].chars, "Yahweh");
+            console.log(JSON.stringify(result.data.documents[0].mainSequence.succinctBlocks[0], null, 2));
         } catch (err) {
             console.log(err)
         }
