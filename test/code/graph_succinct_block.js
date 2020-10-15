@@ -185,3 +185,23 @@ test(
         }
     }
 );
+
+test(
+    `HTML (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(6);
+            const query = `{ documents { mainSequence { succinctBlocks { html } } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            const succinctBlocks = result.data.documents[0].mainSequence.succinctBlocks;
+            t.ok(succinctBlocks[0].html.includes("<h3>Graft title"));
+            t.ok(succinctBlocks[0].html.includes("class=\"blocktag-q\""));
+            t.ok(succinctBlocks[0].html.includes("class=\"chapter\""));
+            t.ok(succinctBlocks[2].html.includes("class=\"verses\""));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
