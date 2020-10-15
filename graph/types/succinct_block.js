@@ -155,6 +155,18 @@ const succinctBlockType = new GraphQLObjectType({
                     return html4Block(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
+        scopeLabels: {
+            type: GraphQLList(GraphQLString),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return [...new Set(
+                        context.docSet.unsuccinctifyScopes(root.os).concat(
+                            context.docSet.unsuccinctifyScopes(root.is)
+                        )
+                    .map(ri => ri[1]))];
+                }
+        },
     })
 })
 

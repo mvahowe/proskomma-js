@@ -205,3 +205,22 @@ test(
         }
     }
 );
+
+test(
+    `scopeLabels (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(5);
+            const query = `{ documents { mainSequence { succinctBlocks { scopeLabels } } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            const succinctBlockScopeLabels = result.data.documents[0].mainSequence.succinctBlocks.map(b => b.scopeLabels);
+            for (const scope of ["chapter/8", "verse/1", "verses/1"]) {
+                t.ok(succinctBlockScopeLabels[0].includes(scope));
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
