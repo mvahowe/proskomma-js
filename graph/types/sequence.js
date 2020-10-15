@@ -52,7 +52,10 @@ const sequenceType = new GraphQLObjectType({
         },
         succinctBlocks: {
             type: GraphQLList(succinctBlockType),
-            resolve: (root) => root.blocks
+            resolve: (root, args, context) => {
+                context.docSet.maybeBuildEnumIndexes();
+                return root.blocks;
+            }
         }
     })
 })

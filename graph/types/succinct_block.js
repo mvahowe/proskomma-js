@@ -83,7 +83,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(scopeType),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyScopes(root.is)
                 }
         },
@@ -91,7 +90,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(scopeType),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyScopes(root.os)
                 }
         },
@@ -99,7 +97,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: scopeType,
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     const [itemLength, itemType, itemSubtype] = context.docSet.headerBytes(root.bs, 0);
                     return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
                 }
@@ -108,7 +105,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(graftType),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyGrafts(root.bg)
                 }
         },
@@ -116,7 +112,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(itemType),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyItems(root.c, {})
                 }
         },
@@ -124,7 +119,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(tokenType),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyItems(root.c, {token: true})
                 }
         },
@@ -132,7 +126,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLString,
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyItems(root.c, {token: true})
                         .map(t => t[2])
                         .join('')
@@ -143,7 +136,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLString,
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
@@ -151,7 +143,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLString,
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return html4Block(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
@@ -159,7 +150,6 @@ const succinctBlockType = new GraphQLObjectType({
             type: GraphQLList(GraphQLString),
             resolve:
                 (root, args, context) => {
-                    context.docSet.maybeBuildEnumIndexes();
                     return [...new Set(
                         context.docSet.unsuccinctifyScopes(root.os).concat(
                             context.docSet.unsuccinctifyScopes(root.is)

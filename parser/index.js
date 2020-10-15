@@ -140,7 +140,9 @@ const Parser = class {
             seq.addTableScopes();
             seq.close(this);
             this.substitutePubNumberScopes(seq);
-            this.substituteEsbCatScopes(seq);
+            if (seq.type === "sidebar") {
+                this.substituteEsbCatScopes(seq);
+            }
             if (["footnote", "xref"].includes(seq.type)) {
                 seq.lastBlock().inlineToEnd();
             }
