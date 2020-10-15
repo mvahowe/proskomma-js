@@ -164,3 +164,24 @@ test(
         }
     }
 );
+
+test(
+    `Dump (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(7);
+            const query = `{ documents { mainSequence { succinctBlocks { dump } } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            const succinctBlocks = result.data.documents[0].mainSequence.succinctBlocks;
+            t.ok(succinctBlocks[0].dump.includes("title graft"));
+            t.ok(succinctBlocks[0].dump.includes("blockTag/q"));
+            t.ok(succinctBlocks[0].dump.includes("+chapter/8+"));
+            t.ok(succinctBlocks[1].dump.includes("-verse/1"));
+            t.ok(succinctBlocks[0].dump.includes("|Yahweh|"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

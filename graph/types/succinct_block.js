@@ -4,6 +4,29 @@ const scopeType = require('./scope');
 const graftType = require('./graft');
 const itemType = require('./item');
 
+const dumpItem = i => {
+    switch (i[0]) {
+        case "token":
+            return `|${i[2]}`;
+        case "startScope":
+            return `+${i[1]}+`;
+        case "endScope":
+            return `-${i[1]}-`;
+        case "graft":
+            return `>${i[1]}<`;
+    }
+}
+
+const dumpBlock = b => {
+    const ret = ["Block:"];
+    if (b.bg.length > 0) {
+        b.bg.forEach(bbg => ret.push(`   ${bbg[1]} graft to ${bbg[2]}`));
+    }
+    ret.push(`   Scope ${b.bs[1]}`);
+    ret.push(`   ${b.c.map(bci => dumpItem(bci)).join("")}`);
+    return ret.join("\n");
+}
+
 const succinctBlockType = new GraphQLObjectType({
     name: "SuccinctBlock",
     fields: () => ({
@@ -89,6 +112,14 @@ const succinctBlockType = new GraphQLObjectType({
                         .map(t => t[2])
                         .join('')
                         .trim()
+                }
+        },
+        dump: {
+            type: GraphQLString,
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
     })
