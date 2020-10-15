@@ -26,7 +26,7 @@ test(
                 ["e", "inline/f"]
             ];
             t.plan(3 + (2 * expectedScopes.length));
-            const itemFragment = '{ ... on Token { subType chars dump } ... on Scope { subType label dump } ... on Graft { type sequenceId dump } }';
+            const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
             const query = `{ documents { sequences { id type blocks { dump c ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
@@ -37,13 +37,13 @@ test(
             const mainSequence = sequences[result.data.documents[0].mainSequence.id];
             t.equal(mainSequence.blocks.length, 5);
             const footnoteCallerBlock = mainSequence.blocks[2];
-            const footnoteGrafts = footnoteCallerBlock.c.filter(i => i.type === "footnote");
+            const footnoteGrafts = footnoteCallerBlock.c.filter(i => i.subType === "footnote");
             t.equal(footnoteGrafts.length, 1);
             const footnoteItems = sequences[footnoteGrafts[0].sequenceId].blocks[0].c;
-            const scopes = footnoteItems.filter(i => i.subType && i.subType.endsWith("Scope"));
+            const scopes = footnoteItems.filter(i => i.itemType.endsWith("Scope"));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
-                t.equal(scopes[count].subType, sOrE === "s" ? "startScope" : "endScope");
+                t.equal(scopes[count].itemType, sOrE === "s" ? "startScope" : "endScope");
                 t.equal(scopes[count].label, expectedLabel);
                 count++;
             }
@@ -66,7 +66,7 @@ test(
                 ["e", "inline/x"]
             ];
             t.plan(3 + (2 * expectedScopes.length));
-            const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
+            const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } }';
             const query = `{ documents { sequences { id type blocks { c ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
@@ -77,13 +77,13 @@ test(
             const mainSequence = sequences[result.data.documents[0].mainSequence.id];
             t.equal(mainSequence.blocks.length, 1);
             const xrefCallerBlock = mainSequence.blocks[0];
-            const xrefGrafts = xrefCallerBlock.c.filter(i => i.type === "xref");
+            const xrefGrafts = xrefCallerBlock.c.filter(i => i.subType === "xref");
             t.equal(xrefGrafts.length, 1);
             const xrefItems = sequences[xrefGrafts[0].sequenceId].blocks[0].c;
-            const scopes = xrefItems.filter(i => i.subType && i.subType.endsWith("Scope"));
+            const scopes = xrefItems.filter(i => i.itemType.endsWith("Scope"));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
-                t.equal(scopes[count].subType, sOrE === "s" ? "startScope" : "endScope");
+                t.equal(scopes[count].itemType, sOrE === "s" ? "startScope" : "endScope");
                 t.equal(scopes[count].label, expectedLabel);
                 count++;
             }

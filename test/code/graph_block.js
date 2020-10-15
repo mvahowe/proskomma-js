@@ -81,12 +81,12 @@ test(
     async function (t) {
         try {
             t.plan(3);
-            const query = '{ documents { mainSequence { blocks { bg { type sequenceId } } } } }';
+            const query = '{ documents { mainSequence { blocks { bg { subType sequenceId } } } } }';
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             const block = result.data.documents[0].mainSequence.blocks[0];
-            t.equal(block.bg[0].type, "title");
-            t.equal(block.bg[1].type, "heading");
+            t.equal(block.bg[0].subType, "title");
+            t.equal(block.bg[1].subType, "heading");
         } catch (err) {
             console.log(err)
         }
@@ -103,17 +103,17 @@ test(
                 "verses/9"
             ];
             t.plan(15 + openScopes.length);
-            const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
+            const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = '{ documents { mainSequence { blocks {' +
                 `c ${itemFragment}` +
-                `bg {type sequenceId}` +
-                `os {subType label}` +
-                `is {subType label}` +
+                `bg {subType sequenceId}` +
+                `os {itemType label}` +
+                `is {itemType label}` +
                 '} } } }';
             let result = await pk.gqlQuery(query);
             t.ok("data" in result);
             let block = result.data.documents[0].mainSequence.blocks[0];
-            t.equal(block.c[0].subType, "startScope");
+            t.equal(block.c[0].itemType, "startScope");
             t.equal(block.c[0].label, "chapter/1");
             t.equal(block.c[3].subType, "wordLike");
             t.equal(block.c[3].chars, "This");
@@ -125,8 +125,8 @@ test(
             t.ok("data" in result);
             block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.bg.length, 2);
-            t.equal(block.bg[0].type, "title");
-            t.equal(block.bg[1].type, "heading");
+            t.equal(block.bg[0].subType, "title");
+            t.equal(block.bg[1].subType, "heading");
             result = await pk3.gqlQuery(query);
             t.ok("data" in result);
             block = result.data.documents[0].mainSequence.blocks[1];

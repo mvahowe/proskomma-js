@@ -11,7 +11,7 @@ test(
     async function (t) {
         try {
             t.plan(6);
-            const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
+            const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = `{ documents { mainSequence { blocks { c ${ itemFragment } } } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);

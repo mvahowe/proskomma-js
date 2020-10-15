@@ -22,7 +22,7 @@ const checkResult = (t, result) => {
     t.false(blocks[5].scopeLabels.includes("table"));
 }
 
-const itemFragment = '{ ... on Token { subType chars } ... on Scope { subType label } ... on Graft { type sequenceId } }';
+const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
 const query = `{ documents { mainSequence { blocks { scopeLabels bs { label } c ${itemFragment} } } } }`;
 
 test(
@@ -61,7 +61,7 @@ test(
             const result = await pk3.gqlQuery(query);
             t.ok("data" in result);
             const lastBlockItems = result.data.documents[0].mainSequence.blocks[2].c;
-            t.equal(lastBlockItems.filter(i => i.subType === "endScope" && i.label === "table").length, 1);
+            t.equal(lastBlockItems.filter(i => i.itemType === "endScope" && i.label === "table").length, 1);
         } catch (err) {
             console.log(err)
         }

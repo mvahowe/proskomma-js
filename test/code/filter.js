@@ -6,15 +6,15 @@ const testGroup = "Filter on Parse";
 
 const queryToBlock = async (t, filter) => {
     const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", filter)[0];
-    const itemFragment = '{ ... on Token { subType chars dump } ... on Scope { subType label dump } ... on Graft { type sequenceId dump } }';
-    const query = `{ documents { mainSequence { blocks { bg { type } bs { label } scopeLabels c ${itemFragment} } } } }`;
+    const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
+    const query = `{ documents { mainSequence { blocks { bg { subType } bs { label } scopeLabels c ${itemFragment} } } } }`;
     const result = await pk.gqlQuery(query);
     t.ok("data" in result);
     return result.data.documents[0].mainSequence.blocks[0];
 }
 
 const inlineGrafts = block => {
-    return block.c.filter(i => i.type);
+    return block.c.filter(i => i.itemType === "graft");
 }
 
 test(
@@ -32,8 +32,8 @@ test(
             t.plan(6 + scopeLabels.length);
             const block = await queryToBlock(t,{});
             t.equal(block.bg.length, 2);
-            t.equal(block.bg[0].type, "title");
-            t.equal(block.bg[1].type, "heading");
+            t.equal(block.bg[0].subType, "title");
+            t.equal(block.bg[1].subType, "heading");
             t.equal(block.scopeLabels.length, 6);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
@@ -159,7 +159,7 @@ test(
             t.plan(3);
             const block = await queryToBlock(t,{includeGrafts: ["title"]});
             t.equal(block.bg.length, 1);
-            t.equal(block.bg[0].type, "title");
+            t.equal(block.bg[0].subType, "title");
         } catch (err) {
             console.log(err)
         }
@@ -173,7 +173,7 @@ test(
             t.plan(3);
             const block = await queryToBlock(t,{excludeGrafts: ["title"]});
             t.equal(block.bg.length, 1);
-            t.equal(block.bg[0].type, "heading");
+            t.equal(block.bg[0].subType, "heading");
         } catch (err) {
             console.log(err)
         }

@@ -63,12 +63,12 @@ const succinctBlockType = new GraphQLObjectType({
                     return context.docSet.unsuccinctifyGrafts(root.bg)
                 }
         },
-        c: {
+        items: {
             type: GraphQLList(itemType),
             resolve:
                 (root, args, context) => {
                     context.docSet.maybeBuildEnumIndexes();
-                    return context.docSet.unsuccinctifyGrafts(root.c)
+                    return context.docSet.unsuccinctifyItems(root.c, {})
                 }
         },
     })
