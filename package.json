@@ -1,7 +1,7 @@
 {
   "name": "proskomma",
-  "version": "0.1.3",
-  "description": "A Model for Complex Text Documents like Bibles",
+  "version": "0.1.4",
+  "description": "A Model for Complex Text Documents such as Bibles",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/tape/bin/tape test/code/*.js | node_modules/tap-summary/bin/cmd.js",

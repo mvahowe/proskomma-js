@@ -1,0 +1,1 @@
+{ documents { sequences { blocks { c { ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } } } } } }
