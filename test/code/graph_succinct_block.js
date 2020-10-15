@@ -122,7 +122,26 @@ test(
             t.equal(succinctBlocks[2].items.filter(i => i.itemType === "graft" && i.subType === "footnote").length, 1);
             t.equal(succinctBlocks[0].items.filter(i => i.itemType === "startScope" && i.label === "chapter/8").length, 1);
             t.equal(succinctBlocks[0].items.filter(i => i.itemType === "token" && i.subType === "wordLike")[0].chars, "Yahweh");
-            console.log(JSON.stringify(result.data.documents[0].mainSequence.succinctBlocks[0], null, 2));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Tokens (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(6);
+            const query = `{ documents { mainSequence { succinctBlocks { tokens { itemType subType chars } } } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            const succinctBlocks = result.data.documents[0].mainSequence.succinctBlocks;
+            t.equal(succinctBlocks[2].tokens.filter(i => i.itemType === "graft").length, 0);
+            t.equal(succinctBlocks[0].tokens.filter(i => i.itemType === "startScope").length, 0);
+            t.equal(succinctBlocks[0].tokens.filter(i => i.itemType === "endScope").length, 0);
+            t.ok(succinctBlocks[0].tokens.filter(i => i.itemType === "token").length > 0);
         } catch (err) {
             console.log(err)
         }

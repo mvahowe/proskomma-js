@@ -1,4 +1,5 @@
 const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString} = require('graphql');
+const tokenType = require('./token');
 const scopeType = require('./scope');
 const graftType = require('./graft');
 const itemType = require('./item');
@@ -69,6 +70,14 @@ const succinctBlockType = new GraphQLObjectType({
                 (root, args, context) => {
                     context.docSet.maybeBuildEnumIndexes();
                     return context.docSet.unsuccinctifyItems(root.c, {})
+                }
+        },
+        tokens: {
+            type: GraphQLList(tokenType),
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyItems(root.c, {token: true})
                 }
         },
     })

@@ -204,16 +204,18 @@ class DocSet {
         const [itemLength, itemType, itemSubtype] = this.headerBytes(succinct, pos);
         switch (itemType) {
             case itemEnum.token:
-                item = this.unsuccinctifyToken(succinct, itemSubtype, pos);
+                if (Object.keys(options).length === 0 || options.token) {
+                    item = this.unsuccinctifyToken(succinct, itemSubtype, pos);
+                }
                 break;
             case itemEnum.startScope:
             case itemEnum.endScope:
-                if (!("scopes" in options) || options.scopes) {
+                if (Object.keys(options).length === 0 || options.scopes) {
                     item = this.unsuccinctifyScope(succinct, itemType, itemSubtype, pos);
                 }
                 break;
             case itemEnum.graft:
-                if (!("grafts" in options) || options.grafts) {
+                if (Object.keys(options).length === 0 || options.grafts) {
                     item = this.unsuccinctifyGraft(succinct, itemSubtype, pos);
                 }
                 break;
