@@ -147,3 +147,20 @@ test(
         }
     }
 );
+
+test(
+    `Text (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query = `{ documents { mainSequence { succinctBlocks { text } } } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("succinctBlocks" in result.data.documents[0].mainSequence);
+            const succinctBlocks = result.data.documents[0].mainSequence.succinctBlocks;
+            t.ok(succinctBlocks[0].text.startsWith("Yahweh our Lord"))
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

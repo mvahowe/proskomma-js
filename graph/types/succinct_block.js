@@ -80,6 +80,17 @@ const succinctBlockType = new GraphQLObjectType({
                     return context.docSet.unsuccinctifyItems(root.c, {token: true})
                 }
         },
+        text: {
+            type: GraphQLString,
+            resolve:
+                (root, args, context) => {
+                    context.docSet.maybeBuildEnumIndexes();
+                    return context.docSet.unsuccinctifyItems(root.c, {token: true})
+                        .map(t => t[2])
+                        .join('')
+                        .trim()
+                }
+        },
     })
 })
 
