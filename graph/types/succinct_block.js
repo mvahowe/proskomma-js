@@ -53,7 +53,7 @@ const html4Block = b => {
 }
 
 const succinctBlockType = new GraphQLObjectType({
-    name: "SuccinctBlock",
+    name: "Block",
     fields: () => ({
         cBL: {type: GraphQLInt, resolve: root => root.c.length},
         bgBL: {type: GraphQLInt, resolve: root => root.bg.length},

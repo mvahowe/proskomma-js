@@ -12,10 +12,10 @@ test(
         try {
             t.plan(6);
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-            const query = `{ documents { mainSequence { blocks { c ${ itemFragment } } } } }`;
+            const query = `{ documents { mainSequence { blocks { items ${ itemFragment } } } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
-            const words = result.data.documents[0].mainSequence.blocks[0].c.filter(i => i.subType === "wordLike");
+            const words = result.data.documents[0].mainSequence.blocks[0].items.filter(i => i.subType === "wordLike");
             t.equal(words.length, 4);
             t.equal(words[0].chars.length, 127);
             t.equal(words[1].chars.length, 127);

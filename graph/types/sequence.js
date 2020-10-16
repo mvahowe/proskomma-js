@@ -1,6 +1,6 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
-const blockType = require('./block');
+// const blockType = require('./oldBlock');
 const succinctBlockType = require('./succinct_block');
 
 const htmlStyles = ".blocktag-q1 {font-family: italic}" +
@@ -18,8 +18,13 @@ const htmlFoot = s => {
     return "</body>\n</html>\n";
 }
 
-const scopesInBlock = (block, scopes) => {
-    const allBlockScopes = [...new Set([...block.os.map(s => s[1]), ...block.is.map(s => s[1])])];
+const scopesInBlock = (docSet, block, scopes) => {
+    const allBlockScopes = [
+        ...new Set([
+            ...docSet.unsuccinctifyScopes(block.os).map(s => s[1]),
+            ...docSet.unsuccinctifyScopes(block.is).map(s => s[1])
+        ])
+    ];
     for (const scope of scopes) {
         if (!allBlockScopes.includes(scope)) {
             return false;
@@ -36,21 +41,15 @@ const sequenceType = new GraphQLObjectType({
         nBlocks: {type: GraphQLInt, resolve: root => root.blocks.length},
         htmlHead: {type: GraphQLString, resolve: root => htmlHead(root)},
         htmlFoot: {type: GraphQLString, resolve: root => htmlFoot(root)},
-        blocks: {
-            type: GraphQLList(blockType),
-            resolve:
-                (root, args, context) =>
-                    root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {}))
-        },
         blocksForScopes: {
-            type: GraphQLList(blockType),
+            type: GraphQLList(succinctBlockType),
             args: {
                 scopes: {type: GraphQLList(GraphQLString)}
             },
             resolve: (root, args, context) =>
-                root.blocks.map(b => context.docSet.unsuccinctifyBlock(b, {})).filter(b => scopesInBlock(b, args.scopes))
+                root.blocks.filter(b => scopesInBlock(context.docSet, b, args.scopes))
         },
-        succinctBlocks: {
+        blocks: {
             type: GraphQLList(succinctBlockType),
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();

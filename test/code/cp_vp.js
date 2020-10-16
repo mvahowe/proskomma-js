@@ -35,10 +35,10 @@ test(
             ];
             t.plan(1 + (expectedScopes.length * 2));
             const query =
-                '{ documents { mainSequence { blocks { html c { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
+                '{ documents { mainSequence { blocks { html items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
-            const scopes = result.data.documents[0].mainSequence.blocks[0].c.filter(i => ["startScope", "endScope"].includes(i.itemType));
+            const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => ["startScope", "endScope"].includes(i.itemType));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
                 t.equal(scopes[count].itemType, sOrE === "s" ? "startScope" : "endScope");
@@ -81,10 +81,10 @@ test(
             ];
             t.plan(1 + (2 * expectedScopes.length));
             const query =
-                '{ documents { mainSequence { blocks { c { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
+                '{ documents { mainSequence { blocks { items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
-            const scopes = result.data.documents[0].mainSequence.blocks[0].c.filter(i => ["startScope", "endScope"].includes(i.itemType));
+            const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => ["startScope", "endScope"].includes(i.itemType));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
                 t.equal(scopes[count].itemType, sOrE === "s" ? "startScope" : "endScope");

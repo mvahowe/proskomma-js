@@ -13,10 +13,10 @@ test(
         try {
             t.plan(2);
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-            const query = `{ documents { mainSequence { blocks { c ${itemFragment} } } } }`;
+            const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
-            const firstItem = result.data.documents[0].mainSequence.blocks[0].c[0];
+            const firstItem = result.data.documents[0].mainSequence.blocks[0].items[0];
             t.equal(firstItem.subType, "bareSlash");
         } catch (err) {
             console.log(err)
@@ -30,10 +30,10 @@ test(
         try {
             t.plan(2);
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-            const query = `{ documents { mainSequence { blocks { c ${itemFragment} } } } }`;
+            const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
-            const firstItem = result.data.documents[0].mainSequence.blocks[0].c[0];
+            const firstItem = result.data.documents[0].mainSequence.blocks[0].items[0];
             t.equal(firstItem.subType, "unknown");
         } catch (err) {
             console.log(err)

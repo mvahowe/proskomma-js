@@ -7,24 +7,60 @@ const testGroup = "Graph Block";
 const pk = pkWithDoc("../test_data/usfm/hello.usfm", "eng", "ust")[0];
 const pk2 = pkWithDoc("../test_data/usfm/headings.usfm", "eng", "ust")[0];
 const pk3 = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust")[0];
+const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", "eng", "ust")[0];
 
 test(
     `Length (${testGroup})`,
     async function (t) {
         try {
             const lengths = {
-                cLength: 26,
-                bgLength: 0,
-                osLength: 0,
-                isLength: 3
+                cL: 26,
+                bgL: 0,
+                osL: 0,
+                isL: 3
             };
             t.plan(2 + Object.keys(lengths).length);
-            const query = '{ documents { mainSequence { blocks { cLength bgLength osLength isLength } } } }';
+            const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("blocks" in result.data.documents[0].mainSequence);
             for (const [field, value] of Object.entries(lengths)) {
                 t.equal(result.data.documents[0].mainSequence.blocks[0][field], value);
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Length in Items (${testGroup})`,
+    async function (t) {
+        try {
+            const lengths = [
+                {
+                    cL: 578,
+                    bgL: 1,
+                    osL: 0,
+                    isL: 19
+                },
+                {
+                    cL: 65,
+                    bgL: 0,
+                    osL: 3,
+                    isL: 2
+                }
+            ];
+            t.plan(2 + (lengths.length * Object.keys(lengths[0]).length));
+            const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
+            const result = await pk3.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            for (const blockNo of [0, 1]) {
+                const block = result.data.documents[0].mainSequence.blocks[blockNo];
+                for (const [field, value] of Object.entries(lengths[blockNo])) {
+                    t.equal(block[field], value);
+                }
             }
         } catch (err) {
             console.log(err)
@@ -94,6 +130,26 @@ test(
 );
 
 test(
+    `Tokens (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(6);
+            const query = `{ documents { mainSequence { blocks { tokens { itemType subType chars } } } } }`;
+            const result = await pk4.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            const blocks = result.data.documents[0].mainSequence.blocks;
+            t.equal(blocks[2].tokens.filter(i => i.itemType === "graft").length, 0);
+            t.equal(blocks[0].tokens.filter(i => i.itemType === "startScope").length, 0);
+            t.equal(blocks[0].tokens.filter(i => i.itemType === "endScope").length, 0);
+            t.ok(blocks[0].tokens.filter(i => i.itemType === "token").length > 0);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
     `Items (${testGroup})`,
     async function (t) {
         try {
@@ -105,7 +161,7 @@ test(
             t.plan(15 + openScopes.length);
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = '{ documents { mainSequence { blocks {' +
-                `c ${itemFragment}` +
+                `items ${itemFragment}` +
                 `bg {subType sequenceId}` +
                 `os {itemType label}` +
                 `is {itemType label}` +
@@ -113,10 +169,10 @@ test(
             let result = await pk.gqlQuery(query);
             t.ok("data" in result);
             let block = result.data.documents[0].mainSequence.blocks[0];
-            t.equal(block.c[0].itemType, "startScope");
-            t.equal(block.c[0].label, "chapter/1");
-            t.equal(block.c[3].subType, "wordLike");
-            t.equal(block.c[3].chars, "This");
+            t.equal(block.items[0].itemType, "startScope");
+            t.equal(block.items[0].label, "chapter/1");
+            t.equal(block.items[3].subType, "wordLike");
+            t.equal(block.items[3].chars, "This");
             t.equal(block.os.length, 0);
             t.equal(block.bg.length, 0);
             t.equal(block.is.length, 3);

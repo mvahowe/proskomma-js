@@ -1,6 +1,7 @@
 const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
-const {docSetType, documentType} = require('./types');
+const docSetType = require('./types/doc_set');
+const documentType = require('./types/document');
 
 const gqlSchema = new GraphQLSchema({
     query: new GraphQLObjectType({

@@ -27,7 +27,7 @@ test(
             ];
             t.plan(3 + (2 * expectedScopes.length));
             const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
-            const query = `{ documents { sequences { id type blocks { dump c ${itemFragment} } } mainSequence { id } } }`;
+            const query = `{ documents { sequences { id type blocks { dump items ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             const sequences = {};
@@ -37,9 +37,9 @@ test(
             const mainSequence = sequences[result.data.documents[0].mainSequence.id];
             t.equal(mainSequence.blocks.length, 5);
             const footnoteCallerBlock = mainSequence.blocks[2];
-            const footnoteGrafts = footnoteCallerBlock.c.filter(i => i.subType === "footnote");
+            const footnoteGrafts = footnoteCallerBlock.items.filter(i => i.subType === "footnote");
             t.equal(footnoteGrafts.length, 1);
-            const footnoteItems = sequences[footnoteGrafts[0].sequenceId].blocks[0].c;
+            const footnoteItems = sequences[footnoteGrafts[0].sequenceId].blocks[0].items;
             const scopes = footnoteItems.filter(i => i.itemType.endsWith("Scope"));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
@@ -67,7 +67,7 @@ test(
             ];
             t.plan(3 + (2 * expectedScopes.length));
             const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } }';
-            const query = `{ documents { sequences { id type blocks { c ${itemFragment} } } mainSequence { id } } }`;
+            const query = `{ documents { sequences { id type blocks { items ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             const sequences = {};
@@ -77,9 +77,9 @@ test(
             const mainSequence = sequences[result.data.documents[0].mainSequence.id];
             t.equal(mainSequence.blocks.length, 1);
             const xrefCallerBlock = mainSequence.blocks[0];
-            const xrefGrafts = xrefCallerBlock.c.filter(i => i.subType === "xref");
+            const xrefGrafts = xrefCallerBlock.items.filter(i => i.subType === "xref");
             t.equal(xrefGrafts.length, 1);
-            const xrefItems = sequences[xrefGrafts[0].sequenceId].blocks[0].c;
+            const xrefItems = sequences[xrefGrafts[0].sequenceId].blocks[0].items;
             const scopes = xrefItems.filter(i => i.itemType.endsWith("Scope"));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {

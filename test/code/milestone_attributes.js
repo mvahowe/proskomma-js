@@ -38,10 +38,10 @@ test(
             const wScopes = ["x-occurrence/1", "x-occurrences/1"];
             t.plan(12 + (4 * zalnScopes.length) + (4 * wScopes.length));
             const query =
-                '{ documents { mainSequence { blocks { c { ... on Token { itemType subType chars }... on Scope { itemType label }... on Graft { itemType subType sequenceId } } } } } }';
+                '{ documents { mainSequence { blocks { items { ... on Token { itemType subType chars }... on Scope { itemType label }... on Graft { itemType subType sequenceId } } } } } }';
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
-            const content = topNTailItems(result.data.documents[0].mainSequence.blocks[0].c);
+            const content = topNTailItems(result.data.documents[0].mainSequence.blocks[0].items);
             const zalnAtt = suffix => `attribute/milestone/zaln/${suffix}`;
             const wAtt = suffix => `attribute/spanWithAtts/w/${suffix}`;
             t.equal(content.length, 23);
