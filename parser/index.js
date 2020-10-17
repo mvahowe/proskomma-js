@@ -83,7 +83,7 @@ const Parser = class {
                 this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
             }
             if (["chapter", "pubchapter", "verses"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(lexedItem.subclass);
+                this.closeActiveScopes(lexedItem.subclass, this.sequences.main);
             }
             const spec = this.specForItem(lexedItem);
             if (spec) {
@@ -302,18 +302,20 @@ const Parser = class {
         return false;
     }
 
-    closeActiveScopes(closeLabel) {
-        const matchedScopes = this.current.sequence.activeScopes.filter(
+    closeActiveScopes(closeLabel, targetSequence) {
+        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        const matchedScopes = targetSequence.activeScopes.filter(
             sc => sc.endedBy.includes(closeLabel)
         ).reverse();
-        this.current.sequence.activeScopes = this.current.sequence.activeScopes.filter(
+        targetSequence.activeScopes = targetSequence.activeScopes.filter(
             sc => !sc.endedBy.includes(closeLabel)
         );
-        matchedScopes.forEach(ms => this.closeActiveScope(ms));
+        matchedScopes.forEach(ms => this.closeActiveScope(ms, targetSequence));
     }
 
-    closeActiveScope(sc) {
-        this.addScope("end", sc.label);
+    closeActiveScope(sc, targetSequence) {
+        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        this.addScope("end", sc.label, targetSequence);
         if (sc.onEnd) {
             sc.onEnd(this, sc.label);
         }
@@ -406,8 +408,9 @@ const Parser = class {
         this.current.sequence.addItem(new Token(pt));
     }
 
-    addScope(sOrE, label) {
-        this.current.sequence.addItem(new Scope(sOrE, label));
+    addScope(sOrE, label, targetSequence) {
+        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        targetSequence.addItem(new Scope(sOrE, label));
     }
 
     addEmptyMilestone(label) {
