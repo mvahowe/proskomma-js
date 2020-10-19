@@ -186,7 +186,8 @@ const Sequence = class {
         }
     }
 
-    removeEmptyBlocks(canBeEmpty) {
+    removeEmptyBlocks(customCanBeEmpty) {
+        const canBeEmpty = ["blockTag/b", "blockTag/ib"].concat(customCanBeEmpty);
         const emptyBlocks = [];
         let changed= false;
         for (const blockRecord of this.blocks.entries()) {
@@ -210,8 +211,12 @@ const Sequence = class {
             }
         }
         if (changed) {
-            this.removeEmptyBlocks();
+            this.removeEmptyBlocks(customCanBeEmpty);
         }
+    }
+
+    removeGraftsToEmptySequences(emptySequences) {
+        this.blocks.forEach(b => b.removeGraftsToEmptySequences(emptySequences));
     }
 
     succinctifyBlocks(docSet) {

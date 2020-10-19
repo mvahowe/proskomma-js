@@ -5,9 +5,10 @@ const {labelForScope} = require("../lib/scope_defs");
 
 const Parser = class {
 
-    constructor(filterOptions, custom) {
+    constructor(filterOptions, customTags, emptyBlocks) {
         this.filterOptions = filterOptions;
-        this.customTags = custom;
+        this.customTags = customTags;
+        this.emptyBlocks = emptyBlocks;
         this.specs = specs(this);
         this.headers = {};
         this.setSequenceTypes();
@@ -133,12 +134,19 @@ const Parser = class {
         if (this.sequences.introduction) {
             this.sequences.introduction.graftifyIntroductionHeadings(this);
         }
-        for (const seq of this.allSequences()) {
+        const allSequences = this.allSequences();
+        for (const seq of allSequences) {
             seq.trim();
             seq.reorderSpanWithAtts();
             seq.makeNoteGrafts(this);
             seq.moveOrphanScopes();
-            seq.removeEmptyBlocks(["blockTag/b", "blockTag/ib"]);
+            seq.removeEmptyBlocks(this.emptyBlocks);
+        }
+        const emptySequences = this.emptySequences(allSequences);
+        for (const seq of allSequences) {
+            if (emptySequences) {
+                seq.removeGraftsToEmptySequences(emptySequences);
+            }
             seq.addTableScopes();
             seq.close(this);
             this.substitutePubNumberScopes(seq);
@@ -149,6 +157,10 @@ const Parser = class {
                 seq.lastBlock().inlineToEnd();
             }
         }
+    }
+
+    emptySequences(sequences) {
+        return sequences.filter(s => s.blocks.length === 0).map(s => s.id);
     }
 
     substitutePubNumberScopes(seq) {

@@ -5,12 +5,13 @@ const { nComponentsForScope } = require('../lib/scope_defs');
 
 class Document {
 
-    constructor(processor, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags) {
+    constructor(processor, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks) {
         this.id = generateId();
         this.processor = processor;
         this.docSetId = docSetId;
         this.filterOptions = filterOptions;
         this.customTags = customTags;
+        this.emptyBlocks = emptyBlocks;
         this.headers = {};
         this.mainId = null;
         this.sequences = {};
@@ -37,7 +38,11 @@ class Document {
     }
 
     processLexed(lexed) {
-        const parser = new Parser(this.filterOptions, this.customTags);
+        const parser = new Parser(
+            this.filterOptions,
+            this.customTags,
+            this.emptyBlocks
+        );
         parser.parse(lexed);
         parser.tidy();
         parser.filter();

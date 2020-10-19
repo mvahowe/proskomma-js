@@ -188,6 +188,29 @@ const Block = class {
         return false;
     }
 
+    removeGraftsToEmptySequences(emptySequences) {
+        const ret = [];
+        let toRemove = [];
+        for (const [pos, item] of this.grafts()) {
+            if (emptySequences.includes(item.seqId)) {
+                toRemove.push(pos);
+            }
+        }
+        for (const [count, pos] of Array.from(toRemove.entries())) {
+            this.items.splice(pos - count, 1);
+        }
+        toRemove = [];
+        for (const [pos, item] of this.blockGrafts.entries()) {
+            if (emptySequences.includes(item.seqId)) {
+                toRemove.push(pos);
+            }
+        }
+        for (const [count, pos] of Array.from(toRemove.entries())) {
+            this.blockGrafts.splice(pos - count, 1);
+        }
+        return ret;
+    }
+
     grafts() {
         return Array.from(this.items.entries()).filter(ip => ip[1].itemType === "graft");
     }

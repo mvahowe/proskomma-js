@@ -19,6 +19,7 @@ class ProsKomma {
             intro: [],
             introHeading: []
         }
+        this.emptyBlocks = [];
     }
 
     packageVersion() {
@@ -49,15 +50,18 @@ class ProsKomma {
         return this.documents[args.id]
     }
 
-    importDocument(lang, abbr, contentType, contentString, filterOptions, customTags) {
+    importDocument(lang, abbr, contentType, contentString, filterOptions, customTags, emptyBlocks) {
         if (!filterOptions) {
             filterOptions = this.filters;
         }
         if (!customTags) {
             customTags = this.customTags;
         }
+        if (!emptyBlocks) {
+            emptyBlocks = this.emptyBlocks;
+        }
         const docSetId = this.findOrMakeDocSet(lang, abbr);
-        let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags);
+        let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
         this.addDocument(doc, docSetId);
         return doc;
     }
