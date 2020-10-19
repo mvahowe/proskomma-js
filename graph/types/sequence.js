@@ -1,7 +1,7 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
 
 // const blockType = require('./oldBlock');
-const succinctBlockType = require('./succinct_block');
+const succinctBlockType = require('./block');
 
 const htmlStyles = ".blocktag-q1 {font-family: italic}" +
     ".blocktag-q2 {font-family: italic; padding-left: 2em}" +
