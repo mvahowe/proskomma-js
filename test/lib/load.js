@@ -18,6 +18,21 @@ const pkWithDoc = (fp, lang, abbr, options) => {
     return [pk, pkDoc];
 }
 
+const customPkWithDoc = (pkClass, fp, lang, abbr, options) => {
+    if (!options) {options = {}};
+    const content = fse.readFileSync(path.resolve(__dirname, fp));
+    const contentType = fp.split('.').pop();
+    const pk = new pkClass();
+    const pkDoc = pk.importDocument(
+        lang,
+        abbr,
+        contentType,
+        content,
+        options
+    );
+    return [pk, pkDoc];
+}
+
 const pkWithDocs = (contentSpecs) => {
     const pk = new ProsKomma();
     for (const [fp, lang, abbr] of contentSpecs) {
@@ -34,4 +49,4 @@ const pkWithDocs = (contentSpecs) => {
     return pk;
 }
 
-module.exports = { pkWithDoc, pkWithDocs };
+module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs };

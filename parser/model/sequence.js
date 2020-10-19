@@ -111,13 +111,14 @@ const Sequence = class {
         }
     }
 
-    graftifyHeadings(parser) {
+    graftifyIntroductionHeadings(parser) {
         let removed = 0;
         let blockEntries = [...this.blocks.entries()];
         blockEntries.reverse();
+        const introHeadingTags = ["iot", "is"].concat(parser.customTags.introHeading);
         for (const [n, block] of blockEntries) {
-            const blockTag = block.blockScope.label.split("/")[1];
-            if (blockTag.startsWith("is") || blockTag.startsWith("iot")) {
+            const blockTag = block.blockScope.label.split("/")[1].replace(/[0-9]/g, "");
+            if (introHeadingTags.includes(blockTag)) {
                 const headingSequence = new Sequence("heading");
                 parser.sequences.heading.push(headingSequence);
                 headingSequence.blocks.push(block);
@@ -185,8 +186,7 @@ const Sequence = class {
         }
     }
 
-    removeEmptyBlocks() {
-        const canBeEmpty = ["blockTag/b", "blockTag/ib"];
+    removeEmptyBlocks(canBeEmpty) {
         const emptyBlocks = [];
         let changed= false;
         for (const blockRecord of this.blocks.entries()) {

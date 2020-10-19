@@ -5,40 +5,42 @@ const { nComponentsForScope } = require('../lib/scope_defs');
 
 class Document {
 
-    constructor(processor, lang, abbr, docSetId, contentType, contentString, filterOptions) {
+    constructor(processor, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags) {
         this.id = generateId();
         this.processor = processor;
         this.docSetId = docSetId;
+        this.filterOptions = filterOptions;
+        this.customTags = customTags;
         this.headers = {};
         this.mainId = null;
         this.sequences = {};
         switch (contentType) {
             case "usfm":
-                this.processUsfm(contentString, filterOptions);
+                this.processUsfm(contentString);
                 break;
             case "usx":
-                this.processUsx(contentString, filterOptions);
+                this.processUsx(contentString);
                 break;
             default:
                 throw new Error(`Unknown document contentType '${contentType}'`);
         }
     }
 
-    processUsfm(usfmString, filterOptions) {
+    processUsfm(usfmString) {
         const lexed = lexifyUsfm(usfmString);
-        this.processLexed(lexed, filterOptions);
+        this.processLexed(lexed);
     }
 
-    processUsx(usxString, filterOptions) {
+    processUsx(usxString) {
         const lexed = lexifyUsx(usxString);
-        this.processLexed(lexed, filterOptions);
+        this.processLexed(lexed);
     }
 
-    processLexed(lexed, filterOptions) {
-        const parser = new Parser();
+    processLexed(lexed) {
+        const parser = new Parser(this.filterOptions, this.customTags);
         parser.parse(lexed);
         parser.tidy();
-        parser.filter(filterOptions);
+        parser.filter();
         this.headers = parser.headers;
         this.succinctPass1(parser);
         this.succinctPass2(parser);

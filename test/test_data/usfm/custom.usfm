@@ -1,0 +1,13 @@
+\id XXX Testing custom tag support
+\toc1 Custom
+\imt Introduction
+\zhi Custom Introduction Heading
+\ip Normal intro content
+\zip Custom intro content
+\c 1
+\p
+\v 1
+So far so normal
+\zh Custom Heading
+\zp
+Now \zc for\zc*\zw not|x-foo="baa"\zw* so normal

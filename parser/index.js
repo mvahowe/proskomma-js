@@ -5,8 +5,10 @@ const {labelForScope} = require("../lib/scope_defs");
 
 const Parser = class {
 
-    constructor() {
-        this.specs = specs;
+    constructor(filterOptions, custom) {
+        this.filterOptions = filterOptions;
+        this.customTags = custom;
+        this.specs = specs(this);
         this.headers = {};
         this.setSequenceTypes();
         this.setSequences();
@@ -129,14 +131,14 @@ const Parser = class {
 
     tidy() {
         if (this.sequences.introduction) {
-            this.sequences.introduction.graftifyHeadings(this);
+            this.sequences.introduction.graftifyIntroductionHeadings(this);
         }
         for (const seq of this.allSequences()) {
             seq.trim();
             seq.reorderSpanWithAtts();
             seq.makeNoteGrafts(this);
             seq.moveOrphanScopes();
-            seq.removeEmptyBlocks();
+            seq.removeEmptyBlocks(["blockTag/b", "blockTag/ib"]);
             seq.addTableScopes();
             seq.close(this);
             this.substitutePubNumberScopes(seq);
@@ -235,12 +237,12 @@ const Parser = class {
         return ret;
     }
 
-    filter(options) {
+    filter() {
         const usedSequences = [];
         const sequenceById = this.sequenceById();
-        this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, options);
+        this.filterGrafts(this.sequences.main.id, sequenceById, usedSequences, this.filterOptions);
         this.removeUnusedSequences(usedSequences);
-        this.filterScopes(Object.values(sequenceById), options);
+        this.filterScopes(Object.values(sequenceById), this.filterOptions);
     }
 
     filterGrafts(seqId, seqById, used, options) {

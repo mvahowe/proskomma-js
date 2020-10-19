@@ -10,6 +10,15 @@ class ProsKomma {
         this.documents = {};
         this.docSetsByLang = {};
         this.docSets = {};
+        this.filters = {};
+        this.customTags = {
+            heading: [],
+            paragraph: [],
+            char: [],
+            word: [],
+            intro: [],
+            introHeading: []
+        }
     }
 
     packageVersion() {
@@ -40,13 +49,16 @@ class ProsKomma {
         return this.documents[args.id]
     }
 
-    importDocument(lang, abbr, contentType, contentString, filterOptions) {
+    importDocument(lang, abbr, contentType, contentString, filterOptions, customTags) {
+        if (!filterOptions) {
+            filterOptions = this.filters;
+        }
+        if (!customTags) {
+            customTags = this.customTags;
+        }
         const docSetId = this.findOrMakeDocSet(lang, abbr);
-        let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions);
+        let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags);
         this.addDocument(doc, docSetId);
-        // const unsuccinct = doc.unsuccinctifySequence(doc.mainId, {scopes: true, grafts: false});
-        // console.log(JSON.stringify(unsuccinct, null, 2));
-        // console.log(JSON.stringify(this.docSets[docSetId].serializeSuccinct(), null, 2));
         return doc;
     }
 

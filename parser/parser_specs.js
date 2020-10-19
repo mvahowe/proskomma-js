@@ -2,7 +2,7 @@ const {labelForScope} = require("../lib/scope_defs");
 const {generateId} = require("../lib/generate_id");
 const PrintablePT = require("./lexers/preTokenClasses/printable_pt");
 
-const specs = [
+const specs = (pt) => [
     {
         // HEADERS - make temp sequence, then add to headers object
         contexts: [
@@ -51,7 +51,7 @@ const specs = [
                     "qa",
                     "sp",
                     "sd"
-                ]
+                ].concat(pt.customTags.heading)
             ]
         ],
         parser: {
@@ -118,7 +118,7 @@ const specs = [
                     "io",
                     "iex",
                     "imte",
-                ]
+                ].concat(pt.customTags.intro)
             ]
         ],
         parser: {
@@ -247,7 +247,7 @@ const specs = [
                     "lf",
                     "lim",
                     "d"
-                ]
+                ].concat(pt.customTags.paragraph)
             ]
         ],
         parser: {
@@ -510,7 +510,7 @@ const specs = [
                     "sup",
                     "ior",
                     "iqt"
-                ]
+                ].concat(pt.customTags.char)
             ]
         ],
         parser: {
@@ -589,14 +589,18 @@ const specs = [
         ],
         parser: {
             during: (parser, pt) => {
-                pt.values.map(a => {
-                        const attScope = {
-                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, a]),
-                            endedBy: [`$attributeContext$`]
-                        };
-                        parser.openNewScope(pt, attScope);
-                    }
-                );
+                if (parser.current.attributeContext) {
+                    pt.values.map(a => {
+                            const attScope = {
+                                label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, a]),
+                                endedBy: [`$attributeContext$`]
+                            };
+                            parser.openNewScope(pt, attScope);
+                        }
+                    );
+                } else {
+                    parser.addToken(new PrintablePT("unknown", [pt.printValue]));
+                }
             }
         }
     },
@@ -610,8 +614,8 @@ const specs = [
                     "w",
                     "rb",
                     "xt",
-                    "fig"
-                ]
+                    "fig",
+                ].concat(pt.customTags.word)
             ]
         ],
         parser: {
