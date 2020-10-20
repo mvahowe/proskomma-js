@@ -24,7 +24,7 @@ class UsxLexer {
             row: this.handleRowOpen,
             cell: this.handleCellOpen,
             char: this.handleCharOpen,
-            ms: this.notHandledHandler,
+            ms: this.handleMSOpen,
             note: this.handleNoteOpen,
             sidebar: this.handleSidebarOpen,
             periph: this.notHandledHandler,
@@ -42,7 +42,7 @@ class UsxLexer {
             row: this.handleRowClose,
             cell: this.handleCellClose,
             char: this.handleCharClose,
-            ms: this.notHandledHandler,
+            ms: this.handleMSClose,
             note: this.handleNoteClose,
             sidebar: this.handleSidebarClose,
             periph: this.notHandledHandler,
@@ -124,6 +124,12 @@ class UsxLexer {
     handleCharOpen(lexer, oOrC, name, atts) {
         const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
         lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, `+${tagName}`, tagNo]));
+        const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id"];
+        for (const [attName, attValue] of Object.entries(atts)) {
+            if (!ignoredAtts.includes(attName)) {
+                lexer.lexed.push(new ptClasses.AttributePT("attribute", [null, null, attName, attValue]));
+            }
+        }
         lexer.stackPush(name, atts);
     }
 
@@ -223,6 +229,33 @@ class UsxLexer {
     handleSidebarClose(lexer) {
         lexer.stackPop();
         lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "esbe", ""]));
+    }
+
+    handleMSOpen(lexer, oOrC, name, atts) {
+        let matchBits = xre.exec(atts.style, xre("(([a-z1-9]+)\\\\[*])"));
+        if (matchBits) {
+            console.log("EMPTY MILESTONE NOT IMPLEMENTED");
+        } else {
+            matchBits = xre.exec(atts.style, xre("(([a-z1-9]+)-([se]))"));
+            if (matchBits) {
+                const startMS = new ptClasses.MilestonePT("startMilestoneTag", [null, null, matchBits[2], matchBits[3]]);
+                lexer.lexed.push(startMS);
+                const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id"];
+                for (const [attName, attValue] of Object.entries(atts)) {
+                    if (!ignoredAtts.includes(attName)) {
+                        lexer.lexed.push(new ptClasses.AttributePT("attribute", [null, null, attName, attValue]));
+                    }
+                }
+                lexer.lexed.push(new ptClasses.MilestonePT("endMilestoneMarker"));
+            } else {
+                console.log("NO MILESTONE MATCH", atts.style);
+            }
+        }
+        lexer.stackPush(name, atts);
+    }
+
+    handleMSClose(lexer) {
+        lexer.stackPop();
     }
 
     handleOptBreakOpen(lexer, oOrC, name, atts) {
