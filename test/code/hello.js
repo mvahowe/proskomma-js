@@ -11,6 +11,7 @@ test(
     async function (t) {
         try {
             const expectedHeaders = [
+                ["bookCode", "MRK"],
                 ["id", "MRK Mark's Gospel, translated by Mark"],
                 ["toc", "The Gospel of Mark"],
                 ["toc2", "Mark"],

@@ -34,7 +34,7 @@ test(
             t.ok("data" in result);
             t.ok("documents" in result.data);
             t.ok("headers" in result.data.documents[0]);
-            t.equal(result.data.documents[0].headers.length, 6);
+            t.equal(result.data.documents[0].headers.length, 7);
             t.equal(result.data.documents[0].headers.filter(h => h.key === "toc")[0].value, "The Book of Ruth");
             t.equal(result.data.documents[0].toc, "The Book of Ruth");
         } catch

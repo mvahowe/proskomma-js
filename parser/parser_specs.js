@@ -31,6 +31,12 @@ const specs = (pt) => [
                     endedBy: ["baseSequenceChange"],
                     onEnd: (parser, label) => {
                         parser.headers[label] = parser.current.sequence.plainText();
+                        if (label === "id") {
+                            if (parser.headers[label].substring(3, 4) === " ") {
+                                const bookCode = parser.headers[label].substring(0, 3);
+                                parser.headers["bookCode"] = bookCode;
+                            }
+                        }
                     }
                 }
             ]
