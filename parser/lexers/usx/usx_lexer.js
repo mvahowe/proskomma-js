@@ -28,7 +28,7 @@ class UsxLexer {
             note: this.handleNoteOpen,
             sidebar: this.handleSidebarOpen,
             periph: this.notHandledHandler,
-            figure: this.notHandledHandler,
+            figure: this.handleFigureOpen,
             optbreak: this.handleOptBreakOpen,
             ref: this.ignoreHandler
         }
@@ -46,7 +46,7 @@ class UsxLexer {
             note: this.handleNoteClose,
             sidebar: this.handleSidebarClose,
             periph: this.notHandledHandler,
-            figure: this.notHandledHandler,
+            figure: this.handleFigureClose,
             optbreak: this.handleOptBreakClose,
             ref: this.ignoreHandler
         }
@@ -253,6 +253,22 @@ class UsxLexer {
     handleMSClose(lexer) {
         lexer.stackPop();
     }
+
+    handleFigureOpen(lexer, oOrC, name, atts) {
+        lexer.lexed.push(new ptClasses.TagPT("startTag", [null, null, "+fig", ""]));
+        for (const [attName, attValue] of Object.entries(atts)) {
+            if (attName === "style") {continue};
+            const scopeAttName = (attName === "file") ? "src": attName;
+            lexer.lexed.push(new ptClasses.AttributePT("attribute", [null, null, scopeAttName, attValue]));
+        }
+        lexer.stackPush(name, atts);
+    }
+
+    handleFigureClose(lexer) {
+        const sAtts = lexer.stackPop()[1];
+        lexer.lexed.push(new ptClasses.TagPT("endTag", [null, null, `+fig`, ""]));
+    }
+
 
     handleOptBreakOpen(lexer, oOrC, name, atts) {
         lexer.lexed.push(new ptClasses.PrintablePT("softLineBreak", ["//"]));

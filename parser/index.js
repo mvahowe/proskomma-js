@@ -36,6 +36,7 @@ const Parser = class {
             pubNumber: "*",
             altNumber: "*",
             esbCat: "*",
+            fig: "*",
             temp: "?"
         };
     }

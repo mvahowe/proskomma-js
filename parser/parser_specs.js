@@ -324,6 +324,32 @@ const specs = (pt) => [
         }
     },
     {
+        // FIGURE - new inline sequence
+        contexts: [
+            [
+                "startTag",
+                "tagName",
+                [
+                    "fig"
+                ]
+            ]
+        ],
+        parser: {
+            inlineSequenceType: "fig",
+            forceNewSequence: true,
+            newScopes: [
+                {
+                    label: pt => labelForScope("spanWithAtts", [pt.tagName]),
+                    endedBy: ["endBlock", "endTag/$tagName$"],
+                    onEnd: (parser) => parser.clearAttributeContext()
+                }
+            ],
+            during: (parser, pt) => {
+                parser.setAttributeContext(labelForScope("spanWithAtts", [pt.tagName]))
+            }
+        }
+    },
+    {
         // CHAPTER - chapter scope
         contexts: [["chapter"]],
         parser: {
@@ -619,8 +645,7 @@ const specs = (pt) => [
                 [
                     "w",
                     "rb",
-                    "xt",
-                    "fig",
+                    "xt"
                 ].concat(pt.customTags.word)
             ]
         ],
