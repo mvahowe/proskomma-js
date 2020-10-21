@@ -13,6 +13,13 @@ const docSetType = new GraphQLObjectType({
                 context.docSet = root;
                 return root.documents();
             }
+        },
+        documentWithBook: {
+            type: documentType,
+            args: {
+                bookCode: {type: GraphQLString}
+            },
+            resolve: (root, args) => root.documentWithBook(args.bookCode)
         }
     },
 })

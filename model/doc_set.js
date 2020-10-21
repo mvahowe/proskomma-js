@@ -27,6 +27,11 @@ class DocSet {
         return this.docIds.map(did => this.processor.documents[did]);
     }
 
+    documentWithBook(bookCode) {
+        const docsWithBook = Object.values(this.documents()).filter(doc => "bookCode" in doc.headers && doc.headers["bookCode"] === bookCode);
+        return docsWithBook.length === 1 ? docsWithBook[0] : null;
+    }
+
     buildPreEnums() {
         for (const [category, succinct] of Object.entries(this.enums)) {
             this.preEnums[category] = this.buildPreEnum(succinct);

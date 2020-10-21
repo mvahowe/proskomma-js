@@ -1,11 +1,17 @@
 const test = require('tape');
 
 const {ProsKomma} = require('../../');
-const {pkWithDoc} = require('../lib/load');
+const {pkWithDoc, pkWithDocs} = require('../lib/load');
 
 const testGroup = "Graph Basics";
 
 const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust");
+const pk2 = pkWithDocs([
+    ["../test_data/usx/web_rut.usx", "eng", "webbe"],
+    ["../test_data/usx/web_psa150.usx", "eng", "webbe"],
+    ["../test_data/usfm/ust_psa.usfm", "eng", "ust"],
+    ["../test_data/usx/not_nfc18_phm.usx", "eng", "nnfc18"]
+]);
 
 test(
     `Scalar Root Fields (${testGroup})`,
@@ -82,6 +88,23 @@ test(
 );
 
 test(
+    `DocSetsWithBooks (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(4);
+            const query = `{ docSets: docSetsWithBook(bookCode: "PSA") { id lang abbr document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.equal(result.data.docSets.length, 2);
+            t.equal(result.data.docSets[0].document.header, "PSA");
+            t.equal(result.data.docSets[1].document.header, "PSA");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
     `Documents (${testGroup})`,
     async function (t) {
         try {
@@ -120,6 +143,23 @@ test(
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("id" in result.data.documentsById[0]);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `DocumentsWithBook (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(4);
+            const query = `{  documentsWithBook(bookCode:"PSA") { id header(id:"bookCode") } }`;
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            t.equal(result.data.documentsWithBook.length, 2);
+            t.equal(result.data.documentsWithBook[0].header, "PSA");
+            t.equal(result.data.documentsWithBook[1].header, "PSA");
         } catch (err) {
             console.log(err)
         }

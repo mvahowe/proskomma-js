@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+  <book code="PSA" style="id">World English Bible British Edition (WEBBE) abbreviated by Mark</book>
+  <para style="ide">UTF-8</para>
+  <para style="h">Psalms</para>
+  <para style="toc1">The Psalms</para>
+  <para style="toc2">Psalms</para>
+  <para style="toc3">Psalm</para>
+  <para style="mt1">The Psalms</para>
+  <para style="cl">Psalm</para>
+
+  <chapter number="150" style="c" sid="PSA 150" />
+  <para style="q1">
+    <verse number="1" style="v" sid="PSA 150:1" />Praise the LORD!</para>
+  <para style="q2" vid="PSA 150:1">Praise God in his sanctuary!</para>
+  <para style="q2" vid="PSA 150:1">Praise him in his heavens for his acts of power!<verse eid="PSA 150:1" /></para>
+  <para style="q1">
+    <verse number="2" style="v" sid="PSA 150:2" />Praise him for his mighty acts!</para>
+  <para style="q2" vid="PSA 150:2">Praise him according to his excellent greatness!<verse eid="PSA 150:2" /></para>
+  <para style="q1">
+    <verse number="3" style="v" sid="PSA 150:3" />Praise him with the sounding of the trumpet!</para>
+  <para style="q2" vid="PSA 150:3">Praise him with harp and lyre!<verse eid="PSA 150:3" /></para>
+  <para style="q1">
+    <verse number="4" style="v" sid="PSA 150:4" />Praise him with tambourine and dancing!</para>
+  <para style="q2" vid="PSA 150:4">Praise him with stringed instruments and flute!<verse eid="PSA 150:4" /></para>
+  <para style="q1">
+    <verse number="5" style="v" sid="PSA 150:5" />Praise him with loud cymbals!</para>
+  <para style="q2" vid="PSA 150:5">Praise him with resounding cymbals!<verse eid="PSA 150:5" /></para>
+  <para style="q1">
+    <verse number="6" style="v" sid="PSA 150:6" />Let everything that has breath praise the LORD!</para>
+  <para style="q2" vid="PSA 150:6">Praise the LORD!<verse eid="PSA 150:6" /></para>
+  <chapter eid="PSA 150" />
+</usx>

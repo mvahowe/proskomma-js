@@ -38,6 +38,21 @@ class ProsKomma {
         return this.docSets[id];
     }
 
+    docSetsWithBook(bookCode) {
+        const docIdsWithBook = Object.values(this.documents)
+            .filter(doc => "bookCode" in doc.headers && doc.headers["bookCode"] === bookCode)
+            .map(doc => doc.id);
+        const docIdWithBookInDocSet = (ds) => {
+            for (const docId of docIdsWithBook) {
+                if (ds.docIds.includes(docId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return Object.values(this.docSets).filter(ds => docIdWithBookInDocSet(ds));
+    }
+
     nDocSets() {
         return this.docSetList().length;
     }
@@ -56,6 +71,10 @@ class ProsKomma {
 
     documentsById(ids) {
         return Object.values(this.documents).filter(doc => ids.includes(doc.id));
+    }
+
+    documentsWithBook(bookCode) {
+        return Object.values(this.documents).filter(doc => "bookCode" in doc.headers && doc.headers["bookCode"] === bookCode);
     }
 
     importDocument(lang, abbr, contentType, contentString, filterOptions, customTags, emptyBlocks) {

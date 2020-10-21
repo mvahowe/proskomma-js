@@ -28,6 +28,13 @@ const gqlSchema = new GraphQLSchema({
                     },
                     resolve: (root, args) => root.docSetsById(args.ids)
                 },
+                docSetsWithBook: {
+                    type: GraphQLList(docSetType),
+                    args: {
+                        bookCode: {type: GraphQLString}
+                    },
+                    resolve: (root, args) => root.docSetsWithBook(args.bookCode)
+                },
                 nDocuments: {type: GraphQLInt},
                 documents: {
                     type: GraphQLList(documentType),
@@ -46,6 +53,13 @@ const gqlSchema = new GraphQLSchema({
                         ids: {type: GraphQLList(GraphQLString)}
                     },
                     resolve: (root, args) => root.documentsById(args.ids)
+                },
+                documentsWithBook: {
+                    type: GraphQLList(documentType),
+                    args: {
+                        bookCode: {type: GraphQLString}
+                    },
+                    resolve: (root, args) => root.documentsWithBook(args.bookCode)
                 }
             }
         }
