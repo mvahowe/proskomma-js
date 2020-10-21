@@ -232,24 +232,20 @@ class UsxLexer {
     }
 
     handleMSOpen(lexer, oOrC, name, atts) {
-        let matchBits = xre.exec(atts.style, xre("(([a-z1-9]+)\\\\[*])"));
+        let matchBits = xre.exec(atts.style, xre("(([a-z1-9]+)-([se]))"));
         if (matchBits) {
-            console.log("EMPTY MILESTONE NOT IMPLEMENTED");
-        } else {
-            matchBits = xre.exec(atts.style, xre("(([a-z1-9]+)-([se]))"));
-            if (matchBits) {
-                const startMS = new ptClasses.MilestonePT("startMilestoneTag", [null, null, matchBits[2], matchBits[3]]);
-                lexer.lexed.push(startMS);
-                const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id"];
-                for (const [attName, attValue] of Object.entries(atts)) {
-                    if (!ignoredAtts.includes(attName)) {
-                        lexer.lexed.push(new ptClasses.AttributePT("attribute", [null, null, attName, attValue]));
-                    }
+            const startMS = new ptClasses.MilestonePT("startMilestoneTag", [null, null, matchBits[2], matchBits[3]]);
+            lexer.lexed.push(startMS);
+            const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id"];
+            for (const [attName, attValue] of Object.entries(atts)) {
+                if (!ignoredAtts.includes(attName)) {
+                    lexer.lexed.push(new ptClasses.AttributePT("attribute", [null, null, attName, attValue]));
                 }
-                lexer.lexed.push(new ptClasses.MilestonePT("endMilestoneMarker"));
-            } else {
-                console.log("NO MILESTONE MATCH", atts.style);
             }
+            lexer.lexed.push(new ptClasses.MilestonePT("endMilestoneMarker"));
+        } else {
+            const emptyMS = new ptClasses.MilestonePT("emptyMilestone", [null, null, atts.style, ""]);
+            lexer.lexed.push(emptyMS);
         }
         lexer.stackPush(name, atts);
     }
@@ -269,4 +265,4 @@ class UsxLexer {
 
 }
 
-module.exports = { UsxLexer }
+module.exports = {UsxLexer}

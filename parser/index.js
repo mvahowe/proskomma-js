@@ -428,8 +428,8 @@ const Parser = class {
     }
 
     addEmptyMilestone(label) {
-        this.current.sequence.addItem(new Scope("start", label));
-        this.current.sequence.addItem(new Scope("end", label));
+        this.mainLike.addItem(new Scope("start", label));
+        this.mainLike.addItem(new Scope("end", label));
     }
 
     setAttributeContext(label) {

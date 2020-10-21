@@ -37,9 +37,14 @@ const query =
     '{ documents { mainSequence { id } sequences { id blocks { items { ... on Token { itemType subType chars }... on Scope { itemType label }... on Graft { itemType subType sequenceId } } } } } }';
 
 const checkResult = (t, result) => {
-    const content = topNTailItems(result.data.documents[0].sequences.filter(s => s.id === result.data.documents[0].mainSequence.id)[0].blocks[0].items);
+    const mainSequenceItems = result.data.documents[0].sequences.filter(s => s.id === result.data.documents[0].mainSequence.id)[0].blocks[0].items;
+    const content = topNTailItems(mainSequenceItems);
     const zalnAtt = suffix => `attribute/milestone/zaln/${suffix}`;
     const wAtt = suffix => `attribute/spanWithAtts/w/${suffix}`;
+    t.equal(mainSequenceItems[0].itemType, "startScope");
+    t.equal(mainSequenceItems[0].label, "milestone/ts");
+    t.equal(mainSequenceItems[1].itemType, "endScope");
+    t.equal(mainSequenceItems[1].label, "milestone/ts");
     t.equal(content.length, 23);
     t.equal(content[0].itemType, "startScope");
     t.equal(content[0].label, "milestone/zaln");
@@ -73,7 +78,7 @@ test(
     `USFM (${testGroup})`,
     async function (t) {
         try {
-            t.plan(12 + (4 * zalnScopes.length) + (4 * wScopes.length));
+            t.plan(16 + (4 * zalnScopes.length) + (4 * wScopes.length));
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             checkResult(t, result);
@@ -87,7 +92,7 @@ test(
     `USX (${testGroup})`,
     async function (t) {
         try {
-            t.plan(12 + (4 * zalnScopes.length) + (4 * wScopes.length));
+            t.plan(16 + (4 * zalnScopes.length) + (4 * wScopes.length));
             const result = await pk2.gqlQuery(query);
             t.ok("data" in result);
             checkResult(t, result);
