@@ -15,10 +15,18 @@ const gqlSchema = new GraphQLSchema({
                     resolve: root => Object.values(root.docSets)
                 },
                 docSetById: {
-                  type: docSetType,
-                  args: {
-                      id: {type: GraphQLString}
-                  }
+                    type: docSetType,
+                    args: {
+                        id: {type: GraphQLString}
+                    },
+                    resolve: (root, args) => root.docSetById(args.id)
+                },
+                docSetsById: {
+                    type: GraphQLList(docSetType),
+                    args: {
+                        ids: {type: GraphQLList(GraphQLString)}
+                    },
+                    resolve: (root, args) => root.docSetsById(args.ids)
                 },
                 nDocuments: {type: GraphQLInt},
                 documents: {
@@ -29,7 +37,15 @@ const gqlSchema = new GraphQLSchema({
                     type: documentType,
                     args: {
                         id: {type: GraphQLString}
-                    }
+                    },
+                    resolve: (root, args) => root.documentById(args.id)
+                },
+                documentsById: {
+                    type: GraphQLList(documentType),
+                    args: {
+                        ids: {type: GraphQLList(GraphQLString)}
+                    },
+                    resolve: (root, args) => root.documentsById(args.ids)
                 }
             }
         }

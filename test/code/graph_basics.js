@@ -64,6 +64,24 @@ test(
 );
 
 test(
+    `DocSetsById (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(5);
+            const query = `{ docSetsById(ids: ["${pkDoc.docSetId}"]) { id lang abbr documents { id } } }`;
+            const result = await pk.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("id" in result.data.docSetsById[0]);
+            t.equal(result.data.docSetsById[0].lang, "eng");
+            t.equal(result.data.docSetsById[0].abbr, "ust");
+            t.ok("id" in result.data.docSetsById[0].documents[0]);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
     `Documents (${testGroup})`,
     async function (t) {
         try {
@@ -87,6 +105,21 @@ test(
             const result = await pk.gqlQuery(query);
             t.ok("data" in result);
             t.ok("id" in result.data.documentById);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `DocumentsById (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const query = `{ documentsById(ids: ["${pkDoc.id}"]) { id } }`;
+            const result = await pk.gqlQuery(query);
+            t.ok("data" in result);
+            t.ok("id" in result.data.documentsById[0]);
         } catch (err) {
             console.log(err)
         }

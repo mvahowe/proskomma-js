@@ -30,8 +30,12 @@ class ProsKomma {
         return Object.values(this.docSets);
     }
 
-    docSetById(args) {
-        return this.docSets[args.id]
+    docSetsById(ids) {
+        return Object.values(this.docSets).filter(ds => ids.includes(ds.id));
+    }
+
+    docSetById(id) {
+        return this.docSets[id];
     }
 
     nDocSets() {
@@ -46,8 +50,12 @@ class ProsKomma {
         return Object.values(this.documents);
     }
 
-    documentById(args) {
-        return this.documents[args.id]
+    documentById(id) {
+        return this.documents[id];
+    }
+
+    documentsById(ids) {
+        return Object.values(this.documents).filter(doc => ids.includes(doc.id));
     }
 
     importDocument(lang, abbr, contentType, contentString, filterOptions, customTags, emptyBlocks) {
