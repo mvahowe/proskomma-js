@@ -1,14 +1,14 @@
-const {GraphQLObjectType, GraphQLString} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLNonNull} = require('graphql');
 
 const keyValueType = new GraphQLObjectType({
     name: "KeyValue",
     fields: () => ({
         key: {
-            type: GraphQLString,
+            type: GraphQLNonNull(GraphQLString),
             resolve: root => root[0]
         },
         value: {
-            type: GraphQLString,
+            type: GraphQLNonNull(GraphQLString),
             resolve: root => root[1]
         }
     })

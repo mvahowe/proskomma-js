@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLString, GraphQLList} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull} = require('graphql');
 
 const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
@@ -9,23 +9,23 @@ const headerById = (root, id) =>
 const documentType = new GraphQLObjectType({
     name: "Document",
     fields: () => ({
-        id: {type: GraphQLString},
-        docSetId: {type: GraphQLString},
+        id: {type: GraphQLNonNull(GraphQLString)},
+        docSetId: {type: GraphQLNonNull(GraphQLString)},
         headers: {
-            type: GraphQLList(keyValueType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
             resolve: root => Object.entries(root.headers)
         },
         header: {
             type: GraphQLString,
             args: {
                 id: {
-                    type: GraphQLString
+                    type: GraphQLNonNull(GraphQLString)
                 }
             },
             resolve: (root, args) => headerById(root, args.id)
         },
         mainSequence: {
-            type: sequenceType,
+            type: GraphQLNonNull(sequenceType),
             resolve: (root, args, context, info) => {
                 context.docSet = root.processor.docSets[root.docSetId];
                 return root.sequences[root.mainId];
@@ -33,7 +33,7 @@ const documentType = new GraphQLObjectType({
 
         },
         sequences: {
-            type: GraphQLList(sequenceType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
             resolve: (root, args, context, info) => {
                 context.docSet = root.processor.docSets[root.docSetId];
                 return Object.values(root.sequences);

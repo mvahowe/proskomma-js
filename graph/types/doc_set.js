@@ -1,14 +1,14 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull} = require('graphql');
 const documentType = require('./document');
 
 const docSetType = new GraphQLObjectType({
     name: "DocSet",
     fields: {
-        id: {type: GraphQLString},
+        id: {type: GraphQLNonNull(GraphQLString)},
         lang: {type: GraphQLString},
         abbr: {type: GraphQLString},
         documents: {
-            type: GraphQLList(documentType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
             resolve: (root, args, context, info) => {
                 context.docSet = root;
                 return root.documents();
@@ -17,7 +17,7 @@ const docSetType = new GraphQLObjectType({
         documentWithBook: {
             type: documentType,
             args: {
-                bookCode: {type: GraphQLString}
+                bookCode: {type: GraphQLNonNull(GraphQLString)}
             },
             resolve: (root, args) => root.documentWithBook(args.bookCode)
         }

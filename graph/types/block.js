@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString} = require('graphql');
+const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull} = require('graphql');
 const tokenType = require('./token');
 const scopeType = require('./scope');
 const graftType = require('./graft');
@@ -52,49 +52,49 @@ const html4Block = b => {
     return ret.join('');
 }
 
-const succinctBlockType = new GraphQLObjectType({
+const blockType = new GraphQLObjectType({
     name: "Block",
     fields: () => ({
-        cBL: {type: GraphQLInt, resolve: root => root.c.length},
-        bgBL: {type: GraphQLInt, resolve: root => root.bg.length},
-        osBL: {type: GraphQLInt, resolve: root => root.os.length},
-        isBL: {type: GraphQLInt, resolve: root => root.is.length},
+        cBL: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.c.length},
+        bgBL: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.bg.length},
+        osBL: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.os.length},
+        isBL: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.is.length},
         cL: {
-            type: GraphQLInt,
+            type: GraphQLNonNull(GraphQLInt),
             resolve:
                 (root, args, context) => context.docSet.countItems(root.c)
         },
         bgL: {
-            type: GraphQLInt,
+            type: GraphQLNonNull(GraphQLInt),
             resolve:
                 (root, args, context) => context.docSet.countItems(root.bg)
         },
         osL: {
-            type: GraphQLInt,
+            type: GraphQLNonNull(GraphQLInt),
             resolve:
                 (root, args, context) => context.docSet.countItems(root.os)
         },
         isL: {
-            type: GraphQLInt,
+            type: GraphQLNonNull(GraphQLInt),
             resolve:
                 (root, args, context) => context.docSet.countItems(root.is)
         },
         is: {
-            type: GraphQLList(scopeType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyScopes(root.is)
                 }
         },
         os: {
-            type: GraphQLList(scopeType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyScopes(root.os)
                 }
         },
         bs: {
-            type: scopeType,
+            type: GraphQLNonNull(scopeType),
             resolve:
                 (root, args, context) => {
                     const [itemLength, itemType, itemSubtype] = context.docSet.headerBytes(root.bs, 0);
@@ -102,21 +102,21 @@ const succinctBlockType = new GraphQLObjectType({
                 }
         },
         bg: {
-            type: GraphQLList(graftType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(graftType))),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyGrafts(root.bg)
                 }
         },
         items: {
-            type: GraphQLList(itemType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyItems(root.c, {})
                 }
         },
         prunedItems: {
-            type: GraphQLList(itemType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             args: {
                 requiredScopes: {type: GraphQLList(GraphQLString)}
             },
@@ -134,14 +134,14 @@ const succinctBlockType = new GraphQLObjectType({
                 }
         },
         tokens: {
-            type: GraphQLList(tokenType),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
                 }
         },
         text: {
-            type: GraphQLString,
+            type: GraphQLNonNull(GraphQLString),
             resolve:
                 (root, args, context) => {
                     return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
@@ -151,21 +151,21 @@ const succinctBlockType = new GraphQLObjectType({
                 }
         },
         dump: {
-            type: GraphQLString,
+            type: GraphQLNonNull(GraphQLString),
             resolve:
                 (root, args, context) => {
                     return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
         html: {
-            type: GraphQLString,
+            type: GraphQLNonNull(GraphQLString),
             resolve:
                 (root, args, context) => {
                     return html4Block(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
         scopeLabels: {
-            type: GraphQLList(GraphQLString),
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
             resolve:
                 (root, args, context) =>
                     [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)]
@@ -173,4 +173,4 @@ const succinctBlockType = new GraphQLObjectType({
     })
 })
 
-module.exports = succinctBlockType;
+module.exports = blockType;

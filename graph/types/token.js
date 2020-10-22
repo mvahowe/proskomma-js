@@ -1,12 +1,12 @@
-const {GraphQLObjectType, GraphQLString} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLNonNull} = require('graphql');
 
 const tokenType = new GraphQLObjectType({
     name: "Token",
     fields: () => ({
-        itemType: {type: GraphQLString, resolve: root => root[0]},
-        subType: {type: GraphQLString, resolve: root => root[1]},
-        chars: {type: GraphQLString, resolve: root => root[2]},
-        dump: {type: GraphQLString, resolve: (root) => `${root[1]} '${root[2]}'`}
+        itemType: {type: GraphQLNonNull(GraphQLString), resolve: root => root[0]},
+        subType: {type: GraphQLNonNull(GraphQLString), resolve: root => root[1]},
+        chars: {type: GraphQLNonNull(GraphQLString), resolve: root => root[2]},
+        dump: {type: GraphQLNonNull(GraphQLString), resolve: (root) => `${root[1]} '${root[2]}'`}
     })
 })
 

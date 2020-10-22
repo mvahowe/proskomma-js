@@ -1,4 +1,4 @@
-const {GraphQLUnionType, GraphQLString} = require('graphql');
+const {GraphQLUnionType, GraphQLNonNull} = require('graphql');
 const tokenType = require('./token');
 const graftType = require('./graft');
 const scopeType = require('./scope');

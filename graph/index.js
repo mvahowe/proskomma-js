@@ -1,4 +1,4 @@
-const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList} = require('graphql');
+const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull} = require('graphql');
 
 const docSetType = require('./types/doc_set');
 const documentType = require('./types/document');
@@ -7,57 +7,57 @@ const gqlSchema = new GraphQLSchema({
     query: new GraphQLObjectType({
             name: "Root",
             fields: {
-                processor: {type: GraphQLString},
-                packageVersion: {type: GraphQLString},
-                nDocSets: {type: GraphQLInt},
+                processor: {type: GraphQLNonNull(GraphQLString)},
+                packageVersion: {type: GraphQLNonNull(GraphQLString)},
+                nDocSets: {type: GraphQLNonNull(GraphQLInt)},
                 docSets: {
-                    type: GraphQLList(docSetType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
                     resolve: root => Object.values(root.docSets)
                 },
                 docSetById: {
                     type: docSetType,
                     args: {
-                        id: {type: GraphQLString}
+                        id: {type: GraphQLNonNull(GraphQLString)}
                     },
                     resolve: (root, args) => root.docSetById(args.id)
                 },
                 docSetsById: {
-                    type: GraphQLList(docSetType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
                     args: {
-                        ids: {type: GraphQLList(GraphQLString)}
+                        ids: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
                     },
                     resolve: (root, args) => root.docSetsById(args.ids)
                 },
                 docSetsWithBook: {
-                    type: GraphQLList(docSetType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
                     args: {
-                        bookCode: {type: GraphQLString}
+                        bookCode: {type: GraphQLNonNull(GraphQLString)}
                     },
                     resolve: (root, args) => root.docSetsWithBook(args.bookCode)
                 },
-                nDocuments: {type: GraphQLInt},
+                nDocuments: {type: GraphQLNonNull(GraphQLInt)},
                 documents: {
-                    type: GraphQLList(documentType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
                     resolve: root => root.documentList()
                 },
                 documentById: {
                     type: documentType,
                     args: {
-                        id: {type: GraphQLString}
+                        id: {type: GraphQLNonNull(GraphQLString)}
                     },
                     resolve: (root, args) => root.documentById(args.id)
                 },
                 documentsById: {
-                    type: GraphQLList(documentType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
                     args: {
-                        ids: {type: GraphQLList(GraphQLString)}
+                        ids: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
                     },
                     resolve: (root, args) => root.documentsById(args.ids)
                 },
                 documentsWithBook: {
-                    type: GraphQLList(documentType),
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
                     args: {
-                        bookCode: {type: GraphQLString}
+                        bookCode: {type: GraphQLNonNull(GraphQLString)}
                     },
                     resolve: (root, args) => root.documentsWithBook(args.bookCode)
                 }
