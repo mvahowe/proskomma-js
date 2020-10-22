@@ -18,15 +18,14 @@ const htmlFoot = s => {
     return "</body>\n</html>\n";
 }
 
-const scopesInBlock = (docSet, block, scopes) => {
-    const allBlockScopes = [
-        ...new Set([
+const allScopesInBlock = (docSet, block, scopes) => {
+    const allBlockScopes = new Set([
             ...docSet.unsuccinctifyScopes(block.os).map(s => s[1]),
             ...docSet.unsuccinctifyScopes(block.is).map(s => s[1])
-        ])
-    ];
+        ]
+    );
     for (const scope of scopes) {
-        if (!allBlockScopes.includes(scope)) {
+        if (!allBlockScopes.has(scope)) {
             return false;
         }
     }
@@ -46,8 +45,10 @@ const sequenceType = new GraphQLObjectType({
             args: {
                 scopes: {type: GraphQLList(GraphQLString)}
             },
-            resolve: (root, args, context) =>
-                root.blocks.filter(b => scopesInBlock(context.docSet, b, args.scopes))
+            resolve: (root, args, context) => {
+                context.docSet.maybeBuildEnumIndexes();
+                return root.blocks.filter(b => allScopesInBlock(context.docSet, b, args.scopes))
+            }
         },
         blocks: {
             type: GraphQLList(succinctBlockType),

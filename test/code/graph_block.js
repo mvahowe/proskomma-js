@@ -8,6 +8,7 @@ const pk = pkWithDoc("../test_data/usfm/hello.usfm", "eng", "ust")[0];
 const pk2 = pkWithDoc("../test_data/usfm/headings.usfm", "eng", "ust")[0];
 const pk3 = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust")[0];
 const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", "eng", "ust")[0];
+const pk5 = pkWithDoc("../test_data/usfm/verse_breaks_in_blocks.usfm", "eng", "ust")[0];
 
 test(
     `Length (${testGroup})`,
@@ -190,6 +191,37 @@ test(
             for (const openScope of openScopes) {
                 t.ok(block.os.map(s => s.label).includes(openScope));
             }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `prunedItems (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const requiredScopes = '["chapter/1", "verse/2"]';
+            const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
+            const query = `{ documents { mainSequence { blocks: blocksForScopes(scopes:${requiredScopes}) { items: prunedItems(requiredScopes:${requiredScopes}) ${itemFragment} } } } }`;
+            let result = await pk5.gqlQuery(query);
+            t.ok("data" in result);
+            const blocks = result.data.documents[0].mainSequence.blocks;
+            const texts = blocks
+                .map(
+                    b => b.items.map(
+                        i => i.itemType === "token" ? i.chars : ""
+                    ).map(
+                        t => t.replace(/[ \n\r\t]+/, " ")
+                    ).join("")
+                ).join(" ")
+                .trim();
+            t.equal(
+                texts,
+                "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +
+                "They read and think every day and every night about what Yahweh teaches."
+            );
         } catch (err) {
             console.log(err)
         }

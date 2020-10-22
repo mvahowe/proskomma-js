@@ -209,7 +209,7 @@ class DocSet {
         const [itemLength, itemType, itemSubtype] = this.headerBytes(succinct, pos);
         switch (itemType) {
             case itemEnum.token:
-                if (Object.keys(options).length === 0 || options.token) {
+                if (Object.keys(options).length === 0 || options.tokens) {
                     item = this.unsuccinctifyToken(succinct, itemSubtype, pos);
                 }
                 break;
@@ -249,6 +249,40 @@ class DocSet {
             this.succinctGraftName(itemSubtype),
             this.succinctGraftSeqId(succinct, pos)
         ];
+    }
+
+    unsuccinctifyBlockScopeLabelsSet(block) {
+        return new Set(
+            this.unsuccinctifyScopes(block.os).concat(
+                this.unsuccinctifyScopes(block.is)
+            )
+                .map(ri => ri[1]));
+    }
+
+    unsuccinctifyPrunedItems(block, options) {
+        const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
+        const requiredScopes = options.requiredScopes || [];
+        const allScopesInItem = () => {
+            for (const scope of requiredScopes) {
+                if (!openScopes.has(scope)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        const ret = [];
+        for (const item of this.unsuccinctifyItems(block.c, options)) {
+            if (item[0] === "startScope") {
+                openScopes.add(item[1]);
+            }
+            if (allScopesInItem()) {
+                ret.push(item);
+            }
+            if (item[0] === "endScope") {
+                openScopes.delete(item[1]);
+            }
+        }
+        return ret;
     }
 
     headerBytes(succinct, pos) {

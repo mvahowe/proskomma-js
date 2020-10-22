@@ -115,18 +115,36 @@ const succinctBlockType = new GraphQLObjectType({
                     return context.docSet.unsuccinctifyItems(root.c, {})
                 }
         },
+        prunedItems: {
+            type: GraphQLList(itemType),
+            args: {
+                requiredScopes: {type: GraphQLList(GraphQLString)}
+            },
+            resolve:
+                (root, args, context) => {
+                    return context.docSet.unsuccinctifyPrunedItems(
+                        root,
+                        {
+                            tokens: true,
+                            scopes: true,
+                            grafts: true,
+                            requiredScopes: args.requiredScopes
+                        }
+                    )
+                }
+        },
         tokens: {
             type: GraphQLList(tokenType),
             resolve:
                 (root, args, context) => {
-                    return context.docSet.unsuccinctifyItems(root.c, {token: true})
+                    return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
                 }
         },
         text: {
             type: GraphQLString,
             resolve:
                 (root, args, context) => {
-                    return context.docSet.unsuccinctifyItems(root.c, {token: true})
+                    return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
                         .map(t => t[2])
                         .join('')
                         .trim()
@@ -149,13 +167,8 @@ const succinctBlockType = new GraphQLObjectType({
         scopeLabels: {
             type: GraphQLList(GraphQLString),
             resolve:
-                (root, args, context) => {
-                    return [...new Set(
-                        context.docSet.unsuccinctifyScopes(root.os).concat(
-                            context.docSet.unsuccinctifyScopes(root.is)
-                        )
-                    .map(ri => ri[1]))];
-                }
+                (root, args, context) =>
+                    [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)]
         },
     })
 })
