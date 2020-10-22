@@ -32,7 +32,13 @@ const specs = (pt) => [
                     onEnd: (parser, label) => {
                         parser.headers[label] = parser.current.sequence.plainText();
                         if (label === "id") {
-                            if (parser.headers[label].substring(3, 4) === " ") {
+                            if (
+                                parser.headers[label].length === 3 ||
+                                (
+                                    parser.headers[label].length > 3 &&
+                                    parser.headers[label].substring(3, 4) === " "
+                                )
+                            ) {
                                 const bookCode = parser.headers[label].substring(0, 3);
                                 parser.headers["bookCode"] = bookCode;
                             }
