@@ -5,9 +5,10 @@ const {pkWithDoc} = require('../lib/load');
 const testGroup = "Graft Introduction";
 
 const pk = pkWithDoc("../test_data/usx/not_nfc18_phm.usx", "fra", "hello")[0];
+const pk2 = pkWithDoc("../test_data/usfm/section_intros.usfm", "fra", "hello")[0];
 
 test(
-    `Introduction (${testGroup})`,
+    `One Introduction (${testGroup})`,
     async function (t) {
         try {
             t.plan(23);
@@ -48,6 +49,36 @@ test(
             t.equal(endTitleSequence.blocks[0].bs.label, "blockTag/imte2");
             t.equal(endTitleSequence.blocks[1].bs.label, "blockTag/imte3");
             t.equal(endTitleSequence.blocks[2].bs.label, "blockTag/imte");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `One Introduction (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(12);
+            const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } bs { label } text } } mainSequence { id } } }';
+            const result = await pk2.gqlQuery(query);
+            t.ok("data" in result);
+            const sequences = {};
+            for (const seq of result.data.documents[0].sequences) {
+                sequences[seq.id] = seq;
+            }
+            const mainSequence = sequences[result.data.documents[0].mainSequence.id];
+            t.equal(Object.keys(sequences).length, 8);
+            t.equal(mainSequence.blocks.length, 2);
+            t.equal(mainSequence.blocks[0].bg.length, 1);
+            t.equal(mainSequence.blocks[0].bg[0].subType, "title");
+            t.equal(mainSequence.blocks[1].bg.length, 6);
+            t.equal(mainSequence.blocks[1].bg[2].subType, "introduction");
+            t.equal(sequences[mainSequence.blocks[1].bg[2].sequenceId].blocks.length, 2);
+            t.equal(sequences[mainSequence.blocks[1].bg[2].sequenceId].blocks[0].bs.label, "blockTag/ip");
+            t.equal(mainSequence.blocks[1].bg[5].subType, "introduction");
+            t.equal(sequences[mainSequence.blocks[1].bg[5].sequenceId].blocks.length, 1);
+            t.equal(sequences[mainSequence.blocks[1].bg[5].sequenceId].blocks[0].bs.label, "blockTag/ip");
         } catch (err) {
             console.log(err)
         }

@@ -19,7 +19,7 @@ const Parser = class {
     setSequenceTypes() {
         this.baseSequenceTypes = {
             main: "1",
-            introduction: "?",
+            introduction: "*",
             introTitle: "?",
             introEndTitle: "?",
             title: "?",
@@ -132,8 +132,8 @@ const Parser = class {
     }
 
     tidy() {
-        if (this.sequences.introduction) {
-            this.sequences.introduction.graftifyIntroductionHeadings(this);
+        for (const introduction of this.sequences.introduction) {
+            introduction.graftifyIntroductionHeadings(this);
         }
         const allSequences = this.allSequences();
         for (const seq of allSequences) {
