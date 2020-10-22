@@ -9,7 +9,7 @@ const queryToBlock = async (t, filter) => {
     const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
     const query = `{ documents { mainSequence { blocks { bg { subType } bs { label } scopeLabels items ${itemFragment} } } } }`;
     const result = await pk.gqlQuery(query);
-    t.ok("data" in result);
+    t.equal(result.errors, undefined);
     return result.data.documents[0].mainSequence.blocks[0];
 }
 

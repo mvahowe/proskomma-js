@@ -37,7 +37,7 @@ test(
             const query =
                 '{ documents { mainSequence { blocks { html items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => ["startScope", "endScope"].includes(i.itemType));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {
@@ -83,7 +83,7 @@ test(
             const query =
                 '{ documents { mainSequence { blocks { items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => ["startScope", "endScope"].includes(i.itemType));
             let count = 0;
             for (const [sOrE, expectedLabel] of expectedScopes) {

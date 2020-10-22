@@ -35,7 +35,7 @@ test(
         try {
             t.plan(3);
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
             t.equal(sequences.filter(s => s.type === "heading").length, 0);
             t.equal(sequences.filter(s => s.type === "main")[0].blocks[0].bs.label, "blockTag/q");
@@ -51,7 +51,7 @@ test(
         try {
             t.plan(4);
             const result = await customPk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
             t.equal(sequences.filter(s => s.type === "heading").length, 3);
             t.equal(sequences.filter(s => s.type === "heading" && s.blocks[0].bs.label === "blockTag/s5").length, 3);

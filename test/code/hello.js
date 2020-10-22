@@ -20,7 +20,7 @@ test(
             t.plan(6 + (2 * expectedHeaders.length));
             const query = '{ documents { headers { key value } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const queryHeaders = result.data.documents[0].headers;
             t.equal(queryHeaders.length, expectedHeaders.length);
             for (const [expectedKey, expectedValue] of expectedHeaders) {
@@ -47,7 +47,7 @@ test(
             const query =
                 '{ documents { sequences { type blocks { bs { label } text } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
             t.equal(sequences.length, 1);
             t.equal(sequences[0].type, "main");
@@ -69,7 +69,7 @@ test(
             const query =
                 '{ documents { sequences { type blocks { os { label } is { label } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const block = result.data.documents[0].sequences[0].blocks[0];
             t.equal(block.os.length, 0);
             t.equal(block.is.length, 3);

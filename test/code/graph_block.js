@@ -23,7 +23,7 @@ test(
             t.plan(2 + Object.keys(lengths).length);
             const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("blocks" in result.data.documents[0].mainSequence);
             for (const [field, value] of Object.entries(lengths)) {
                 t.equal(result.data.documents[0].mainSequence.blocks[0][field], value);
@@ -55,7 +55,7 @@ test(
             t.plan(2 + (lengths.length * Object.keys(lengths[0]).length));
             const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
             const result = await pk3.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("blocks" in result.data.documents[0].mainSequence);
             for (const blockNo of [0, 1]) {
                 const block = result.data.documents[0].mainSequence.blocks[blockNo];
@@ -76,7 +76,7 @@ test(
             t.plan(6);
             const query = '{ documents { mainSequence { blocks { text dump html } } } }';
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.text, "Dear Theophilus,");
             t.ok(block.dump.includes("+verse/1+"));
@@ -101,7 +101,7 @@ test(
             t.plan(2 + scopeLabels.length);
             const query = '{ documents { mainSequence { blocks { scopeLabels bs { label } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.bs.label, "blockTag/p");
             for (const scopeLabel of scopeLabels) {
@@ -120,7 +120,7 @@ test(
             t.plan(3);
             const query = '{ documents { mainSequence { blocks { bg { subType sequenceId } } } } }';
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.bg[0].subType, "title");
             t.equal(block.bg[1].subType, "heading");
@@ -137,7 +137,7 @@ test(
             t.plan(6);
             const query = `{ documents { mainSequence { blocks { tokens { itemType subType chars } } } } }`;
             const result = await pk4.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("blocks" in result.data.documents[0].mainSequence);
             const blocks = result.data.documents[0].mainSequence.blocks;
             t.equal(blocks[2].tokens.filter(i => i.itemType === "graft").length, 0);
@@ -168,7 +168,7 @@ test(
                 `is {itemType label}` +
                 '} } } }';
             let result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             let block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.items[0].itemType, "startScope");
             t.equal(block.items[0].label, "chapter/1");
@@ -179,13 +179,13 @@ test(
             t.equal(block.is.length, 3);
             t.equal(block.is[0].label, "chapter/1");
             result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.bg.length, 2);
             t.equal(block.bg[0].subType, "title");
             t.equal(block.bg[1].subType, "heading");
             result = await pk3.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             block = result.data.documents[0].mainSequence.blocks[1];
             t.equal(block.os.length, 3);
             for (const openScope of openScopes) {
@@ -206,7 +206,7 @@ test(
             const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
             const query = `{ documents { mainSequence { blocks: blocksForScopes(scopes:${requiredScopes}) { items: prunedItems(requiredScopes:${requiredScopes}) ${itemFragment} } } } }`;
             let result = await pk5.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
             const texts = blocks
                 .map(

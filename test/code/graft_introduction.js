@@ -14,7 +14,7 @@ test(
             t.plan(23);
             const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } bs { label } text } } mainSequence { id } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = {};
             for (const seq of result.data.documents[0].sequences) {
                 sequences[seq.id] = seq;
@@ -62,7 +62,7 @@ test(
             t.plan(12);
             const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } bs { label } text } } mainSequence { id } } }';
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = {};
             for (const seq of result.data.documents[0].sequences) {
                 sequences[seq.id] = seq;

@@ -35,8 +35,8 @@ test(
         try {
             t.plan(7);
             const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
-            t.ok("data" in result);
             t.equal(sequences.length, 3);
             const mainSequence = sequences.filter(s => s.type === "main")[0];
             t.equal(mainSequence.blocks.length, 1);
@@ -57,8 +57,8 @@ test(
         try {
             t.plan(15);
             const result = await customPk.gqlQuery(query);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
-            t.ok("data" in result);
             const mainSequence = sequences.filter(s => s.type === "main")[0];
             t.equal(mainSequence.blocks.length, 2);
             t.equal(mainSequence.blocks[0].items.filter(i => i.chars === "Custom").length, 0);

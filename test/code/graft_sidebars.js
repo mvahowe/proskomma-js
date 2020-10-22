@@ -11,7 +11,7 @@ const doTest = async (t, pk) => {
     t.plan(12);
     const query = `{ documents { sequences { id blocks { scopeLabels bg { subType, sequenceId } } } mainSequence { id } } }`;
     const result = await pk.gqlQuery(query);
-    t.ok("data" in result);
+    t.equal(result.errors, undefined);
     const sequences = {};
     for (const seq of result.data.documents[0].sequences) {
         sequences[seq.id] = seq;

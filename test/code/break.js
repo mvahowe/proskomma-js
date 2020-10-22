@@ -16,7 +16,7 @@ test(
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const secondItem = result.data.documents[0].mainSequence.blocks[0].items[1];
             t.equal(secondItem.subType, "lineSpace");
             t.equal(secondItem.chars, '\xa0');
@@ -34,7 +34,7 @@ test(
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const secondItem = result.data.documents[0].mainSequence.blocks[0].items[1];
             t.equal(secondItem.subType, "softLineBreak");
             t.equal(secondItem.chars, '//');
@@ -52,7 +52,7 @@ test(
             const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query = `{ documents { sequences { type blocks { items ${itemFragment} } } } }`;
             const result = await pk3.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = result.data.documents[0].sequences;
             const headingSequence = sequences.filter(s => s.type === "heading")[0];
             t.equal(headingSequence.blocks[0].items[3].subType, "softLineBreak");

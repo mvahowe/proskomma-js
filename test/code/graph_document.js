@@ -13,7 +13,7 @@ test(
             t.plan(3);
             const query = '{ documents { docSetId } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("documents" in result.data);
             t.ok("docSetId" in result.data.documents[0]);
         } catch
@@ -31,7 +31,7 @@ test(
             t.plan(6);
             const query = '{ documents { headers { key value }  toc: header(id:"toc") } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("documents" in result.data);
             t.ok("headers" in result.data.documents[0]);
             t.equal(result.data.documents[0].headers.length, 7);
@@ -52,7 +52,7 @@ test(
             t.plan(4);
             const query = '{ documents { mainSequence { id } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("documents" in result.data);
             t.ok("mainSequence" in result.data.documents[0]);
             t.ok("id" in result.data.documents[0].mainSequence);
@@ -71,7 +71,7 @@ test(
             t.plan(4);
             const query = '{ documents { sequences { id } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("documents" in result.data);
             t.ok("sequences" in result.data.documents[0]);
             t.ok("id" in result.data.documents[0].sequences[0]);

@@ -13,7 +13,7 @@ test(
             t.plan(4);
             const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } text } } mainSequence { id } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = {};
             for (const seq of result.data.documents[0].sequences) {
                 sequences[seq.id] = seq;

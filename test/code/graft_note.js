@@ -29,7 +29,7 @@ test(
             const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
             const query = `{ documents { sequences { id type blocks { dump items ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = {};
             for (const seq of result.data.documents[0].sequences) {
                 sequences[seq.id] = seq;
@@ -69,7 +69,7 @@ test(
             const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } }';
             const query = `{ documents { sequences { id type blocks { items ${itemFragment} } } mainSequence { id } } }`;
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const sequences = {};
             for (const seq of result.data.documents[0].sequences) {
                 sequences[seq.id] = seq;

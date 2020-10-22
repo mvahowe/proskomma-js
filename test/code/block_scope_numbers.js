@@ -15,7 +15,7 @@ test(
             const query =
                 '{ documents { mainSequence { blocks { bs { label } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
             for (const [n, block] of blocks.entries()) {
                 t.equal(block.bs.label, `blockTag/${bsScopes[n]}`);

@@ -31,7 +31,7 @@ test(
         try {
             t.plan(11);
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)
@@ -45,7 +45,7 @@ test(
         try {
             t.plan(11);
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)
@@ -59,7 +59,7 @@ test(
         try {
             t.plan(2);
             const result = await pk3.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const lastBlockItems = result.data.documents[0].mainSequence.blocks[2].items;
             t.equal(lastBlockItems.filter(i => i.itemType === "endScope" && i.label === "table").length, 1);
         } catch (err) {

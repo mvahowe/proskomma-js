@@ -14,7 +14,7 @@ test(
             const query =
                 '{ documents { mainSequence { blocks { is { label } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.is.length, 4);
             t.equal(block.is[0].label, "chapter/1");

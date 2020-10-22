@@ -27,7 +27,7 @@ test(
             ]);
             const query = '{ docSets { lang abbr documents { id } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
             for (const [n, docSet] of result.data.docSets.entries()) {
                 t.equal(docSet.lang, expected[n].lang);
@@ -51,7 +51,7 @@ test(
             ]);
             const query = '{ docSets { lang abbr documents { header(id:"id") mainSequence { blocks { text } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const documents = result.data.docSets[0].documents;
             t.ok(documents[0].header.startsWith("MRK"));
             t.ok(documents[0].mainSequence.blocks[0].text.startsWith("This is how"));

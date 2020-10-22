@@ -36,7 +36,7 @@ test(
         try {
             t.plan(11);
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)
@@ -50,7 +50,7 @@ test(
         try {
             t.plan(11);
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)

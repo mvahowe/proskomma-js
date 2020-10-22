@@ -21,7 +21,7 @@ test(
             const query = '{ packageVersion nDocSets nDocuments }';
             const pk = new ProsKomma();
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("packageVersion" in result.data);
             t.equal(result.data.packageVersion, pk.packageVersion());
             t.ok("nDocSets" in result.data);
@@ -41,7 +41,7 @@ test(
             t.plan(4);
             const query = '{ docSets { id lang abbr } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSets[0]);
             t.equal(result.data.docSets[0].lang, "eng");
             t.equal(result.data.docSets[0].abbr, "ust");
@@ -58,7 +58,7 @@ test(
             t.plan(5);
             const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang abbr documents { id } } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSetById);
             t.equal(result.data.docSetById.lang, "eng");
             t.equal(result.data.docSetById.abbr, "ust");
@@ -76,7 +76,7 @@ test(
             t.plan(5);
             const query = `{ docSetsById(ids: ["${pkDoc.docSetId}"]) { id lang abbr documents { id } } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSetsById[0]);
             t.equal(result.data.docSetsById[0].lang, "eng");
             t.equal(result.data.docSetsById[0].abbr, "ust");
@@ -94,7 +94,7 @@ test(
             t.plan(4);
             const query = `{ docSets: docSetsWithBook(bookCode: "PSA") { id lang abbr document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
             t.equal(result.data.docSets[0].document.header, "PSA");
             t.equal(result.data.docSets[1].document.header, "PSA");
@@ -111,7 +111,7 @@ test(
             t.plan(2);
             const query = '{ documents { id } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.documents[0]);
         } catch (err) {
             console.log(err)
@@ -126,7 +126,7 @@ test(
             t.plan(2);
             const query = `{ documentById(id: "${pkDoc.id}") { id } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.documentById);
         } catch (err) {
             console.log(err)
@@ -141,7 +141,7 @@ test(
             t.plan(2);
             const query = `{ documentsById(ids: ["${pkDoc.id}"]) { id } }`;
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.ok("id" in result.data.documentsById[0]);
         } catch (err) {
             console.log(err)
@@ -156,7 +156,7 @@ test(
             t.plan(4);
             const query = `{  documentsWithBook(bookCode:"PSA") { id header(id:"bookCode") } }`;
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             t.equal(result.data.documentsWithBook.length, 2);
             t.equal(result.data.documentsWithBook[0].header, "PSA");
             t.equal(result.data.documentsWithBook[1].header, "PSA");

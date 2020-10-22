@@ -31,7 +31,7 @@ test(
             const query =
                 '{ documents { mainSequence { blocks { os { label } is { label } } } } }';
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
             t.equal(scopeRecords.length, blocks.length);
             for (const [n, scopeRecord] of scopeRecords.entries()) {

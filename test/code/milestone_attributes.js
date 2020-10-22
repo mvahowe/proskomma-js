@@ -80,7 +80,7 @@ test(
         try {
             t.plan(16 + (4 * zalnScopes.length) + (4 * wScopes.length));
             const result = await pk.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)
@@ -94,7 +94,7 @@ test(
         try {
             t.plan(16 + (4 * zalnScopes.length) + (4 * wScopes.length));
             const result = await pk2.gqlQuery(query);
-            t.ok("data" in result);
+            t.equal(result.errors, undefined);
             checkResult(t, result);
         } catch (err) {
             console.log(err)
