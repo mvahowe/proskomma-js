@@ -1,7 +1,7 @@
-const { lexifyUsfm } = require("./usfm")
+const { parseUsfm } = require("./usfm")
 const { lexifyUsx } = require("./usx")
 
 module.exports = {
-    lexifyUsfm,
+    parseUsfm,
     lexifyUsx
 }

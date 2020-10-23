@@ -72,61 +72,65 @@ const Parser = class {
     }
 
     parse(lexedItems) {
-        let changeBaseSequence = false;
         for (const lexedItem of lexedItems) {
-            if (["startTag"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`);
-                if (!lexedItem.isNested) {
-                    this.closeActiveScopes(`implicitEnd`);
-                }
+            this.parseItem(lexedItem);
+        }
+    }
+
+    parseItem(lexedItem) {
+        let changeBaseSequence = false;
+        if (["startTag"].includes(lexedItem.subclass)) {
+            this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`);
+            if (!lexedItem.isNested) {
+                this.closeActiveScopes(`implicitEnd`);
             }
-            if (["endTag"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+        }
+        if (["endTag"].includes(lexedItem.subclass)) {
+            this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`)
+        }
+        if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
+            this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
+        }
+        if (["chapter", "pubchapter", "verses"].includes(lexedItem.subclass)) {
+            this.closeActiveScopes(lexedItem.subclass, this.sequences.main);
+        }
+        const spec = this.specForItem(lexedItem);
+        if (spec) {
+            if ("before" in spec.parser) {
+                spec.parser.before(this, lexedItem);
             }
-            if (["startMilestoneTag"].includes(lexedItem.subclass) && lexedItem.sOrE === "e") {
-                this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`)
+            changeBaseSequence = false;
+            if (spec.parser.baseSequenceType) {
+                const returnSequenceType = spec.parser.baseSequenceType === "mainLike" ? this.mainLike.type : spec.parser.baseSequenceType;
+                changeBaseSequence = (returnSequenceType !== this.current.baseSequenceType) ||
+                    spec.parser.forceNewSequence;
             }
-            if (["chapter", "pubchapter", "verses"].includes(lexedItem.subclass)) {
-                this.closeActiveScopes(lexedItem.subclass, this.sequences.main);
-            }
-            const spec = this.specForItem(lexedItem);
-            if (spec) {
-                if ("before" in spec.parser) {
-                    spec.parser.before(this, lexedItem);
-                }
-                changeBaseSequence = false;
-                if (spec.parser.baseSequenceType) {
-                    const returnSequenceType = spec.parser.baseSequenceType === "mainLike" ? this.mainLike.type : spec.parser.baseSequenceType;
-                        changeBaseSequence = (returnSequenceType !== this.current.baseSequenceType) ||
-                        spec.parser.forceNewSequence;
-                }
-                if (changeBaseSequence) {
-                    this.closeActiveScopes("baseSequenceChange");
-                    this.changeBaseSequence(spec.parser);
-                    if ("newBlock" in spec.parser && spec.parser.newBlock) {
-                        this.closeActiveScopes("endBlock");
-                        this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
-                    }
-                } else if (spec.parser.inlineSequenceType) {
-                    this.current.inlineSequenceType = spec.parser.inlineSequenceType;
-                    this.current.parentSequence = this.current.sequence;
-                    if (this.current.parentSequence.type === "header") { // Not lovely, needed for \cp before first content
-                        this.current.parentSequence = this.sequences.main;
-                    }
-                    this.current.sequence = new Sequence(this.current.inlineSequenceType);
-                    this.current.sequence.newBlock(labelForScope("inline", spec.parser.inlineSequenceType));
-                    this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
-                    this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id))
-                } else if ("newBlock" in spec.parser && spec.parser.newBlock) {
+            if (changeBaseSequence) {
+                this.closeActiveScopes("baseSequenceChange");
+                this.changeBaseSequence(spec.parser);
+                if ("newBlock" in spec.parser && spec.parser.newBlock) {
+                    this.closeActiveScopes("endBlock");
                     this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
                 }
-                if ("during" in spec.parser) {
-                    spec.parser.during(this, lexedItem);
+            } else if (spec.parser.inlineSequenceType) {
+                this.current.inlineSequenceType = spec.parser.inlineSequenceType;
+                this.current.parentSequence = this.current.sequence;
+                if (this.current.parentSequence.type === "header") { // Not lovely, needed for \cp before first content
+                    this.current.parentSequence = this.sequences.main;
                 }
-                this.openNewScopes(spec.parser, lexedItem);
-                if ("after" in spec.parser) {
-                    spec.parser.after(this, lexedItem);
-                }
+                this.current.sequence = new Sequence(this.current.inlineSequenceType);
+                this.current.sequence.newBlock(labelForScope("inline", spec.parser.inlineSequenceType));
+                this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
+                this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id))
+            } else if ("newBlock" in spec.parser && spec.parser.newBlock) {
+                this.current.sequence.newBlock(labelForScope("blockTag", [lexedItem.fullTagName]));
+            }
+            if ("during" in spec.parser) {
+                spec.parser.during(this, lexedItem);
+            }
+            this.openNewScopes(spec.parser, lexedItem);
+            if ("after" in spec.parser) {
+                spec.parser.after(this, lexedItem);
             }
         }
     }
@@ -318,7 +322,9 @@ const Parser = class {
     }
 
     closeActiveScopes(closeLabel, targetSequence) {
-        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        if (targetSequence === undefined) {
+            targetSequence = this.current.sequence;
+        }
         const matchedScopes = targetSequence.activeScopes.filter(
             sc => sc.endedBy.includes(closeLabel)
         ).reverse();
@@ -329,7 +335,9 @@ const Parser = class {
     }
 
     closeActiveScope(sc, targetSequence) {
-        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        if (targetSequence === undefined) {
+            targetSequence = this.current.sequence;
+        }
         this.addScope("end", sc.label, targetSequence);
         if (sc.onEnd) {
             sc.onEnd(this, sc.label);
@@ -385,8 +393,12 @@ const Parser = class {
     }
 
     openNewScope(pt, sc, addItem, targetSequence) {
-        if (addItem === undefined) {addItem = true}
-        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        if (addItem === undefined) {
+            addItem = true
+        }
+        if (targetSequence === undefined) {
+            targetSequence = this.current.sequence;
+        }
         if (addItem) {
             targetSequence.addItem(new Scope("start", sc.label(pt)));
         }
@@ -424,7 +436,9 @@ const Parser = class {
     }
 
     addScope(sOrE, label, targetSequence) {
-        if (targetSequence === undefined) {targetSequence = this.current.sequence;}
+        if (targetSequence === undefined) {
+            targetSequence = this.current.sequence;
+        }
         targetSequence.addItem(new Scope(sOrE, label));
     }
 
@@ -443,4 +457,4 @@ const Parser = class {
 
 }
 
-module.exports = { Parser };
+module.exports = {Parser};
