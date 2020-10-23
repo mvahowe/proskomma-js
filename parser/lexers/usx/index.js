@@ -2,8 +2,8 @@ const xre = require('xregexp');
 
 const { UsxLexer } = require("./usx_lexer");
 
-const lexifyUsx = (str) => {
-    return new UsxLexer().lex(str);
+const parseUsx = (str, parser) => {
+    new UsxLexer().lexAndParse(str, parser);
 }
 
-module.exports = { lexifyUsx };
+module.exports = { parseUsx };

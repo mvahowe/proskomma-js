@@ -1,5 +1,5 @@
 const { generateId } = require("../lib/generate_id");
-const { parseUsfm, lexifyUsx } = require("../parser/lexers");
+const { parseUsfm, parseUsx } = require("../parser/lexers");
 const { Parser } = require("../parser");
 const { nComponentsForScope } = require('../lib/scope_defs');
 
@@ -27,13 +27,21 @@ class Document {
         }
     }
 
-    processUsfm(usfmString) {
-        const parser = new Parser(
+    makeParser() {
+        return new Parser(
             this.filterOptions,
             this.customTags,
             this.emptyBlocks
         );
+    }
+
+    processUsfm(usfmString) {
+        const parser = this.makeParser();
         parseUsfm(usfmString, parser);
+        this.postParse(parser);
+    }
+
+    postParse(parser) {
         parser.tidy();
         parser.filter();
         this.headers = parser.headers;
@@ -42,22 +50,10 @@ class Document {
     }
 
     processUsx(usxString) {
-        const lexed = lexifyUsx(usxString);
-        this.processLexed(lexed);
-    }
+        const parser = this.makeParser();
+        parseUsx(usxString, parser);
+        this.postParse(parser);
 
-    processLexed(lexed) {
-        const parser = new Parser(
-            this.filterOptions,
-            this.customTags,
-            this.emptyBlocks
-        );
-        parser.parse(lexed);
-        parser.tidy();
-        parser.filter();
-        this.headers = parser.headers;
-        this.succinctPass1(parser);
-        this.succinctPass2(parser);
     }
 
     succinctPass1(parser) {
