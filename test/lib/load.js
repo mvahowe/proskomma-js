@@ -49,4 +49,20 @@ const pkWithDocs = (contentSpecs) => {
     return pk;
 }
 
-module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs };
+const pkWithDocSetDocs = (fps, lang, abbr, options) => {
+    if (!options) {options = {}};
+    const fpContent = [];
+    fps.forEach(fp => fpContent.push(fse.readFileSync(path.resolve(__dirname, fp))));
+    const contentType = fps[0].split('.').pop();
+    const pk = new ProsKomma();
+    const pkDocs = pk.importDocuments(
+        lang,
+        abbr,
+        contentType,
+        fpContent,
+        options
+    );
+    return [pk, pkDocs];
+}
+
+module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs, pkWithDocSetDocs};

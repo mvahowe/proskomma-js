@@ -78,6 +78,10 @@ class ProsKomma {
     }
 
     importDocument(lang, abbr, contentType, contentString, filterOptions, customTags, emptyBlocks) {
+        return this.importDocuments(lang, abbr, contentType, [contentString], filterOptions, customTags, emptyBlocks)[0];
+    }
+
+    importDocuments(lang, abbr, contentType, contentStrings, filterOptions, customTags, emptyBlocks) {
         if (!filterOptions) {
             filterOptions = this.filters;
         }
@@ -88,9 +92,16 @@ class ProsKomma {
             emptyBlocks = this.emptyBlocks;
         }
         const docSetId = this.findOrMakeDocSet(lang, abbr);
-        let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
-        this.addDocument(doc, docSetId);
-        return doc;
+        const docSet = this.docSets[docSetId];
+        docSet.buildPreEnums();
+        const docs = [];
+        for (const contentString of contentStrings) {
+            let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
+            this.addDocument(doc, docSetId);
+            docs.push(doc);
+        }
+        docSet.preEnums = {};
+        return docs;
     }
 
     addDocument(doc, docSetId) {

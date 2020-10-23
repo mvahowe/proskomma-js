@@ -53,7 +53,6 @@ class Document {
 
     succinctPass1(parser) {
         const docSet = this.processor.docSets[this.docSetId];
-        docSet.buildPreEnums();
         for (const seq of parser.allSequences()) {
             docSet.recordPreEnum("ids", seq.id);
             this.recordPreEnums(docSet, seq);
@@ -97,7 +96,6 @@ class Document {
                 blocks: seq.succinctifyBlocks(docSet)
             };
         }
-        docSet.preEnums = {};
     }
 
     unsuccinctifyBlock(block, options) {

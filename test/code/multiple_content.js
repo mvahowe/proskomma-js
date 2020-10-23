@@ -1,6 +1,6 @@
 const test = require('tape');
 
-const {pkWithDocs} = require('../lib/load');
+const {pkWithDocs, pkWithDocSetDocs} = require('../lib/load');
 
 const testGroup = "Multiple Content";
 
@@ -45,10 +45,15 @@ test(
     async function (t) {
         try {
             t.plan(5);
-            const pk = pkWithDocs([
-                ["../test_data/usfm/hello.usfm", "fra", "hello"],
-                ["../test_data/usfm/cp_vp.usfm", "fra", "hello"]
-            ]);
+            const pk = pkWithDocSetDocs(
+                [
+                    "../test_data/usfm/hello.usfm",
+                    "../test_data/usfm/cp_vp.usfm"
+                ],
+                "eng",
+                "ust",
+                {}
+            )[0];
             const query = '{ docSets { lang abbr documents { header(id:"id") mainSequence { blocks { text } } } } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
