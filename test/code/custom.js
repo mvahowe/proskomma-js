@@ -5,7 +5,7 @@ const { pkWithDoc, customPkWithDoc } = require('../lib/load');
 
 const testGroup = "Custom Tags";
 
-const pk = pkWithDoc("../test_data/usfm/custom.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/custom.usfm", {lang: "fra", abbr: "hello"})[0];
 
 const customProsKomma = class extends ProsKomma {
 
@@ -24,7 +24,7 @@ const customProsKomma = class extends ProsKomma {
 
 }
 
-const customPk = customPkWithDoc(customProsKomma, "../test_data/usfm/custom.usfm", "fra", "hello", {})[0];
+const customPk = customPkWithDoc(customProsKomma, "../test_data/usfm/custom.usfm", {lang: "fra", abbr: "hello"}, {})[0];
 
 const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
 const query = `{ documents { sequences { id type blocks { scopeLabels bs { label } bg { subType, sequenceId } items ${itemFragment} } } } }`;

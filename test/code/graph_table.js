@@ -4,9 +4,9 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Tables";
 
-const pk = pkWithDoc("../test_data/usx/table.usx", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usfm/table.usfm", "fra", "hello")[0];
-const pk3 = pkWithDoc("../test_data/usfm/table_at_end.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usx/table.usx", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usfm/table.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk3 = pkWithDoc("../test_data/usfm/table_at_end.usfm", {lang: "fra", abbr: "hello"})[0];
 
 const checkResult = (t, result) => {
     const blocks = result.data.documents[0].mainSequence.blocks;

@@ -22,10 +22,10 @@ test(
             ]
             t.plan(2 + (3 * expected.length));
             const pk = pkWithDocs([
-                ["../test_data/usfm/hello.usfm", "fra", "hello"],
-                ["../test_data/usfm/cp_vp.usfm", "fra", "cp_vp"]
+                ["../test_data/usfm/hello.usfm", {lang: "fra", abbr: "hello"}],
+                ["../test_data/usfm/cp_vp.usfm", {lang: "fra", abbr: "cp_vp"}]
             ]);
-            const query = '{ docSets { lang abbr documents { id } } }';
+            const query = '{ docSets { lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
@@ -50,11 +50,10 @@ test(
                     "../test_data/usfm/hello.usfm",
                     "../test_data/usfm/cp_vp.usfm"
                 ],
-                "eng",
-                "ust",
+                {lang: "eng", abbr: "ust"},
                 {}
             )[0];
-            const query = '{ docSets { lang abbr documents { header(id:"id") mainSequence { blocks { text } } } } }';
+            const query = '{ docSets { lang: selector(id:"lang") abbr: selector(id:"abbr") documents { header(id:"id") mainSequence { blocks { text } } } } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             const documents = result.data.docSets[0].documents;

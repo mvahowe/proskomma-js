@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graft Headings";
 
-const pk = pkWithDoc("../test_data/usfm/headings.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/headings.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Headings (${testGroup})`,

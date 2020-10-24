@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Spans";
 
-const pk = pkWithDoc("../test_data/usfm/spans.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/spans.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Spans Within a Block (${testGroup})`,

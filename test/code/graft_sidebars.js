@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graft Sidebars";
 
-const pkWithUSX = pkWithDoc("../test_data/usx/sidebars.usx", "fra", "hello")[0];
-const pkWithUSFM = pkWithDoc("../test_data/usfm/sidebars.usfm", "fra", "hello")[0];
+const pkWithUSX = pkWithDoc("../test_data/usx/sidebars.usx", {lang: "fra", abbr: "hello"})[0];
+const pkWithUSFM = pkWithDoc("../test_data/usfm/sidebars.usfm", {lang: "fra", abbr: "hello"})[0];
 
 const doTest = async (t, pk) => {
     t.plan(12);

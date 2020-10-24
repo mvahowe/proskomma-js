@@ -5,7 +5,7 @@ const { pkWithDoc, customPkWithDoc } = require('../lib/load');
 
 const testGroup = "Empty Blocks";
 
-const pk = pkWithDoc("../test_data/usfm/en_ust_psa_1.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/en_ust_psa_1.usfm", {lang: "fra", abbr: "hello"})[0];
 
 const customProsKomma = class extends ProsKomma {
 
@@ -25,7 +25,7 @@ const customProsKomma = class extends ProsKomma {
 
 }
 
-const customPk = customPkWithDoc(customProsKomma, "../test_data/usfm/en_ust_psa_1.usfm", "fra", "hello", {})[0];
+const customPk = customPkWithDoc(customProsKomma, "../test_data/usfm/en_ust_psa_1.usfm", {lang: "fra", abbr: "hello"}, {})[0];
 
 const query = `{ documents { sequences { type blocks { bg { subType sequenceId } bs { label } text } } } }`;
 

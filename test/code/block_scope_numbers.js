@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Block Scopes";
 
-const pk = pkWithDoc("../test_data/usfm/ust_psa.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/ust_psa.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Numbers (${testGroup})`,

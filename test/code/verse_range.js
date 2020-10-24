@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Verse Range";
 
-const pk = pkWithDoc("../test_data/usfm/verse_range.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/verse_range.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Verse and Verses Scopes (${testGroup})`,

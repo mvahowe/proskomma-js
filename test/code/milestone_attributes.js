@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Milestones & Attributes";
 
-const pk = pkWithDoc("../test_data/usfm/milestone_attributes.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usx/milestone_attributes.usx", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/milestone_attributes.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usx/milestone_attributes.usx", {lang: "fra", abbr: "hello"})[0];
 
 const topItems = items => {
     if (items.length === 0) {
@@ -108,7 +108,7 @@ test(
         try {
             t.plan(1);
             let pk;
-            t.doesNotThrow(() => pk = pkWithDoc("../test_data/usfm/slash_in_att.usfm", "fra", "hello")[0]);
+            t.doesNotThrow(() => pk = pkWithDoc("../test_data/usfm/slash_in_att.usfm", {lang: "fra", abbr: "hello"})[0]);
         } catch (err) {
             console.log(err)
         }

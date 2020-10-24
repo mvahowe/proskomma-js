@@ -8,7 +8,7 @@ class ProsKomma {
 
     constructor() {
         this.documents = {};
-        this.docSetsByLang = {};
+        this.docSetsBySelector = {};
         this.docSets = {};
         this.filters = {};
         this.customTags = {
@@ -20,6 +20,17 @@ class ProsKomma {
             introHeading: []
         }
         this.emptyBlocks = [];
+        this.selectors = [
+            {
+                name: "lang",
+                type: "string",
+                regex: "[a-z]{3}"
+            },
+            {
+                name: "abbr",
+                type: "string"
+            }
+        ];
     }
 
     packageVersion() {
@@ -77,11 +88,11 @@ class ProsKomma {
         return Object.values(this.documents).filter(doc => "bookCode" in doc.headers && doc.headers["bookCode"] === bookCode);
     }
 
-    importDocument(lang, abbr, contentType, contentString, filterOptions, customTags, emptyBlocks) {
-        return this.importDocuments(lang, abbr, contentType, [contentString], filterOptions, customTags, emptyBlocks)[0];
+    importDocument(selectors, contentType, contentString, filterOptions, customTags, emptyBlocks) {
+        return this.importDocuments(selectors, contentType, [contentString], filterOptions, customTags, emptyBlocks)[0];
     }
 
-    importDocuments(lang, abbr, contentType, contentStrings, filterOptions, customTags, emptyBlocks) {
+    importDocuments(selectors, contentType, contentStrings, filterOptions, customTags, emptyBlocks) {
         if (!filterOptions) {
             filterOptions = this.filters;
         }
@@ -91,12 +102,12 @@ class ProsKomma {
         if (!emptyBlocks) {
             emptyBlocks = this.emptyBlocks;
         }
-        const docSetId = this.findOrMakeDocSet(lang, abbr);
+        const docSetId = this.findOrMakeDocSet(selectors);
         const docSet = this.docSets[docSetId];
         docSet.buildPreEnums();
         const docs = [];
         for (const contentString of contentStrings) {
-            let doc = new Document(this, lang, abbr, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
+            let doc = new Document(this, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
             this.addDocument(doc, docSetId);
             docs.push(doc);
         }
@@ -109,18 +120,26 @@ class ProsKomma {
         this.docSets[docSetId].docIds.push(doc.id);
     }
 
-    findOrMakeDocSet(lang, abbr) {
-        if (!(lang in this.docSetsByLang)) {
-            this.docSetsByLang[lang] = {};
+    findOrMakeDocSet(selectors) {
+        let selectorTree = this.docSetsBySelector;
+        let docSet;
+        for (const selector of this.selectors) {
+            if (selector.name === this.selectors[this.selectors.length - 1].name) {
+                if (selectors[selector.name] in selectorTree) {
+                    docSet = selectorTree[selectors[selector.name]];
+                } else {
+                    docSet = new DocSet(this, selectors);
+                    selectorTree[selectors[selector.name]] = docSet;
+                    this.docSets[docSet.id] = docSet;
+                }
+            } else {
+                if (!(selectors[selector.name] in selectorTree)) {
+                    selectorTree[selectors[selector.name]] = {};
+                }
+                selectorTree = selectorTree[selectors[selector.name]];
+            }
         }
-        if (!(abbr in this.docSetsByLang[lang])) {
-            this.docSetsByLang[lang][abbr] = new DocSet(this, lang, abbr);
-        }
-        const docSet = this.docSetsByLang[lang][abbr];
-        if (!(docSet.id in this.docSets)) {
-            this.docSets[docSet.id] = docSet;
-        }
-        return this.docSetsByLang[lang][abbr].id;
+        return docSet.id;
     }
 
     async gqlQuery(query) {

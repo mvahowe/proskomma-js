@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graph Sequence";
 
-const [pk, pkDoc] = pkWithDoc("../test_data/usfm/hello.usfm", "eng", "ust");
+const [pk, pkDoc] = pkWithDoc("../test_data/usfm/hello.usfm", {lang: "eng", abbr: "ust"});
 
 test(
     `Scalars (${testGroup})`,

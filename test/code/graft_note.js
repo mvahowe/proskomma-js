@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graft Notes";
 
-const pk = pkWithDoc("../test_data/usfm/footnote.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usfm/xref.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/footnote.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usfm/xref.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Footnote (${testGroup})`,

@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Pub Numbers";
 
-const pk = pkWithDoc("../test_data/usfm/cp_vp.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usx/cp_vp.usx", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/cp_vp.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usx/cp_vp.usx", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `USFM (${testGroup})`,

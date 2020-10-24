@@ -4,9 +4,9 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Lexing Breaks";
 
-const pk = pkWithDoc("../test_data/usfm/no_break_space.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usfm/soft_line_break.usfm", "fra", "hello")[0];
-const pk3 = pkWithDoc("../test_data/usx/opt_break.usx", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/no_break_space.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usfm/soft_line_break.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk3 = pkWithDoc("../test_data/usx/opt_break.usx", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `NBSP (${testGroup})`,

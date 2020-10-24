@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graft Title";
 
-const pk = pkWithDoc("../test_data/usx/not_nfc18_phm.usx", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usx/not_nfc18_phm.usx", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Title (${testGroup})`,

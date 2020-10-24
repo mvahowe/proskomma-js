@@ -5,12 +5,12 @@ const {pkWithDoc, pkWithDocs} = require('../lib/load');
 
 const testGroup = "Graph Basics";
 
-const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust");
+const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"});
 const pk2 = pkWithDocs([
-    ["../test_data/usx/web_rut.usx", "eng", "webbe"],
-    ["../test_data/usx/web_psa150.usx", "eng", "webbe"],
-    ["../test_data/usfm/ust_psa.usfm", "eng", "ust"],
-    ["../test_data/usx/not_nfc18_phm.usx", "eng", "nnfc18"]
+    ["../test_data/usx/web_rut.usx", {lang: "eng", abbr: "webbe"}],
+    ["../test_data/usx/web_psa150.usx", {lang: "eng", abbr: "webbe"}],
+    ["../test_data/usfm/ust_psa.usfm", {lang: "eng", abbr: "ust"}],
+    ["../test_data/usx/not_nfc18_phm.usx", {lang: "eng", abbr: "nnfc18"}]
 ]);
 
 test(
@@ -39,7 +39,7 @@ test(
     async function (t) {
         try {
             t.plan(4);
-            const query = '{ docSets { id lang abbr } }';
+            const query = '{ docSets { id lang: selector(id:"lang") abbr: selector(id:"abbr") } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSets[0]);
@@ -56,7 +56,7 @@ test(
     async function (t) {
         try {
             t.plan(5);
-            const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang abbr documents { id } } }`;
+            const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSetById);
@@ -74,7 +74,7 @@ test(
     async function (t) {
         try {
             t.plan(5);
-            const query = `{ docSetsById(ids: ["${pkDoc.docSetId}"]) { id lang abbr documents { id } } }`;
+            const query = `{ docSetsById(ids: ["${pkDoc.docSetId}"]) { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("id" in result.data.docSetsById[0]);
@@ -92,7 +92,7 @@ test(
     async function (t) {
         try {
             t.plan(4);
-            const query = `{ docSets: docSetsWithBook(bookCode: "PSA") { id lang abbr document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
+            const query = `{ docSets: docSetsWithBook(bookCode: "PSA") { id lang: selector(id:"lang") selector(id:"abbr") document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
             const result = await pk2.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);

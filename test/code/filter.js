@@ -5,7 +5,7 @@ const {pkWithDoc} = require('../lib/load');
 const testGroup = "Filter on Parse";
 
 const queryToBlock = async (t, filter) => {
-    const pk = pkWithDoc("../test_data/usfm/filter.usfm", "fra", "hello", filter)[0];
+    const pk = pkWithDoc("../test_data/usfm/filter.usfm", {lang: "fra", abbr: "hello"}, filter)[0];
     const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
     const query = `{ documents { mainSequence { blocks { bg { subType } bs { label } scopeLabels items ${itemFragment} } } } }`;
     const result = await pk.gqlQuery(query);

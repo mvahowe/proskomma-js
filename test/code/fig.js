@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Fig";
 
-const pk = pkWithDoc("../test_data/usfm/fig.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usx/fig.usx", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/fig.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usx/fig.usx", {lang: "fra", abbr: "hello"})[0];
 
 const query =
     '{ documents { sequences { id type blocks { scopeLabels text items { ... on Token { itemType subType chars }... on Scope { itemType label }... on Graft { itemType subType sequenceId } } } } } }';

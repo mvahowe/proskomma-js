@@ -4,7 +4,7 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graph Document";
 
-const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust");
+const [pk, pkDoc] = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"});
 
 test(
     `DocSetId (${testGroup})`,

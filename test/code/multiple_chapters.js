@@ -6,7 +6,7 @@ const testGroup = "Multiple Chapters";
 
 const pk = pkWithDoc(
     "../test_data/usfm/1pe_webbe.usfm",
-    "fra", "hello",
+    {lang: "fra", abbr: "hello"},
     {includeScopes: ["chapter", "verse/"], includeGrafts: []})[0];
 
 test(

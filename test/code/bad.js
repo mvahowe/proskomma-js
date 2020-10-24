@@ -4,8 +4,8 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Lexing Badness";
 
-const pk = pkWithDoc("../test_data/usfm/backslash.usfm", "fra", "hello")[0];
-const pk2 = pkWithDoc("../test_data/usfm/unknown.usfm", "fra", "hello")[0];
+const pk = pkWithDoc("../test_data/usfm/backslash.usfm", {lang: "fra", abbr: "hello"})[0];
+const pk2 = pkWithDoc("../test_data/usfm/unknown.usfm", {lang: "fra", abbr: "hello"})[0];
 
 test(
     `Bare Backslash (${testGroup})`,
@@ -46,7 +46,7 @@ test(
     async function (t) {
         try {
             t.plan(1);
-            t.throws(() => pkWithDoc("../test_data/usx/bad_element.usx", "fra", "hello"), /Unexpected .+bananas/);
+            t.throws(() => pkWithDoc("../test_data/usx/bad_element.usx", {lang: "fra", abbr: "hello"}), /Unexpected .+bananas/);
         } catch (err) {
             console.log(err)
         }

@@ -5,8 +5,13 @@ const docSetType = new GraphQLObjectType({
     name: "DocSet",
     fields: {
         id: {type: GraphQLNonNull(GraphQLString)},
-        lang: {type: GraphQLString},
-        abbr: {type: GraphQLString},
+        selector: {
+            type: GraphQLNonNull(GraphQLString),
+            args: {
+                id: {type: GraphQLNonNull(GraphQLString)}
+            },
+            resolve: (root, args) => root.selectors[args.id]
+        },
         documents: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
             resolve: (root, args, context, info) => {

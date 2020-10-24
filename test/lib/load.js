@@ -3,14 +3,13 @@ const path = require('path');
 
 const {ProsKomma} = require('../../');
 
-const pkWithDoc = (fp, lang, abbr, options) => {
+const pkWithDoc = (fp, selectors, options) => {
     if (!options) {options = {}};
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     const contentType = fp.split('.').pop();
     const pk = new ProsKomma();
     const pkDoc = pk.importDocument(
-        lang,
-        abbr,
+        selectors,
         contentType,
         content,
         options
@@ -18,14 +17,13 @@ const pkWithDoc = (fp, lang, abbr, options) => {
     return [pk, pkDoc];
 }
 
-const customPkWithDoc = (pkClass, fp, lang, abbr, options) => {
+const customPkWithDoc = (pkClass, fp, selectors, options) => {
     if (!options) {options = {}};
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     const contentType = fp.split('.').pop();
     const pk = new pkClass();
     const pkDoc = pk.importDocument(
-        lang,
-        abbr,
+        selectors,
         contentType,
         content,
         options
@@ -35,12 +33,11 @@ const customPkWithDoc = (pkClass, fp, lang, abbr, options) => {
 
 const pkWithDocs = (contentSpecs) => {
     const pk = new ProsKomma();
-    for (const [fp, lang, abbr] of contentSpecs) {
+    for (const [fp, selectors] of contentSpecs) {
         const content = fse.readFileSync(path.resolve(__dirname, fp));
         const contentType = fp.split('.').pop();
         pk.importDocument(
-            lang,
-            abbr,
+            selectors,
             contentType,
             content,
             {}
@@ -49,15 +46,14 @@ const pkWithDocs = (contentSpecs) => {
     return pk;
 }
 
-const pkWithDocSetDocs = (fps, lang, abbr, options) => {
+const pkWithDocSetDocs = (fps, selectors, options) => {
     if (!options) {options = {}};
     const fpContent = [];
     fps.forEach(fp => fpContent.push(fse.readFileSync(path.resolve(__dirname, fp))));
     const contentType = fps[0].split('.').pop();
     const pk = new ProsKomma();
     const pkDocs = pk.importDocuments(
-        lang,
-        abbr,
+        selectors,
         contentType,
         fpContent,
         options

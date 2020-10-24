@@ -4,11 +4,11 @@ const {pkWithDoc} = require('../lib/load');
 
 const testGroup = "Graph Block";
 
-const pk = pkWithDoc("../test_data/usfm/hello.usfm", "eng", "ust")[0];
-const pk2 = pkWithDoc("../test_data/usfm/headings.usfm", "eng", "ust")[0];
-const pk3 = pkWithDoc("../test_data/usx/web_rut.usx", "eng", "ust")[0];
-const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", "eng", "ust")[0];
-const pk5 = pkWithDoc("../test_data/usfm/verse_breaks_in_blocks.usfm", "eng", "ust")[0];
+const pk = pkWithDoc("../test_data/usfm/hello.usfm", {lang: "eng", abbr: "ust"})[0];
+const pk2 = pkWithDoc("../test_data/usfm/headings.usfm", {lang: "eng", abbr: "ust"})[0];
+const pk3 = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"})[0];
+const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", {lang: "eng", abbr: "ust"})[0];
+const pk5 = pkWithDoc("../test_data/usfm/verse_breaks_in_blocks.usfm", {lang: "eng", abbr: "ust"})[0];
 
 test(
     `Length (${testGroup})`,

@@ -6,11 +6,14 @@ const {itemEnum} = require('../lib/item_defs');
 
 class DocSet {
 
-    constructor(processor, lang, abbr) {
+    constructor(processor, selectors) {
+        this.selectors = selectors || processor.selectors;
+        if (typeof this.selectors !== "object") {
+            throw new Error(`DocSet constructor expects selectors to be object, found ${typeof this.selectors}`);
+        }
         this.id = generateId();
         this.processor = processor;
-        this.lang = lang;
-        this.abbr = abbr;
+        this.selectors = this.validateSelectors(this.selectors);
         this.preEnums = {};
         this.enums = {
             ids: new ByteArray(512),
@@ -21,6 +24,27 @@ class DocSet {
         };
         this.enumIndexes = {};
         this.docIds = [];
+    }
+
+    validateSelectors(selectors) {
+        const expectedSelectors = {};
+        for (const selector of this.processor.selectors) {
+            expectedSelectors[selector.name] = selector;
+        }
+        for (const [name, value] of Object.entries(selectors)) {
+            if (!name in expectedSelectors) {
+                throw new Error(`Unexpected selector '${name}' (expected one of [${Object.keys(expectedSelectors).join(', ')}])`);
+            }
+            if (typeof value !== expectedSelectors[name].type) {
+                throw new Error(`Selector '${name}' is of type ${typeof value} (expected ${expectedSelectors[name].type})`);
+            }
+        }
+        for (const name of Object.keys(expectedSelectors)) {
+            if (!name in selectors) {
+                throw new Error(`Expected selector '${name}' not found`);
+            }
+        }
+        return selectors;
     }
 
     documents() {

@@ -71,12 +71,6 @@ const Parser = class {
         }
     }
 
-    parse(lexedItems) {
-        for (const lexedItem of lexedItems) {
-            this.parseItem(lexedItem);
-        }
-    }
-
     parseItem(lexedItem) {
         let changeBaseSequence = false;
         if (["startTag"].includes(lexedItem.subclass)) {
