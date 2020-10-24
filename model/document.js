@@ -103,11 +103,6 @@ class Document {
         }
     }
 
-    unsuccinctifyBlock(block, options) {
-        const docSet = this.processor.docSets[this.docSetId];
-        docSet.unsuccinctifyBlock(block, options);
-    }
-
     serializeSuccinct() {
         const ret = {sequences: {}};
         ret.headers = this.headers;

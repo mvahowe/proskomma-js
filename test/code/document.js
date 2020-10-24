@@ -10,7 +10,7 @@ test(
         try {
             t.plan(1);
             const pk = new ProsKomma();
-            t.throws(() => pk.importDocument("deu", "xyz", "mov", "abc", {}));
+            t.throws(() => pk.importDocument({lang: "deu", abbr: "xyz"}, "mov", "abc", {}));
         } catch (err) {
             console.log(err)
         }

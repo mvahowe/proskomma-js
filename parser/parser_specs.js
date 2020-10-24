@@ -605,9 +605,7 @@ const specs = (pt) => [
                 }
             ],
             during: (parser, pt) => {
-                if (pt.sOrE === "s") {
-                    parser.setAttributeContext(labelForScope("milestone", [pt.tagName]))
-                }
+                parser.setAttributeContext(labelForScope("milestone", [pt.tagName]))
             }
         }
     },

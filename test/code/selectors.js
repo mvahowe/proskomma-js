@@ -113,8 +113,7 @@ test(
             const importFn = () => pk.importDocument(
                 selectors,
                 "usx",
-                content,
-                {}
+                content
             );
             t.throws(importFn, /Expected selector 'foo' not found/);
             selectors = {banana: 23};

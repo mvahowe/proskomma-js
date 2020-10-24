@@ -329,9 +329,6 @@ const Parser = class {
     }
 
     closeActiveScope(sc, targetSequence) {
-        if (targetSequence === undefined) {
-            targetSequence = this.current.sequence;
-        }
         this.addScope("end", sc.label, targetSequence);
         if (sc.onEnd) {
             sc.onEnd(this, sc.label);
@@ -441,7 +438,7 @@ const Parser = class {
         this.mainLike.addItem(new Scope("end", label));
     }
 
-    setAttributeContext(label) {
+  setAttributeContext(label) {
         this.current.attributeContext = label;
     }
 
