@@ -32,11 +32,17 @@ class DocSet {
             expectedSelectors[selector.name] = selector;
         }
         for (const [name, value] of Object.entries(selectors)) {
-            if (!name in expectedSelectors) {
+            if (!(name in expectedSelectors)) {
                 throw new Error(`Unexpected selector '${name}' (expected one of [${Object.keys(expectedSelectors).join(', ')}])`);
             }
-            if (typeof value !== expectedSelectors[name].type) {
+            if (
+                (typeof value === "string" && expectedSelectors[name].type !== "string") ||
+                (typeof value === "number" && expectedSelectors[name].type !== "integer")
+            ) {
                 throw new Error(`Selector '${name}' is of type ${typeof value} (expected ${expectedSelectors[name].type})`);
+            }
+            if (typeof value === "number" && !Number.isInteger(value)) {
+                throw new Error(`Value '${value}' of integer selector '${name}' is not an integer`);
             }
         }
         for (const name of Object.keys(expectedSelectors)) {

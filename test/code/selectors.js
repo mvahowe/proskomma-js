@@ -87,10 +87,10 @@ test(
 );
 
 test(
-    `Throw on bad selectors (${testGroup})`,
+    `Throw on bad selector name and type (${testGroup})`,
     async function (t) {
         try {
-            // t.plan(6);
+            t.plan(5);
             const customProsKomma = class extends ProsKomma {
                 constructor() {
                     super();
@@ -117,6 +117,14 @@ test(
                 {}
             );
             t.throws(importFn, /Expected selector 'foo' not found/);
+            selectors = {banana: 23};
+            t.throws(importFn, /Unexpected selector/);
+            selectors = {foo: 23, baa: 24};
+            t.throws(importFn, /is of type number \(expected string\)/);
+            selectors = {foo: "banana", baa: 24.5};
+            t.throws(importFn, /is not an integer/);
+            selectors = {foo: "banana", baa: 99};
+            t.doesNotThrow(importFn);
         } catch (err) {
             console.log(err)
         }
