@@ -7,13 +7,10 @@ const {itemEnum} = require('../lib/item_defs');
 class DocSet {
 
     constructor(processor, selectors) {
-        this.selectors = selectors || processor.selectors;
-        if (typeof this.selectors !== "object") {
-            throw new Error(`DocSet constructor expects selectors to be object, found ${typeof this.selectors}`);
-        }
         this.id = generateId();
         this.processor = processor;
-        this.selectors = this.validateSelectors(this.selectors);
+        const defaultedSelectors = selectors || processor.selectors;
+        this.selectors = this.validateSelectors(defaultedSelectors);
         this.preEnums = {};
         this.enums = {
             ids: new ByteArray(512),
@@ -27,6 +24,9 @@ class DocSet {
     }
 
     validateSelectors(selectors) {
+        if (typeof selectors !== "object") {
+            throw new Error(`DocSet constructor expects selectors to be object, found ${typeof this.selectors}`);
+        }
         const expectedSelectors = {};
         for (const selector of this.processor.selectors) {
             expectedSelectors[selector.name] = selector;
@@ -40,7 +40,7 @@ class DocSet {
             }
         }
         for (const name of Object.keys(expectedSelectors)) {
-            if (!name in selectors) {
+            if (!(name in selectors)) {
                 throw new Error(`Expected selector '${name}' not found`);
             }
         }

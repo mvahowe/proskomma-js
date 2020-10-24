@@ -2,6 +2,7 @@ const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList,
 
 const docSetType = require('./types/doc_set');
 const documentType = require('./types/document');
+const selectorSpecType = require('./types/selector_spec');
 
 const gqlSchema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -9,6 +10,10 @@ const gqlSchema = new GraphQLSchema({
             fields: {
                 processor: {type: GraphQLNonNull(GraphQLString)},
                 packageVersion: {type: GraphQLNonNull(GraphQLString)},
+                selectors: {
+                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(selectorSpecType))),
+                    resolve: root => root.selectors
+                },
                 nDocSets: {type: GraphQLNonNull(GraphQLInt)},
                 docSets: {
                     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),

@@ -33,6 +33,28 @@ class ProsKomma {
         ];
     }
 
+    validateSelectors() {
+        if (this.selectors.length === 0) {
+            throw new Error("No selectors found");
+        }
+        for (const [n, selector] of this.selectors.entries()) {
+            if (!("name" in selector)) {
+                throw new Error(`Selector ${n} has no name`);
+            }
+            if (!("type" in selector)) {
+                throw new Error(`Selector ${n} has no type`);
+            }
+            if (!["string", "integer"].includes(selector.type)) {
+                throw new Error(`Type for selector ${n} must be string or number, not ${selector.type}`)
+            }
+            for (const selectorKey of Object.keys(selector)) {
+                if (!["name", "type", "regex", "min", "max", "enum"].includes(selectorKey)) {
+                    throw new Error(`Unexpected key '${selectorKey}' in selector ${n}`);
+                }
+            }
+        }
+    }
+
     packageVersion() {
         return packageJson.version;
     };
