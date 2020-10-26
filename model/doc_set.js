@@ -13,6 +13,7 @@ class DocSet {
         const defaultedSelectors = selectors || processor.selectors;
         this.selectors = this.validateSelectors(defaultedSelectors);
         this.tags = new Set(tags || []);
+        this.validateTags();
         this.preEnums = {};
         this.enums = {
             ids: new ByteArray(512),
@@ -68,6 +69,14 @@ class DocSet {
             }
         }
         return selectors;
+    }
+
+    validateTags() {
+        for (const tag of this.tags) {
+            if (!xre.exec(tag, /^[a-z][a-z0-9]*$/)) {
+                throw new Error(`Tag '${tag}' is not valid (should be [a-z][a-z0-9]*)`);
+            }
+        }
     }
 
     documents() {
