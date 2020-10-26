@@ -5,13 +5,14 @@ const { nComponentsForScope } = require('../lib/scope_defs');
 
 class Document {
 
-    constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks) {
+    constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
         this.id = generateId();
         this.processor = processor;
         this.docSetId = docSetId;
         this.filterOptions = filterOptions;
         this.customTags = customTags;
         this.emptyBlocks = emptyBlocks;
+        this.tags = new Set(tags || []);
         this.headers = {};
         this.mainId = null;
         this.sequences = {};

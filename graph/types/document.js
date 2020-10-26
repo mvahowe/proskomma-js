@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull, GraphQLBoolean} = require('graphql');
 
 const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
@@ -38,6 +38,19 @@ const documentType = new GraphQLObjectType({
                 context.docSet = root.processor.docSets[root.docSetId];
                 return Object.values(root.sequences);
             }
+        },
+        tags: {
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+            resolve: root => Array.from(root.tags)
+        },
+        hasTag: {
+            type: GraphQLNonNull(GraphQLBoolean),
+            args: {
+                tagName: {
+                    type: GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve: (root, args) => root.tags.has(args.tagName)
         }
     })
 })

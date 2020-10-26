@@ -3,7 +3,7 @@ const path = require('path');
 
 const {ProsKomma} = require('../../');
 
-const pkWithDoc = (fp, selectors, options) => {
+const pkWithDoc = (fp, selectors, options, customTags, emptyBlocks, tags) => {
     if (!options) {options = {}};
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     const contentType = fp.split('.').pop();
@@ -12,7 +12,10 @@ const pkWithDoc = (fp, selectors, options) => {
         selectors,
         contentType,
         content,
-        options
+        options,
+        customTags,
+        emptyBlocks,
+        tags
     );
     return [pk, pkDoc];
 }

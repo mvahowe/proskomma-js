@@ -154,11 +154,11 @@ class ProsKomma {
         return Object.values(this.documents).filter(doc => "bookCode" in doc.headers && doc.headers["bookCode"] === bookCode);
     }
 
-    importDocument(selectors, contentType, contentString, filterOptions, customTags, emptyBlocks) {
-        return this.importDocuments(selectors, contentType, [contentString], filterOptions, customTags, emptyBlocks)[0];
+    importDocument(selectors, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
+        return this.importDocuments(selectors, contentType, [contentString], filterOptions, customTags, emptyBlocks, tags)[0];
     }
 
-    importDocuments(selectors, contentType, contentStrings, filterOptions, customTags, emptyBlocks) {
+    importDocuments(selectors, contentType, contentStrings, filterOptions, customTags, emptyBlocks, tags) {
         if (!filterOptions) {
             filterOptions = this.filters;
         }
@@ -168,12 +168,15 @@ class ProsKomma {
         if (!emptyBlocks) {
             emptyBlocks = this.emptyBlocks;
         }
+        if (!tags) {
+            tags = [];
+        }
         const docSetId = this.findOrMakeDocSet(selectors);
         const docSet = this.docSets[docSetId];
         docSet.buildPreEnums();
         const docs = [];
         for (const contentString of contentStrings) {
-            let doc = new Document(this, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks);
+            let doc = new Document(this, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags);
             this.addDocument(doc, docSetId);
             docs.push(doc);
         }

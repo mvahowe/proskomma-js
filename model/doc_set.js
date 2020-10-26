@@ -7,11 +7,12 @@ const {itemEnum} = require('../lib/item_defs');
 
 class DocSet {
 
-    constructor(processor, selectors) {
+    constructor(processor, selectors, tags) {
         this.id = generateId();
         this.processor = processor;
         const defaultedSelectors = selectors || processor.selectors;
         this.selectors = this.validateSelectors(defaultedSelectors);
+        this.tags = new Set(tags || []);
         this.preEnums = {};
         this.enums = {
             ids: new ByteArray(512),

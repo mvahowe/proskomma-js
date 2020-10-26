@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLBoolean} = require('graphql');
 const documentType = require('./document');
 const keyValueType = require('./key_value');
 
@@ -16,6 +16,19 @@ const docSetType = new GraphQLObjectType({
                 id: {type: GraphQLNonNull(GraphQLString)}
             },
             resolve: (root, args) => root.selectors[args.id]
+        },
+        tags: {
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+            resolve: root => Array.from(root.tags)
+        },
+        hasTag: {
+            type: GraphQLNonNull(GraphQLBoolean),
+            args: {
+                tagName: {
+                    type: GraphQLNonNull(GraphQLString)
+                }
+            },
+            resolve: (root, args) => root.tags.has(args.tagName)
         },
         documents: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
