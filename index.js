@@ -1,4 +1,6 @@
 const { graphql } = require('graphql');
+const xre = require('xregexp');
+
 const packageJson = require('./package.json');
 const { DocSet } = require('./model/doc_set');
 const { Document } = require('./model/document');
@@ -46,6 +48,48 @@ class ProsKomma {
             }
             if (!["string", "integer"].includes(selector.type)) {
                 throw new Error(`Type for selector ${n} must be string or number, not ${selector.type}`)
+            }
+            if (selector.type === "string") {
+                if ("min" in selector) {
+                    throw new Error("String selector should not include 'min'");
+                }
+                if ("max" in selector) {
+                    throw new Error("String selector should not include 'max'");
+                }
+                if ("regex" in selector) {
+                    try {
+                        xre(selector.regex);
+                    } catch (err) {
+                        throw new Error(`Regex '${selector.regex}' is not valid: ${err}`);
+                    }
+                }
+                if ("enum" in selector) {
+                    for (const enumElement of selector.enum) {
+                        if (typeof enumElement !== "string") {
+                            throw new Error(`Enum values for selector ${selector.name} should be strings, not '${enumElement}'`);
+                        }
+                    }
+                }
+            } else {
+                if ("regex" in selector) {
+                    throw new Error("Integer selector should not include 'regex'");
+                }
+                if ("min" in selector && typeof selector.min !== "number") {
+                    throw new Error(`'min' must be a number, not '${selector.min}'`);
+                }
+                if ("max" in selector && typeof selector.max !== "number") {
+                    throw new Error(`'max' must be a number, not '${selector.max}'`);
+                }
+                if ("min" in selector && "max" in selector && selector.min > selector.max) {
+                    throw new Error(`'min' cannot be greater than 'max' (${selector.min} > ${selector.max})`);
+                }
+                if ("enum" in selector) {
+                    for (const enumElement of selector.enum) {
+                        if (typeof enumElement !== "number") {
+                            throw new Error(`Enum values for selector ${selector.name} should be numbers, not '${enumElement}'`);
+                        }
+                    }
+                }
             }
             for (const selectorKey of Object.keys(selector)) {
                 if (!["name", "type", "regex", "min", "max", "enum"].includes(selectorKey)) {

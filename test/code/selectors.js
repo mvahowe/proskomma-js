@@ -60,7 +60,7 @@ test(
     `Throw on bad spec (${testGroup})`,
     async function (t) {
         try {
-            t.plan(6);
+            t.plan(15);
             let selectors = [];
             const customProsKomma = class extends ProsKomma {
                 constructor() {
@@ -78,6 +78,24 @@ test(
             t.throws(() => new customProsKomma(), /Type for selector/);
             selectors = [{name: "foo", type: "string", banana: "split"}];
             t.throws(() => new customProsKomma(), /Unexpected key/);
+            selectors = [{name: "foo", type: "string", min: 23}];
+            t.throws(() => new customProsKomma(), /should not include 'min'/);
+            selectors = [{name: "foo", type: "string", max: 23}];
+            t.throws(() => new customProsKomma(), /should not include 'max'/);
+            selectors = [{name: "foo", type: "string", regex: "["}];
+            t.throws(() => new customProsKomma(), /is not valid/);
+            selectors = [{name: "foo", type: "string", enum: ["a", "b", 23]}];
+            t.throws(() => new customProsKomma(), /should be strings/);
+            selectors = [{name: "foo", type: "integer", regex: "[a]"}];
+            t.throws(() => new customProsKomma(), /should not include 'regex'/);
+            selectors = [{name: "foo", type: "integer", min: "23"}];
+            t.throws(() => new customProsKomma(), /'min' must be a number/);
+            selectors = [{name: "foo", type: "integer", max: "23"}];
+            t.throws(() => new customProsKomma(), /'max' must be a number/);
+            selectors = [{name: "foo", type: "integer", min: 23, max: 22}];
+            t.throws(() => new customProsKomma(), /'min' cannot be greater than 'max'/);
+            selectors = [{name: "foo", type: "integer", enum: [1, 2, "3"]}];
+            t.throws(() => new customProsKomma(), /should be numbers/);
             selectors = [{name: "foo", type: "string"}];
             t.doesNotThrow(() => new customProsKomma());
         } catch (err) {
