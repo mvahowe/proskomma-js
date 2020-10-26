@@ -3,14 +3,9 @@ const fse = require('fs-extra');
 const path = require('path');
 
 const {ProsKomma} = require('../../');
-const {pkWithDoc, pkWithDocs} = require('../lib/load');
+const {customPkWithDoc, customPkWithDocs} = require('../lib/load');
 
 const testGroup = "Graph Selectors";
-
-const pk = pkWithDocs([
-    ["../test_data/usx/web_rut.usx", {lang: "eng", abbr: "webbe"}],
-    ["../test_data/usx/web_psa150.usx", {lang: "eng", abbr: "webbe"}]
-]);
 
 test(
     `selectors for root (${testGroup})`,
@@ -30,26 +25,6 @@ test(
             t.equal(selectors[1].name, "abbr");
             t.equal(selectors[1].type, "string");
             t.equal(selectors[1].regex, null);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-);
-
-test(
-    `selectors for docSet (${testGroup})`,
-    async function (t) {
-        try {
-            t.plan(6);
-            const query = '{ docSets { selectors { key value } } }';
-            const result = await pk.gqlQuery(query);
-            t.equal(result.errors, undefined);
-            t.ok("selectors" in result.data.docSets[0]);
-            const selectors = result.data.docSets[0].selectors;
-            t.equal(selectors[0].key, "lang");
-            t.equal(selectors[0].value, "eng");
-            t.equal(selectors[1].key, "abbr");
-            t.equal(selectors[1].value, "webbe");
         } catch (err) {
             console.log(err)
         }
@@ -162,3 +137,76 @@ test(
     }
 );
 
+test(
+    `selectors in graph for docSet (${testGroup})`,
+    async function (t) {
+        try {
+            const customProsKomma = class extends ProsKomma {
+                constructor() {
+                    super();
+                    this.selectors = [
+                        {
+                            name: "foo",
+                            type: "string"
+                        },
+                        {
+                            name: "baa",
+                            type: "integer"
+                        }
+                    ];
+                    this.validateSelectors();
+                }
+            }
+            let cpk = customPkWithDoc(customProsKomma, "../test_data/usx/web_rut.usx", {foo: "banana", baa: 23})[0];
+            t.plan(22);
+            let query = '{ docSets { selectors { key value } } }';
+            let result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.ok("selectors" in result.data.docSets[0]);
+            const selectors = result.data.docSets[0].selectors;
+            t.equal(selectors[0].key, "foo");
+            t.equal(selectors[0].value, "banana");
+            t.equal(selectors[1].key, "baa");
+            t.equal(selectors[1].value, '23');
+            cpk = customPkWithDocs(customProsKomma, [
+                ["../test_data/usx/web_rut.usx", {foo: "banana", baa: 23}],
+                    ["../test_data/usx/web_psa150.usx", {foo: "banana", baa: 48}],
+                    ["../test_data/usx/fig.usx", {foo: "mango", baa: 48}]
+                ]);
+            query = '{ docSets { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets.length, 3);
+            query = '{ docSets(selectorKeys:["foo"] selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets.length, 2);
+            query = '{ docSets(selectorKeys:["baa"] selectorValues:["48"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets.length, 2);
+            query = '{ docSets(selectorKeys:["foo", "baa"] selectorValues:["banana", "48"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets.length, 1);
+            query = '{ docSets(selectorKeys:["foo"] selectorValues:["durian"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets.length, 0);
+            query = '{ docSets(selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.ok(result.errors);
+            t.equal(result.errors[0].message, "selectorValues but no selectorKeys");
+            query = '{ docSets(selectorKeys:["foo"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.ok(result.errors);
+            t.equal(result.errors[0].message, "selectorKeys but no selectorValues");
+            query = '{ docSets(selectorKeys:["foo", "baa"] selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            result = await cpk.gqlQuery(query);
+            t.ok(result.errors);
+            t.equal(result.errors[0].message, "selectorKeys and selectorValues must be the same length");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

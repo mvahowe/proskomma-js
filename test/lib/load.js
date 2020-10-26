@@ -46,6 +46,21 @@ const pkWithDocs = (contentSpecs) => {
     return pk;
 }
 
+const customPkWithDocs = (pkClass, contentSpecs) => {
+    const pk = new pkClass();
+    for (const [fp, selectors] of contentSpecs) {
+        const content = fse.readFileSync(path.resolve(__dirname, fp));
+        const contentType = fp.split('.').pop();
+        pk.importDocument(
+            selectors,
+            contentType,
+            content,
+            {}
+        );
+    }
+    return pk;
+}
+
 const pkWithDocSetDocs = (fps, selectors, options) => {
     if (!options) {options = {}};
     const fpContent = [];
@@ -61,4 +76,4 @@ const pkWithDocSetDocs = (fps, selectors, options) => {
     return [pk, pkDocs];
 }
 
-module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs, pkWithDocSetDocs};
+module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs, customPkWithDocs, pkWithDocSetDocs};

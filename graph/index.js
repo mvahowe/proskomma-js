@@ -2,6 +2,7 @@ const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList,
 
 const docSetType = require('./types/doc_set');
 const documentType = require('./types/document');
+const keyValueType = require('./types/key_value');
 const selectorSpecType = require('./types/selector_spec');
 
 const gqlSchema = new GraphQLSchema({
@@ -17,7 +18,38 @@ const gqlSchema = new GraphQLSchema({
                 nDocSets: {type: GraphQLNonNull(GraphQLInt)},
                 docSets: {
                     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
-                    resolve: root => Object.values(root.docSets)
+                    args: {
+                        selectorKeys: {
+                            type: GraphQLList(GraphQLNonNull(GraphQLString))
+                        },
+                        selectorValues: {
+                            type: GraphQLList(GraphQLNonNull(GraphQLString))
+                        }
+                    },
+                    resolve: (root, args) => {
+                        const docSetMatchesSelectors = (ds, keys, values) => {
+                            for (const [n, key] of keys.entries()) {
+                                if (ds.selectors[key].toString() !== values[n]) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                        if (args.selectorKeys || args.selectorValues) {
+                            if (!args.selectorKeys) {
+                                throw new Error("selectorValues but no selectorKeys");
+                            }
+                            if (!args.selectorValues) {
+                                throw new Error("selectorKeys but no selectorValues");
+                            }
+                            if (args.selectorKeys.length !== args.selectorValues.length) {
+                                throw new Error("selectorKeys and selectorValues must be the same length");
+                            }
+                            return Object.values(root.docSets).filter(ds => docSetMatchesSelectors(ds, args.selectorKeys, args.selectorValues));
+                        } else {
+                            return Object.values(root.docSets)
+                        }
+                    }
                 },
                 docSetById: {
                     type: docSetType,
