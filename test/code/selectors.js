@@ -96,7 +96,10 @@ test(
             t.throws(() => new customProsKomma(), /'min' cannot be greater than 'max'/);
             selectors = [{name: "foo", type: "integer", enum: [1, 2, "3"]}];
             t.throws(() => new customProsKomma(), /should be numbers/);
-            selectors = [{name: "foo", type: "string"}];
+            selectors = [
+                {name: "foo", type: "string", regex: ".*", enum: ["a", "b", "c"]},
+                {name: "baa", type: "integer", min: 1, max: 9, enum: [2, 4, 6]}
+            ];
             t.doesNotThrow(() => new customProsKomma());
         } catch (err) {
             console.log(err)
@@ -108,18 +111,23 @@ test(
     `Throw on bad selector name and type (${testGroup})`,
     async function (t) {
         try {
-            t.plan(5);
+            t.plan(8);
             const customProsKomma = class extends ProsKomma {
                 constructor() {
                     super();
                     this.selectors = [
                         {
                             name: "foo",
-                            type: "string"
+                            type: "string",
+                            regex: "[a-z]+",
+                            enum: ["banana", "mango", "apple"]
                         },
                         {
                             name: "baa",
-                            type: "integer"
+                            type: "integer",
+                            min: 1,
+                            max: 9,
+                            enum: [2, 4, 6, 8]
                         }
                     ];
                     this.validateSelectors();
@@ -140,7 +148,13 @@ test(
             t.throws(importFn, /is of type number \(expected string\)/);
             selectors = {foo: "banana", baa: 24.5};
             t.throws(importFn, /is not an integer/);
-            selectors = {foo: "banana", baa: 99};
+            selectors = {foo: "banana", baa: 7};
+            t.throws(importFn, /is not in enum/);
+            selectors = {foo: "orange", baa: 8};
+            t.throws(importFn, /is not in enum/);
+            selectors = {foo: "123", baa: 8};
+            t.throws(importFn, /does not match regex/);
+            selectors = {foo: "banana", baa: 6};
             t.doesNotThrow(importFn);
         } catch (err) {
             console.log(err)

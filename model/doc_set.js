@@ -1,3 +1,4 @@
+const xre = require('xregexp');
 const {generateId} = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
 const {scopeEnumLabels, nComponentsForScope} = require('../lib/scope_defs');
@@ -41,8 +42,23 @@ class DocSet {
             ) {
                 throw new Error(`Selector '${name}' is of type ${typeof value} (expected ${expectedSelectors[name].type})`);
             }
-            if (typeof value === "number" && !Number.isInteger(value)) {
-                throw new Error(`Value '${value}' of integer selector '${name}' is not an integer`);
+            if (typeof value === "number") {
+                if (!Number.isInteger(value)) {
+                    throw new Error(`Value '${value}' of integer selector '${name}' is not an integer`);
+                }
+                if ("min" in expectedSelectors[name] && value < expectedSelectors[name].min) {
+                    throw new Error(`Value '${value}' is less than ${expectedSelectors[name].min}`);
+                }
+                if ("max" in expectedSelectors[name] && value > expectedSelectors[name].max) {
+                    throw new Error(`Value '${value}' is greater than ${expectedSelectors[name].max}`);
+                }
+            } else {
+                if ("regex" in expectedSelectors[name] && !xre.exec(value, xre(expectedSelectors[name].regex), 0)) {
+                    throw new Error(`Value '${value}' does not match regex '${expectedSelectors[name].regex}'`);
+                }
+            }
+            if ("enum" in expectedSelectors[name] && !expectedSelectors[name].enum.includes(value)) {
+                throw new Error(`Value '${value}' of selector '${name}' is not in enum`);
             }
         }
         for (const name of Object.keys(expectedSelectors)) {
