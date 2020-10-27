@@ -100,7 +100,6 @@ class ProsKomma {
     }
 
     processor() {
-        console.log("here")
         return "ProsKomma JS";
     }
 
