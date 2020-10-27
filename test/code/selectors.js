@@ -158,8 +158,8 @@ test(
                 }
             }
             let cpk = customPkWithDoc(customProsKomma, "../test_data/usx/web_rut.usx", {foo: "banana", baa: 23})[0];
-            t.plan(22);
-            let query = '{ docSets { selectors { key value } } }';
+            t.plan(23);
+            let query = '{ docSets { selectors { key value } selectorString } }';
             let result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("selectors" in result.data.docSets[0]);
@@ -168,6 +168,7 @@ test(
             t.equal(selectors[0].value, "banana");
             t.equal(selectors[1].key, "baa");
             t.equal(selectors[1].value, '23');
+            t.equal(result.data.docSets[0].selectorString, "banana_23");
             cpk = customPkWithDocs(customProsKomma, [
                 ["../test_data/usx/web_rut.usx", {foo: "banana", baa: 23}],
                     ["../test_data/usx/web_psa150.usx", {foo: "banana", baa: 48}],

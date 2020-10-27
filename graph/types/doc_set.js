@@ -17,6 +17,7 @@ const docSetType = new GraphQLObjectType({
             },
             resolve: (root, args) => root.selectors[args.id]
         },
+        selectorString: {type: GraphQLNonNull(GraphQLString)},
         tags: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
             resolve: root => Array.from(root.tags)

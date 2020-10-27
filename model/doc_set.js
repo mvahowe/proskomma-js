@@ -71,6 +71,10 @@ class DocSet {
         return selectors;
     }
 
+    selectorString() {
+        return this.processor.selectors.map(s => s.name).map(n => `${this.selectors[n]}`).join("_");
+    }
+
     validateTags() {
         for (const tag of this.tags) {
             if (!xre.exec(tag, /^[a-z][a-z0-9]*$/)) {
