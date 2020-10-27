@@ -99,7 +99,12 @@ class ProsKomma {
         }
     }
 
-    processor() {
+    selectorString(docSetSelectors) {
+        // In root so it can be easily subclassed
+        return this.selectors.map(s => s.name).map(n => `${docSetSelectors[n]}`).join("_");
+    }
+
+processor() {
         return "ProsKomma JS";
     }
 

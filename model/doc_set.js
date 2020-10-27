@@ -72,7 +72,7 @@ class DocSet {
     }
 
     selectorString() {
-        return this.processor.selectors.map(s => s.name).map(n => `${this.selectors[n]}`).join("_");
+        return this.processor.selectorString(this.selectors);
     }
 
     validateTags() {
