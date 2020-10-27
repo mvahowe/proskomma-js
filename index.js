@@ -99,6 +99,11 @@ class ProsKomma {
         }
     }
 
+    processor() {
+        console.log("here")
+        return "ProsKomma JS";
+    }
+
     packageVersion() {
         return packageJson.version;
     };
