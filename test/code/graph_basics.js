@@ -89,11 +89,11 @@ test(
 );
 
 test(
-    `DocSetsWithBooks (${testGroup})`,
+    `DocSets withBooks (${testGroup})`,
     async function (t) {
         try {
             t.plan(4);
-            const query = `{ docSets: docSetsWithBook(bookCode: "PSA") { id lang: selector(id:"lang") selector(id:"abbr") document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
+            const query = `{ docSets(withBook: "PSA") { id lang: selector(id:"lang") selector(id:"abbr") document: documentWithBook(bookCode: "PSA") { id header(id:"bookCode")} } }`;
             const result = await pk2.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
@@ -155,7 +155,7 @@ test(
     async function (t) {
         try {
             t.plan(4);
-            const query = `{  documentsWithBook(bookCode:"PSA") { id header(id:"bookCode") } }`;
+            const query = `{ documentsWithBook(bookCode:"PSA") { id header(id:"bookCode") } }`;
             const result = await pk2.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.documentsWithBook.length, 2);

@@ -24,7 +24,8 @@ const gqlSchema = new GraphQLSchema({
                         },
                         selectorValues: {
                             type: GraphQLList(GraphQLNonNull(GraphQLString))
-                        }
+                        },
+                        withBook: { type: GraphQLString }
                     },
                     resolve: (root, args) => {
                         const docSetMatchesSelectors = (ds, keys, values) => {
@@ -35,6 +36,7 @@ const gqlSchema = new GraphQLSchema({
                             }
                             return true;
                         }
+                        const docSetValues = "withBook" in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets);
                         if (args.selectorKeys || args.selectorValues) {
                             if (!args.selectorKeys) {
                                 throw new Error("selectorValues but no selectorKeys");
@@ -45,9 +47,9 @@ const gqlSchema = new GraphQLSchema({
                             if (args.selectorKeys.length !== args.selectorValues.length) {
                                 throw new Error("selectorKeys and selectorValues must be the same length");
                             }
-                            return Object.values(root.docSets).filter(ds => docSetMatchesSelectors(ds, args.selectorKeys, args.selectorValues));
+                            return docSetValues.filter(ds => docSetMatchesSelectors(ds, args.selectorKeys, args.selectorValues));
                         } else {
-                            return Object.values(root.docSets)
+                            return docSetValues;
                         }
                     }
                 },
@@ -64,13 +66,6 @@ const gqlSchema = new GraphQLSchema({
                         ids: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
                     },
                     resolve: (root, args) => root.docSetsById(args.ids)
-                },
-                docSetsWithBook: {
-                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
-                    args: {
-                        bookCode: {type: GraphQLNonNull(GraphQLString)}
-                    },
-                    resolve: (root, args) => root.docSetsWithBook(args.bookCode)
                 },
                 nDocuments: {type: GraphQLNonNull(GraphQLInt)},
                 documents: {
