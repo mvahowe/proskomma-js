@@ -110,15 +110,8 @@ const blockType = new GraphQLObjectType({
         },
         items: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-            resolve:
-                (root, args, context) => {
-                    return context.docSet.unsuccinctifyItems(root.c, {})
-                }
-        },
-        prunedItems: {
-            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             args: {
-                requiredScopes: {type: GraphQLList(GraphQLString)}
+                withScopes: {type: GraphQLList(GraphQLString)}
             },
             resolve:
                 (root, args, context) => {
@@ -128,7 +121,7 @@ const blockType = new GraphQLObjectType({
                             tokens: true,
                             scopes: true,
                             grafts: true,
-                            requiredScopes: args.requiredScopes
+                            requiredScopes: args.withScopes || []
                         }
                     )
                 }

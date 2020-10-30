@@ -204,7 +204,7 @@ test(
             t.plan(2);
             const requiredScopes = '["chapter/1", "verse/2"]';
             const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
-            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { items: prunedItems(requiredScopes:${requiredScopes}) ${itemFragment} } } } }`;
+            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { items(withScopes:${requiredScopes}) ${itemFragment} } } } }`;
             let result = await pk5.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
