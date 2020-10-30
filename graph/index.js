@@ -19,13 +19,16 @@ const gqlSchema = new GraphQLSchema({
                 docSets: {
                     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
                     args: {
+                        ids: {
+                            type: GraphQLList(GraphQLNonNull(GraphQLString))
+                        },
                         selectorKeys: {
                             type: GraphQLList(GraphQLNonNull(GraphQLString))
                         },
                         selectorValues: {
                             type: GraphQLList(GraphQLNonNull(GraphQLString))
                         },
-                        withBook: { type: GraphQLString }
+                        withBook: {type: GraphQLString}
                     },
                     resolve: (root, args) => {
                         const docSetMatchesSelectors = (ds, keys, values) => {
@@ -36,7 +39,8 @@ const gqlSchema = new GraphQLSchema({
                             }
                             return true;
                         }
-                        const docSetValues = "withBook" in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets);
+                        const docSetValues = ("withBook" in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
+                            .filter(ds => !args.ids || args.ids.includes(ds.id));
                         if (args.selectorKeys || args.selectorValues) {
                             if (!args.selectorKeys) {
                                 throw new Error("selectorValues but no selectorKeys");
@@ -59,13 +63,6 @@ const gqlSchema = new GraphQLSchema({
                         id: {type: GraphQLNonNull(GraphQLString)}
                     },
                     resolve: (root, args) => root.docSetById(args.id)
-                },
-                docSetsById: {
-                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
-                    args: {
-                        ids: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
-                    },
-                    resolve: (root, args) => root.docSetsById(args.ids)
                 },
                 nDocuments: {type: GraphQLNonNull(GraphQLInt)},
                 documents: {

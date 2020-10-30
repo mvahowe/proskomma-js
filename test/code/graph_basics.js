@@ -71,17 +71,17 @@ test(
 );
 
 test(
-    `DocSetsById (${testGroup})`,
+    `Filter docSets by IDs (${testGroup})`,
     async function (t) {
         try {
             t.plan(5);
-            const query = `{ docSetsById(ids: ["${pkDoc.docSetId}"]) { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
+            const query = `{ docSets(ids: ["${pkDoc.docSetId}"]) { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("id" in result.data.docSetsById[0]);
-            t.equal(result.data.docSetsById[0].lang, "eng");
-            t.equal(result.data.docSetsById[0].abbr, "ust");
-            t.ok("id" in result.data.docSetsById[0].documents[0]);
+            t.ok("id" in result.data.docSets[0]);
+            t.equal(result.data.docSets[0].lang, "eng");
+            t.equal(result.data.docSets[0].abbr, "ust");
+            t.ok("id" in result.data.docSets[0].documents[0]);
         } catch (err) {
             console.log(err)
         }
@@ -89,7 +89,7 @@ test(
 );
 
 test(
-    `DocSets withBooks (${testGroup})`,
+    `Filter docSets by withBooks (${testGroup})`,
     async function (t) {
         try {
             t.plan(4);

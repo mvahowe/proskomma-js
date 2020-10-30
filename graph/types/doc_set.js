@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLBoolean} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLList, GraphQLNonNull, GraphQLBoolean} = require('graphql');
 const documentType = require('./document');
 const keyValueType = require('./key_value');
 
