@@ -67,7 +67,14 @@ const gqlSchema = new GraphQLSchema({
                 nDocuments: {type: GraphQLNonNull(GraphQLInt)},
                 documents: {
                     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
-                    resolve: root => root.documentList()
+                    args: {
+                        ids: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                        withBook: {type: GraphQLString}
+                    },
+                    resolve: (root, args) => {
+                        const documentValues = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
+                        return documentValues.filter(d => !args.ids || args.ids.includes(d.id));
+                    }
                 },
                 documentById: {
                     type: documentType,
@@ -76,20 +83,6 @@ const gqlSchema = new GraphQLSchema({
                     },
                     resolve: (root, args) => root.documentById(args.id)
                 },
-                documentsById: {
-                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
-                    args: {
-                        ids: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
-                    },
-                    resolve: (root, args) => root.documentsById(args.ids)
-                },
-                documentsWithBook: {
-                    type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
-                    args: {
-                        bookCode: {type: GraphQLNonNull(GraphQLString)}
-                    },
-                    resolve: (root, args) => root.documentsWithBook(args.bookCode)
-                }
             }
         }
     )

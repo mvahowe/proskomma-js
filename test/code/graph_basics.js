@@ -136,14 +136,14 @@ test(
 );
 
 test(
-    `DocumentsById (${testGroup})`,
+    `Filter documents by id (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
-            const query = `{ documentsById(ids: ["${pkDoc.id}"]) { id } }`;
+            const query = `{ documents(ids: ["${pkDoc.id}"]) { id } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("id" in result.data.documentsById[0]);
+            t.ok("id" in result.data.documents[0]);
         } catch (err) {
             console.log(err)
         }
@@ -151,16 +151,16 @@ test(
 );
 
 test(
-    `DocumentsWithBook (${testGroup})`,
+    `Filter documents by withBook (${testGroup})`,
     async function (t) {
         try {
             t.plan(4);
-            const query = `{ documentsWithBook(bookCode:"PSA") { id header(id:"bookCode") } }`;
+            const query = `{ documents(withBook:"PSA") { id header(id:"bookCode") } }`;
             const result = await pk2.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.equal(result.data.documentsWithBook.length, 2);
-            t.equal(result.data.documentsWithBook[0].header, "PSA");
-            t.equal(result.data.documentsWithBook[1].header, "PSA");
+            t.equal(result.data.documents.length, 2);
+            t.equal(result.data.documents[0].header, "PSA");
+            t.equal(result.data.documents[1].header, "PSA");
         } catch (err) {
             console.log(err)
         }
