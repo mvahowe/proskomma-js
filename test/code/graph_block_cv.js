@@ -2,7 +2,7 @@ const test = require('tape');
 
 const {pkWithDoc} = require('../lib/load');
 
-const testGroup = "Scripture Book Scope";
+const testGroup = "Block CV";
 
 const pk = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "fra", abbr: "hello"})[0];
 
@@ -134,6 +134,27 @@ test(
             const blocks = result.data.docSets[0].document.mainSequence.blocks;
             t.ok(blocks[0].text.startsWith("Then she kissed them"));
             t.ok(blocks[blocks.length - 1].text.endsWith("hand has gone out against me.”"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Chapter/verse range (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '      mainSequence { blocks(withScriptureCV:"1:22-3:4") { text } } } }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            console.log(JSON.stringify(blocks, null, 2));
+            t.ok(blocks[0].text.startsWith("She said to them,"));
+            t.ok(blocks[blocks.length - 1].text.endsWith("Then he will tell you what to do.”"));
         } catch (err) {
             console.log(err)
         }
