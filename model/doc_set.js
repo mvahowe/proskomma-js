@@ -385,6 +385,50 @@ class DocSet {
         return this.enums.ids.countedString(seqIndex);
     }
 
+    blocksWithScriptureCV(blocks, cv) {
+        if (xre.exec(cv, xre("^[1-9][0-9]*$"))) {
+            const scopes = [`chapter/${cv}`];
+            return blocks.filter(b => this.allScopesInBlock(b, scopes));
+        } else if (xre.exec(cv, xre("^[1-9][0-9]*-[1-9][0-9]*$"))) {
+            const [fromC, toC] = cv.split("-").map(v => parseInt(v));
+            if (fromC > toC) {
+                throw new Error(`Chapter range must be from min to max, not '${cv}'`);
+            }
+            const scopes = [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`);
+            return blocks.filter(b => this.anyScopeInBlock(b, scopes));
+        } else {
+            return null;
+        }
+    }
+
+    allScopesInBlock(block, scopes) {
+        const allBlockScopes = new Set([
+                ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
+                ...this.unsuccinctifyScopes(block.is).map(s => s[1])
+            ]
+        );
+        for (const scope of scopes) {
+            if (!allBlockScopes.has(scope)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    anyScopeInBlock(block, scopes) {
+        const allBlockScopes = new Set([
+                ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
+                ...this.unsuccinctifyScopes(block.is).map(s => s[1])
+            ]
+        );
+        for (const scope of scopes) {
+            if (allBlockScopes.has(scope)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     serializeSuccinct() {
         const ret = {
             id: this.id,

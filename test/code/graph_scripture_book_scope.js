@@ -10,15 +10,14 @@ test(
     `Bad bookScope (${testGroup})`,
     async function (t) {
         try {
-            t.plan(3);
+            t.plan(2);
             const query =
                 '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
-                '     mainSequence { blocks(withScriptureBookScope:{book:3}) { cBL } } } }' +
+                '     mainSequence { blocks(withScriptureCV:2) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
-            t.equal(result.errors.length, 2);
-            t.equal(result.errors.filter(e => e.message.includes("was not provided")).length, 1);
-            t.equal(result.errors.filter(e => e.message.includes("cannot represent a non string value: 3")).length, 1);
+            t.equal(result.errors.length, 1);
+            t.equal(result.errors.filter(e => e.message.includes("cannot represent a non string value: 2")).length, 1);
         } catch (err) {
             console.log(err)
         }
@@ -32,11 +31,11 @@ test(
             t.plan(2);
             const query =
                 '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
-                '      mainSequence { blocks(withScriptureBookScope:{book:"RUT", cvs:"1"} withScopes:[]) { cBL } } } }' +
+                '      mainSequence { blocks(withScriptureCV:"2" withScopes:[]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors.length, 1);
-            t.ok(result.errors[0].message.includes("Cannot specify both withScopes and forScriptureBookScope"));
+            t.ok(result.errors[0].message.includes("Cannot specify both withScopes and withScriptureCV"));
         } catch (err) {
             console.log(err)
         }
@@ -47,13 +46,36 @@ test(
     `One chapter (${testGroup})`,
     async function (t) {
         try {
-            t.plan(1);
+            t.plan(3);
             const query =
                 '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
-                '      mainSequence { blocks(withScriptureBookScope:{book:"RUT", cvs:"1"}) { cBL } } } }' +
+                '      mainSequence { blocks(withScriptureCV:"2") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            t.ok(blocks[0].text.startsWith("Naomi had a relative of her husband"));
+            t.ok(blocks[blocks.length - 1].text.endsWith("lived with her mother-in-law."));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Chapter range (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '      mainSequence { blocks(withScriptureCV:"1-3") { text } } } }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            t.ok(blocks[0].text.startsWith("In the days when the judges judged"));
+            t.ok(blocks[blocks.length - 1].text.endsWith("until he has settled this today.”"));
         } catch (err) {
             console.log(err)
         }

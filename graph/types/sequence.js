@@ -1,6 +1,5 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull} = require('graphql');
 
-// const blockType = require('./oldBlock');
 const blockType = require('./block');
 
 const htmlStyles = ".blocktag-q1 {font-family: italic}" +
@@ -18,20 +17,6 @@ const htmlFoot = s => {
     return "</body>\n</html>\n";
 }
 
-const allScopesInBlock = (docSet, block, scopes) => {
-    const allBlockScopes = new Set([
-            ...docSet.unsuccinctifyScopes(block.os).map(s => s[1]),
-            ...docSet.unsuccinctifyScopes(block.is).map(s => s[1])
-        ]
-    );
-    for (const scope of scopes) {
-        if (!allBlockScopes.has(scope)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 const sequenceType = new GraphQLObjectType({
     name: "Sequence",
     fields: () => ({
@@ -43,12 +28,18 @@ const sequenceType = new GraphQLObjectType({
         blocks: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
             args: {
-                withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+                withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                withScriptureCV: {type: GraphQLString}
             },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
+                if (args.withScopes && args.withScriptureCV) {
+                    throw new Error("Cannot specify both withScopes and withScriptureCV");
+                }
                 if (args.withScopes) {
-                    return root.blocks.filter(b => allScopesInBlock(context.docSet, b, args.withScopes));
+                    return root.blocks.filter(b => context.docSet.allScopesInBlock(b, args.withScopes));
+                } else if (args.withScriptureCV) {
+                    return context.docSet.blocksWithScriptureCV(root.blocks, args.withScriptureCV);
                 } else {
                     return root.blocks;
                 }
