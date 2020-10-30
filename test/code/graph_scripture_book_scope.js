@@ -99,3 +99,24 @@ test(
         }
     }
 );
+
+test(
+    `One verse (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '      mainSequence { blocks(withScriptureCV:"1:14") { text } } } }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            t.ok(blocks[0].text.startsWith("They lifted up their voices"));
+            t.ok(blocks[blocks.length - 1].text.endsWith("Follow your sister-in-law.”"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+

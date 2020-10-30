@@ -396,6 +396,10 @@ class DocSet {
             }
             const scopes = [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`);
             return blocks.filter(b => this.anyScopeInBlock(b, scopes));
+        } else if (xre.exec(cv, xre("^[1-9][0-9]*:[1-9][0-9]*$"))) {
+            const [fromC, fromV] = cv.split(":").map(v => parseInt(v));
+            const scopes = [`chapter/${fromC}`, `verse/${fromV}`];
+            return blocks.filter(b => this.allScopesInBlock(b, scopes));
         } else {
             return null;
         }
