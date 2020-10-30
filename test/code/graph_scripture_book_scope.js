@@ -120,3 +120,23 @@ test(
     }
 );
 
+test(
+    `Verse range (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '      mainSequence { blocks(withScriptureCV:"1:10-13") { text } } } }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            t.ok(blocks[0].text.startsWith("Then she kissed them"));
+            t.ok(blocks[blocks.length - 1].text.endsWith("hand has gone out against me.”"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+

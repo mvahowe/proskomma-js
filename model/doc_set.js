@@ -400,6 +400,15 @@ class DocSet {
             const [fromC, fromV] = cv.split(":").map(v => parseInt(v));
             const scopes = [`chapter/${fromC}`, `verse/${fromV}`];
             return blocks.filter(b => this.allScopesInBlock(b, scopes));
+        } else if (xre.exec(cv, xre("^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*$"))) {
+            const [fromC, vs] = cv.split(":");
+            const [fromV, toV] = vs.split("-").map(v => parseInt(v));
+            if (fromV > toV) {
+                throw new Error(`Verse range must be from min to max, not '${vs}'`);
+            }
+            const chapterScopes = [`chapter/${fromC}`];
+            const verseScopes = [...Array((toV - fromV) + 1).keys()].map(n => `verse/${n + fromV}`);
+            return blocks.filter(b => this.allScopesInBlock(b, chapterScopes)).filter(b => this.anyScopeInBlock(b, verseScopes));
         } else {
             return null;
         }
