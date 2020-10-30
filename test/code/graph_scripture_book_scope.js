@@ -81,3 +81,21 @@ test(
         }
     }
 );
+
+test(
+    `Reverse chapter range (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const query =
+                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '      mainSequence { blocks(withScriptureCV:"3-1") { text } } } }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors.length, 1);
+            t.ok(result.errors[0].message.includes("Chapter range must be from min to max"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
