@@ -40,21 +40,18 @@ const sequenceType = new GraphQLObjectType({
         nBlocks: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.blocks.length},
         htmlHead: {type: GraphQLNonNull(GraphQLString), resolve: root => htmlHead(root)},
         htmlFoot: {type: GraphQLNonNull(GraphQLString), resolve: root => htmlFoot(root)},
-        blocksForScopes: {
+        blocks: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
             args: {
-                scopes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))}
+                withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
             },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
-                return root.blocks.filter(b => allScopesInBlock(context.docSet, b, args.scopes))
-            }
-        },
-        blocks: {
-            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
-            resolve: (root, args, context) => {
-                context.docSet.maybeBuildEnumIndexes();
-                return root.blocks;
+                if (args.withScopes) {
+                    return root.blocks.filter(b => allScopesInBlock(context.docSet, b, args.withScopes));
+                } else {
+                    return root.blocks;
+                }
             }
         }
     })

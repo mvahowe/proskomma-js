@@ -48,17 +48,17 @@ test(
     async function (t) {
         try {
             t.plan(7);
-            let query = '{ documents { mainSequence { blocksForScopes(scopes:["chapter/1", "verse/1"]) { text } } } }';
+            let query = '{ documents { mainSequence { blocks(withScopes:["chapter/1", "verse/1"]) { text } } } }';
             let result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("blocksForScopes" in result.data.documents[0].mainSequence);
-            t.equal(result.data.documents[0].mainSequence.blocksForScopes.length, 1);
-            t.equal(result.data.documents[0].mainSequence.blocksForScopes[0].text, "This is how the Good News of JC began...");
-            query = '{ documents { mainSequence { blocksForScopes(scopes:["chapter/1", "verse/2"]) { text } } } }';
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            t.equal(result.data.documents[0].mainSequence.blocks.length, 1);
+            t.equal(result.data.documents[0].mainSequence.blocks[0].text, "This is how the Good News of JC began...");
+            query = '{ documents { mainSequence { blocks(withScopes:["chapter/1", "verse/2"]) { text } } } }';
             result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("blocksForScopes" in result.data.documents[0].mainSequence);
-            t.equal(result.data.documents[0].mainSequence.blocksForScopes.length, 0);
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            t.equal(result.data.documents[0].mainSequence.blocks.length, 0);
         } catch (err) {
             console.log(err)
         }
