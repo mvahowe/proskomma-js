@@ -2,7 +2,7 @@ const test = require('tape');
 
 const {pkWithDoc} = require('../lib/load');
 
-const testGroup = "Block CV";
+const testGroup = "Blocks with CV";
 
 const pk = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "fra", abbr: "hello"})[0];
 
@@ -152,7 +152,6 @@ test(
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.docSets[0].document.mainSequence.blocks;
-            console.log(JSON.stringify(blocks, null, 2));
             t.ok(blocks[0].text.startsWith("She said to them,"));
             t.ok(blocks[blocks.length - 1].text.endsWith("Then he will tell you what to do.”"));
         } catch (err) {

@@ -111,19 +111,27 @@ const blockType = new GraphQLObjectType({
         items: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             args: {
-                withScopes: {type: GraphQLList(GraphQLString)}
+                withScopes: {type: GraphQLList(GraphQLString)},
+                withScriptureCV: {type: GraphQLString}
             },
             resolve:
                 (root, args, context) => {
-                    return context.docSet.unsuccinctifyPrunedItems(
-                        root,
-                        {
-                            tokens: true,
-                            scopes: true,
-                            grafts: true,
-                            requiredScopes: args.withScopes || []
-                        }
-                    )
+                    if (args.withScopes && args.withScriptureCV) {
+                        throw new Error("Cannot specify both withScopes and withScriptureCV");
+                    }
+                    if (args.withScriptureCV) {
+                        return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV);
+                    } else {
+                        return context.docSet.unsuccinctifyPrunedItems(
+                            root,
+                            {
+                                tokens: true,
+                                scopes: true,
+                                grafts: true,
+                                requiredScopes: args.withScopes || []
+                            }
+                        )
+                    }
                 }
         },
         tokens: {

@@ -439,7 +439,7 @@ class DocSet {
                     },
                     {}
                 );
-                ;
+            ;
         }
 
         if (xre.exec(cv, xre("^[1-9][0-9]*$"))) {
@@ -476,9 +476,10 @@ class DocSet {
             const chapterBlocks = blocks.filter(b => this.anyScopeInBlock(b, chapterScopes));
             return chapterBlocks.filter(b => hasMiddleChapter(b, fromC, toC) || hasFirstChapter(b, fromC, fromV) || hasLastChapter(b, toC, toV));
         } else {
-            return null;
+            throw new Error(`Bad cv reference '${cv}'`);
         }
     }
+
 
     allScopesInBlock(block, scopes) {
         const allBlockScopes = new Set([
@@ -506,6 +507,36 @@ class DocSet {
             }
         }
         return false;
+    }
+
+    unsuccinctifyItemsWithScriptureCV(block, cv) {
+        const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
+
+        const cvMatchFunction = () => {
+            if (xre.exec(cv, xre("^[1-9][0-9]*$"))) {
+                return () => {
+                    return openScopes.has(`chapter/${cv}`);
+                }
+            } else {
+                throw new Error(`Bad cv reference '${cv}'`);
+            }
+        }
+
+        const itemMatchesCV = cvMatchFunction();
+
+        const ret = [];
+        for (const item of this.unsuccinctifyItems(block.c, {})) {
+            if (item[0] === "startScope") {
+                openScopes.add(item[1]);
+            }
+            if (itemMatchesCV()) {
+                ret.push(item);
+            }
+            if (item[0] === "endScope") {
+                openScopes.delete(item[1]);
+            }
+        }
+        return ret;
     }
 
     blockHasMatchingItem(block, testFunction, options) {
