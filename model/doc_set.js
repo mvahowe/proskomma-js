@@ -517,6 +517,19 @@ class DocSet {
                 return () => {
                     return openScopes.has(`chapter/${cv}`);
                 }
+            } else if (xre.exec(cv, xre("^[1-9][0-9]*-[1-9][0-9]*$"))) {
+                return () => {
+                    const [fromC, toC] = cv.split("-").map(v => parseInt(v));
+                    if (fromC > toC) {
+                        throw new Error(`Chapter range must be from min to max, not '${cv}'`);
+                    }
+                    for (const scope of [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`)) {
+                        if (openScopes.has(scope)) {
+                            return true;
+                        }
+                    };
+                    return false;
+                }
             } else {
                 throw new Error(`Bad cv reference '${cv}'`);
             }
