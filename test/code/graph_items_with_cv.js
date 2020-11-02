@@ -127,3 +127,26 @@ test(
         }
     }
 );
+
+test(
+    `Verse range (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                     mainSequence { blocks(withScriptureCV:"1:10-13") { items(withScriptureCV:"1:10-13") ${itemFragment} } } } }
+                }`;
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            console.log(JSON.stringify(blocks, null, 2));
+            const firstBlockItems = blocks[0].items;
+            const lastBlockItems = blocks[blocks.length - 1].items;
+            t.equal(firstBlockItems.filter(i => i.subType === "wordLike")[0].chars, "They");
+            t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "me");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

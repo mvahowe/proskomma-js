@@ -540,6 +540,25 @@ class DocSet {
                     }
                     return true;
                 }
+            } else if (xre.exec(cv, xre("^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*$"))) {
+                return () => {
+                    const [fromC, vs] = cv.split(":");
+                    const [fromV, toV] = vs.split("-").map(v => parseInt(v));
+                    if (fromV > toV) {
+                        throw new Error(`Verse range must be from min to max, not '${vs}'`);
+                    }
+                    const chapterScope = `chapter/${fromC}`;
+                    const verseScopes = [...Array((toV - fromV) + 1).keys()].map(n => `verse/${n + fromV}`);
+                    if (!openScopes.has(chapterScope)) {
+                        return false;
+                    }
+                    for (const scope of verseScopes) {
+                        if (openScopes.has(scope)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             } else {
                 throw new Error(`Bad cv reference '${cv}'`);
             }
