@@ -508,7 +508,8 @@ class DocSet {
         return false;
     }
 
-    unsuccinctifyItemsWithScriptureCV(block, cv) {
+    unsuccinctifyItemsWithScriptureCV(block, cv, options) {
+        options = options || {};
         const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
 
         const cvMatchFunction = () => {
@@ -568,8 +569,8 @@ class DocSet {
                     }
                     const scopeArray = [...openScopes];
                     const chapterScopes = scopeArray.filter(s => s.startsWith("chapter/"));
-                    if (chapterScopes.length !== 1) {
-                        throw new Error(`Expected one chapter for item, found ${chapterScopes}`);
+                    if (chapterScopes.length > 1) {
+                        throw new Error(`Expected zero or one chapter for item, found ${chapterScopes.length}`);
                     }
                     const chapterNo = parseInt(chapterScopes[0].split("/")[1]);
                     if ((chapterNo < fromC) || (chapterNo > toC)) {
@@ -583,8 +584,6 @@ class DocSet {
                     }
 
                 }
-
-
             } else {
                 throw new Error(`Bad cv reference '${cv}'`);
             }
@@ -592,12 +591,25 @@ class DocSet {
 
         const itemMatchesCV = cvMatchFunction();
 
+        const itemInOptions = (item) => {
+            if (!options || Object.keys(options).length === 0) {
+                return true;
+            } else {
+                const itemType = item[0];
+                return (
+                    (itemType === "token" && "tokens" in options) ||
+                    (itemType === "graft" && "grafts" in options) ||
+                    (itemType.endsWith("Scope") && "scopes" in options)
+                )
+            }
+        }
+
         const ret = [];
         for (const item of this.unsuccinctifyItems(block.c, {})) {
             if (item[0] === "startScope") {
                 openScopes.add(item[1]);
             }
-            if (itemMatchesCV()) {
+            if (itemMatchesCV() && itemInOptions(item)) {
                 ret.push(item);
             }
             if (item[0] === "endScope") {

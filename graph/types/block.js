@@ -136,9 +136,16 @@ const blockType = new GraphQLObjectType({
         },
         tokens: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
+            args: {
+                withScriptureCV: {type: GraphQLString}
+            },
             resolve:
                 (root, args, context) => {
-                    return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
+                    if (args.withScriptureCV) {
+                        return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {tokens: true});
+                    } else {
+                        return context.docSet.unsuccinctifyItems(root.c, {tokens: true});
+                    }
                 }
         },
         text: {

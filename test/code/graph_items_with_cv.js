@@ -140,7 +140,6 @@ test(
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.docSets[0].document.mainSequence.blocks;
-            console.log(JSON.stringify(blocks, null, 2));
             const firstBlockItems = blocks[0].items;
             const lastBlockItems = blocks[blocks.length - 1].items;
             t.equal(firstBlockItems.filter(i => i.subType === "wordLike")[0].chars, "They");
@@ -166,6 +165,29 @@ test(
             const firstBlockItems = blocks[0].items;
             const lastBlockItems = blocks[blocks.length - 1].items;
             t.equal(firstBlockItems.filter(i => i.subType === "wordLike")[0].chars, "So");
+            t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "drinking");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Chapter/verse range tokens (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { tokens(withScriptureCV:"1:22-3:3") { subType chars } } } } }
+                }`;
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            console.log(JSON.stringify(blocks, null, 2));
+            const firstBlockItems = blocks[0].tokens;
+            const lastBlockItems = blocks[blocks.length - 1].tokens;
+            t.equal(firstBlockItems[0].chars, "So");
             t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "drinking");
         } catch (err) {
             console.log(err)
