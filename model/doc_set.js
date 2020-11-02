@@ -480,7 +480,6 @@ class DocSet {
         }
     }
 
-
     allScopesInBlock(block, scopes) {
         const allBlockScopes = new Set([
                 ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
@@ -559,6 +558,33 @@ class DocSet {
                     }
                     return false;
                 }
+            } else if (xre.exec(cv, xre("^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*:[1-9][0-9]*$"))) {
+                return () => {
+                    const [fromCV, toCV] = cv.split("-");
+                    const [fromC, fromV] = fromCV.split(":").map(c => parseInt(c));
+                    const [toC, toV] = toCV.split(":").map(v => parseInt(v));
+                    if (fromC > toC) {
+                        throw new Error(`Chapter range must be from min to max, not '${fromC}-${toV}'`);
+                    }
+                    const scopeArray = [...openScopes];
+                    const chapterScopes = scopeArray.filter(s => s.startsWith("chapter/"));
+                    if (chapterScopes.length !== 1) {
+                        throw new Error(`Expected one chapter for item, found ${chapterScopes}`);
+                    }
+                    const chapterNo = parseInt(chapterScopes[0].split("/")[1]);
+                    if ((chapterNo < fromC) || (chapterNo > toC)) {
+                        return false;
+                    } else if (chapterNo === fromC) {
+                        return scopeArray.filter(s => s.startsWith("verse/") && parseInt(s.split("/")[1]) >= fromV).length > 0;
+                    } else if (chapterNo === toC) {
+                        return scopeArray.filter(s => s.startsWith("verse/") && parseInt(s.split("/")[1]) <= toV).length > 0;
+                    } else {
+                        return true;
+                    }
+
+                }
+
+
             } else {
                 throw new Error(`Bad cv reference '${cv}'`);
             }
