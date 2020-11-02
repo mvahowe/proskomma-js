@@ -150,12 +150,15 @@ const blockType = new GraphQLObjectType({
         },
         text: {
             type: GraphQLNonNull(GraphQLString),
+            args: {
+                withScriptureCV: {type: GraphQLString}
+            },
             resolve:
                 (root, args, context) => {
-                    return context.docSet.unsuccinctifyItems(root.c, {tokens: true})
-                        .map(t => t[2])
-                        .join('')
-                        .trim()
+                    const tokens = args.withScriptureCV ?
+                        context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {tokens: true}) :
+                        context.docSet.unsuccinctifyItems(root.c, {tokens: true});
+                    return tokens.map(t => t[2]).join('').trim();
                 }
         },
         dump: {

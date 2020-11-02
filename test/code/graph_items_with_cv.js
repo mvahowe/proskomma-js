@@ -79,7 +79,6 @@ test(
             const blocks = result.data.docSets[0].document.mainSequence.blocks;
             const firstBlockItems = blocks[0].items;
             const lastBlockItems = blocks[blocks.length - 1].items;
-            console.log(JSON.stringify(firstBlockItems, null, 2));
             t.equal(firstBlockItems.filter(i => i.subType === "wordLike")[0].chars, "In");
             t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "today");
         } catch (err) {
@@ -184,11 +183,32 @@ test(
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.docSets[0].document.mainSequence.blocks;
-            console.log(JSON.stringify(blocks, null, 2));
             const firstBlockItems = blocks[0].tokens;
             const lastBlockItems = blocks[blocks.length - 1].tokens;
             t.equal(firstBlockItems[0].chars, "So");
             t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "drinking");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Chapter/verse range text (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { text(withScriptureCV:"1:22-3:3") } } } }
+                }`;
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            const firstBlockText = blocks[0].text;
+            const lastBlockText = blocks[blocks.length - 1].text;
+            t.ok(firstBlockText.startsWith("So"));
+            t.ok(lastBlockText.endsWith("drinking."));
         } catch (err) {
             console.log(err)
         }
