@@ -105,3 +105,25 @@ test(
         }
     }
 );
+
+test(
+    `One verse (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(3);
+            const query =
+                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                     mainSequence { blocks(withScriptureCV:"1:15") { items(withScriptureCV:"1:15") ${itemFragment} } } } }
+                }`;
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.docSets[0].document.mainSequence.blocks;
+            const firstBlockItems = blocks[0].items;
+            const lastBlockItems = blocks[blocks.length - 1].items;
+            t.equal(firstBlockItems.filter(i => i.subType === "wordLike")[0].chars, "She");
+            t.equal(lastBlockItems.filter(i => i.subType === "wordLike").reverse()[0].chars, "law");
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);

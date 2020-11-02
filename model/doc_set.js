@@ -527,8 +527,18 @@ class DocSet {
                         if (openScopes.has(scope)) {
                             return true;
                         }
-                    };
+                    }
                     return false;
+                }
+            } else if (xre.exec(cv, xre("^[1-9][0-9]*:[1-9][0-9]*$"))) {
+                return () => {
+                    const [fromC, fromV] = cv.split(":").map(v => parseInt(v));
+                    for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
+                        if (!openScopes.has(scope)) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             } else {
                 throw new Error(`Bad cv reference '${cv}'`);
