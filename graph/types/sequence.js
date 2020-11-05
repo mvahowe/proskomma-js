@@ -38,6 +38,7 @@ const blockHasStrongs = (docSet, block, strongs, requireAll) => {
         const [att, attType, element, key, value] = item[1].split("/");
         if (
             (attType === "spanWithAtts" && element === "w" && key === "strong" && strongs.includes(cleanStrong(value))) ||
+            (attType === "spanWithAtts" && element === "w" && key === "strongs" && strongs.includes(cleanStrong(value))) ||
             (attType === "milestone" && element === "zaln" && key === "x-strong" && strongs.includes(cleanStrong(value)))
         ) {
             matched.add(value);
