@@ -144,7 +144,7 @@ processor() {
     }
 
     nDocuments() {
-        return this.documentList.length;
+        return this.documentList().length;
     }
 
     documentList() {
