@@ -31,8 +31,8 @@ const topNTailItems = items => {
     return tailItems(topItems(items));
 }
 
-const zalnScopes = ["x-strong/H5662", "x-lemma/עֹבַדְיָה", "x-morph/He", "x-morph/Np", "x-occurrence/1", "x-occurrences/1"];
-const wScopes = ["x-occurrence/1", "x-occurrences/1"];
+const zalnScopes = ["x-strong/0/H5662", "x-lemma/0/עֹבַדְיָה", "x-morph/0/He", "x-morph/1/Np", "x-occurrence/0/1", "x-occurrences/0/1"];
+const wScopes = ["x-occurrence/0/1", "x-occurrences/0/1"];
 const query =
     '{ documents { mainSequence { id } sequences { id blocks { items { ... on Token { itemType subType chars }... on Scope { itemType label }... on Graft { itemType subType sequenceId } } } } } }';
 

@@ -20,7 +20,7 @@ const blockHasStrongs = (docSet, block, strongs, requireAll) => {
         requiredScopes: []
     };
     for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
-        const [att, attType, element, key, value] = item[1].split("/");
+        const [att, attType, element, key, count, value] = item[1].split("/");
         if (
             (attType === "spanWithAtts" && element === "w" && key === "strong" && strongs.includes(cleanStrong(value))) ||
             (attType === "spanWithAtts" && element === "w" && key === "strongs" && strongs.includes(cleanStrong(value))) ||

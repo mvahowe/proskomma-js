@@ -66,7 +66,7 @@ test(
             t.equal(mainSequence.blocks[1].items.filter(i => i.subType === "unknown").length, 0);
             t.equal(mainSequence.blocks[0].bs.label, "blockTag/p");
             t.equal(mainSequence.blocks[1].bs.label, "blockTag/zp");
-            for (const label of ["span/zc", "spanWithAtts/zw", "attribute/spanWithAtts/zw/x-foo/baa"]) {
+            for (const label of ["span/zc", "spanWithAtts/zw", "attribute/spanWithAtts/zw/x-foo/0/baa"]) {
                 t.ok(mainSequence.blocks[1].scopeLabels.includes(label));
             }
             const introSequence = sequences.filter(s => s.type === "introduction")[0];

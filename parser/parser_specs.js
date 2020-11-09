@@ -626,9 +626,9 @@ const specs = (pt) => [
         parser: {
             during: (parser, pt) => {
                 if (parser.current.attributeContext) {
-                    pt.values.map(a => {
+                    [...pt.values.entries()].map(na => {
                             const attScope = {
-                                label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, a]),
+                                label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, na[0], na[1]]),
                                 endedBy: [`$attributeContext$`]
                             };
                             parser.openNewScope(pt, attScope);
