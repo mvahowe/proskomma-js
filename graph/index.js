@@ -57,7 +57,7 @@ const gqlSchema = new GraphQLSchema({
                         }
                     }
                 },
-                docSetById: {
+                docSet: {
                     type: docSetType,
                     args: {
                         id: {type: GraphQLNonNull(GraphQLString)}

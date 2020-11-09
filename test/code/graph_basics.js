@@ -53,17 +53,17 @@ test(
 );
 
 test(
-    `DocSetById (${testGroup})`,
+    `DocSet (${testGroup})`,
     async function (t) {
         try {
             t.plan(5);
-            const query = `{ docSetById(id: "${pkDoc.docSetId}") { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
+            const query = `{ docSet(id: "${pkDoc.docSetId}") { id lang: selector(id:"lang") abbr: selector(id:"abbr") documents { id } } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("id" in result.data.docSetById);
-            t.equal(result.data.docSetById.lang, "eng");
-            t.equal(result.data.docSetById.abbr, "ust");
-            t.ok("id" in result.data.docSetById.documents[0]);
+            t.ok("id" in result.data.docSet);
+            t.equal(result.data.docSet.lang, "eng");
+            t.equal(result.data.docSet.abbr, "ust");
+            t.ok("id" in result.data.docSet.documents[0]);
         } catch (err) {
             console.log(err)
         }
