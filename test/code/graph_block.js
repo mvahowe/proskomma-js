@@ -73,16 +73,13 @@ test(
     `Render as Text (${testGroup})`,
     async function (t) {
         try {
-            t.plan(6);
-            const query = '{ documents { mainSequence { blocks { text dump html } } } }';
+            t.plan(3);
+            const query = '{ documents { mainSequence { blocks { text dump } } } }';
             const result = await pk2.gqlQuery(query);
             t.equal(result.errors, undefined);
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.text, "Dear Theophilus,");
             t.ok(block.dump.includes("+verse/1+"));
-            t.ok(block.html.includes("Dear Theophilus,"));
-            t.ok(block.html.startsWith("<h3>"));
-            t.ok(block.html.endsWith("</div>\n"));
         } catch (err) {
             console.log(err)
         }

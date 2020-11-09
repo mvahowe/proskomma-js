@@ -27,31 +27,6 @@ const dumpBlock = b => {
     return ret.join("\n");
 }
 
-const scope2class = c => c.replace("/", "-").toLowerCase();
-
-const html4Item = i => {
-    if (i[0] === "token") {
-        return i[2];
-    } else if (i[0].startsWith("start") && i[1].startsWith("chapter/")) {
-        const chNo = i[1].split("/")[1];
-        return `<span class="chapter">${chNo}</span>`;
-    } else if (i[0].startsWith("start") && i[1].startsWith("verses/")) {
-        const vNo = i[1].split("/")[1];
-        if (vNo !== "1") {
-            return `<span class="verses">${vNo}</span>`;
-        }
-    }
-}
-
-const html4Block = b => {
-    const ret = [];
-    b.bg.forEach(bgi => ret.push(`<h3>Graft ${bgi[1]} ${bgi[2]}</h3>\n`));
-    ret.push(`<div class="${scope2class(b.bs[1])}">`);
-    b.c.filter(ci => ci[0] !== 'graft').forEach(i => ret.push(html4Item(i)));
-    ret.push("</div>\n")
-    return ret.join('');
-}
-
 const blockType = new GraphQLObjectType({
     name: "Block",
     fields: () => ({
@@ -166,13 +141,6 @@ const blockType = new GraphQLObjectType({
             resolve:
                 (root, args, context) => {
                     return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}));
-                }
-        },
-        html: {
-            type: GraphQLNonNull(GraphQLString),
-            resolve:
-                (root, args, context) => {
-                    return html4Block(context.docSet.unsuccinctifyBlock(root, {}));
                 }
         },
         scopeLabels: {

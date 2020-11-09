@@ -10,16 +10,14 @@ test(
     `Scalars (${testGroup})`,
     async function (t) {
         try {
-            t.plan(7);
-            const query = '{ documents { mainSequence { id type nBlocks htmlHead htmlFoot } } }';
+            t.plan(5);
+            const query = '{ documents { mainSequence { id type nBlocks } } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("mainSequence" in result.data.documents[0]);
             t.ok("id" in result.data.documents[0].mainSequence);
             t.equal(result.data.documents[0].mainSequence.type, "main");
             t.equal(result.data.documents[0].mainSequence.nBlocks, 1);
-            t.ok(result.data.documents[0].mainSequence.htmlHead.startsWith("<html"));
-            t.ok(result.data.documents[0].mainSequence.htmlFoot.endsWith("/html>\n"));
         } catch (err) {
             console.log(err)
         }
