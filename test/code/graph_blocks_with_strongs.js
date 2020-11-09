@@ -13,7 +13,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '     mainSequence { blocks(withAllStrongs:["x=y"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -31,7 +31,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAllStrongs:["H1234"] withAnyStrongs:["H1234"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -49,7 +49,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAllStrongs:[]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -67,7 +67,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAllStrongs:["H9999"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -85,7 +85,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAllStrongs:["G2587"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -103,7 +103,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAnyStrongs:["G2587"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -121,7 +121,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAllStrongs:["G2532", "G3588"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -139,7 +139,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"1PE") {' +
+                '{ docSets { document(bookCode:"1PE") {' +
                 '      mainSequence { blocks(withAnyStrongs:["G2532", "G3588"]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -157,7 +157,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"OBA") {' +
+                '{ docSets { document(bookCode:"OBA") {' +
                 '      mainSequence { blocks(withAnyStrongs:["H5662"]) { cBL } } } }' +
                 '}';
             const result = await pk2.gqlQuery(query);

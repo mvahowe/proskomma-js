@@ -38,7 +38,7 @@ const docSetType = new GraphQLObjectType({
                 return root.documents();
             }
         },
-        documentWithBook: {
+        document: {
             type: documentType,
             args: {
                 bookCode: {type: GraphQLNonNull(GraphQLString)}

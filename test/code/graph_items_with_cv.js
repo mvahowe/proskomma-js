@@ -13,7 +13,7 @@ test(
         try {
             t.plan(2);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"x=y") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -31,7 +31,7 @@ test(
         try {
             t.plan(2);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2" withScopes:[]) ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -49,7 +49,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -71,7 +71,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"1-3") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -93,7 +93,7 @@ test(
         try {
             t.plan(2);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"3-1") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -111,7 +111,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1:15") { items(withScriptureCV:"1:15") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -133,7 +133,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1:10-13") { items(withScriptureCV:"1:10-13") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -155,7 +155,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1:22-3:3") { items(withScriptureCV:"1:22-3:3") ${itemFragment} } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -177,7 +177,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1:22-3:3") { tokens(withScriptureCV:"1:22-3:3") { subType chars } } } } }
                 }`;
             const result = await pk.gqlQuery(query);
@@ -199,7 +199,7 @@ test(
         try {
             t.plan(3);
             const query =
-                `{ docSets { document: documentWithBook(bookCode:"RUT") {
+                `{ docSets { document(bookCode:"RUT") {
                      mainSequence { blocks(withScriptureCV:"1:22-3:3") { text(withScriptureCV:"1:22-3:3") } } } }
                 }`;
             const result = await pk.gqlQuery(query);

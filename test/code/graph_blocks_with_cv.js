@@ -12,7 +12,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '     mainSequence { blocks(withScriptureCV:2) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -30,7 +30,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"2" withScopes:[]) { cBL } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -48,7 +48,7 @@ test(
         try {
             t.plan(3);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"2") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -68,7 +68,7 @@ test(
         try {
             t.plan(3);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"1-3") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -88,7 +88,7 @@ test(
         try {
             t.plan(2);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"3-1") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -106,7 +106,7 @@ test(
         try {
             t.plan(3);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"1:14") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -126,7 +126,7 @@ test(
         try {
             t.plan(3);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"1:10-13") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
@@ -146,7 +146,7 @@ test(
         try {
             t.plan(3);
             const query =
-                '{ docSets { document: documentWithBook(bookCode:"RUT") {' +
+                '{ docSets { document(bookCode:"RUT") {' +
                 '      mainSequence { blocks(withScriptureCV:"1:22-3:4") { text } } } }' +
                 '}';
             const result = await pk.gqlQuery(query);
