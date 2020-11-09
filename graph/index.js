@@ -76,7 +76,7 @@ const gqlSchema = new GraphQLSchema({
                         return documentValues.filter(d => !args.ids || args.ids.includes(d.id));
                     }
                 },
-                documentById: {
+                document: {
                     type: documentType,
                     args: {
                         id: {type: GraphQLNonNull(GraphQLString)}

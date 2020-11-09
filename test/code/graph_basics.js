@@ -121,14 +121,14 @@ test(
 );
 
 test(
-    `DocumentById (${testGroup})`,
+    `Document (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
-            const query = `{ documentById(id: "${pkDoc.id}") { id } }`;
+            const query = `{ document(id: "${pkDoc.id}") { id } }`;
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
-            t.ok("id" in result.data.documentById);
+            t.ok("id" in result.data.document);
         } catch (err) {
             console.log(err)
         }
