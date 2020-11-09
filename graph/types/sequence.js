@@ -1,7 +1,8 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull} = require('graphql');
+const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull} = require('graphql');
 const xre = require('xregexp');
 
 const blockType = require('./block');
+const inputAttSpecType = require('./input_att_spec');
 
 const blockHasStrongs = (docSet, block, strongs, requireAll) => {
 
@@ -55,7 +56,10 @@ const sequenceType = new GraphQLObjectType({
                 withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 withScriptureCV: {type: GraphQLString},
                 withAllStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                withAnyStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+                withAnyStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                attSpecs: {type: GraphQLList(GraphQLNonNull(inputAttSpecType))},
+                attValues: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                anyAttValue: {type: GraphQLBoolean}
             },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
@@ -64,6 +68,15 @@ const sequenceType = new GraphQLObjectType({
                 }
                 if (args.withAllStrongs && args.withAnyStrongs) {
                     throw new Error("Cannot specify both withAllStrongs and withAnyStrongs");
+                }
+                if (args.attSpecs && !args.attValues) {
+                    throw new Error("Cannot specify attSpecs without attValues");
+                }
+                if (!args.attSpecs && args.attValues) {
+                    throw new Error("Cannot specify attValues without attSpecs");
+                }
+                if (args.anyAttValue && !args.attValues) {
+                    throw new Error("Cannot specify anyAttValue without attSpecs and attValues");
                 }
                 let ret;
                 if (args.withScopes) {
