@@ -1,4 +1,5 @@
 const xre = require('xregexp');
+const validateTags = require('../lib/tags');
 const {generateId} = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
 const {scopeEnumLabels, nComponentsForScope} = require('../lib/scope_defs');
@@ -13,7 +14,7 @@ class DocSet {
         const defaultedSelectors = selectors || processor.selectors;
         this.selectors = this.validateSelectors(defaultedSelectors);
         this.tags = new Set(tags || []);
-        this.validateTags();
+        validateTags(this.tags);
         this.preEnums = {};
         this.enums = {
             ids: new ByteArray(512),
@@ -73,14 +74,6 @@ class DocSet {
 
     selectorString() {
         return this.processor.selectorString(this.selectors);
-    }
-
-    validateTags() {
-        for (const tag of this.tags) {
-            if (!xre.exec(tag, /^[a-z][a-z0-9]*(:.+)?$/)) {
-                throw new Error(`Tag '${tag}' is not valid (should be [a-z][a-z0-9]*(:.+)?)`);
-            }
-        }
     }
 
     documents() {

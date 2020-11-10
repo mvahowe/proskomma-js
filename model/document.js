@@ -1,8 +1,8 @@
-const xre = require('xregexp');
 const { generateId } = require("../lib/generate_id");
 const { parseUsfm, parseUsx } = require("../parser/lexers");
 const { Parser } = require("../parser");
 const { nComponentsForScope } = require('../lib/scope_defs');
+const validateTags = require('../lib/tags');
 
 class Document {
 
@@ -14,7 +14,7 @@ class Document {
         this.customTags = customTags;
         this.emptyBlocks = emptyBlocks;
         this.tags = new Set(tags || []);
-        this.validateTags();
+        validateTags(this.tags);
         this.headers = {};
         this.mainId = null;
         this.sequences = {};
@@ -27,14 +27,6 @@ class Document {
                 break;
             default:
                 throw new Error(`Unknown document contentType '${contentType}'`);
-        }
-    }
-
-    validateTags() {
-        for (const tag of this.tags) {
-            if (!xre.exec(tag, /^[a-z][a-z0-9]*(:.+)?$/)) {
-                throw new Error(`Tag '${tag}' is not valid (should be [a-z][a-z0-9]*(:.+)?)`);
-            }
         }
     }
 

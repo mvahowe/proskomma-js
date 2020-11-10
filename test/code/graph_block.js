@@ -15,13 +15,13 @@ test(
     async function (t) {
         try {
             const lengths = {
-                cL: 26,
-                bgL: 0,
-                osL: 0,
-                isL: 3
+                cBL: 78,
+                bgBL: 0,
+                osBL: 0,
+                isBL: 9
             };
             t.plan(2 + Object.keys(lengths).length);
-            const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
+            const query = '{ documents { mainSequence { blocks { cBL bgBL osBL isBL } } } }';
             const result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("blocks" in result.data.documents[0].mainSequence);
