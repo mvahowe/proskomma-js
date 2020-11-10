@@ -77,8 +77,8 @@ class DocSet {
 
     validateTags() {
         for (const tag of this.tags) {
-            if (!xre.exec(tag, /^[a-z][a-z0-9]*$/)) {
-                throw new Error(`Tag '${tag}' is not valid (should be [a-z][a-z0-9]*)`);
+            if (!xre.exec(tag, /^[a-z][a-z0-9]*(:.+)?$/)) {
+                throw new Error(`Tag '${tag}' is not valid (should be [a-z][a-z0-9]*(:.+)?)`);
             }
         }
     }

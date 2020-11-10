@@ -46,7 +46,7 @@ test(
 
 test(
     `Throw on bad tag format (${testGroup})`,
-    // Destructive so do last!
+    // Destructive so do last (ish)!
     async function (t) {
         try {
             t.plan(2);
@@ -58,6 +58,27 @@ test(
                 pk.docSetList()[0].validateTags();
             };
             t.throws(addTagFn, /Tag 'FROB' is not valid/);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Support colon tag format (${testGroup})`,
+    // Destructive so do last!
+    async function (t) {
+        try {
+            t.plan(2);
+            const importFn = () =>
+                pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"}, {}, {}, [], ["FROB"]);
+            t.throws(importFn, /Tag 'FROB' is not valid/);
+            const addTagFn = () => {
+                pk.docSetList()[0].tags.delete("FROB");
+                pk.docSetList()[0].tags.add("frob:Fooie!! §");
+                pk.docSetList()[0].validateTags();
+            };
+            t.doesNotThrow(addTagFn);
         } catch (err) {
             console.log(err)
         }
