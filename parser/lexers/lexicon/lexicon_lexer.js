@@ -2,6 +2,8 @@ const sax = require("sax");
 const xre = require('xregexp');
 
 const ptClasses = require('../preTokenClasses');
+const {lexingRegexes, mainRegex} = require('../lexingRegexes');
+const {preTokenClassForFragment} = require("../class_for_fragment");
 
 class LexiconLexer {
 
@@ -13,8 +15,27 @@ class LexiconLexer {
         this.lexed = [];
         this.elementStack = [];
         this.openTagHandlers = {
+            TEI: this.ignoreHandler,
+            entry: this.handleEntryOpen,
+            orth: this.handleOrthOpen,
+            def: this.handleDefOpen
         }
         this.closeTagHandlers = {
+            TEI: this.ignoreHandler,
+            entry: this.handleEntryClose,
+            orth: this.handleOrthClose,
+            def: this.handleDefClose
+        }
+        this.resetState();
+    }
+
+    resetState() {
+        this.state = {
+            strongs: "",
+            lemma: "",
+            orth: "",
+            brief: "",
+            full: ""
         }
     }
 
@@ -25,12 +46,23 @@ class LexiconLexer {
         this.sax.write(str).close();
     }
 
+    topElement() {
+        return this.elementStack[this.elementStack.length - 1];
+    }
+
     handleSaxText(text) {
-        /*
-        xre.match(this.replaceEntities(text), mainRegex, "all")
-            .map(f => preTokenClassForFragment(f, lexingRegexes))
-            .forEach(t => this.parser.parseItem(t));
-         */
+        const tE = this.topElement();
+        if (tE) {
+            switch (tE[0]) {
+                case "orth":
+                    this.state.orth += this.replaceEntities(text);
+                    break;
+                case "def":
+                    this.topElement()[1].role === "brief" ?
+                        this.state.brief += this.replaceEntities(text) :
+                        this.state.full += this.replaceEntities(text);
+            }
+        }
     }
 
     replaceEntities(text) {
@@ -55,10 +87,6 @@ class LexiconLexer {
         this.closeTagHandlers[name](this, "close", name);
     }
 
-    notHandledHandler(lexer, oOrC, tag) {
-        console.error(`WARNING: ${oOrC} element tag '${tag}' is not handled by LexiconParser`);
-    }
-
     stackPush(name, atts) {
         this.elementStack.push([name, atts]);
     }
@@ -69,6 +97,58 @@ class LexiconLexer {
 
     ignoreHandler(lexer, oOrC, tag) {
     }
+
+    handleEntryOpen(lexer, oOrC, name, atts) {
+        const [lemma, strongs] = atts.n.split("|").map(s => s.trim());
+        lexer.state.strongs = `G${strongs}`;
+        lexer.state.lemma = lemma;
+        lexer.stackPush(name, atts);
+    }
+
+    handleOrthOpen(lexer, oOrC, name, atts) {
+        lexer.stackPush(name, atts);
+    }
+
+    handleDefOpen(lexer, oOrC, name, atts) {
+        lexer.stackPush(name, atts);
+    }
+
+    handleEntryClose(lexer) {
+
+        const parseText = text => xre.match(lexer.replaceEntities(text), mainRegex, "all")
+            .map(f => preTokenClassForFragment(f, lexingRegexes))
+            .forEach(t => lexer.parser.parseItem(t));
+
+        const startMilestone = () => {
+            lexer.parser.parseItem(new ptClasses.MilestonePT("startMilestoneTag", [null, null, "zlexentry", "s"]));
+            lexer.parser.parseItem(new ptClasses.AttributePT("attribute", [null, null, "x-strongs", lexer.state.strongs]));
+            lexer.parser.parseItem(new ptClasses.AttributePT("attribute", [null, null, "x-lemma", lexer.state.lemma]));
+            lexer.parser.parseItem(new ptClasses.MilestonePT("endMilestoneMarker"));
+        }
+
+        ["brief", "full"].map(k => lexer.state[k] = lexer.state[k].replace(/[ \t\r\n]+/g, " ").trim());
+        for (const field of ["orth", "brief", "full"]) {
+            lexer.parser.parseItem(new ptClasses.TagPT("startTag", [null, null, `zlex${field}`, ""]));
+            if (field === "orth") {
+                startMilestone();
+            }
+            parseText(lexer.state[field]);
+            lexer.parser.parseItem(new ptClasses.TagPT("endTag", [null, null, `zlex${field}`, ""]));
+        }
+        lexer.parser.parseItem(new ptClasses.MilestonePT("startMilestoneTag", [null, null, "zlexentry", "e"]));
+        lexer.parser.parseItem(new ptClasses.MilestonePT("endMilestoneMarker"));
+        lexer.resetState();
+        lexer.stackPop();
+    }
+
+    handleOrthClose(lexer) {
+        lexer.stackPop();
+    }
+
+    handleDefClose(lexer) {
+        lexer.stackPop();
+    }
+
 
 }
 

@@ -5,14 +5,20 @@ const { Graft, Scope } = require("./items");
 const { scopeEnum, labelForScope } = require('../../lib/scope_defs');
 const { tokenEnum, tokenCategory } = require('../../lib/token_defs');
 const { itemEnum } = require('../../lib/item_defs');
+const { addTag } = require('../../lib/tags');
 
 const Sequence = class {
 
     constructor(sType) {
         this.id = generateId();
         this.type = sType;
+        this.tags = new Set([]);
         this.blocks = [];
         this.activeScopes = [];
+    }
+
+    addTag(tag) {
+        addTag(this.tags, tag);
     }
 
     plainText() {

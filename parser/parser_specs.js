@@ -258,7 +258,10 @@ const specs = (pt) => [
                     "li",
                     "lf",
                     "lim",
-                    "d"
+                    "d",
+                    "zlexorth",
+                    "zlexbrief",
+                    "zlexfull",
                 ].concat(pt.customTags.paragraph)
             ]
         ],

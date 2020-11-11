@@ -1,6 +1,6 @@
 const test = require('tape');
 const {pkWithDoc} = require('../lib/load');
-const validateTags = require('../../lib/tags');
+const { validateTags } = require('../../lib/tags');
 
 const pk = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"}, {}, {}, [], ["frob"])[0];
 pk.docSetList()[0].tags.add("foo");

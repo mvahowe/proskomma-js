@@ -1,5 +1,5 @@
 const xre = require('xregexp');
-const validateTags = require('../lib/tags');
+const { validateTags, addTag } = require('../lib/tags');
 const {generateId} = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
 const {scopeEnumLabels, nComponentsForScope} = require('../lib/scope_defs');
@@ -25,6 +25,10 @@ class DocSet {
         };
         this.enumIndexes = {};
         this.docIds = [];
+    }
+
+    addTag(tag) {
+        addTag(this.tags, tag);
     }
 
     validateSelectors(selectors) {

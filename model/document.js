@@ -1,8 +1,8 @@
 const { generateId } = require("../lib/generate_id");
-const { parseUsfm, parseUsx } = require("../parser/lexers");
+const { parseUsfm, parseUsx, parseLexicon } = require("../parser/lexers");
 const { Parser } = require("../parser");
 const { nComponentsForScope } = require('../lib/scope_defs');
-const validateTags = require('../lib/tags');
+const { validateTags, addTag } = require('../lib/tags');
 
 class Document {
 
@@ -25,9 +25,16 @@ class Document {
             case "usx":
                 this.processUsx(contentString);
                 break;
+            case "lexicon":
+                this.processLexicon(contentString);
+                break;
             default:
                 throw new Error(`Unknown document contentType '${contentType}'`);
         }
+    }
+
+    addTag(tag) {
+        addTag(this.tags, tag);
     }
 
     makeParser() {
@@ -41,10 +48,16 @@ class Document {
     processUsfm(usfmString) {
         const parser = this.makeParser();
         parseUsfm(usfmString, parser);
-        this.postParse(parser);
+        this.postParseScripture(parser);
     }
 
-    postParse(parser) {
+    processUsx(usxString) {
+        const parser = this.makeParser();
+        parseUsx(usxString, parser);
+        this.postParseScripture(parser);
+    }
+
+    postParseScripture(parser) {
         parser.tidy();
         parser.filter();
         this.headers = parser.headers;
@@ -52,11 +65,12 @@ class Document {
         this.succinctPass2(parser);
     }
 
-    processUsx(usxString) {
+    processLexicon(lexiconString) {
         const parser = this.makeParser();
-        parseUsx(usxString, parser);
-        this.postParse(parser);
-
+        parseLexicon(lexiconString, parser);
+        this.headers = parser.headers;
+        this.succinctPass1(parser);
+        this.succinctPass2(parser);
     }
 
     succinctPass1(parser) {
