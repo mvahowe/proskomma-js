@@ -4,9 +4,16 @@ const xre = require('xregexp');
 const blockType = require('./block');
 const inputAttSpecType = require('./input_att_spec');
 
+const options = {
+    tokens: false,
+    scopes: true,
+    grafts: false,
+    requiredScopes: []
+};
+
 const blockHasStrongs = (docSet, block, strongs, requireAll) => {
 
-    const cleanStrong= (s) => {
+    const cleanStrong = (s) => {
         return xre.match(s, xre("[HG][0-9]+"));
     }
 
@@ -14,12 +21,6 @@ const blockHasStrongs = (docSet, block, strongs, requireAll) => {
         return true;
     }
     let matched = new Set([]);
-    const options = {
-        tokens: false,
-        scopes: true,
-        grafts: false,
-        requiredScopes: []
-    };
     for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
         const [att, attType, element, key, count, value] = item[1].split("/");
         if (
@@ -29,6 +30,24 @@ const blockHasStrongs = (docSet, block, strongs, requireAll) => {
         ) {
             matched.add(value);
             if (!requireAll || matched.size === strongs.length) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+const blockHasAtts = (docSet, block, attSpecs, attValues) => {
+    for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
+        const [att, attType, element, key, count, value] = item[1].split("/");
+        for (const attSpec of attSpecs) {
+            if (
+                attType === attSpec.attType &&
+                element === attSpec.tagName &&
+                key === attSpec.attKey &&
+                parseInt(count) === attSpec.valueN &&
+                attValues.includes(value)
+            ) {
                 return true;
             }
         }
@@ -59,7 +78,6 @@ const sequenceType = new GraphQLObjectType({
                 withAnyStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 attSpecs: {type: GraphQLList(GraphQLNonNull(inputAttSpecType))},
                 attValues: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                anyAttValue: {type: GraphQLBoolean}
             },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
@@ -74,9 +92,6 @@ const sequenceType = new GraphQLObjectType({
                 }
                 if (!args.attSpecs && args.attValues) {
                     throw new Error("Cannot specify attValues without attSpecs");
-                }
-                if (args.anyAttValue && !args.attValues) {
-                    throw new Error("Cannot specify anyAttValue without attSpecs and attValues");
                 }
                 let ret;
                 if (args.withScopes) {
@@ -93,6 +108,9 @@ const sequenceType = new GraphQLObjectType({
                 if (args.withAnyStrongs) {
                     checkStrongsFormat(args.withAnyStrongs);
                     ret = ret.filter(b => blockHasStrongs(context.docSet, b, args.withAnyStrongs, false));
+                }
+                if (args.attSpecs) {
+                    ret = ret.filter(b => blockHasAtts(context.docSet, b, args.attSpecs, args.attValues));
                 }
                 return ret;
             }

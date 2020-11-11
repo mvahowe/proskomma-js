@@ -60,7 +60,7 @@ test(
 );
 
 test(
-    `!anyAttValue without specs and values (${testGroup})`,
+    `Filter by att (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
@@ -68,17 +68,18 @@ test(
                 '{ docSets { document(bookCode:"1PE") {' +
                 '    mainSequence {' +
                 '      blocks(' +
-                '        anyAttValue: true' +
+                '        attSpecs: [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}]' +
+                '        attValues:["G2587"]' +
                 '      ) {' +
-                '          cBL' +
+                '        cBL' +
                 '        }' +
                 '      }' +
                 '    }' +
                 '  }' +
                 '}';
             const result = await pk.gqlQuery(query);
-            t.equal(result.errors.length, 1);
-            t.ok(result.errors[0].message.includes("Cannot specify anyAttValue without attSpecs and attValues"));
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets[0].document.mainSequence.blocks.length, 1);
         } catch (err) {
             console.log(err)
         }
