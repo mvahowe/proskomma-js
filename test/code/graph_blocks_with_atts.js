@@ -16,7 +16,7 @@ test(
                 '{ docSets { document(bookCode:"1PE") {' +
                 '    mainSequence {' +
                 '      blocks(' +
-                '        attSpecs: [{attType:"spanWithAtts", tagName:"w", attKey:"strongs", valueN:0}]' +
+                '        attSpecs: [[{attType:"spanWithAtts", tagName:"w", attKey:"strongs", valueN:0}]]' +
                 '      ) {' +
                 '        cBL' +
                 '        }' +
@@ -42,7 +42,7 @@ test(
                 '{ docSets { document(bookCode:"1PE") {' +
                 '    mainSequence {' +
                 '      blocks(' +
-                '        attValues:["H5662"]' +
+                '        attValues:[["H5662"]]' +
                 '      ) {' +
                 '        cBL' +
                 '        }' +
@@ -68,8 +68,69 @@ test(
                 '{ docSets { document(bookCode:"1PE") {' +
                 '    mainSequence {' +
                 '      blocks(' +
-                '        attSpecs: [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}]' +
-                '        attValues:["G2587"]' +
+                '        attSpecs: [[{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}]]' +
+                '        attValues:[["G2587"]]' +
+                '      ) {' +
+                '        cBL' +
+                '        }' +
+                '      }' +
+                '    }' +
+                '  }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets[0].document.mainSequence.blocks.length, 1);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Any matching att (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const query =
+                '{ docSets { document(bookCode:"1PE") {' +
+                '    mainSequence {' +
+                '      blocks(' +
+                '        attSpecs: [' +
+                '          [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}],' +
+                '          [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}]' +
+                '        ]' +
+                '        attValues:[["G2587"], ["G2962"]]' +
+                '      ) {' +
+                '        cBL' +
+                '        }' +
+                '      }' +
+                '    }' +
+                '  }' +
+                '}';
+            const result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.equal(result.data.docSets[0].document.mainSequence.blocks.length, 2);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `All matching atts (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const query =
+                '{ docSets { document(bookCode:"1PE") {' +
+                '    mainSequence {' +
+                '      blocks(' +
+                '        attSpecs: [' +
+                '          [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}],' +
+                '          [{attType:"spanWithAtts", tagName:"w", attKey:"strong", valueN:0}]' +
+                '        ]' +
+                '        attValues:[["G2532", "G9999"], ["G1519", "G0000"]]' +
+                '        allAtts:true' +
                 '      ) {' +
                 '        cBL' +
                 '        }' +

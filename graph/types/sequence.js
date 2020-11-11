@@ -37,17 +37,27 @@ const blockHasStrongs = (docSet, block, strongs, requireAll) => {
     return false;
 }
 
-const blockHasAtts = (docSet, block, attSpecs, attValues) => {
+const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) => {
+    let matched = new Set([]);
     for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
         const [att, attType, element, key, count, value] = item[1].split("/");
-        for (const attSpec of attSpecs) {
-            if (
-                attType === attSpec.attType &&
-                element === attSpec.tagName &&
-                key === attSpec.attKey &&
-                parseInt(count) === attSpec.valueN &&
-                attValues.includes(value)
-            ) {
+        for (const [n, attSpecs] of attSpecsArray.entries()) {
+            for (const attSpec of attSpecs) {
+                if (
+                    attType === attSpec.attType &&
+                    element === attSpec.tagName &&
+                    key === attSpec.attKey &&
+                    parseInt(count) === attSpec.valueN &&
+                    attValuesArray[n].includes(value)
+                ) {
+                    if (!requireAll) {
+                        return true;
+                    }
+                    matched.add(n);
+                    break;
+                }
+            }
+            if (matched.size === attSpecsArray.length) {
                 return true;
             }
         }
@@ -76,8 +86,9 @@ const sequenceType = new GraphQLObjectType({
                 withScriptureCV: {type: GraphQLString},
                 withAllStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 withAnyStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                attSpecs: {type: GraphQLList(GraphQLNonNull(inputAttSpecType))},
-                attValues: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                attSpecs: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType))))},
+                attValues: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))))},
+                allAtts: {type: GraphQLBoolean}
             },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
@@ -110,7 +121,7 @@ const sequenceType = new GraphQLObjectType({
                     ret = ret.filter(b => blockHasStrongs(context.docSet, b, args.withAnyStrongs, false));
                 }
                 if (args.attSpecs) {
-                    ret = ret.filter(b => blockHasAtts(context.docSet, b, args.attSpecs, args.attValues));
+                    ret = ret.filter(b => blockHasAtts(context.docSet, b, args.attSpecs, args.attValues, args.allAtts || false));
                 }
                 return ret;
             }
