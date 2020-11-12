@@ -49,6 +49,7 @@ const sequenceType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
             args: {
                 withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                withBlockScope: {type: GraphQLString},
                 withScriptureCV: {type: GraphQLString},
                 attSpecs: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType))))},
                 attValues: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))))},
@@ -78,6 +79,9 @@ const sequenceType = new GraphQLObjectType({
                 }
                 if (args.attSpecs) {
                     ret = ret.filter(b => blockHasAtts(context.docSet, b, args.attSpecs, args.attValues, args.allAtts || false));
+                }
+                if (args.withBlockScope) {
+                    ret = ret.filter(b => context.docSet.blockHasBlockScope(b, args.withBlockScope));
                 }
                 return ret;
             }

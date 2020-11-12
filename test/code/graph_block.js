@@ -93,7 +93,8 @@ test(
             const scopeLabels = [
                 "chapter/1",
                 "verse/1",
-                "verses/1"
+                "verses/1",
+                "blockTag/p"
             ];
             t.plan(2 + scopeLabels.length);
             const query = '{ documents { mainSequence { blocks { scopeLabels bs { label } } } } }';

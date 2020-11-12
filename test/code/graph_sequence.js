@@ -42,7 +42,7 @@ test(
 );
 
 test(
-    `BlocksForScopes (${testGroup})`,
+    `withScopes (${testGroup})`,
     async function (t) {
         try {
             t.plan(7);
@@ -53,6 +53,27 @@ test(
             t.equal(result.data.documents[0].mainSequence.blocks.length, 1);
             t.equal(result.data.documents[0].mainSequence.blocks[0].text, "This is how the Good News of JC began...");
             query = '{ documents { mainSequence { blocks(withScopes:["chapter/1", "verse/2"]) { text } } } }';
+            result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            t.equal(result.data.documents[0].mainSequence.blocks.length, 0);
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `withBlockScope (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(6);
+            let query = '{ documents { mainSequence { blocks(withBlockScope:"blockTag/p") { text } } } }';
+            let result = await pk.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            t.ok("blocks" in result.data.documents[0].mainSequence);
+            t.equal(result.data.documents[0].mainSequence.blocks.length, 1);
+            query = '{ documents { mainSequence { blocks(withBlockScope:"blockTag/q") { text } } } }';
             result = await pk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.ok("blocks" in result.data.documents[0].mainSequence);

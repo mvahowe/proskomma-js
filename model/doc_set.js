@@ -1,5 +1,5 @@
 const xre = require('xregexp');
-const { validateTags, addTag } = require('../lib/tags');
+const {validateTags, addTag} = require('../lib/tags');
 const {generateId} = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
 const {scopeEnumLabels, nComponentsForScope} = require('../lib/scope_defs');
@@ -309,10 +309,12 @@ class DocSet {
     }
 
     unsuccinctifyBlockScopeLabelsSet(block) {
+        const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+        const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
         return new Set(
             this.unsuccinctifyScopes(block.os).concat(
                 this.unsuccinctifyScopes(block.is)
-            )
+            ).concat([blockScope])
                 .map(ri => ri[1]));
     }
 
@@ -477,12 +479,19 @@ class DocSet {
         }
     }
 
-    allScopesInBlock(block, scopes) {
-        const allBlockScopes = new Set([
+    allBlockScopes(block) {
+        const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+        const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
+        return new Set([
                 ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
-                ...this.unsuccinctifyScopes(block.is).map(s => s[1])
+                ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
+                blockScope[1]
             ]
         );
+    }
+
+    allScopesInBlock(block, scopes) {
+        const allBlockScopes = this.allBlockScopes(block);
         for (const scope of scopes) {
             if (!allBlockScopes.has(scope)) {
                 return false;
@@ -492,17 +501,19 @@ class DocSet {
     }
 
     anyScopeInBlock(block, scopes) {
-        const allBlockScopes = new Set([
-                ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
-                ...this.unsuccinctifyScopes(block.is).map(s => s[1])
-            ]
-        );
+        const allBlockScopes = this.allBlockScopes(block);
         for (const scope of scopes) {
             if (allBlockScopes.has(scope)) {
                 return true;
             }
         }
         return false;
+    }
+
+    blockHasBlockScope(block, scope) {
+        const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+        const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
+        return (blockScope[1] === scope);
     }
 
     unsuccinctifyItemsWithScriptureCV(block, cv, options) {

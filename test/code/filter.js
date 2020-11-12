@@ -27,14 +27,15 @@ test(
                 "verses/1",
                 "span/nd",
                 "span/it",
-                "span/bd"
+                "span/bd",
+                "blockTag/p"
             ];
             t.plan(6 + scopeLabels.length);
             const block = await queryToBlock(t,{});
             t.equal(block.bg.length, 2);
             t.equal(block.bg[0].subType, "title");
             t.equal(block.bg[1].subType, "heading");
-            t.equal(block.scopeLabels.length, 6);
+            t.equal(block.scopeLabels.length, 7);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
             }
@@ -53,7 +54,7 @@ test(
             t.plan(4);
             const block = await queryToBlock(t,{includeScopes: []});
             t.equal(block.bg.length, 2);
-            t.equal(block.scopeLabels.length, 0);
+            t.equal(block.scopeLabels.length, 1);
             const inlines = inlineGrafts(block);
             t.equal(inlines.length, 1);
         } catch (err) {
@@ -69,7 +70,7 @@ test(
             t.plan(4);
             const block = await queryToBlock(t,{includeGrafts: []});
             t.equal(block.bg.length, 0);
-            t.equal(block.scopeLabels.length, 6);
+            t.equal(block.scopeLabels.length, 7);
             const inlines = inlineGrafts(block);
             t.equal(inlines.length, 0);
         } catch (err) {
@@ -85,7 +86,7 @@ test(
             t.plan(4);
             const block = await queryToBlock(t,{includeGrafts: [], includeScopes: []});
             t.equal(block.bg.length, 0);
-            t.equal(block.scopeLabels.length, 0);
+            t.equal(block.scopeLabels.length, 1);
             const inlines = inlineGrafts(block);
             t.equal(inlines.length, 0);
         } catch (err) {
@@ -101,7 +102,7 @@ test(
             t.plan(4);
             const block = await queryToBlock(t,{excludeGrafts: [], excludeScopes: []});
             t.equal(block.bg.length, 2);
-            t.equal(block.scopeLabels.length, 6);
+            t.equal(block.scopeLabels.length, 7);
             const inlines = inlineGrafts(block);
             t.equal(inlines.length, 1);
         } catch (err) {
@@ -120,7 +121,7 @@ test(
             ];
             t.plan(2 + scopeLabels.length);
             const block = await queryToBlock(t,{includeScopes: ["chapter", "verse/"]});
-            t.equal(block.scopeLabels.length, 2);
+            t.equal(block.scopeLabels.length, 3);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
             }
@@ -142,7 +143,7 @@ test(
             ];
             t.plan(2 + scopeLabels.length);
             const block = await queryToBlock(t,{excludeScopes: ["chapter", "verse/"]});
-            t.equal(block.scopeLabels.length, 4);
+            t.equal(block.scopeLabels.length, 5);
             for (const scopeLabel of scopeLabels) {
                 t.ok(block.scopeLabels.includes(scopeLabel));
             }
