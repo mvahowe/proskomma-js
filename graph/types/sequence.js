@@ -11,32 +11,6 @@ const options = {
     requiredScopes: []
 };
 
-const blockHasStrongs = (docSet, block, strongs, requireAll) => {
-
-    const cleanStrong = (s) => {
-        return xre.match(s, xre("[HG][0-9]+"));
-    }
-
-    if (strongs.length === 0) {
-        return true;
-    }
-    let matched = new Set([]);
-    for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
-        const [att, attType, element, key, count, value] = item[1].split("/");
-        if (
-            (attType === "spanWithAtts" && element === "w" && key === "strong" && strongs.includes(cleanStrong(value))) ||
-            (attType === "spanWithAtts" && element === "w" && key === "strongs" && strongs.includes(cleanStrong(value))) ||
-            (attType === "milestone" && element === "zaln" && key === "x-strong" && strongs.includes(cleanStrong(value)))
-        ) {
-            matched.add(value);
-            if (!requireAll || matched.size === strongs.length) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) => {
     let matched = new Set([]);
     for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
@@ -65,14 +39,6 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
     return false;
 }
 
-const checkStrongsFormat = (strongs) => {
-    for (const strong of strongs) {
-        if (!xre.match(strong, xre("^[HG][0-9]+$"))) {
-            throw new Error(`Bad Strongs format '${strong} in query'`);
-        }
-    }
-}
-
 const sequenceType = new GraphQLObjectType({
     name: "Sequence",
     fields: () => ({
@@ -84,8 +50,6 @@ const sequenceType = new GraphQLObjectType({
             args: {
                 withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 withScriptureCV: {type: GraphQLString},
-                withAllStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                withAnyStrongs: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 attSpecs: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType))))},
                 attValues: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))))},
                 allAtts: {type: GraphQLBoolean}
@@ -95,14 +59,14 @@ const sequenceType = new GraphQLObjectType({
                 if (args.withScopes && args.withScriptureCV) {
                     throw new Error("Cannot specify both withScopes and withScriptureCV");
                 }
-                if (args.withAllStrongs && args.withAnyStrongs) {
-                    throw new Error("Cannot specify both withAllStrongs and withAnyStrongs");
-                }
                 if (args.attSpecs && !args.attValues) {
                     throw new Error("Cannot specify attSpecs without attValues");
                 }
                 if (!args.attSpecs && args.attValues) {
                     throw new Error("Cannot specify attValues without attSpecs");
+                }
+                if (args.attSpecs && args.attValues && (args.attSpecs.length !== args.attValues.length)) {
+                    throw new Error("attSpecs and attValues must be same length");
                 }
                 let ret;
                 if (args.withScopes) {
@@ -111,14 +75,6 @@ const sequenceType = new GraphQLObjectType({
                     ret = context.docSet.blocksWithScriptureCV(root.blocks, args.withScriptureCV);
                 } else {
                     ret = root.blocks;
-                }
-                if (args.withAllStrongs) {
-                    checkStrongsFormat(args.withAllStrongs);
-                    ret = ret.filter(b => blockHasStrongs(context.docSet, b, args.withAllStrongs, true));
-                }
-                if (args.withAnyStrongs) {
-                    checkStrongsFormat(args.withAnyStrongs);
-                    ret = ret.filter(b => blockHasStrongs(context.docSet, b, args.withAnyStrongs, false));
                 }
                 if (args.attSpecs) {
                     ret = ret.filter(b => blockHasAtts(context.docSet, b, args.attSpecs, args.attValues, args.allAtts || false));

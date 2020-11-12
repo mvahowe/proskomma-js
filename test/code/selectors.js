@@ -158,7 +158,7 @@ test(
                 }
             }
             let cpk = customPkWithDoc(customProsKomma, "../test_data/usx/web_rut.usx", {foo: "banana", baa: 23})[0];
-            t.plan(23);
+            t.plan(17);
             let query = '{ docSets { selectors { key value } selectorString } }';
             let result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
@@ -178,34 +178,22 @@ test(
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 3);
-            query = '{ docSets(selectorKeys:["foo"] selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            query = '{ docSets(withSelectors:[{key:"foo", value:"banana"}]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
-            query = '{ docSets(selectorKeys:["baa"] selectorValues:["48"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            query = '{ docSets(withSelectors:[{key:"baa", value:"48"}]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 2);
-            query = '{ docSets(selectorKeys:["foo", "baa"] selectorValues:["banana", "48"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            query = '{ docSets(withSelectors:[{key: "foo", value:"banana"}, {key:"baa", value:"48"}]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 1);
-            query = '{ docSets(selectorKeys:["foo"] selectorValues:["durian"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
+            query = '{ docSets(withSelectors:[{key:"foo", value:"durian"}]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);
             t.equal(result.data.docSets.length, 0);
-            query = '{ docSets(selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
-            result = await cpk.gqlQuery(query);
-            t.ok(result.errors);
-            t.equal(result.errors[0].message, "selectorValues but no selectorKeys");
-            query = '{ docSets(selectorKeys:["foo"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
-            result = await cpk.gqlQuery(query);
-            t.ok(result.errors);
-            t.equal(result.errors[0].message, "selectorKeys but no selectorValues");
-            query = '{ docSets(selectorKeys:["foo", "baa"] selectorValues:["banana"]) { foo: selector(id:"foo") baa: selector(id:"baa") } }';
-            result = await cpk.gqlQuery(query);
-            t.ok(result.errors);
-            t.equal(result.errors[0].message, "selectorKeys and selectorValues must be the same length");
         } catch (err) {
             console.log(err)
         }

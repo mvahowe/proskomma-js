@@ -2,7 +2,7 @@ const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList,
 
 const docSetType = require('./types/doc_set');
 const documentType = require('./types/document');
-const keyValueType = require('./types/key_value');
+const inputKeyValueType = require('./types/input_key_value');
 const selectorSpecType = require('./types/selector_spec');
 
 const gqlSchema = new GraphQLSchema({
@@ -22,18 +22,15 @@ const gqlSchema = new GraphQLSchema({
                         ids: {
                             type: GraphQLList(GraphQLNonNull(GraphQLString))
                         },
-                        selectorKeys: {
-                            type: GraphQLList(GraphQLNonNull(GraphQLString))
-                        },
-                        selectorValues: {
-                            type: GraphQLList(GraphQLNonNull(GraphQLString))
+                        withSelectors: {
+                            type: GraphQLList(GraphQLNonNull(inputKeyValueType))
                         },
                         withBook: {type: GraphQLString}
                     },
                     resolve: (root, args) => {
-                        const docSetMatchesSelectors = (ds, keys, values) => {
-                            for (const [n, key] of keys.entries()) {
-                                if (ds.selectors[key].toString() !== values[n]) {
+                        const docSetMatchesSelectors = (ds, selectors) => {
+                            for (const selector of selectors) {
+                                if (ds.selectors[selector.key].toString() !== selector.value) {
                                     return false;
                                 }
                             }
@@ -41,17 +38,8 @@ const gqlSchema = new GraphQLSchema({
                         }
                         const docSetValues = ("withBook" in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
                             .filter(ds => !args.ids || args.ids.includes(ds.id));
-                        if (args.selectorKeys || args.selectorValues) {
-                            if (!args.selectorKeys) {
-                                throw new Error("selectorValues but no selectorKeys");
-                            }
-                            if (!args.selectorValues) {
-                                throw new Error("selectorKeys but no selectorValues");
-                            }
-                            if (args.selectorKeys.length !== args.selectorValues.length) {
-                                throw new Error("selectorKeys and selectorValues must be the same length");
-                            }
-                            return docSetValues.filter(ds => docSetMatchesSelectors(ds, args.selectorKeys, args.selectorValues));
+                        if (args.withSelectors) {
+                             return docSetValues.filter(ds => docSetMatchesSelectors(ds, args.withSelectors));
                         } else {
                             return docSetValues;
                         }
