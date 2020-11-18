@@ -9,6 +9,7 @@ const pk2 = pkWithDoc("../test_data/usfm/headings.usfm", {lang: "eng", abbr: "us
 const pk3 = pkWithDoc("../test_data/usx/web_rut.usx", {lang: "eng", abbr: "ust"})[0];
 const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", {lang: "eng", abbr: "ust"})[0];
 const pk5 = pkWithDoc("../test_data/usfm/verse_breaks_in_blocks.usfm", {lang: "eng", abbr: "ust"})[0];
+const pk6 = pkWithDoc("../test_data/usfm/whitespace.usfm", {lang: "eng", abbr: "ust"})[0];
 
 test(
     `Length (${testGroup})`,
@@ -80,6 +81,22 @@ test(
             const block = result.data.documents[0].mainSequence.blocks[0];
             t.equal(block.text, "Dear Theophilus,");
             t.ok(block.dump.includes("+verse/1+"));
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Normalize whitespace (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const query = '{ documents { mainSequence { blocks { text(normalizeSpace:true) } } } }';
+            const result = await pk6.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const block = result.data.documents[0].mainSequence.blocks[0];
+            t.equal(block.text, "This is how the Good News of JC began...");
         } catch (err) {
             console.log(err)
         }

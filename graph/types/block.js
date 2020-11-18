@@ -1,4 +1,4 @@
-const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull} = require('graphql');
+const {GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLBoolean} = require('graphql');
 const tokenType = require('./token');
 const scopeType = require('./scope');
 const graftType = require('./graft');
@@ -126,14 +126,19 @@ const blockType = new GraphQLObjectType({
         text: {
             type: GraphQLNonNull(GraphQLString),
             args: {
-                withScriptureCV: {type: GraphQLString}
+                withScriptureCV: {type: GraphQLString},
+                normalizeSpace: {type: GraphQLBoolean}
             },
             resolve:
                 (root, args, context) => {
                     const tokens = args.withScriptureCV ?
                         context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {tokens: true}) :
                         context.docSet.unsuccinctifyItems(root.c, {tokens: true});
-                    return tokens.map(t => t[2]).join('').trim();
+                    let ret = tokens.map(t => t[2]).join('').trim();
+                    if (args.normalizeSpace) {
+                        ret = ret.replace(/[ \t\n\r]+/g, " ");
+                    }
+                    return ret;
                 }
         },
         dump: {
