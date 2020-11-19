@@ -8,16 +8,22 @@ const itemGroupType = new GraphQLObjectType({
     name: "ItemGroup",
     fields: () => ({
         items: {
-            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType)))
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+            resolve: (root, args, context) => root[1]
         },
         tokens: {
-            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType)))
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
+            resolve: (root, args, context) =>
+                root[1].filter(i => i[0] === "token")
         },
         text: {
-            type: GraphQLNonNull(GraphQLString)
+            type: GraphQLNonNull(GraphQLString),
+            resolve: (root, args, context) =>
+                root[1].filter(i => i[0] === "token").map(t => t[2]).join("")
         },
         scopeLabels: {
-            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+            resolve: (root, args, context) => root[0]
         }
     })
 })

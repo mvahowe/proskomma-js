@@ -89,7 +89,7 @@ const sequenceType = new GraphQLObjectType({
         },
         itemGroups: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
-            arg: {
+            args: {
                 byScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
                 byMilestones: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
             },

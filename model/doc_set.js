@@ -650,13 +650,65 @@ class DocSet {
         //   - turn found scopes into string
         //   - if that scope string doesn't exist, add to lookup table and push array
         //   - add item to array matching scope string
+        let allBlockScopes = [];
+
+        const allScopesPresent = () => {
+            for (const requiredScope of byScopes) {
+                if (!matchingScope(requiredScope)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        const matchingScope = (scopeToMatch) => {
+            for (const blockScope of allBlockScopes) {
+                if (blockScope.startsWith(scopeToMatch)) {
+                    return blockScope;
+                }
+            }
+            return null;
+        }
+
+        const scopesString = () => {
+            return byScopes.map(s => matchingScope(s)).sort().join("_");
+        }
+
+        this.maybeBuildEnumIndexes();
+        const ret = [];
+        const scopes2array = {};
+        for (const block of blocks) {
+            const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+            const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[1];
+            allBlockScopes = new Set(this.unsuccinctifyScopes(block.os)
+                .map(s => s[1])
+                .concat([blockScope])
+            );
+            for (const item of this.unsuccinctifyItems(block.c, {})) {
+                if (item[0] === "startScope") {
+                    allBlockScopes.add(item[1]);
+                }
+                if (allScopesPresent()) {
+                    const scopeKey = scopesString();
+                    if (!(scopeKey in scopes2array)) {
+                        scopes2array[scopeKey] = ret.length;
+                        ret.push([[...allBlockScopes], []]);
+                    }
+                    ret[ret.length - 1][1].push(item);
+                }
+                if (item[0] === "endScope") {
+                    allBlockScopes.delete(item[1]);
+                }
+            }
+        }
+        return ret;
     }
 
     sequenceItemsByMilestones(blocks, byMilestones) {
         // Return array of [scopes, items]
         // Scan block items
         // If all scopes found and scope string has changed:
-        //   - add item to array
+        //   - add array
         // push item to last array
     }
 
