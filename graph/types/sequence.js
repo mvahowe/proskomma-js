@@ -2,6 +2,7 @@ const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList
 const xre = require('xregexp');
 
 const blockType = require('./block');
+const itemGroupType = require('./itemGroup');
 const inputAttSpecType = require('./input_att_spec');
 
 const options = {
@@ -84,6 +85,26 @@ const sequenceType = new GraphQLObjectType({
                     ret = ret.filter(b => context.docSet.blockHasBlockScope(b, args.withBlockScope));
                 }
                 return ret;
+            }
+        },
+        itemGroups: {
+            type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+            arg: {
+                byScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                byMilestones: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+            },
+            resolve: (root, args, context) => {
+                if (args.byScopes && args.byMilestones) {
+                    throw new Error("Cannot specify both byScopes and byMilestones");
+                }
+                if (!args.byScopes && !args.byMilestones) {
+                    throw new Error("Must specify either byScopes or byMilestones");
+                }
+                if (args.byScopes) {
+                    return context.docSet.sequenceItemsByScopes(root, args.byScopes);
+                } else {
+                    return context.docSet.sequenceItemsByMilestones(root, args.byMilestones);
+                }
             }
         }
     })
