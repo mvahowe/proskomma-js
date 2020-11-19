@@ -643,6 +643,23 @@ class DocSet {
         return false;
     }
 
+    sequenceItemsByScopes(blocks, byScopes) {
+        // Return array of [scopes, items]
+        // Scan block items, track scopes
+        // If all scopes found:
+        //   - turn found scopes into string
+        //   - if that scope string doesn't exist, add to lookup table and push array
+        //   - add item to array matching scope string
+    }
+
+    sequenceItemsByMilestones(blocks, byMilestones) {
+        // Return array of [scopes, items]
+        // Scan block items
+        // If all scopes found and scope string has changed:
+        //   - add item to array
+        // push item to last array
+    }
+
     serializeSuccinct() {
         const ret = {
             id: this.id,

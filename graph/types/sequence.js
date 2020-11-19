@@ -101,9 +101,9 @@ const sequenceType = new GraphQLObjectType({
                     throw new Error("Must specify either byScopes or byMilestones");
                 }
                 if (args.byScopes) {
-                    return context.docSet.sequenceItemsByScopes(root, args.byScopes);
+                    return context.docSet.sequenceItemsByScopes(root.blocks, args.byScopes);
                 } else {
-                    return context.docSet.sequenceItemsByMilestones(root, args.byMilestones);
+                    return context.docSet.sequenceItemsByMilestones(root.blocks, args.byMilestones);
                 }
             }
         }
