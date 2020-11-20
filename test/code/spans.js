@@ -30,7 +30,6 @@ test(
     async function (t) {
         try {
             t.plan(8);
-            const itemFragment = '{ ... on Token { subType chars position scopes } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
             const query =
                 `{ documents { mainSequence { blocks { tokens(includeContext:true) { subType chars position scopes } } } } }`;
             const result = await pk.gqlQuery(query);

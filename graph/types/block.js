@@ -115,23 +115,30 @@ const blockType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
             args: {
                 withScriptureCV: {type: GraphQLString},
-                includeContext: {type: GraphQLBoolean}
+                includeContext: {type: GraphQLBoolean},
+                withChars: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
             },
             resolve:
                 (root, args, context) => {
+                    let ret;
                     if (args.withScriptureCV) {
-                        return context.docSet.unsuccinctifyItemsWithScriptureCV(
+                        ret = context.docSet.unsuccinctifyItemsWithScriptureCV(
                             root,
                             args.withScriptureCV,
                             {tokens: true},
                             args.includeContext || false
                         );
                     } else {
-                        return context.docSet.unsuccinctifyItems(
+                        ret = context.docSet.unsuccinctifyItems(
                             root.c,
                             {tokens: true},
                             args.includeContext || false
                         );
+                    }
+                    if (args.withChars) {
+                        return ret.filter(t => args.withChars.includes(t[2]));
+                    } else {
+                        return ret;
                     }
                 }
         },
