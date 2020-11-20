@@ -14,7 +14,7 @@ const options = {
 
 const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) => {
     let matched = new Set([]);
-    for (const item of docSet.unsuccinctifyPrunedItems(block, options)) {
+    for (const item of docSet.unsuccinctifyPrunedItems(block, options, false)) {
         const [att, attType, element, key, count, value] = item[1].split("/");
         for (const [n, attSpecs] of attSpecsArray.entries()) {
             for (const attSpec of attSpecs) {
@@ -55,7 +55,7 @@ const sequenceType = new GraphQLObjectType({
                 attSpecs: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType))))},
                 attValues: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))))},
                 allAtts: {type: GraphQLBoolean}
-            },
+                },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
                 if (args.withScopes && args.withScriptureCV) {
@@ -91,7 +91,8 @@ const sequenceType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
             args: {
                 byScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                byMilestones: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+                byMilestones: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
+                includeContext: {type: GraphQLBoolean}
             },
             resolve: (root, args, context) => {
                 if (args.byScopes && args.byMilestones) {
@@ -101,9 +102,9 @@ const sequenceType = new GraphQLObjectType({
                     throw new Error("Must specify either byScopes or byMilestones");
                 }
                 if (args.byScopes) {
-                    return context.docSet.sequenceItemsByScopes(root.blocks, args.byScopes);
+                    return context.docSet.sequenceItemsByScopes(root.blocks, args.byScopes, args.includeContext || false);
                 } else {
-                    return context.docSet.sequenceItemsByMilestones(root.blocks, args.byMilestones);
+                    return context.docSet.sequenceItemsByMilestones(root.blocks, args.byMilestones, args.includeContext || false);
                 }
             }
         }

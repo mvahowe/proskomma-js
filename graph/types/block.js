@@ -87,7 +87,8 @@ const blockType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             args: {
                 withScopes: {type: GraphQLList(GraphQLString)},
-                withScriptureCV: {type: GraphQLString}
+                withScriptureCV: {type: GraphQLString},
+                includeContext: {type: GraphQLBoolean}
             },
             resolve:
                 (root, args, context) => {
@@ -95,7 +96,7 @@ const blockType = new GraphQLObjectType({
                         throw new Error("Cannot specify both withScopes and withScriptureCV");
                     }
                     if (args.withScriptureCV) {
-                        return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV);
+                        return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {},args.includeContext || false);
                     } else {
                         return context.docSet.unsuccinctifyPrunedItems(
                             root,
@@ -104,7 +105,8 @@ const blockType = new GraphQLObjectType({
                                 scopes: true,
                                 grafts: true,
                                 requiredScopes: args.withScopes || []
-                            }
+                            },
+                            args.includeContext || false
                         )
                     }
                 }
@@ -112,14 +114,24 @@ const blockType = new GraphQLObjectType({
         tokens: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
             args: {
-                withScriptureCV: {type: GraphQLString}
+                withScriptureCV: {type: GraphQLString},
+                includeContext: {type: GraphQLBoolean}
             },
             resolve:
                 (root, args, context) => {
                     if (args.withScriptureCV) {
-                        return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {tokens: true});
+                        return context.docSet.unsuccinctifyItemsWithScriptureCV(
+                            root,
+                            args.withScriptureCV,
+                            {tokens: true},
+                            args.includeContext || false
+                        );
                     } else {
-                        return context.docSet.unsuccinctifyItems(root.c, {tokens: true});
+                        return context.docSet.unsuccinctifyItems(
+                            root.c,
+                            {tokens: true},
+                            args.includeContext || false
+                        );
                     }
                 }
         },
@@ -132,8 +144,13 @@ const blockType = new GraphQLObjectType({
             resolve:
                 (root, args, context) => {
                     const tokens = args.withScriptureCV ?
-                        context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {tokens: true}) :
-                        context.docSet.unsuccinctifyItems(root.c, {tokens: true});
+                        context.docSet.unsuccinctifyItemsWithScriptureCV(
+                            root,
+                            args.withScriptureCV,
+                            {tokens: true},
+                            false
+                            ) :
+                        context.docSet.unsuccinctifyItems(root.c, {tokens: true}, false);
                     let ret = tokens.map(t => t[2]).join('').trim();
                     if (args.normalizeSpace) {
                         ret = ret.replace(/[ \t\n\r]+/g, " ");
@@ -145,7 +162,7 @@ const blockType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLString),
             resolve:
                 (root, args, context) => {
-                    return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}));
+                    return dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, false));
                 }
         },
         scopeLabels: {

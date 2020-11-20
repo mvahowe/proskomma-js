@@ -50,7 +50,6 @@ test(
             t.equal(itemGroups[1].items.filter(i => i.itemType === "token").reverse()[0].chars, ".");
             t.equal(itemGroups[1].tokens[0].chars, "Instead");
             t.equal([...itemGroups[1].tokens].reverse()[0].chars, ".");
-            console.log(JSON.stringify(result.data, null, 2));
         } catch (err) {
             console.log(err)
         }
