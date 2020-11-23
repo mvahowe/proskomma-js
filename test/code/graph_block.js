@@ -213,7 +213,7 @@ test(
 );
 
 test(
-    `prunedItems (${testGroup})`,
+    `Items withScopes (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
@@ -227,6 +227,36 @@ test(
                 .map(
                     b => b.items.map(
                         i => i.itemType === "token" ? i.chars : ""
+                    ).map(
+                        t => t.replace(/[ \n\r\t]+/, " ")
+                    ).join("")
+                ).join(" ")
+                .trim();
+            t.equal(
+                texts,
+                "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +
+                "They read and think every day and every night about what Yahweh teaches."
+            );
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Tokens withScopes (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const requiredScopes = '["chapter/1", "verse/2"]';
+            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { tokens(withScopes:${requiredScopes}) { chars } } } } }`;
+            let result = await pk5.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.documents[0].mainSequence.blocks;
+            const texts = blocks
+                .map(
+                    b => b.tokens.map(
+                        i => i.chars
                     ).map(
                         t => t.replace(/[ \n\r\t]+/, " ")
                     ).join("")

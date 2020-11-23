@@ -87,6 +87,7 @@ const blockType = new GraphQLObjectType({
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
             args: {
                 withScopes: {type: GraphQLList(GraphQLString)},
+                anyScope: {type: GraphQLBoolean},
                 withScriptureCV: {type: GraphQLString},
                 includeContext: {type: GraphQLBoolean}
             },
@@ -114,6 +115,8 @@ const blockType = new GraphQLObjectType({
         tokens: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
             args: {
+                withScopes: {type: GraphQLList(GraphQLString)},
+                anyScope: {type: GraphQLBoolean},
                 withScriptureCV: {type: GraphQLString},
                 includeContext: {type: GraphQLBoolean},
                 withChars: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
@@ -125,21 +128,26 @@ const blockType = new GraphQLObjectType({
                         ret = context.docSet.unsuccinctifyItemsWithScriptureCV(
                             root,
                             args.withScriptureCV,
-                            {tokens: true},
+                            {
+                                tokens: true
+                            },
                             args.includeContext || false
                         );
                     } else {
-                        ret = context.docSet.unsuccinctifyItems(
-                            root.c,
-                            {tokens: true},
+                        ret = context.docSet.unsuccinctifyPrunedItems(
+                            root,
+                            {
+                                tokens: true,
+                                scopes: true,
+                                requiredScopes: args.withScopes || []
+                            },
                             args.includeContext || false
                         );
                     }
                     if (args.withChars) {
-                        return ret.filter(t => args.withChars.includes(t[2]));
-                    } else {
-                        return ret;
+                        ret = ret.filter(t => args.withChars.includes(t[2]));
                     }
+                    return ret.filter(i => i[0] === "token");
                 }
         },
         text: {
