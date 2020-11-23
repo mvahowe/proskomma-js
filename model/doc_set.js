@@ -261,7 +261,7 @@ class DocSet {
             if (item[0] === "token") {
                 if ((Object.keys(options).length === 0) || options.tokens) {
                     if (includeContext) {
-                        item.push(tokenCount++);
+                        item.push(item[0] === "token" && item[1] === "wordLike" ? tokenCount++ : null);
                         item.push([...scopes]);
                     }
                 }
