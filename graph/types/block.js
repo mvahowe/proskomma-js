@@ -105,7 +105,8 @@ const blockType = new GraphQLObjectType({
                                 tokens: true,
                                 scopes: true,
                                 grafts: true,
-                                requiredScopes: args.withScopes || []
+                                requiredScopes: args.withScopes || [],
+                                anyScope: args.anyScope || false
                             },
                             args.includeContext || false
                         )
@@ -139,7 +140,8 @@ const blockType = new GraphQLObjectType({
                             {
                                 tokens: true,
                                 scopes: true,
-                                requiredScopes: args.withScopes || []
+                                requiredScopes: args.withScopes || [],
+                                anyScope: args.anyScope || false
                             },
                             args.includeContext || false
                         );

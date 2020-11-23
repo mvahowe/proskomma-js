@@ -11,6 +11,15 @@ const pk4 = pkWithDoc("../test_data/usfm/footnote.usfm", {lang: "eng", abbr: "us
 const pk5 = pkWithDoc("../test_data/usfm/verse_breaks_in_blocks.usfm", {lang: "eng", abbr: "ust"})[0];
 const pk6 = pkWithDoc("../test_data/usfm/whitespace.usfm", {lang: "eng", abbr: "ust"})[0];
 
+const blocksText = blocks => blocks.map(
+        b => b.items.map(
+            i => i.itemType === "token" ? i.chars : ""
+        ).map(
+            t => t.replace(/[ \n\r\t]+/, " ")
+        ).join("")
+    ).join(" ")
+    .trim();
+
 test(
     `Length (${testGroup})`,
     async function (t) {
@@ -223,15 +232,7 @@ test(
             let result = await pk5.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
-            const texts = blocks
-                .map(
-                    b => b.items.map(
-                        i => i.itemType === "token" ? i.chars : ""
-                    ).map(
-                        t => t.replace(/[ \n\r\t]+/, " ")
-                    ).join("")
-                ).join(" ")
-                .trim();
+            const texts = blocksText(blocks);
             t.equal(
                 texts,
                 "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +
@@ -249,19 +250,57 @@ test(
         try {
             t.plan(2);
             const requiredScopes = '["chapter/1", "verse/2"]';
-            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { tokens(withScopes:${requiredScopes}) { chars } } } } }`;
+            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) {items: tokens(withScopes:${requiredScopes}) { itemType chars } } } } }`;
             let result = await pk5.gqlQuery(query);
             t.equal(result.errors, undefined);
             const blocks = result.data.documents[0].mainSequence.blocks;
-            const texts = blocks
-                .map(
-                    b => b.tokens.map(
-                        i => i.chars
-                    ).map(
-                        t => t.replace(/[ \n\r\t]+/, " ")
-                    ).join("")
-                ).join(" ")
-                .trim();
+            const texts = blocksText(blocks);
+            t.equal(
+                texts,
+                "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +
+                "They read and think every day and every night about what Yahweh teaches."
+            );
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Items anyScope (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const requiredScopes = '["chapter/1", "verse/2"]';
+            const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
+            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { items(anyScope:true withScopes:["verse/2", "verse/2000"]) ${itemFragment} } } } }`;
+            let result = await pk5.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.documents[0].mainSequence.blocks;
+            const texts = blocksText(blocks);
+            t.equal(
+                texts,
+                "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +
+                "They read and think every day and every night about what Yahweh teaches."
+            );
+        } catch (err) {
+            console.log(err)
+        }
+    }
+);
+
+test(
+    `Tokens anyScope (${testGroup})`,
+    async function (t) {
+        try {
+            t.plan(2);
+            const requiredScopes = '["chapter/1", "verse/2"]';
+            const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
+            const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { items: tokens(anyScope:true withScopes:["verse/2", "verse/2000"]) { itemType chars } } } } }`;
+            let result = await pk5.gqlQuery(query);
+            t.equal(result.errors, undefined);
+            const blocks = result.data.documents[0].mainSequence.blocks;
+            const texts = blocksText(blocks);
             t.equal(
                 texts,
                 "Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. " +

@@ -346,6 +346,7 @@ class DocSet {
     unsuccinctifyPrunedItems(block, options, includeContext) {
         const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
         const requiredScopes = options.requiredScopes || [];
+        const anyScope = options.anyScope || false;
         const allScopesInItem = () => {
             for (const scope of requiredScopes) {
                 if (!openScopes.has(scope)) {
@@ -354,12 +355,21 @@ class DocSet {
             }
             return true;
         }
+        const anyScopeInItem = () => {
+            for (const scope of requiredScopes) {
+                if (openScopes.has(scope)) {
+                    return true;
+                }
+            }
+            return (requiredScopes.length === 0);
+        }
+        const scopeTest = anyScope ? anyScopeInItem : allScopesInItem;
         const ret = [];
         for (const item of this.unsuccinctifyItems(block.c, options, includeContext)) {
             if (item[0] === "startScope") {
                 openScopes.add(item[1]);
             }
-            if (allScopesInItem()) {
+            if (scopeTest()) {
                 ret.push(item);
             }
             if (item[0] === "endScope") {
