@@ -38,7 +38,8 @@ test(
                 '          withScriptureCV: "1:3"' +
                 '          withChars: ["ἐρχομένων", "ἀδελφῶν"]' +
                 '        ) {' +
-                '          subType chars position scopes' +
+                '          chars position' +
+                '          scopes(startsWith:["attribute/spanWithAtts/w/lemma", "attribute/spanWithAtts/w/strong"])' +
                 '        }' +
                 '      }' +
                 '    }' +
