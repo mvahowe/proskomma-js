@@ -18,7 +18,8 @@ node do_graph.js ../test/test_data/usfm/hello.usfm example_query.txt
 ```
 
 # Documentation
-## Big ideas
+See the project's [ReadtheDocs](https://doc.proskomma.bible)
+## Overall Structure
 - docSet => bundle
 - document => book document (created from USFM or USX)
 - each document has >= 1 sequence
