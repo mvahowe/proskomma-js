@@ -1,10 +1,10 @@
-const xre = require('xregexp');
-const {validateTags, addTag} = require('../lib/tags');
-const {generateId} = require("../lib/generate_id");
+import * as xre from 'xregexp';
+const { validateTags, addTag } = require('../lib/tags');
+const { generateId } = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
-const {scopeEnumLabels, nComponentsForScope} = require('../lib/scope_defs');
-const {tokenEnumLabels, tokenCategory} = require('../lib/token_defs');
-const {itemEnum} = require('../lib/item_defs');
+const { scopeEnumLabels, nComponentsForScope } = require('../lib/scope_defs');
+const { tokenEnumLabels, tokenCategory } = require('../lib/token_defs');
+const { itemEnum } = require('../lib/item_defs');
 
 class DocSet {
 
@@ -518,10 +518,10 @@ class DocSet {
         const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
         const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
         return new Set([
-                ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
-                ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
-                blockScope[1]
-            ]
+            ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
+            ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
+            blockScope[1]
+        ]
         );
     }
 
@@ -769,4 +769,4 @@ class DocSet {
 
 }
 
-module.exports = {DocSet}
+module.exports = { DocSet }

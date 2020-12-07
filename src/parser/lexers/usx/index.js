@@ -1,4 +1,4 @@
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const { UsxLexer } = require("./usx_lexer");
 

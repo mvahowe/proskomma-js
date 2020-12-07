@@ -181,7 +181,7 @@ const Sequence = class {
     removeEmptyBlocks(customCanBeEmpty) {
         const canBeEmpty = ["blockTag/b", "blockTag/ib"].concat(customCanBeEmpty);
         const emptyBlocks = [];
-        let changed= false;
+        let changed = false;
         for (const blockRecord of this.blocks.entries()) {
             if (blockRecord[1].tokens().length === 0 && !canBeEmpty.includes(blockRecord[1].blockScope.label)) {
                 emptyBlocks.push(blockRecord);
@@ -252,7 +252,7 @@ const Sequence = class {
                         break;
                     case "graft":
                         this.pushSuccinctGraft(contentBA, docSet, item);
-                         break;
+                        break;
                     case "startScope":
                     case "endScope":
                         this.pushSuccinctScope(contentBA, docSet, item);
@@ -318,4 +318,4 @@ const Sequence = class {
 
 }
 
-module.exports = {Sequence};
+module.exports = { Sequence };

@@ -1,4 +1,4 @@
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const { lexingRegexes, mainRegex } = require('../lexingRegexes');
 const { preTokenClassForFragment } = require("../class_for_fragment");

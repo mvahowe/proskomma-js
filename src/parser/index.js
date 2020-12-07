@@ -1,7 +1,7 @@
-const {Sequence} = require("./model/sequence");
-const {specs} = require("./parser_specs");
-const {Token, Scope, Graft} = require("./model/items");
-const {labelForScope} = require("../lib/scope_defs");
+const { Sequence } = require("./model/sequence");
+const { specs } = require("./parser_specs");
+const { Token, Scope, Graft } = require("./model/items");
+const { labelForScope } = require("../lib/scope_defs");
 
 const Parser = class {
 
@@ -43,7 +43,7 @@ const Parser = class {
 
     setSequences() {
         this.sequences = {};
-        for (const [sType, sArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
+        for (const [sType, sArity] of Object.entries({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes })) {
             switch (sArity) {
                 case "1":
                     this.sequences[sType] = new Sequence(sType);
@@ -222,7 +222,7 @@ const Parser = class {
 
     allSequences() {
         const ret = [];
-        for (const [seqName, seqArity] of Object.entries({...this.baseSequenceTypes, ...this.inlineSequenceTypes})) {
+        for (const [seqName, seqArity] of Object.entries({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes })) {
             switch (seqArity) {
                 case "1":
                 case "?":
@@ -272,7 +272,7 @@ const Parser = class {
     removeUnusedSequences(usedSequences) {
         for (const seq of this.allSequences()) {
             if (!usedSequences.includes(seq.id)) {
-                switch ({...this.baseSequenceTypes, ...this.inlineSequenceTypes}[seq.type]) {
+                switch ({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes }[seq.type]) {
                     case "1":
                         throw new Error("Attempting to remove sequence with arity of 1");
                     case "?":
@@ -438,7 +438,7 @@ const Parser = class {
         this.mainLike.addItem(new Scope("end", label));
     }
 
-  setAttributeContext(label) {
+    setAttributeContext(label) {
         this.current.attributeContext = label;
     }
 
@@ -448,4 +448,4 @@ const Parser = class {
 
 }
 
-module.exports = {Parser};
+module.exports = { Parser };

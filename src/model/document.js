@@ -121,7 +121,7 @@ class Document {
     }
 
     serializeSuccinct() {
-        const ret = {sequences: {}};
+        const ret = { sequences: {} };
         ret.headers = this.headers;
         ret.mainId = this.mainId;
         for (const [seqId, seqOb] of Object.entries(this.sequences)) {

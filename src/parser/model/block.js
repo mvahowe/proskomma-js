@@ -3,7 +3,7 @@ const { Token, Scope, Graft } = require("./items");
 
 const Block = class {
 
-    constructor (blockScope) {
+    constructor(blockScope) {
         this.id = generateId();
         this.items = [];
         this.blockGrafts = [];
@@ -168,7 +168,7 @@ const Block = class {
     graftPassesOptions(item, options) {
         return (
             (!("includeGrafts" in options) || options.includeGrafts.includes(item.graftType)) &&
-                (!("excludeGrafts" in options) || !options.excludeGrafts.includes(item.graftType))
+            (!("excludeGrafts" in options) || !options.excludeGrafts.includes(item.graftType))
         );
     }
 
@@ -216,7 +216,7 @@ const Block = class {
     }
 
     scopes() {
-        return Array.from(this.items.entries()).filter(ip =>ip[1].itemType.endsWith("Scope"));
+        return Array.from(this.items.entries()).filter(ip => ip[1].itemType.endsWith("Scope"));
     }
 
     tokens() {

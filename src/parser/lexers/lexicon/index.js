@@ -1,4 +1,4 @@
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const { LexiconLexer } = require("./lexicon_lexer");
 
