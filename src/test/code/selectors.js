@@ -2,8 +2,8 @@ const test = require('tape');
 const fse = require('fs-extra');
 const path = require('path');
 
-const {ProsKomma} = require('../../');
-const {customPkWithDoc, customPkWithDocs} = require('../lib/load');
+const { ProsKomma } = require('../../');
+const { customPkWithDoc, customPkWithDocs } = require('../lib/load');
 
 const testGroup = "Graph Selectors";
 
@@ -47,33 +47,33 @@ test(
             t.throws(() => new customProsKomma(), /No selectors found/);
             selectors = [{}];
             t.throws(() => new customProsKomma(), /Selector.+has no name/);
-            selectors = [{name: "foo"}];
+            selectors = [{ name: "foo" }];
             t.throws(() => new customProsKomma(), /Selector.+has no type/);
-            selectors = [{name: "foo", type: "banana"}];
+            selectors = [{ name: "foo", type: "banana" }];
             t.throws(() => new customProsKomma(), /Type for selector/);
-            selectors = [{name: "foo", type: "string", banana: "split"}];
+            selectors = [{ name: "foo", type: "string", banana: "split" }];
             t.throws(() => new customProsKomma(), /Unexpected key/);
-            selectors = [{name: "foo", type: "string", min: 23}];
+            selectors = [{ name: "foo", type: "string", min: 23 }];
             t.throws(() => new customProsKomma(), /should not include 'min'/);
-            selectors = [{name: "foo", type: "string", max: 23}];
+            selectors = [{ name: "foo", type: "string", max: 23 }];
             t.throws(() => new customProsKomma(), /should not include 'max'/);
-            selectors = [{name: "foo", type: "string", regex: "["}];
+            selectors = [{ name: "foo", type: "string", regex: "[" }];
             t.throws(() => new customProsKomma(), /is not valid/);
-            selectors = [{name: "foo", type: "string", enum: ["a", "b", 23]}];
+            selectors = [{ name: "foo", type: "string", enum: ["a", "b", 23] }];
             t.throws(() => new customProsKomma(), /should be strings/);
-            selectors = [{name: "foo", type: "integer", regex: "[a]"}];
+            selectors = [{ name: "foo", type: "integer", regex: "[a]" }];
             t.throws(() => new customProsKomma(), /should not include 'regex'/);
-            selectors = [{name: "foo", type: "integer", min: "23"}];
+            selectors = [{ name: "foo", type: "integer", min: "23" }];
             t.throws(() => new customProsKomma(), /'min' must be a number/);
-            selectors = [{name: "foo", type: "integer", max: "23"}];
+            selectors = [{ name: "foo", type: "integer", max: "23" }];
             t.throws(() => new customProsKomma(), /'max' must be a number/);
-            selectors = [{name: "foo", type: "integer", min: 23, max: 22}];
+            selectors = [{ name: "foo", type: "integer", min: 23, max: 22 }];
             t.throws(() => new customProsKomma(), /'min' cannot be greater than 'max'/);
-            selectors = [{name: "foo", type: "integer", enum: [1, 2, "3"]}];
+            selectors = [{ name: "foo", type: "integer", enum: [1, 2, "3"] }];
             t.throws(() => new customProsKomma(), /should be numbers/);
             selectors = [
-                {name: "foo", type: "string", regex: ".*", enum: ["a", "b", "c"]},
-                {name: "baa", type: "integer", min: 1, max: 9, enum: [2, 4, 6]}
+                { name: "foo", type: "string", regex: ".*", enum: ["a", "b", "c"] },
+                { name: "baa", type: "integer", min: 1, max: 9, enum: [2, 4, 6] }
             ];
             t.doesNotThrow(() => new customProsKomma());
         } catch (err) {
@@ -117,19 +117,19 @@ test(
                 content
             );
             t.throws(importFn, /Expected selector 'foo' not found/);
-            selectors = {banana: 23};
+            selectors = { banana: 23 };
             t.throws(importFn, /Unexpected selector/);
-            selectors = {foo: 23, baa: 24};
+            selectors = { foo: 23, baa: 24 };
             t.throws(importFn, /is of type number \(expected string\)/);
-            selectors = {foo: "banana", baa: 24.5};
+            selectors = { foo: "banana", baa: 24.5 };
             t.throws(importFn, /is not an integer/);
-            selectors = {foo: "banana", baa: 7};
+            selectors = { foo: "banana", baa: 7 };
             t.throws(importFn, /is not in enum/);
-            selectors = {foo: "orange", baa: 8};
+            selectors = { foo: "orange", baa: 8 };
             t.throws(importFn, /is not in enum/);
-            selectors = {foo: "123", baa: 8};
+            selectors = { foo: "123", baa: 8 };
             t.throws(importFn, /does not match regex/);
-            selectors = {foo: "banana", baa: 6};
+            selectors = { foo: "banana", baa: 6 };
             t.doesNotThrow(importFn);
         } catch (err) {
             console.log(err)
@@ -157,7 +157,7 @@ test(
                     this.validateSelectors();
                 }
             }
-            let cpk = customPkWithDoc(customProsKomma, "../test_data/usx/web_rut.usx", {foo: "banana", baa: 23})[0];
+            let cpk = customPkWithDoc(customProsKomma, "../test_data/usx/web_rut.usx", { foo: "banana", baa: 23 })[0];
             t.plan(17);
             let query = '{ docSets { selectors { key value } selectorString } }';
             let result = await cpk.gqlQuery(query);
@@ -170,10 +170,10 @@ test(
             t.equal(selectors[1].value, '23');
             t.equal(result.data.docSets[0].selectorString, "banana_23");
             cpk = customPkWithDocs(customProsKomma, [
-                ["../test_data/usx/web_rut.usx", {foo: "banana", baa: 23}],
-                    ["../test_data/usx/web_psa150.usx", {foo: "banana", baa: 48}],
-                    ["../test_data/usx/fig.usx", {foo: "mango", baa: 48}]
-                ]);
+                ["../test_data/usx/web_rut.usx", { foo: "banana", baa: 23 }],
+                ["../test_data/usx/web_psa150.usx", { foo: "banana", baa: 48 }],
+                ["../test_data/usx/fig.usx", { foo: "mango", baa: 48 }]
+            ]);
             query = '{ docSets { foo: selector(id:"foo") baa: selector(id:"baa") } }';
             result = await cpk.gqlQuery(query);
             t.equal(result.errors, undefined);

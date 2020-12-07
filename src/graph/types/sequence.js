@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull } = require('graphql');
-import * as xre from 'xregexp';
+import xre from 'xregexp';
 
 const blockType = require('./block');
 const itemGroupType = require('./itemGroup');

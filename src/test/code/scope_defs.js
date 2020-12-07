@@ -1,5 +1,5 @@
 const test = require('tape');
-const {labelForScope, nComponentsForScope} = require("../../lib/scope_defs");
+const { labelForScope, nComponentsForScope } = require("../../lib/scope_defs");
 
 const testGroup = "Scope Def Edge Cases";
 

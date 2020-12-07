@@ -1,4 +1,4 @@
-import * as xre from 'xregexp';
+import xre from 'xregexp';
 const { validateTags, addTag } = require('../lib/tags');
 const { generateId } = require("../lib/generate_id");
 const ByteArray = require("../lib/byte_array");
