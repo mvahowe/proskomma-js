@@ -1,7 +1,7 @@
 const fse = require('fs-extra');
 const path = require('path');
 
-const { ProsKomma } = require('../../../dist');
+const { ProsKomma } = require('../../../src');
 
 const pkWithDoc = (fp, selectors, options, customTags, emptyBlocks, tags) => {
     if (!options) { options = {} };
