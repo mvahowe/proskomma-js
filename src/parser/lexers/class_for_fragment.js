@@ -1,5 +1,5 @@
 const ptClasses = require('./preTokenClasses');
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const classForFragment = {
     printable: ptClasses.PrintablePT,

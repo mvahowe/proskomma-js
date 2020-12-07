@@ -1,5 +1,5 @@
-const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull} = require('graphql');
-const xre = require('xregexp');
+const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull } = require('graphql');
+import * as xre from 'xregexp';
 
 const blockType = require('./block');
 const itemGroupType = require('./itemGroup');
@@ -43,19 +43,19 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
 const sequenceType = new GraphQLObjectType({
     name: "Sequence",
     fields: () => ({
-        id: {type: GraphQLNonNull(GraphQLString)},
-        type: {type: GraphQLNonNull(GraphQLString)},
-        nBlocks: {type: GraphQLNonNull(GraphQLInt), resolve: root => root.blocks.length},
+        id: { type: GraphQLNonNull(GraphQLString) },
+        type: { type: GraphQLNonNull(GraphQLString) },
+        nBlocks: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.blocks.length },
         blocks: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
             args: {
-                withScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                withBlockScope: {type: GraphQLString},
-                withScriptureCV: {type: GraphQLString},
-                attSpecs: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType))))},
-                attValues: {type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))))},
-                allAtts: {type: GraphQLBoolean}
-                },
+                withScopes: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+                withBlockScope: { type: GraphQLString },
+                withScriptureCV: { type: GraphQLString },
+                attSpecs: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))) },
+                attValues: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))) },
+                allAtts: { type: GraphQLBoolean }
+            },
             resolve: (root, args, context) => {
                 context.docSet.maybeBuildEnumIndexes();
                 if (args.withScopes && args.withScriptureCV) {
@@ -90,9 +90,9 @@ const sequenceType = new GraphQLObjectType({
         itemGroups: {
             type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
             args: {
-                byScopes: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                byMilestones: {type: GraphQLList(GraphQLNonNull(GraphQLString))},
-                includeContext: {type: GraphQLBoolean}
+                byScopes: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+                byMilestones: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+                includeContext: { type: GraphQLBoolean }
             },
             resolve: (root, args, context) => {
                 if (args.byScopes && args.byMilestones) {

@@ -1,5 +1,5 @@
-const {labelForScope} = require("../lib/scope_defs");
-const {generateId} = require("../lib/generate_id");
+const { labelForScope } = require("../lib/scope_defs");
+const { generateId } = require("../lib/generate_id");
 const PrintablePT = require("./lexers/preTokenClasses/printable_pt");
 
 const specs = (pt) => [
@@ -428,12 +428,12 @@ const specs = (pt) => [
             ],
             during: (parser, pt) => {
                 pt.numbers.map(n => {
-                        const verseScope = {
-                            label: () => labelForScope("verse", [n]),
-                            endedBy: ["verses", "chapter"]
-                        };
-                        parser.openNewScope(pt, verseScope, true, parser.sequences.main);
-                    }
+                    const verseScope = {
+                        label: () => labelForScope("verse", [n]),
+                        endedBy: ["verses", "chapter"]
+                    };
+                    parser.openNewScope(pt, verseScope, true, parser.sequences.main);
+                }
                 );
             }
         }
@@ -630,12 +630,12 @@ const specs = (pt) => [
             during: (parser, pt) => {
                 if (parser.current.attributeContext) {
                     [...pt.values.entries()].map(na => {
-                            const attScope = {
-                                label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, na[0], na[1]]),
-                                endedBy: [`$attributeContext$`]
-                            };
-                            parser.openNewScope(pt, attScope);
-                        }
+                        const attScope = {
+                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, na[0], na[1]]),
+                            endedBy: [`$attributeContext$`]
+                        };
+                        parser.openNewScope(pt, attScope);
+                    }
                     );
                 } else {
                     parser.addToken(new PrintablePT("unknown", [pt.printValue]));
@@ -727,4 +727,4 @@ const specs = (pt) => [
     }
 ];
 
-module.exports = {specs}
+module.exports = { specs }

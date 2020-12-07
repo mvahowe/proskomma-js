@@ -1,9 +1,9 @@
 const sax = require("sax");
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const ptClasses = require('../preTokenClasses');
-const {lexingRegexes, mainRegex} = require('../lexingRegexes');
-const {preTokenClassForFragment} = require("../class_for_fragment");
+const { lexingRegexes, mainRegex } = require('../lexingRegexes');
+const { preTokenClassForFragment } = require("../class_for_fragment");
 
 class UsxLexer {
 
@@ -257,8 +257,8 @@ class UsxLexer {
     handleFigureOpen(lexer, oOrC, name, atts) {
         lexer.parser.parseItem(new ptClasses.TagPT("startTag", [null, null, "+fig", ""]));
         for (const [attName, attValue] of Object.entries(atts)) {
-            if (attName === "style") {continue};
-            const scopeAttName = (attName === "file") ? "src": attName;
+            if (attName === "style") { continue };
+            const scopeAttName = (attName === "file") ? "src" : attName;
             lexer.parser.parseItem(new ptClasses.AttributePT("attribute", [null, null, scopeAttName, attValue]));
         }
         lexer.stackPush(name, atts);
@@ -281,4 +281,4 @@ class UsxLexer {
 
 }
 
-module.exports = {UsxLexer}
+module.exports = { UsxLexer }

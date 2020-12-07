@@ -1,9 +1,9 @@
 const sax = require("sax");
-const xre = require('xregexp');
+import * as xre from 'xregexp';
 
 const ptClasses = require('../preTokenClasses');
-const {lexingRegexes, mainRegex} = require('../lexingRegexes');
-const {preTokenClassForFragment} = require("../class_for_fragment");
+const { lexingRegexes, mainRegex } = require('../lexingRegexes');
+const { preTokenClassForFragment } = require("../class_for_fragment");
 
 class LexiconLexer {
 
@@ -152,4 +152,4 @@ class LexiconLexer {
 
 }
 
-module.exports = {LexiconLexer}
+module.exports = { LexiconLexer }
