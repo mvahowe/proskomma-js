@@ -1,10 +1,10 @@
 const fse = require('fs-extra');
 const path = require('path');
 
-const {ProsKomma} = require('../../');
+const { ProsKomma } = require('../../../dist');
 
 const pkWithDoc = (fp, selectors, options, customTags, emptyBlocks, tags) => {
-    if (!options) {options = {}};
+    if (!options) { options = {} };
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     let contentType = fp.split('.').pop();
     if (contentType === "xml") {
@@ -24,7 +24,7 @@ const pkWithDoc = (fp, selectors, options, customTags, emptyBlocks, tags) => {
 }
 
 const customPkWithDoc = (pkClass, fp, selectors, options) => {
-    if (!options) {options = {}};
+    if (!options) { options = {} };
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     let contentType = fp.split('.').pop();
     if (contentType === "xml") {
@@ -77,7 +77,7 @@ const customPkWithDocs = (pkClass, contentSpecs) => {
 }
 
 const pkWithDocSetDocs = (fps, selectors, options) => {
-    if (!options) {options = {}};
+    if (!options) { options = {} };
     const fpContent = [];
     fps.forEach(fp => fpContent.push(fse.readFileSync(path.resolve(__dirname, fp))));
     let contentType = fps[0].split('.').pop();
@@ -94,4 +94,4 @@ const pkWithDocSetDocs = (fps, selectors, options) => {
     return [pk, pkDocs];
 }
 
-module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs, customPkWithDocs, pkWithDocSetDocs};
+module.exports = { pkWithDoc, customPkWithDoc, pkWithDocs, customPkWithDocs, pkWithDocSetDocs };

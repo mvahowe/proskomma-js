@@ -1,5 +1,5 @@
 const { graphql } = require('graphql');
-import * as xre from 'xregexp';
+import xre from 'xregexp';
 
 const packageJson = require('../package.json');
 const { DocSet } = require('./model/doc_set');

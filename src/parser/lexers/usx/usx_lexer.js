@@ -1,5 +1,5 @@
 const sax = require("sax");
-import * as xre from 'xregexp';
+import xre from 'xregexp';
 
 const ptClasses = require('../preTokenClasses');
 const { lexingRegexes, mainRegex } = require('../lexingRegexes');
