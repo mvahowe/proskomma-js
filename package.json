@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "A Model for Complex Text Documents such as Bibles",
   "main": "dist/index.js",
   "files": [
@@ -12,7 +12,7 @@
     "oneTest": "babel-tape-runner src/test/code/$TESTSCRIPT.js",
     "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner src/test/code/*.js | node_modules/tap-nyc/bin/cmd.js",
     "build": "babel src -d dist",
-    "prepublishOnly": "rm -fr dist && yarn build"
+    "prepublishOnly": "rm -fr dist && npm run build"
   },
   "repository": {
     "type": "git",
