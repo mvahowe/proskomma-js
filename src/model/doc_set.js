@@ -807,8 +807,7 @@ class DocSet {
     const ret = {
       id: this.id,
       metadata: {
-        lang: this.lang,
-        abbr: this.abbr,
+        selectors: this.selectors,
       },
       enums: {},
       docs: {},
