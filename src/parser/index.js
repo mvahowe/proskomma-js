@@ -1,7 +1,7 @@
 const { Sequence } = require("./model/sequence");
 const { specs } = require("./parser_specs");
 const { Token, Scope, Graft } = require("./model/items");
-const { labelForScope } = require("../lib/scope_defs");
+const { labelForScope } = require("proskomma-utils");
 
 const Parser = class {
 

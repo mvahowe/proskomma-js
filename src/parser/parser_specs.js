@@ -1,730 +1,724 @@
-const { labelForScope } = require("../lib/scope_defs");
-const { generateId } = require("../lib/generate_id");
-const PrintablePT = require("./lexers/preTokenClasses/printable_pt");
+const { labelForScope, generateId } = require('proskomma-utils');
+const PrintablePT = require('./lexers/preTokenClasses/printable_pt');
 
 const specs = (pt) => [
-    {
-        // HEADERS - make temp sequence, then add to headers object
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "id",
-                    "usfm",
-                    "ide",
-                    "sts",
-                    "h",
-                    "toc",
-                    "toca"
-                ]
-            ]
+  {
+    // HEADERS - make temp sequence, then add to headers object
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'id',
+          'usfm',
+          'ide',
+          'sts',
+          'h',
+          'toc',
+          'toca',
         ],
-        parser: {
-            baseSequenceType: "header",
-            forceNewSequence: true,
-            newBlock: true,
-            useTempSequence: true,
-            newScopes: [
-                {
-                    label: pt => pt.fullTagName,
-                    endedBy: ["baseSequenceChange"],
-                    onEnd: (parser, label) => {
-                        parser.headers[label] = parser.current.sequence.plainText();
-                        if (label === "id") {
-                            if (
-                                parser.headers[label].length === 3 ||
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'header',
+      forceNewSequence: true,
+      newBlock: true,
+      useTempSequence: true,
+      newScopes: [
+        {
+          label: pt => pt.fullTagName,
+          endedBy: ['baseSequenceChange'],
+          onEnd: (parser, label) => {
+            parser.headers[label] = parser.current.sequence.plainText();
+
+            if (label === 'id') {
+              if (
+                parser.headers[label].length === 3 ||
                                 (
-                                    parser.headers[label].length > 3 &&
-                                    parser.headers[label].substring(3, 4) === " "
+                                  parser.headers[label].length > 3 &&
+                                    parser.headers[label].substring(3, 4) === ' '
                                 )
-                            ) {
-                                const bookCode = parser.headers[label].substring(0, 3);
-                                parser.headers["bookCode"] = bookCode;
-                            }
-                        }
-                    }
-                }
-            ]
-        }
-    },
-    {
-        // HEADINGS - Start new sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "ms",
-                    "mr",
-                    "s",
-                    "sr",
-                    "r",
-                    "qa",
-                    "sp",
-                    "sd"
-                ].concat(pt.customTags.heading)
-            ]
-        ],
-        parser: {
-            baseSequenceType: "heading",
-            forceNewSequence: true,
-            newBlock: true,
-            newScopes: []
-        }
-    },
-    {
-        // TITLE - make a sequence or add to existing one
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "mt"
-                ]
-            ]
-        ],
-        parser: {
-            baseSequenceType: "title",
-            newBlock: true,
-            newScopes: []
-        }
-    },
-    {
-        // END TITLE - make a sequence or add to existing one
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "mte"
-                ]
-            ]
-        ],
-        parser: {
-            baseSequenceType: "endTitle",
-            newBlock: true,
-            newScopes: []
-        }
-    },
-    {
-        // INTRODUCTION - make a sequence or add to existing one
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "imt",
-                    "is",
-                    "ip",
-                    "ipi",
-                    "im",
-                    "imi",
-                    "ipq",
-                    "imq",
-                    "ipr",
-                    "iq",
-                    "ib",
-                    "ili",
-                    "iot",
-                    "io",
-                    "iex",
-                    "imte",
-                ].concat(pt.customTags.intro)
-            ]
-        ],
-        parser: {
-            baseSequenceType: "introduction",
-            newBlock: true,
-            newScopes: []
-        }
-    },
-    {
-        // START SIDEBAR - make a new sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "esb",
-                ]
-            ]
-        ],
-        parser: {
-            baseSequenceType: "sidebar",
-            newBlock: true,
-            newScopes: [],
-            after: (parser) => {
-                parser.mainLike = parser.current.sequence;
+              ) {
+                const bookCode = parser.headers[label].substring(0, 3);
+                parser.headers['bookCode'] = bookCode;
+              }
             }
-        }
+          },
+        },
+      ],
     },
-    {
-        // END SIDEBAR - return to main
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "esbe",
-                ]
-            ]
+  },
+  {
+    // HEADINGS - Start new sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'ms',
+          'mr',
+          's',
+          'sr',
+          'r',
+          'qa',
+          'sp',
+          'sd',
+        ].concat(pt.customTags.heading),
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'heading',
+      forceNewSequence: true,
+      newBlock: true,
+      newScopes: [],
+    },
+  },
+  {
+    // TITLE - make a sequence or add to existing one
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'mt',
         ],
-        parser: {
-            baseSequenceType: "main",
-            newBlock: true,
-            newScopes: [],
-            after: (parser) => {
-                parser.mainLike = parser.sequences.main;
-            }
-        }
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'title',
+      newBlock: true,
+      newScopes: [],
     },
-    {
-        // CAT - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                ["cat"]
-            ]
+  },
+  {
+    // END TITLE - make a sequence or add to existing one
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'mte',
         ],
-        parser: {
-            inlineSequenceType: "esbCat",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/cat", "endBlock", "implicitEnd"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ],
-            during: (parser, pt) => {
-                const scopeId = generateId();
-                const esbScope = {
-                    label: () => labelForScope("esbCat", [scopeId]),
-                    endedBy: ["startTag/esbe"]
-                };
-                parser.openNewScope(pt, esbScope, true, parser.mainLike);
-            }
-        }
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'endTitle',
+      newBlock: true,
+      newScopes: [],
     },
-    {
-        // REMARK - make new sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "rem"
-                ]
-            ]
+  },
+  {
+    // INTRODUCTION - make a sequence or add to existing one
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'imt',
+          'is',
+          'ip',
+          'ipi',
+          'im',
+          'imi',
+          'ipq',
+          'imq',
+          'ipr',
+          'iq',
+          'ib',
+          'ili',
+          'iot',
+          'io',
+          'iex',
+          'imte',
+        ].concat(pt.customTags.intro),
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'introduction',
+      newBlock: true,
+      newScopes: [],
+    },
+  },
+  {
+    // START SIDEBAR - make a new sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'esb',
         ],
-        parser: {
-            baseSequenceType: "remark",
-            forceNewSequence: true,
-            newScopes: []
-        }
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'sidebar',
+      newBlock: true,
+      newScopes: [],
+      after: (parser) => {
+        parser.mainLike = parser.current.sequence;
+      },
     },
-    {
-        // PARAGRAPH STYLES - Make new block on main
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "cd",
-                    "p",
-                    "m",
-                    "po",
-                    "pr",
-                    "cls",
-                    "pmo",
-                    "pm",
-                    "pmc",
-                    "pmr",
-                    "pi",
-                    "mi",
-                    "nb",
-                    "pc",
-                    "ph",
-                    "b",
-                    "q",
-                    "qr",
-                    "qc",
-                    "qa",
-                    "qm",
-                    "qd",
-                    "lh",
-                    "li",
-                    "lf",
-                    "lim",
-                    "d",
-                    "zlexorth",
-                    "zlexbrief",
-                    "zlexfull",
-                ].concat(pt.customTags.paragraph)
-            ]
+  },
+  {
+    // END SIDEBAR - return to main
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'esbe',
         ],
-        parser: {
-            baseSequenceType: "mainLike",
-            newBlock: true,
-            newScopes: []
-        }
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'main',
+      newBlock: true,
+      newScopes: [],
+      after: (parser) => {
+        parser.mainLike = parser.sequences.main;
+      },
     },
-    {
-        // ROW - Make new block
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                ["tr"]
-            ]
+  },
+  {
+    // CAT - graft label and add stub scope, then remove graft and modify scope at tidy stage
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        ['cat'],
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'esbCat',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/cat', 'endBlock', 'implicitEnd'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
+      during: (parser, pt) => {
+        const scopeId = generateId();
+        const esbScope = {
+          label: () => labelForScope('esbCat', [scopeId]),
+          endedBy: ['startTag/esbe'],
+        };
+        parser.openNewScope(pt, esbScope, true, parser.mainLike);
+      },
+    },
+  },
+  {
+    // REMARK - make new sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'rem',
         ],
-        parser: {
-            newBlock: true,
-            newScopes: []
-        }
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'remark',
+      forceNewSequence: true,
+      newScopes: [],
     },
-    {
-        // FOOTNOTE/ENDNOTE - new inline sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "f",
-                    "fe"
-                ]
-            ]
+  },
+  {
+    // PARAGRAPH STYLES - Make new block on main
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'cd',
+          'p',
+          'm',
+          'po',
+          'pr',
+          'cls',
+          'pmo',
+          'pm',
+          'pmc',
+          'pmr',
+          'pi',
+          'mi',
+          'nb',
+          'pc',
+          'ph',
+          'b',
+          'q',
+          'qr',
+          'qc',
+          'qa',
+          'qm',
+          'qd',
+          'lh',
+          'li',
+          'lf',
+          'lim',
+          'd',
+          'zlexorth',
+          'zlexbrief',
+          'zlexfull',
+        ].concat(pt.customTags.paragraph),
+      ],
+    ],
+    parser: {
+      baseSequenceType: 'mainLike',
+      newBlock: true,
+      newScopes: [],
+    },
+  },
+  {
+    // ROW - Make new block
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        ['tr'],
+      ],
+    ],
+    parser: {
+      newBlock: true,
+      newScopes: [],
+    },
+  },
+  {
+    // FOOTNOTE/ENDNOTE - new inline sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'f',
+          'fe',
         ],
-        parser: {
-            inlineSequenceType: "footnote",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/f", "endTag/fe", "endBlock"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ]
-        }
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'footnote',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/f', 'endTag/fe', 'endBlock'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
     },
-    {
-        // CROSS REFERENCE - make new inline sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "x"
-                ]
-            ]
+  },
+  {
+    // CROSS REFERENCE - make new inline sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'x',
         ],
-        parser: {
-            inlineSequenceType: "xref",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/x", "endBlock"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ]
-        }
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'xref',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/x', 'endBlock'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
     },
-    {
-        // FIGURE - new inline sequence
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "fig"
-                ]
-            ]
+  },
+  {
+    // FIGURE - new inline sequence
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'fig',
         ],
-        parser: {
-            inlineSequenceType: "fig",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("spanWithAtts", [pt.tagName]),
-                    endedBy: ["endBlock", "endTag/$tagName$"],
-                    onEnd: (parser) => parser.clearAttributeContext()
-                }
-            ],
-            during: (parser, pt) => {
-                parser.setAttributeContext(labelForScope("spanWithAtts", [pt.tagName]))
-            }
-        }
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'fig',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('spanWithAtts', [pt.tagName]),
+          endedBy: ['endBlock', 'endTag/$tagName$'],
+          onEnd: (parser) => parser.clearAttributeContext(),
+        },
+      ],
+      during: (parser, pt) => {
+        parser.setAttributeContext(labelForScope('spanWithAtts', [pt.tagName]));
+      },
     },
-    {
-        // CHAPTER - chapter scope
-        contexts: [["chapter"]],
-        parser: {
-            mainSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("chapter", [pt.number]),
-                    endedBy: ["chapter"]
-                }
-            ]
-        }
+  },
+  {
+    // CHAPTER - chapter scope
+    contexts: [['chapter']],
+    parser: {
+      mainSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('chapter', [pt.number]),
+          endedBy: ['chapter'],
+        },
+      ],
     },
-    {
-        // CP - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [["pubchapter"]],
-        parser: {
-            mainSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("pubChapter", [pt.numberString]),
-                    endedBy: ["pubchapter", "chapter"]
-                }
-            ]
-        }
+  },
+  {
+    // CP - graft label and add stub scope, then remove graft and modify scope at tidy stage
+    contexts: [['pubchapter']],
+    parser: {
+      mainSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('pubChapter', [pt.numberString]),
+          endedBy: ['pubchapter', 'chapter'],
+        },
+      ],
     },
-    {
-        // CA - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                ["ca"]
-            ]
+  },
+  {
+    // CA - graft label and add stub scope, then remove graft and modify scope at tidy stage
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        ['ca'],
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'altNumber',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/ca', 'endBlock', 'implicitEnd'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
+      during: (parser, pt) => {
+        const scopeId = generateId();
+        const vpScope = {
+          label: () => labelForScope('altChapter', [scopeId]),
+          endedBy: ['startTag/ca', 'chapter'],
+        };
+        parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+      },
+    },
+  },
+  {
+    // VERSES - verse and verses scopes
+    contexts: [
+      ['verses'],
+    ],
+    parser: {
+      mainSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('verses', [pt.numberString]),
+          endedBy: ['verses', 'chapter'],
+        },
+      ],
+      during: (parser, pt) => {
+        pt.numbers.map(n => {
+          const verseScope = {
+            label: () => labelForScope('verse', [n]),
+            endedBy: ['verses', 'chapter'],
+          };
+          parser.openNewScope(pt, verseScope, true, parser.sequences.main);
+        },
+        );
+      },
+    },
+  },
+  {
+    // VP - graft label and add stub scope, then remove graft and modify scope at tidy stage
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        ['vp'],
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'pubNumber',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/vp', 'endBlock', 'implicitEnd'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
+      during: (parser, pt) => {
+        const scopeId = generateId();
+        const vpScope = {
+          label: () => labelForScope('pubVerse', [scopeId]),
+          endedBy: ['startTag/vp', 'verses', 'chapter'],
+        };
+        parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+      },
+    },
+  },
+  {
+    // VA - graft label and add stub scope, then remove graft and modify scope at tidy stage
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        ['va'],
+      ],
+    ],
+    parser: {
+      inlineSequenceType: 'altNumber',
+      forceNewSequence: true,
+      newScopes: [
+        {
+          label: pt => labelForScope('inline', [pt.fullTagName]),
+          endedBy: ['endTag/va', 'endBlock', 'implicitEnd'],
+          onEnd: (parser) => parser.returnToBaseSequence(),
+        },
+      ],
+      during: (parser, pt) => {
+        const scopeId = generateId();
+        const vpScope = {
+          label: () => labelForScope('altVerse', [scopeId]),
+          endedBy: ['startTag/va', 'verses', 'chapter'],
+        };
+        parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+      },
+    },
+  },
+  {
+    // CHARACTER MARKUP - add scope
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'qs',
+          'qac',
+          'litl',
+          'lik',
+          'liv',
+          'fr',
+          'fq',
+          'fqa',
+          'fk',
+          'fl',
+          'fw',
+          'fp',
+          'fv',
+          'ft',
+          'fdc',
+          'fm',
+          'xo',
+          'xk',
+          'xq',
+          'xt',
+          'xta',
+          'xop',
+          'xot',
+          'xnt',
+          'xdc',
+          'rq',
+          'add',
+          'bk',
+          'dc',
+          'k',
+          'nd',
+          'ord',
+          'pn',
+          'png',
+          'qt',
+          'sig',
+          'sls',
+          'tl',
+          'wj',
+          'em',
+          'bd',
+          'it',
+          'bdit',
+          'no',
+          'sc',
+          'sup',
+          'ior',
+          'iqt',
+        ].concat(pt.customTags.char),
+      ],
+    ],
+    parser: {
+      newScopes: [
+        {
+          label: pt => labelForScope('span', [pt.fullTagName]),
+          endedBy: ['endBlock', 'endTag/$fullTagName$', 'implicitEnd'],
+        },
+      ],
+    },
+  },
+  {
+    // CELL - unpick tagName, add scope
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'th',
+          'thr',
+          'tc',
+          'tcr',
         ],
-        parser: {
-            inlineSequenceType: "altNumber",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/ca", "endBlock", "implicitEnd"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ],
-            during: (parser, pt) => {
-                const scopeId = generateId();
-                const vpScope = {
-                    label: () => labelForScope("altChapter", [scopeId]),
-                    endedBy: ["startTag/ca", "chapter"]
-                };
-                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
-            }
-        }
+      ],
+    ],
+    parser: {
+      newScopes: [
+        {
+          label: pt => labelForScope('cell', [pt.fullTagName]),
+          endedBy: ['endBlock', 'endTag/$fullTagName$'],
+        },
+      ],
     },
-    {
-        // VERSES - verse and verses scopes
-        contexts: [
-            ["verses"]
-        ],
-        parser: {
-            mainSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("verses", [pt.numberString]),
-                    endedBy: ["verses", "chapter"]
-                }
-            ],
-            during: (parser, pt) => {
-                pt.numbers.map(n => {
-                    const verseScope = {
-                        label: () => labelForScope("verse", [n]),
-                        endedBy: ["verses", "chapter"]
-                    };
-                    parser.openNewScope(pt, verseScope, true, parser.sequences.main);
-                }
-                );
-            }
-        }
+  },
+  {
+    // EMPTY MILESTONE - add open and close scope
+    contexts: [
+      ['emptyMilestone'],
+    ],
+    parser: { during: (parser, pt) => parser.addEmptyMilestone(labelForScope('milestone', [pt.tagName])) },
+  },
+  {
+    // START MILESTONE - open scope, set attribute context
+    contexts: [
+      ['startMilestoneTag', 'sOrE', 's'],
+    ],
+    parser: {
+      newScopes: [
+        {
+          label: pt => labelForScope('milestone', [pt.tagName]),
+          endedBy: ['endMilestone/$tagName$'],
+        },
+      ],
+      during: (parser, pt) => {
+        parser.setAttributeContext(labelForScope('milestone', [pt.tagName]));
+      },
     },
-    {
-        // VP - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                ["vp"]
-            ]
-        ],
-        parser: {
-            inlineSequenceType: "pubNumber",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/vp", "endBlock", "implicitEnd"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ],
-            during: (parser, pt) => {
-                const scopeId = generateId();
-                const vpScope = {
-                    label: () => labelForScope("pubVerse", [scopeId]),
-                    endedBy: ["startTag/vp", "verses", "chapter"]
-                };
-                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
-            }
+  },
+  {
+    // END MILESTONE - close scope, clear attribute context
+    contexts: [
+      ['endMilestoneMarker'],
+    ],
+    parser: { during: (parser) => parser.clearAttributeContext() },
+  },
+  {
+    // ATTRIBUTE - open scope based on attribute context
+    contexts: [
+      ['attribute'],
+    ],
+    parser: {
+      during: (parser, pt) => {
+        if (parser.current.attributeContext) {
+          [...pt.values.entries()].map(na => {
+            const attScope = {
+              label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
+              endedBy: [`$attributeContext$`],
+            };
+            parser.openNewScope(pt, attScope);
+          },
+          );
+        } else {
+          parser.addToken(new PrintablePT('unknown', [pt.printValue]));
         }
+      },
     },
-    {
-        // VA - graft label and add stub scope, then remove graft and modify scope at tidy stage
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                ["va"]
-            ]
-        ],
-        parser: {
-            inlineSequenceType: "altNumber",
-            forceNewSequence: true,
-            newScopes: [
-                {
-                    label: pt => labelForScope("inline", [pt.fullTagName]),
-                    endedBy: ["endTag/va", "endBlock", "implicitEnd"],
-                    onEnd: (parser) => parser.returnToBaseSequence()
-                }
-            ],
-            during: (parser, pt) => {
-                const scopeId = generateId();
-                const vpScope = {
-                    label: () => labelForScope("altVerse", [scopeId]),
-                    endedBy: ["startTag/va", "verses", "chapter"]
-                };
-                parser.openNewScope(pt, vpScope, true, parser.sequences.main);
-            }
-        }
+  },
+  {
+    // WORD-LEVEL MARKUP - open scope and set attribute context
+    contexts: [
+      [
+        'startTag',
+        'tagName',
+        [
+          'w',
+          'rb',
+          'xt',
+        ].concat(pt.customTags.word),
+      ],
+    ],
+    parser: {
+      newScopes: [
+        {
+          label: pt => labelForScope('spanWithAtts', [pt.tagName]),
+          endedBy: ['endBlock', 'endTag/$tagName$'],
+          onEnd: (parser) => parser.clearAttributeContext(),
+        },
+      ],
+      during: (parser, pt) => {
+        parser.setAttributeContext(labelForScope('spanWithAtts', [pt.tagName]));
+      },
     },
-    {
-        // CHARACTER MARKUP - add scope
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "qs",
-                    "qac",
-                    "litl",
-                    "lik",
-                    "liv",
-                    "fr",
-                    "fq",
-                    "fqa",
-                    "fk",
-                    "fl",
-                    "fw",
-                    "fp",
-                    "fv",
-                    "ft",
-                    "fdc",
-                    "fm",
-                    "xo",
-                    "xk",
-                    "xq",
-                    "xt",
-                    "xta",
-                    "xop",
-                    "xot",
-                    "xnt",
-                    "xdc",
-                    "rq",
-                    "add",
-                    "bk",
-                    "dc",
-                    "k",
-                    "nd",
-                    "ord",
-                    "pn",
-                    "png",
-                    "qt",
-                    "sig",
-                    "sls",
-                    "tl",
-                    "wj",
-                    "em",
-                    "bd",
-                    "it",
-                    "bdit",
-                    "no",
-                    "sc",
-                    "sup",
-                    "ior",
-                    "iqt"
-                ].concat(pt.customTags.char)
-            ]
-        ],
-        parser: {
-            newScopes: [
-                {
-                    label: pt => labelForScope("span", [pt.fullTagName]),
-                    endedBy: ["endBlock", "endTag/$fullTagName$", "implicitEnd"]
-                }
-            ]
-        }
+  },
+  {
+    // TOKEN - add a token!
+    contexts: [
+      ['wordLike'],
+      ['lineSpace'],
+      ['punctuation'],
+      ['eol'],
+    ],
+    parser: { during: (parser, pt) => parser.addToken(pt) },
+  },
+  {
+    // NO BREAK SPACE - make a token!
+    contexts: [
+      ['noBreakSpace'],
+    ],
+    parser: {
+      during: (parser) => {
+        parser.addToken(new PrintablePT('lineSpace', ['\xa0']));
+      },
     },
-    {
-        // CELL - unpick tagName, add scope
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "th",
-                    "thr",
-                    "tc",
-                    "tcr"
-                ]
-            ]
-        ],
-        parser: {
-            newScopes: [
-                {
-                    label: pt => labelForScope("cell", [pt.fullTagName]),
-                    endedBy: ["endBlock", "endTag/$fullTagName$"]
-                }
-            ]
-        }
+  },
+  {
+    // SOFT LINE BREAK - make a token!
+    contexts: [
+      ['softLineBreak'],
+    ],
+    parser: {
+      during: (parser) => {
+        parser.addToken(new PrintablePT('softLineBreak', ['//']));
+      },
     },
-    {
-        // EMPTY MILESTONE - add open and close scope
-        contexts: [
-            ["emptyMilestone"]
-        ],
-        parser: {
-            during: (parser, pt) => parser.addEmptyMilestone(labelForScope("milestone", [pt.tagName]))
-        }
+  },
+  {
+    // BARESLASH - make a token!
+    contexts: [
+      ['bareSlash'],
+    ],
+    parser: {
+      during: (parser) => {
+        parser.addToken(new PrintablePT('bareSlash', ['\\']));
+      },
     },
-    {
-        // START MILESTONE - open scope, set attribute context
-        contexts: [
-            ["startMilestoneTag", "sOrE", "s"]
-        ],
-        parser: {
-            newScopes: [
-                {
-                    label: pt => labelForScope("milestone", [pt.tagName]),
-                    endedBy: ["endMilestone/$tagName$"]
-                }
-            ],
-            during: (parser, pt) => {
-                parser.setAttributeContext(labelForScope("milestone", [pt.tagName]))
-            }
-        }
+  },
+  {
+    // UNKNOWN - make a token!
+    contexts: [
+      ['unknown'],
+    ],
+    parser: {
+      during: (parser, pt) => {
+        parser.addToken(new PrintablePT('unknown', [pt.printValue]));
+      },
     },
-    {
-        // END MILESTONE - close scope, clear attribute context
-        contexts: [
-            ["endMilestoneMarker"]
-        ],
-        parser: {
-            during: (parser) => parser.clearAttributeContext()
-        }
-    },
-    {
-        // ATTRIBUTE - open scope based on attribute context
-        contexts: [
-            ["attribute"]
-        ],
-        parser: {
-            during: (parser, pt) => {
-                if (parser.current.attributeContext) {
-                    [...pt.values.entries()].map(na => {
-                        const attScope = {
-                            label: pt => labelForScope("attribute", [parser.current.attributeContext, pt.key, na[0], na[1]]),
-                            endedBy: [`$attributeContext$`]
-                        };
-                        parser.openNewScope(pt, attScope);
-                    }
-                    );
-                } else {
-                    parser.addToken(new PrintablePT("unknown", [pt.printValue]));
-                }
-            }
-        }
-    },
-    {
-        // WORD-LEVEL MARKUP - open scope and set attribute context
-        contexts: [
-            [
-                "startTag",
-                "tagName",
-                [
-                    "w",
-                    "rb",
-                    "xt"
-                ].concat(pt.customTags.word)
-            ]
-        ],
-        parser: {
-            newScopes: [
-                {
-                    label: pt => labelForScope("spanWithAtts", [pt.tagName]),
-                    endedBy: ["endBlock", "endTag/$tagName$"],
-                    onEnd: (parser) => parser.clearAttributeContext()
-                }
-            ],
-            during: (parser, pt) => {
-                parser.setAttributeContext(labelForScope("spanWithAtts", [pt.tagName]))
-            }
-        }
-    },
-    {
-        // TOKEN - add a token!
-        contexts: [
-            ["wordLike"],
-            ["lineSpace"],
-            ["punctuation"],
-            ["eol"]
-        ],
-        parser: {
-            during: (parser, pt) => parser.addToken(pt)
-        }
-    },
-    {
-        // NO BREAK SPACE - make a token!
-        contexts: [
-            ["noBreakSpace"]
-        ],
-        parser: {
-            during: (parser) => {
-                parser.addToken(new PrintablePT("lineSpace", ['\xa0']));
-            }
-        }
-    },
-    {
-        // SOFT LINE BREAK - make a token!
-        contexts: [
-            ["softLineBreak"]
-        ],
-        parser: {
-            during: (parser) => {
-                parser.addToken(new PrintablePT("softLineBreak", ["//"]));
-            }
-        }
-    },
-    {
-        // BARESLASH - make a token!
-        contexts: [
-            ["bareSlash"]
-        ],
-        parser: {
-            during: (parser) => {
-                parser.addToken(new PrintablePT("bareSlash", ["\\"]));
-            }
-        }
-    },
-    {
-        // UNKNOWN - make a token!
-        contexts: [
-            ["unknown"]
-        ],
-        parser: {
-            during: (parser, pt) => {
-                parser.addToken(new PrintablePT("unknown", [pt.printValue]));
-            }
-        }
-    }
+  },
 ];
 
-module.exports = { specs }
+module.exports = { specs };

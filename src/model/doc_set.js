@@ -1,10 +1,16 @@
 import xre from 'xregexp';
-const { validateTags, addTag } = require('../lib/tags');
-const { generateId } = require('../lib/generate_id');
-const ByteArray = require('../lib/byte_array');
-const { scopeEnumLabels, nComponentsForScope } = require('../lib/scope_defs');
-const { tokenEnumLabels, tokenCategory } = require('../lib/token_defs');
-const { itemEnum } = require('../lib/item_defs');
+
+const {
+  validateTags,
+  addTag,
+  generateId,
+  ByteArray,
+  scopeEnumLabels,
+  nComponentsForScope,
+  tokenEnumLabels,
+  tokenCategory,
+  itemEnum,
+} = require('proskomma-utils');
 
 class DocSet {
   constructor(processor, selectors, tags) {
@@ -806,9 +812,7 @@ class DocSet {
   serializeSuccinct() {
     const ret = {
       id: this.id,
-      metadata: {
-        selectors: this.selectors,
-      },
+      metadata: { selectors: this.selectors },
       enums: {},
       docs: {},
     };
