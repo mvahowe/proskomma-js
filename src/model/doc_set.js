@@ -1,6 +1,11 @@
 import xre from 'xregexp';
-
-const {
+import {
+  enumIndexes,
+  headerBytes,
+  succinctTokenChars,
+  succinctScopeLabel,
+  succinctGraftName,
+  succinctGraftSeqId,
   validateTags,
   addTag,
   generateId,
@@ -10,7 +15,7 @@ const {
   tokenEnumLabels,
   tokenCategory,
   itemEnum,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 class DocSet {
   constructor(processor, selectors, tags) {
@@ -184,43 +189,13 @@ class DocSet {
   }
 
   buildEnumIndexes() {
-    for (const [category, succinct] of Object.entries(this.enums)) {
-      this.buildEnumIndex(category, succinct);
-    }
-  }
-
-  buildEnumIndex(category, enumSuccinct) {
-    const indexSuccinct = new Uint32Array(enumSuccinct.length);
-    let pos = 0;
-    let count = 0;
-
-    while (pos < enumSuccinct.length) {
-      indexSuccinct[count] = pos;
-      const stringLength = enumSuccinct.byte(pos);
-      pos += (stringLength + 1);
-      count += 1;
-    }
-    this.enumIndexes[category] = indexSuccinct;
-  }
-
-  unpackEnum(category) {
-    const succinct = this.enums[category];
-    let pos = 0;
-    const ret = [];
-
-    while (pos < succinct.length) {
-      const stringLength = succinct.byte(pos);
-      const unpacked = succinct.countedString(pos);
-      ret.push(unpacked);
-      pos += stringLength + 1;
-    }
-    return ret;
+    this.enumIndexes = enumIndexes(this.enums);
   }
 
   unsuccinctifyBlock(block, options, includeContext) {
     this.maybeBuildEnumIndexes();
     const succinctBlockScope = block.bs;
-    const [itemLength, itemType, itemSubtype] = this.headerBytes(succinctBlockScope, 0);
+    const [itemLength, itemType, itemSubtype] = headerBytes(succinctBlockScope, 0);
     const blockScope = this.unsuccinctifyScope(succinctBlockScope, itemType, itemSubtype, 0);
     const blockGrafts = this.unsuccinctifyGrafts(block.bg);
     const openScopes = this.unsuccinctifyScopes(block.os);
@@ -253,7 +228,7 @@ class DocSet {
     let pos = 0;
 
     while (pos < succinct.length) {
-      const [itemLength, itemType, itemSubtype] = this.headerBytes(succinct, pos);
+      const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
       ret.push(this.unsuccinctifyScope(succinct, itemType, itemSubtype, pos));
       pos += itemLength;
     }
@@ -265,7 +240,7 @@ class DocSet {
     let pos = 0;
 
     while (pos < succinct.length) {
-      const [itemLength, itemType, itemSubtype] = this.headerBytes(succinct, pos);
+      const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
       ret.push(this.unsuccinctifyGraft(succinct, itemSubtype, pos));
       pos += itemLength;
     }
@@ -317,7 +292,7 @@ class DocSet {
 
   unsuccinctifyItem(succinct, pos, options) {
     let item = null;
-    const [itemLength, itemType, itemSubtype] = this.headerBytes(succinct, pos);
+    const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
 
     switch (itemType) {
     case itemEnum.token:
@@ -364,7 +339,7 @@ class DocSet {
   }
 
   unsuccinctifyBlockScopeLabelsSet(block) {
-    const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set(
       this.unsuccinctifyScopes(block.os).concat(
@@ -415,45 +390,20 @@ class DocSet {
     return ret;
   }
 
-  headerBytes(succinct, pos) {
-    const headerByte = succinct.byte(pos);
-    const itemType = headerByte >> 6;
-    const itemLength = headerByte & 0x0000003F;
-    const itemSubtype = succinct.byte(pos + 1);
-    return [itemLength, itemType, itemSubtype];
-  }
-
   succinctTokenChars(succinct, itemSubtype, pos) {
-    const itemCategory = tokenCategory[tokenEnumLabels[itemSubtype]];
-    const itemIndex = this.enumIndexes[itemCategory][succinct.nByte(pos + 2)];
-    return this.enums[itemCategory].countedString(itemIndex);
+    return succinctTokenChars(this.enums, this.enumIndexes, succinct, itemSubtype, pos);
   }
 
   succinctScopeLabel(succinct, itemSubtype, pos) {
-    const scopeType = scopeEnumLabels[itemSubtype];
-    let nScopeBits = nComponentsForScope(scopeType);
-    let offset = 2;
-    let scopeBits = '';
-
-    while (nScopeBits > 1) {
-      const itemIndexIndex = succinct.nByte(pos + offset);
-      const itemIndex = this.enumIndexes.scopeBits[itemIndexIndex];
-      const scopeBitString = this.enums.scopeBits.countedString(itemIndex);
-      scopeBits += `/${scopeBitString}`;
-      offset += succinct.nByteLength(itemIndexIndex);
-      nScopeBits--;
-    }
-    return `${scopeType}${scopeBits}`;
+    return succinctScopeLabel(this.enums, this.enumIndexes, succinct, itemSubtype, pos);
   }
 
   succinctGraftName(itemSubtype) {
-    const graftIndex = this.enumIndexes.graftTypes[itemSubtype];
-    return this.enums.graftTypes.countedString(graftIndex);
+    return succinctGraftName(this.enums, this.enumIndexes, itemSubtype);
   }
 
   succinctGraftSeqId(succinct, pos) {
-    const seqIndex = this.enumIndexes.ids[succinct.nByte(pos + 2)];
-    return this.enums.ids.countedString(seqIndex);
+    return succinctGraftSeqId(this.enums, this.enumIndexes, succinct, pos);
   }
 
   blocksWithScriptureCV(blocks, cv) {
@@ -556,7 +506,7 @@ class DocSet {
   }
 
   allBlockScopes(block) {
-    const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
       ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
@@ -589,7 +539,7 @@ class DocSet {
   }
 
   blockHasBlockScope(block, scope) {
-    const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return (blockScope[1] === scope);
   }
@@ -770,7 +720,7 @@ class DocSet {
     const scopes2array = {};
 
     for (const block of blocks) {
-      const [itemLength, itemType, itemSubtype] = this.headerBytes(block.bs, 0);
+      const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
       const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[1];
 
       allBlockScopes = new Set(this.unsuccinctifyScopes(block.os)

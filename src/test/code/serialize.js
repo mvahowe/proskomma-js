@@ -1,6 +1,6 @@
 const test = require('tape');
 const Validator = require('jsonschema').Validator;
-const {serializedSchema} = require('proskomma-utils');
+const {serializedSchema, unpackEnum} = require('proskomma-utils');
 
 const {pkWithDoc} = require('../lib/load');
 
@@ -20,7 +20,7 @@ test(
             t.ok(serialized);
             const validationReport = new Validator().validate(serialized, serializedSchema);
             t.equal(validationReport.errors.length, 0);
-            const wordLikes = pk.docSets[docSetId].unpackEnum("wordLike");
+            const wordLikes = unpackEnum(pk.docSets[docSetId].enums["wordLike"]);
             t.ok(wordLikes.includes("Ruth"));
         } catch (err) {
             console.log(err);
