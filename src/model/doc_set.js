@@ -10,7 +10,7 @@ import {
   addTag,
   generateId,
   ByteArray,
-  tokenEnumLabels
+  tokenEnumLabels,
   itemEnum,
 } from 'proskomma-utils';
 
