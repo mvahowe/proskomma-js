@@ -17,9 +17,10 @@ test(
             const result = await pk.gqlQuery(query);
             const docSetId = result.data.docSets[0].id;
             const serialized = pk.serializeSuccinct(docSetId);
+            console.log(serialized)
             t.ok(serialized);
             const validationReport = new Validator().validate(serialized, serializedSchema);
-            t.equal(validationReport.errors.length, 0);
+            t.equal(validationReport.errors, []);
             const wordLikes = unpackEnum(pk.docSets[docSetId].enums["wordLike"]);
             t.ok(wordLikes.includes("Ruth"));
         } catch (err) {

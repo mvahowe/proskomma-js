@@ -762,6 +762,7 @@ class DocSet {
       metadata: { selectors: this.selectors },
       enums: {},
       docs: {},
+      tags: Array.from(this.tags)
     };
 
     for (const [eK, eV] of Object.entries(this.enums)) {

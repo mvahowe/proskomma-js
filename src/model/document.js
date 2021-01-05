@@ -124,6 +124,7 @@ class Document {
       this.sequences[seq.id] = {
         id: seq.id,
         type: seq.type,
+        tags: Array.from(seq.tags),
         isBaseType: (seq.type in parser.baseSequenceTypes),
         blocks: seq.succinctifyBlocks(docSet),
       };
@@ -134,6 +135,7 @@ class Document {
     const ret = { sequences: {} };
     ret.headers = this.headers;
     ret.mainId = this.mainId;
+    ret.tags = Array.from(this.tags)
 
     for (const [seqId, seqOb] of Object.entries(this.sequences)) {
       ret.sequences[seqId] = this.serializeSuccinctSequence(seqOb);
