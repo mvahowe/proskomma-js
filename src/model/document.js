@@ -147,6 +147,7 @@ class Document {
     const ret = {
       type: seqOb.type,
       blocks: seqOb.blocks.map(b => this.serializeSuccinctBlock(b)),
+      tags: Array.from(seqOb.tags),
     };
     return ret;
   }
