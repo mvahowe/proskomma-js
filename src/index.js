@@ -1,4 +1,5 @@
 import xre from 'xregexp';
+import ByteArray from 'proskomma-utils/dist/lib/byte_array';
 const { graphql } = require('graphql');
 
 const packageJson = require('../package.json');
@@ -213,6 +214,72 @@ class ProsKomma {
   addDocument(doc, docSetId) {
     this.documents[doc.id] = doc;
     this.docSets[docSetId].docIds.push(doc.id);
+  }
+
+  loadSuccinctDocSet(succinctOb) {
+    const docSet = new DocSet(this, null, null, succinctOb);
+    const docSetId = docSet.id;
+    this.docSets[docSetId] = docSet;
+    let selectorTree = this.docSetsBySelector;
+    const selectors = succinctOb.metadata.selectors;
+
+    for (const selector of this.selectors) {
+      if (selector.name === this.selectors[this.selectors.length - 1].name) {
+        if (!(selectors[selector.name] in selectorTree)) {
+          selectorTree[selectors[selector.name]] = docSet;
+          this.docSets[docSet.id] = docSet;
+        }
+      } else {
+        if (!(selectors[selector.name] in selectorTree)) {
+          selectorTree[selectors[selector.name]] = {};
+        }
+        selectorTree = selectorTree[selectors[selector.name]];
+      }
+    }
+    docSet.buildPreEnums();
+    const docs = [];
+
+    for (const docId of Object.keys(succinctOb.docs)) {
+      let doc = this.newDocumentFromSuccinct(docId, succinctOb);
+      this.addDocument(doc, docSetId);
+      docs.push(doc);
+    }
+    docSet.preEnums = {};
+    return docs;
+  }
+
+  newDocumentFromSuccinct(docId, succinctOb) {
+    const doc = new Document(this, succinctOb.id);
+    doc.id = docId;
+    const succinctDocOb = succinctOb.docs[docId];
+    doc.filterOptions = {};
+    doc.customTags = [];
+    doc.emptyBlocks = [];
+    doc.tags = succinctDocOb.tags;
+    doc.headers = succinctDocOb.headers;
+    doc.mainId = succinctDocOb.mainId;
+    doc.sequences = {};
+
+    for (const [seqId, seq] of Object.entries(succinctDocOb.sequences)) {
+      doc.sequences[seqId] = {
+        type: seq.type,
+        tags: new Set(seq.tags),
+        blocks: [],
+      };
+
+      for (const succinctBlock of seq.blocks) {
+        const block = {};
+
+        for (const [blockField, blockSuccinct] of Object.entries(succinctBlock)) {
+          const ba = new ByteArray(256);
+          ba.fromBase64(blockSuccinct);
+          block[blockField] = ba;
+        }
+        doc.sequences[seqId].blocks.push(block);
+      }
+    }
+    this.addDocument(doc, succinctOb.id);
+    return doc;
   }
 
   findOrMakeDocSet(selectors) {

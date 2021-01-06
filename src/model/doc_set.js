@@ -15,20 +15,52 @@ import {
 } from 'proskomma-utils';
 
 class DocSet {
-  constructor(processor, selectors, tags) {
-    this.id = generateId();
+  constructor(processor, selectors, tags, succinctJson) {
     this.processor = processor;
+    this.preEnums = {};
+    this.enumIndexes = {};
+    this.docIds = [];
+    if (succinctJson) {
+      this.fromSuccinct(processor, succinctJson);
+    } else {
+      this.fromScratch(processor, selectors, tags);
+    }
+    validateTags(this.tags);
+  }
+
+  fromScratch(processor, selectors, tags) {
+    this.id = generateId();
     const defaultedSelectors = selectors || processor.selectors;
     this.selectors = this.validateSelectors(defaultedSelectors);
     this.tags = new Set(tags || []);
-    validateTags(this.tags);
-    this.preEnums = {};
     this.enums = {
       ids: new ByteArray(512),
       wordLike: new ByteArray(8192),
       notWordLike: new ByteArray(256),
       scopeBits: new ByteArray(256),
       graftTypes: new ByteArray(10),
+    };
+  }
+
+  fromSuccinct(processor, succinctJson) {
+    const populatedByteArray = (succinct) => {
+      const ret = new ByteArray(256);
+      ret.fromBase64(succinct);
+      ret.trim();
+      return ret;
+    };
+
+    this.id = succinctJson.id;
+    this.selectors = this.validateSelectors(succinctJson.metadata.selectors);
+    this.tags = new Set(succinctJson.tags);
+    validateTags(this.tags);
+    this.preEnums = {};
+    this.enums = {
+      ids: populatedByteArray(succinctJson.enums.ids),
+      wordLike: populatedByteArray(succinctJson.enums.wordLike),
+      notWordLike: populatedByteArray(succinctJson.enums.notWordLike),
+      scopeBits: populatedByteArray(succinctJson.enums.scopeBits),
+      graftTypes: populatedByteArray(succinctJson.enums.graftTypes),
     };
     this.enumIndexes = {};
     this.docIds = [];
@@ -762,7 +794,7 @@ class DocSet {
       metadata: { selectors: this.selectors },
       enums: {},
       docs: {},
-      tags: Array.from(this.tags)
+      tags: Array.from(this.tags),
     };
 
     for (const [eK, eV] of Object.entries(this.enums)) {

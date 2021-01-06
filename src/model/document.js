@@ -11,30 +11,32 @@ const { Parser } = require('../parser');
 
 class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
-    this.id = generateId();
     this.processor = processor;
     this.docSetId = docSetId;
-    this.filterOptions = filterOptions;
-    this.customTags = customTags;
-    this.emptyBlocks = emptyBlocks;
-    this.tags = new Set(tags || []);
-    validateTags(this.tags);
-    this.headers = {};
-    this.mainId = null;
-    this.sequences = {};
+    if (contentType) {
+      this.id = generateId();
+      this.filterOptions = filterOptions;
+      this.customTags = customTags;
+      this.emptyBlocks = emptyBlocks;
+      this.tags = new Set(tags || []);
+      validateTags(this.tags);
+      this.headers = {};
+      this.mainId = null;
+      this.sequences = {};
 
-    switch (contentType) {
-    case 'usfm':
-      this.processUsfm(contentString);
-      break;
-    case 'usx':
-      this.processUsx(contentString);
-      break;
-    case 'lexicon':
-      this.processLexicon(contentString);
-      break;
-    default:
-      throw new Error(`Unknown document contentType '${contentType}'`);
+      switch (contentType) {
+      case 'usfm':
+        this.processUsfm(contentString);
+        break;
+      case 'usx':
+        this.processUsx(contentString);
+        break;
+      case 'lexicon':
+        this.processLexicon(contentString);
+        break;
+      default:
+        throw new Error(`Unknown document contentType '${contentType}'`);
+      }
     }
   }
 
@@ -135,7 +137,7 @@ class Document {
     const ret = { sequences: {} };
     ret.headers = this.headers;
     ret.mainId = this.mainId;
-    ret.tags = Array.from(this.tags)
+    ret.tags = Array.from(this.tags);
 
     for (const [seqId, seqOb] of Object.entries(this.sequences)) {
       ret.sequences[seqId] = this.serializeSuccinctSequence(seqOb);
