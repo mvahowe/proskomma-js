@@ -131,7 +131,7 @@ const sequenceType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLBoolean),
       args: { tagName: { type: GraphQLNonNull(GraphQLString) } },
       resolve: (root, args) => root.tags.has(args.tagName),
-    }
+    },
   }),
 });
 

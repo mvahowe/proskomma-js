@@ -752,13 +752,14 @@ class DocSet {
     for (const block of blocks) {
       const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
       const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[1];
+      const blockGrafts = this.unsuccinctifyGrafts(block.bg);
 
       allBlockScopes = new Set(this.unsuccinctifyScopes(block.os)
         .map(s => s[1])
         .concat([blockScope]),
       );
 
-      for (const item of this.unsuccinctifyItems(block.c, {}, includeContext)) {
+      for (const item of blockGrafts.concat(this.unsuccinctifyItems(block.c, {}, includeContext))) {
         if (item[0] === 'startScope') {
           allBlockScopes.add(item[1]);
         }
