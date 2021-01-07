@@ -38,6 +38,7 @@ test(
       let result = await pk.gqlQuery(query);
       const docSetId = result.data.docSets[0].id;
       const serialized = pk.serializeSuccinct(docSetId);
+      // console.log(JSON.stringify(serialized, null, 2));
       const pk2 = new(ProsKomma);
       pk2.loadSuccinctDocSet(serialized);
       t.equal(pk2.nDocSets(), 1);

@@ -20,6 +20,7 @@ class DocSet {
     this.preEnums = {};
     this.enumIndexes = {};
     this.docIds = [];
+
     if (succinctJson) {
       this.fromSuccinct(processor, succinctJson);
     } else {
@@ -29,9 +30,9 @@ class DocSet {
   }
 
   fromScratch(processor, selectors, tags) {
-    this.id = generateId();
     const defaultedSelectors = selectors || processor.selectors;
     this.selectors = this.validateSelectors(defaultedSelectors);
+    this.id = this.selectorString();
     this.tags = new Set(tags || []);
     this.enums = {
       ids: new ByteArray(512),
