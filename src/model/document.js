@@ -126,7 +126,7 @@ class Document {
       this.sequences[seq.id] = {
         id: seq.id,
         type: seq.type,
-        tags: Array.from(seq.tags),
+        tags: new Set(seq.tags),
         isBaseType: (seq.type in parser.baseSequenceTypes),
         blocks: seq.succinctifyBlocks(docSet),
       };

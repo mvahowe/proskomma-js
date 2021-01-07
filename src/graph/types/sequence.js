@@ -123,6 +123,15 @@ const sequenceType = new GraphQLObjectType({
         }
       },
     },
+    tags: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      resolve: root => Array.from(root.tags),
+    },
+    hasTag: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      args: { tagName: { type: GraphQLNonNull(GraphQLString) } },
+      resolve: (root, args) => root.tags.has(args.tagName),
+    }
   }),
 });
 
