@@ -8,7 +8,6 @@ import {
   succinctGraftSeqId,
   validateTags,
   addTag,
-  generateId,
   ByteArray,
   tokenEnumLabels,
   itemEnum,
@@ -782,12 +781,59 @@ class DocSet {
     return ret;
   }
 
-  sequenceItemsByMilestones(blocks, byMilestones) {
+  sequenceItemsByMilestones(blocks, byMilestones, includeContext) {
     // Return array of [scopes, items]
     // Scan block items
-    // If all scopes found and scope string has changed:
+    // If milestone found:
     //   - add array
     // push item to last array
+    let allBlockScopes = new Set([]);
+    const milestoneFound = (item) => (item[0] === 'startScope') && byMilestones.includes(item[1]);
+
+    this.maybeBuildEnumIndexes();
+    const ret = [[[], []]];
+
+    for (const block of blocks) {
+      const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+      const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[1];
+      const blockGrafts = this.unsuccinctifyGrafts(block.bg);
+      allBlockScopes.add(blockScope);
+      this.unsuccinctifyScopes(block.os).forEach(s => allBlockScopes.add(s[1]));
+      const items = blockGrafts.concat(
+        [blockScope].concat(
+          this.unsuccinctifyItems(block.c, {}, includeContext),
+        ),
+      );
+
+      for (const item of items) {
+        if (item[0] === 'startScope') {
+          allBlockScopes.add(item[1]);
+        }
+
+        if (milestoneFound(item)) {
+          ret[ret.length - 1][0] = [...allBlockScopes].sort();
+          ret.push([[], []]);
+
+          for (
+            const bs of [...allBlockScopes]
+              .filter(
+                s => {
+                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+                },
+              )
+          ) {
+            allBlockScopes.delete(bs);
+          }
+          allBlockScopes.add(blockScope);
+        }
+        ret[ret.length - 1][1].push(item);
+      }
+      ret[ret.length - 1][1].push(['endScope', blockScope]);
+      ret[ret.length - 1][1].push(['token', 'punctuation', '\n']);
+    }
+    ret[ret.length - 1][0] = [...allBlockScopes].sort();
+    return ret;
   }
 
   serializeSuccinct() {
