@@ -573,6 +573,22 @@ class DocSet {
     return (blockScope[1] === scope);
   }
 
+  blockHasChars(block, chars) {
+    let ret = false;
+    let pos = 0;
+    const succinct = block.c;
+
+    while (!ret && (pos < succinct.length)) {
+      const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
+
+      if (item[0] === 'token' && item[2] === chars) {
+        ret = true;
+      }
+      pos += itemLength;
+    }
+    return ret;
+  }
+
   unsuccinctifyItemsWithScriptureCV(block, cv, options, includeContext) {
     options = options || {};
     const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));

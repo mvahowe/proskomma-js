@@ -1,4 +1,3 @@
-import xre from 'xregexp';
 const {
   GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull,
 } = require('graphql');
@@ -60,6 +59,7 @@ const sequenceType = new GraphQLObjectType({
         attSpecs: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))) },
         attValues: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))) },
         allAtts: { type: GraphQLBoolean },
+        withChars: { type: GraphQLString },
       },
       resolve: (root, args, context) => {
         context.docSet.maybeBuildEnumIndexes();
@@ -96,6 +96,10 @@ const sequenceType = new GraphQLObjectType({
 
         if (args.withBlockScope) {
           ret = ret.filter(b => context.docSet.blockHasBlockScope(b, args.withBlockScope));
+        }
+
+        if (args.withChars) {
+          ret = ret.filter(b => context.docSet.blockHasChars(b, args.withChars));
         }
         return ret;
       },
