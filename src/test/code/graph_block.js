@@ -10,6 +10,7 @@ const pk3 = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust'
 const pk4 = pkWithDoc('../test_data/usfm/footnote.usfm', { lang: 'eng', abbr: 'ust' })[0];
 const pk5 = pkWithDoc('../test_data/usfm/verse_breaks_in_blocks.usfm', { lang: 'eng', abbr: 'ust' })[0];
 const pk6 = pkWithDoc('../test_data/usfm/whitespace.usfm', { lang: 'eng', abbr: 'ust' })[0];
+const pk7 = pkWithDoc('../test_data/usx/web_psa.usx', { lang: 'eng', abbr: 'ust' })[0];
 
 const blocksText = blocks => blocks.map(
   b => b.items.map(
@@ -325,14 +326,15 @@ test(
   async function (t) {
     try {
       t.plan(3);
-      const requiredChars = '["Boaz"]';
-      const query = `{ documents { mainSequence { blocks(withChars:${requiredChars}) { tokens(withChars:${requiredChars} includeContext:true) { chars scopes(startsWith:["chapter", "verses"])} } } } }`;
-      let result = await pk3.gqlQuery(query);
+      const requiredChars = '["tree"]';
+      const query = `{documents { mainSequence { blocks(withChars:${requiredChars}) {`+
+          `tokens(withChars:${requiredChars} includeContext:true) { chars scopes(startsWith:["chapter", "verses"])} } } } }`;
+      let result = await pk7.gqlQuery(query);
       t.equal(result.errors, undefined);
       const blocks = result.data.documents[0].mainSequence.blocks;
       const tokens = blocks.map(b => b.tokens.map(t => t.chars)).reduce((a, b) => a.concat(b));
-      t.ok(tokens.filter(s => s === 'Boaz').length > 1);
-      t.equal(tokens.filter(s => s !== 'Boaz').length, 0);
+      t.ok(tokens.filter(s => s === 'tree').length > 1);
+      t.equal(tokens.filter(s => s !== 'tree').length, 0);
     } catch (err) {
       console.log(err);
     }

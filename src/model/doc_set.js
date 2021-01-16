@@ -276,7 +276,7 @@ class DocSet {
     return ret;
   }
 
-  unsuccinctifyItems(succinct, options, includeContext) {
+  unsuccinctifyItems(succinct, options, includeContext, openScopes) {
     if (includeContext === undefined) {
       throw new Error('includeContext must now be provided to unsuccinctifyItems');
     }
@@ -284,7 +284,7 @@ class DocSet {
     const ret = [];
     let pos = 0;
     let tokenCount = 0;
-    const scopes = new Set([]);
+    const scopes = new Set(openScopes || []);
 
     while (pos < succinct.length) {
       const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
@@ -407,7 +407,7 @@ class DocSet {
         (item[0] === 'token' && options.withChars.includes(item[2]));
     const ret = [];
 
-    for (const item of this.unsuccinctifyItems(block.c, options, includeContext)) {
+    for (const item of this.unsuccinctifyItems(block.c, options, includeContext, openScopes)) {
       if (item[0] === 'startScope') {
         openScopes.add(item[1]);
       }
