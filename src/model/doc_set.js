@@ -401,6 +401,10 @@ class DocSet {
     };
 
     const scopeTest = anyScope ? anyScopeInItem : allScopesInItem;
+    const charsTest = (item) =>
+      !options.withChars ||
+        options.withChars.length === 0 ||
+        (item[0] === 'token' && options.withChars.includes(item[2]));
     const ret = [];
 
     for (const item of this.unsuccinctifyItems(block.c, options, includeContext)) {
@@ -408,7 +412,7 @@ class DocSet {
         openScopes.add(item[1]);
       }
 
-      if (scopeTest()) {
+      if (scopeTest() && charsTest(item)) {
         ret.push(item);
       }
 
@@ -581,7 +585,7 @@ class DocSet {
     while (!ret && (pos < succinct.length)) {
       const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
 
-      if (item[0] === 'token' && item[2] === chars) {
+      if (item[0] === 'token' && chars.includes(item[2])) {
         ret = true;
       }
       pos += itemLength;

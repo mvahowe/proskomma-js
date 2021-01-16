@@ -303,7 +303,6 @@ test(
     try {
       t.plan(2);
       const requiredScopes = '["chapter/1", "verse/2"]';
-      const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType } ... on Graft { itemType } }';
       const query = `{ documents { mainSequence { blocks(withScopes:${requiredScopes}) { items: tokens(anyScope:true withScopes:["verse/2", "verse/2000"]) { itemType chars } } } } }`;
       let result = await pk5.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -315,6 +314,25 @@ test(
         'Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. ' +
                 'They read and think every day and every night about what Yahweh teaches.',
       );
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Tokens withChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const requiredChars = '["Boaz"]';
+      const query = `{ documents { mainSequence { blocks(withChars:${requiredChars}) { tokens(withChars:${requiredChars} includeContext:true) { chars scopes(startsWith:["chapter", "verses"])} } } } }`;
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      const tokens = blocks.map(b => b.tokens.map(t => t.chars)).reduce((a, b) => a.concat(b));
+      t.ok(tokens.filter(s => s === 'Boaz').length > 1);
+      t.equal(tokens.filter(s => s !== 'Boaz').length, 0);
     } catch (err) {
       console.log(err);
     }

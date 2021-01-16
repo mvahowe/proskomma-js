@@ -146,8 +146,9 @@ const blockType = new GraphQLObjectType({
                   }
 
                   if (args.withChars) {
-                    ret = ret.filter(t => args.withChars.includes(t[2]));
+                    ret = ret.filter(i => args.withChars.includes(i[2]));
                   }
+
                   return ret.filter(i => i[0] === 'token');
                 },
     },

@@ -59,7 +59,7 @@ const sequenceType = new GraphQLObjectType({
         attSpecs: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))) },
         attValues: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))) },
         allAtts: { type: GraphQLBoolean },
-        withChars: { type: GraphQLString },
+        withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
       },
       resolve: (root, args, context) => {
         context.docSet.maybeBuildEnumIndexes();
