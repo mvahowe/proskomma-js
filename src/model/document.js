@@ -3,6 +3,7 @@ const {
   nComponentsForScope,
   validateTags,
   addTag,
+  removeTag,
 } = require('proskomma-utils');
 const {
   parseUsfm, parseUsx, parseLexicon,
@@ -42,6 +43,10 @@ class Document {
 
   addTag(tag) {
     addTag(this.tags, tag);
+  }
+
+  removeTag(tag) {
+    removeTag(this.tags, tag);
   }
 
   makeParser() {

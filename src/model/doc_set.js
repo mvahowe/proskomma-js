@@ -9,6 +9,7 @@ import {
   succinctGraftSeqId,
   validateTags,
   addTag,
+  removeTag,
   ByteArray,
   tokenEnumLabels,
   itemEnum,
@@ -69,6 +70,10 @@ class DocSet {
 
   addTag(tag) {
     addTag(this.tags, tag);
+  }
+
+  removeTag(tag) {
+    removeTag(this.tags, tag);
   }
 
   validateSelectors(selectors) {
