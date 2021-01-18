@@ -1,3 +1,5 @@
+import {enumStringIndex} from "proskomma-utils";
+
 const {
   GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull,
 } = require('graphql');
@@ -99,7 +101,8 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withChars) {
-          ret = ret.filter(b => context.docSet.blockHasChars(b, args.withChars));
+          const charsIndexes = args.withChars.map(c => enumStringIndex(context.docSet.enums.wordLike, c));
+          ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
         }
         return ret;
       },

@@ -1,6 +1,7 @@
 import xre from 'xregexp';
 import {
   enumIndexes,
+  enumStringIndex,
   headerBytes,
   succinctTokenChars,
   succinctScopeLabel,
@@ -577,16 +578,22 @@ class DocSet {
     return (blockScope[1] === scope);
   }
 
-  blockHasChars(block, chars) {
+  blockHasChars(block, charsIndexes) {
     let ret = false;
     let pos = 0;
     const succinct = block.c;
 
-    while (!ret && (pos < succinct.length)) {
-      const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
+    if (charsIndexes.includes(-1)) {
+      return false;
+    }
 
-      if (item[0] === 'token' && chars.includes(item[2])) {
-        ret = true;
+    while (!ret && (pos < succinct.length)) {
+      const [itemLength, itemType] = headerBytes(succinct, pos);
+
+      if (itemType === itemEnum['token']) {
+        if (charsIndexes.includes(succinct.nByte(pos + 2))) {
+          ret = true;
+        }
       }
       pos += itemLength;
     }
