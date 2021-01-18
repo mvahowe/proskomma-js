@@ -1,7 +1,7 @@
 const test = require('tape');
 const { pkWithDoc } = require('../lib/load');
 
-const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], ['frob'])[0];
+const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], [])[0];
 
 const testGroup = 'Add Tags';
 
@@ -21,6 +21,30 @@ test(
       query = `mutation { addDocSetTags(docSetId: "${docSet.id}", tags: ["foo", "frob"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.data.addDocSetTags.length, 3);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Document (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      let query = '{ docSets { id documents { id tags } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docSet = result.data.docSets[0];
+      const document = docSet.documents[0];
+      t.equal(document.tags.length, 0);
+      query = `mutation { addDocumentTags(docSetId: "${docSet.id}", documentId: "${document.id}", tags: ["foo", "baa"]) }`;
+      result = await pk.gqlQuery(query);
+      console.log(result);
+      t.equal(result.data.addDocumentTags.length, 2);
+      query = `mutation { addDocumentTags(docSetId: "${docSet.id}", documentId: "${document.id}", tags: ["foo", "frob"]) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.data.addDocumentTags.length, 3);
     } catch (err) {
       console.log(err);
     }
