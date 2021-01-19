@@ -211,6 +211,24 @@ class ProsKomma {
     return docs;
   }
 
+  deleteDocSet(docSetId) {
+    if (!(docSetId in this.docSets)) {
+      return false;
+    }
+
+    let selected = this.docSetsBySelector;
+    const parentSelectors = this.selectors.slice(0, this.selectors.length - 1);
+
+    for (const selector of parentSelectors) {
+      selected = selected[this.docSets[docSetId].selectors[selector.name]];
+    }
+
+    const lastSelectorName = this.selectors[this.selectors.length - 1].name;
+    delete selected[lastSelectorName];
+    delete this.docSets[docSetId];
+    return true;
+  }
+
   addDocument(doc, docSetId) {
     this.documents[doc.id] = doc;
     this.docSets[docSetId].docIds.push(doc.id);
