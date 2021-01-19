@@ -14,6 +14,7 @@ class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
     this.docSetId = docSetId;
+
     if (contentType) {
       this.id = generateId();
       this.filterOptions = filterOptions;
@@ -151,12 +152,11 @@ class Document {
   }
 
   serializeSuccinctSequence(seqOb) {
-    const ret = {
+    return {
       type: seqOb.type,
       blocks: seqOb.blocks.map(b => this.serializeSuccinctBlock(b)),
       tags: Array.from(seqOb.tags),
     };
-    return ret;
   }
 
   serializeSuccinctBlock(blockOb) {
