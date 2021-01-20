@@ -905,7 +905,7 @@ class DocSet {
         if (enumString in this.preEnums[category]) {
           ret[category].push(this.preEnums[category][enumString].enum);
         } else {
-          throw new Error(`${category} ${enumString} not found in preEnums when rehashing docSet ${docSet.id}`);
+          ret[category].push(null);
         }
 
         pos += stringLength + 1;

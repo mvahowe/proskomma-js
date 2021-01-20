@@ -1,12 +1,15 @@
 const {
-  generateId,
-  ByteArray,
-  scopeEnum,
-  labelForScope,
-  tokenEnum,
-  tokenCategory,
-  itemEnum,
   addTag,
+  ByteArray,
+  generateId,
+  itemEnum,
+  labelForScope,
+  pushSuccinctGraftBytes,
+  pushSuccinctScopeBytes,
+  scopeEnum,
+  tokenCategory,
+  tokenEnum,
+  pushSuccinctTokenBytes,
 } = require('proskomma-utils');
 const { Block } = require('./block');
 const { Graft, Scope } = require('./items');
@@ -312,34 +315,21 @@ const Sequence = class {
   }
 
   pushSuccinctToken(bA, docSet, item) {
-    const charsEnum = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
-    const lengthPos = bA.length;
-    bA.pushByte(0);
-    bA.pushByte(tokenEnum[item.itemType]);
-    bA.pushNByte(charsEnum);
-    bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.token << 6);
+    const charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
+    pushSuccinctTokenBytes(bA, tokenEnum[item.itemType], charsEnumIndex);
   }
 
   pushSuccinctGraft(bA, docSet, item) {
-    const graftTypeEnum = docSet.enumForCategoryValue('graftTypes', item.graftType);
-    const seqEnum = docSet.enumForCategoryValue('ids', item.seqId);
-    const lengthPos = bA.length;
-    bA.pushByte(0);
-    bA.pushByte(graftTypeEnum);
-    bA.pushNByte(seqEnum);
-    bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum.graft << 6);
+    const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.graftType);
+    const seqEnumIndex = docSet.enumForCategoryValue('ids', item.seqId);
+    pushSuccinctGraftBytes(bA, graftTypeEnumIndex, seqEnumIndex);
   }
 
   pushSuccinctScope(bA, docSet, item) {
     const scopeBits = item.label.split('/');
-    const lengthPos = bA.length;
-    bA.pushByte(0);
-    bA.pushByte(scopeEnum[scopeBits[0]]);
-
-    for (const scopeBit of scopeBits.slice(1)) {
-      bA.pushNByte(docSet.enumForCategoryValue('scopeBits', scopeBit));
-    }
-    bA.setByte(lengthPos, (bA.length - lengthPos) | itemEnum[item.itemType] << 6);
+    const scopeTypeByte = scopeEnum[scopeBits[0]];
+    const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b));
+    pushSuccinctScopeBytes(bA, itemEnum[item.itemType], scopeTypeByte, scopeBitBytes);
   }
 };
 
