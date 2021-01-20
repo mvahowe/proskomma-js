@@ -124,6 +124,40 @@ class Document {
     }
   }
 
+  rerecordPreEnums(docSet, seq) {
+    docSet.recordPreEnum('ids', seq.id);
+
+    for (const block of seq.blocks) {
+      for (const blockKey of ['bs', 'bg', 'c', 'is', 'os']) {
+        this.rerecordBlockPreEnums(docSet, block[blockKey]);
+      }
+    }
+  }
+
+  rerecordBlockPreEnums(docSet, ba) {
+    for (const item of docSet.unsuccinctifyItems(ba, {}, false)) {
+      if (item[0] === 'token') {
+        if (item[1] === 'wordLike') {
+          docSet.recordPreEnum('wordLike', item[2]);
+        } else {
+          docSet.recordPreEnum('notWordLike', item[2]);
+        }
+      } else if (item[0] === 'graft') {
+        docSet.recordPreEnum('graftTypes', item[1]);
+      } else if (item[0] === 'startScope') {
+        const labelBits = item[1].split('/');
+
+        if (labelBits.length !== nComponentsForScope(labelBits[0])) {
+          throw new Error(`Scope ${item[1]} has unexpected number of components`);
+        }
+
+        for (const labelBit of labelBits.slice(1)) {
+          docSet.recordPreEnum('scopeBits', labelBit);
+        }
+      }
+    }
+  }
+
   succinctPass2(parser) {
     const docSet = this.processor.docSets[this.docSetId];
     this.mainId = parser.sequences.main.id;
@@ -136,6 +170,32 @@ class Document {
         isBaseType: (seq.type in parser.baseSequenceTypes),
         blocks: seq.succinctifyBlocks(docSet),
       };
+    }
+  }
+
+  rewriteSequenceBlocks(sequenceId, oldToNew) {
+    const sequence = this.sequences[sequenceId];
+
+    for (const block of sequence.blocks) {
+      this.rewriteSequenceBlock(block, oldToNew);
+    }
+  }
+
+  rewriteSequenceBlock(block, oldToNew) {
+    const docSet = this.processor.docSets[this.docSetId];
+
+    for (const blockKey of ['bs', 'bg', 'c', 'is', 'os']) {
+      const ba = block[blockKey];
+
+      for (const item of docSet.unsuccinctifyItems(ba, {}, false)) {
+        if (item[0] === 'token') {
+          if (item[1] === 'wordLike') {
+          } else {
+          }
+        } else if (item[0] === 'graft') {
+        } else if (item[0] === 'startScope') {
+        }
+      }
     }
   }
 

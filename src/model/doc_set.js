@@ -868,6 +868,52 @@ class DocSet {
     return ret;
   }
 
+  rehash() {
+    this.preEnums = {};
+
+    for (const category of Object.keys(this.enums)) {
+      this.preEnums[category] = {};
+    }
+    this.maybeBuildEnumIndexes();
+
+    for (const document of this.documents()) {
+      for (const sequence of Object.values(document.sequences)) {
+        document.rerecordPreEnums(this, sequence);
+      }
+    }
+    this.sortPreEnums();
+    const oldToNew = this.makeRehashEnumMap();
+
+    for (const document of this.documents()) {
+      for (const sequence of Object.values(document.sequences)) {
+        document.rewriteSequenceBlocks(sequence.id, oldToNew);
+      }
+    }
+  }
+
+  makeRehashEnumMap() {
+    const ret = {};
+
+    for (const [category, enumSuccinct] of Object.entries(this.enums)) {
+      ret[category] = [];
+      let pos = 0;
+
+      while (pos < enumSuccinct.length) {
+        const stringLength = enumSuccinct.byte(pos);
+        const enumString = enumSuccinct.countedString(pos);
+
+        if (enumString in this.preEnums[category]) {
+          ret[category].push(this.preEnums[category][enumString].enum);
+        } else {
+          throw new Error(`${category} ${enumString} not found in preEnums when rehashing docSet ${docSet.id}`);
+        }
+
+        pos += stringLength + 1;
+      }
+    }
+    return ret;
+  }
+
   serializeSuccinct() {
     const ret = {
       id: this.id,
