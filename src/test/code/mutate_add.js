@@ -15,7 +15,7 @@ test(
   `DocSet (${testGroup})`,
   async function (t) {
     try {
-      t.plan(5);
+      t.plan(7);
       let query = '{ docSets { id } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -27,9 +27,11 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.addDocument, true);
-      query = '{ docSets { id } }';
+      query = '{ docSets { id documents { id mainSequence { nBlocks } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 1);
+      t.equal(result.data.docSets[0].documents.length, 1);
+      t.ok(result.data.docSets[0].documents[0].mainSequence.nBlocks > 0);
     } catch (err) {
       console.log(err);
     }
