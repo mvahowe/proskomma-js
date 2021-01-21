@@ -229,6 +229,16 @@ class ProsKomma {
     return true;
   }
 
+  rehashDocSet(docSetId) {
+    if (!(docSetId in this.docSets)) {
+      return false;
+    }
+
+    const docSet = this.docSets[docSetId];
+    docSet.rehash();
+    return true;
+  }
+
   addDocument(doc, docSetId) {
     this.documents[doc.id] = doc;
     this.docSets[docSetId].docIds.push(doc.id);

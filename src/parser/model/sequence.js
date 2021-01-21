@@ -6,10 +6,10 @@ const {
   labelForScope,
   pushSuccinctGraftBytes,
   pushSuccinctScopeBytes,
+  pushSuccinctTokenBytes,
   scopeEnum,
   tokenCategory,
   tokenEnum,
-  pushSuccinctTokenBytes,
 } = require('proskomma-utils');
 const { Block } = require('./block');
 const { Graft, Scope } = require('./items');
@@ -113,7 +113,6 @@ const Sequence = class {
   }
 
   graftifyIntroductionHeadings(parser) {
-    let removed = 0;
     let blockEntries = [...this.blocks.entries()];
     blockEntries.reverse();
     const introHeadingTags = ['iot', 'is'].concat(parser.customTags.introHeading);
@@ -132,7 +131,6 @@ const Sequence = class {
         }
         this.blocks[n + 1].blockGrafts.unshift(headingGraft);
         this.blocks.splice(n, 1);
-        removed++;
       } else if (blockTag.startsWith('imt')) {
         const titleType = (blockTag.startsWith('imte') ? 'introEndTitle' : 'introTitle');
         let titleSequence;
@@ -152,7 +150,6 @@ const Sequence = class {
         }
         this.blocks.splice(n, 1);
         titleSequence.blocks.unshift(block);
-        removed++;
       }
     }
   }

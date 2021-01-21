@@ -1,9 +1,18 @@
+import { headerBytes } from 'proskomma-utils';
+
 const {
-  generateId,
-  nComponentsForScope,
-  validateTags,
   addTag,
+  ByteArray,
+  generateId,
+  itemEnum,
+  nComponentsForScope,
+  pushSuccinctGraftBytes,
+  pushSuccinctScopeBytes,
+  pushSuccinctTokenBytes,
   removeTag,
+  scopeEnumLabels,
+  tokenEnum,
+  validateTags,
 } = require('proskomma-utils');
 const {
   parseUsfm, parseUsx, parseLexicon,
@@ -182,20 +191,39 @@ class Document {
   }
 
   rewriteSequenceBlock(block, oldToNew) {
-    const docSet = this.processor.docSets[this.docSetId];
-
     for (const blockKey of ['bs', 'bg', 'c', 'is', 'os']) {
-      const ba = block[blockKey];
+      const oldBa = block[blockKey];
+      const newBa = new ByteArray(oldBa.length);
+      let pos = 0;
 
-      for (const item of docSet.unsuccinctifyItems(ba, {}, false)) {
-        if (item[0] === 'token') {
-          if (item[1] === 'wordLike') {
+      while (pos < oldBa.length) {
+        const [itemLength, itemType, itemSubtype] = headerBytes(oldBa, pos);
+
+        if (itemType === itemEnum['token']) {
+          if (itemSubtype === tokenEnum.wordLike) {
+            pushSuccinctTokenBytes(newBa, itemSubtype, oldToNew.wordLike[oldBa.nByte(pos + 2)]);
           } else {
+            pushSuccinctTokenBytes(newBa, itemSubtype, oldToNew.notWordLike[oldBa.nByte(pos + 2)]);
           }
-        } else if (item[0] === 'graft') {
-        } else if (item[0] === 'startScope') {
+        } else if (itemType === itemEnum['graft']) {
+          pushSuccinctGraftBytes(newBa, oldToNew.graftTypes[itemSubtype], oldToNew.ids[oldBa.nByte(pos + 2)]);
+        } else {
+          let nScopeBitBytes = nComponentsForScope(scopeEnumLabels[itemSubtype]);
+          const scopeBitBytes = [];
+          let offset = 2;
+
+          while (nScopeBitBytes > 1) {
+            const scopeBitByte = oldToNew.scopeBits[oldBa.nByte(pos + offset)];
+            scopeBitBytes.push(scopeBitByte);
+            offset += oldBa.nByteLength(scopeBitByte);
+            nScopeBitBytes--;
+          }
+          pushSuccinctScopeBytes(newBa, itemType, itemSubtype, scopeBitBytes);
         }
+        pos += itemLength;
       }
+      newBa.trim();
+      block[blockKey] = newBa;
     }
   }
 

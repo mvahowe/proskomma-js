@@ -351,26 +351,38 @@ class DocSet {
   }
 
   unsuccinctifyToken(succinct, itemSubtype, pos) {
-    return [
-      'token',
-      tokenEnumLabels[itemSubtype],
-      this.succinctTokenChars(succinct, itemSubtype, pos),
-    ];
+    try {
+      return [
+        'token',
+        tokenEnumLabels[itemSubtype],
+        this.succinctTokenChars(succinct, itemSubtype, pos),
+      ];
+    } catch (err) {
+      throw new Error(`Error from unsuccinctifyToken: ${err}`);
+    }
   }
 
   unsuccinctifyScope(succinct, itemType, itemSubtype, pos) {
-    return [
-      (itemType === itemEnum.startScope) ? 'startScope' : 'endScope',
-      this.succinctScopeLabel(succinct, itemSubtype, pos),
-    ];
+    try {
+      return [
+        (itemType === itemEnum.startScope) ? 'startScope' : 'endScope',
+        this.succinctScopeLabel(succinct, itemSubtype, pos),
+      ];
+    } catch (err) {
+      throw new Error(`Error from unsuccinctifyToken: ${err}`);
+    }
   }
 
   unsuccinctifyGraft(succinct, itemSubtype, pos) {
-    return [
-      'graft',
-      this.succinctGraftName(itemSubtype),
-      this.succinctGraftSeqId(succinct, pos),
-    ];
+    try {
+      return [
+        'graft',
+        this.succinctGraftName(itemSubtype),
+        this.succinctGraftSeqId(succinct, pos),
+      ];
+    } catch (err) {
+      throw new Error(`Error from unsuccinctifyToken: ${err}`);
+    }
   }
 
   unsuccinctifyBlockScopeLabelsSet(block) {
@@ -889,6 +901,8 @@ class DocSet {
         document.rewriteSequenceBlocks(sequence.id, oldToNew);
       }
     }
+    this.buildEnums();
+    this.buildEnumIndexes();
   }
 
   makeRehashEnumMap() {
