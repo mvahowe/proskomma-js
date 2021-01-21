@@ -229,14 +229,31 @@ class ProsKomma {
     return true;
   }
 
+  deleteDocument(docSetId, documentId) {
+    if (!(docSetId in this.docSets)) {
+      return false;
+    }
+
+    if (!(documentId in this.documents)) {
+      return false;
+    }
+
+    if (this.docSets[docSetId].docIds.length > 1) {
+      this.docSets[docSetId].docIds = this.docSets[docSetId].docIds.filter(i => i !== documentId);
+    } else {
+      delete this.docSets[docSetId];
+    }
+    delete this.documents[documentId];
+    return this.rehashDocSet(docSetId);
+  }
+
   rehashDocSet(docSetId) {
     if (!(docSetId in this.docSets)) {
       return false;
     }
 
     const docSet = this.docSets[docSetId];
-    docSet.rehash();
-    return true;
+    return docSet.rehash();
   }
 
   addDocument(doc, docSetId) {

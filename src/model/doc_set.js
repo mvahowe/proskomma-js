@@ -903,6 +903,7 @@ class DocSet {
     }
     this.buildEnums();
     this.buildEnumIndexes();
+    return true;
   }
 
   makeRehashEnumMap() {
