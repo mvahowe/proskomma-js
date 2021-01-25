@@ -1,5 +1,7 @@
 const {
-  GraphQLString, GraphQLNonNull, GraphQLBoolean,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLBoolean,
 } = require('graphql');
 
 const rehashMutations = {

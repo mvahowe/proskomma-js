@@ -4,8 +4,14 @@ const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Graph Item Groups';
 
-const pk = pkWithDoc('../test_data/usfm/verse_breaks_in_blocks.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk2 = pkWithDoc('../test_data/usfm/ust_psa_with_ts.usfm', { lang: 'eng', abbr: 'ust' })[0];
+const pk = pkWithDoc('../test_data/usfm/verse_breaks_in_blocks.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk2 = pkWithDoc('../test_data/usfm/ust_psa_with_ts.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
 
 test(
   `Text by scopes (${testGroup})`,
@@ -13,8 +19,8 @@ test(
     try {
       t.plan(8);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
-                'scopeLabels text ' +
-                '} } } }';
+        'scopeLabels text ' +
+        '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
@@ -38,10 +44,10 @@ test(
       t.plan(8);
       const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } }';
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
-                'scopeLabels ' +
-                `items ${itemFragment} ` +
-                'tokens { chars }' +
-                '} } } }';
+        'scopeLabels ' +
+        `items ${itemFragment} ` +
+        'tokens { chars }' +
+        '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
@@ -64,8 +70,8 @@ test(
     try {
       t.plan(7);
       const query = '{ documents { mainSequence { itemGroups(byMilestones:["milestone/ts"]) {' +
-            'scopeLabels text ' +
-            '} } } }';
+        'scopeLabels text ' +
+        '} } } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
@@ -73,8 +79,8 @@ test(
       t.ok(itemGroups[0].scopeLabels.includes('chapter/150'));
       t.ok(itemGroups[0].scopeLabels.includes('verse/1'));
       t.ok(!itemGroups[1].scopeLabels.includes('verse/1'));
-      t.ok(itemGroups[1].text.trim().startsWith("Praise"));
-      t.ok(itemGroups[1].text.trim().endsWith("cymbals!"));
+      t.ok(itemGroups[1].text.trim().startsWith('Praise'));
+      t.ok(itemGroups[1].text.trim().endsWith('cymbals!'));
     } catch (err) {
       console.log(err);
     }

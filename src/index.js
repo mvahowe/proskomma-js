@@ -1,5 +1,6 @@
 import xre from 'xregexp';
 import ByteArray from 'proskomma-utils/dist/lib/byte_array';
+
 const { graphql } = require('graphql');
 
 const packageJson = require('../package.json');

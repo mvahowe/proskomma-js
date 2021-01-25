@@ -1,5 +1,8 @@
 const test = require('tape');
-const { pkWithDoc, pkWithDocs } = require('../lib/load');
+const {
+  pkWithDoc,
+  pkWithDocs,
+} = require('../lib/load');
 
 const testGroup = 'Mutate Delete Operations';
 
@@ -8,7 +11,10 @@ test(
   async function (t) {
     try {
       t.plan(8);
-      const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], [])[0];
+      const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
+        lang: 'eng',
+        abbr: 'ust',
+      }, {}, {}, [], [])[0];
       let query = '{ docSets { id } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -40,8 +46,14 @@ test(
       t.plan(9);
       const pk = pkWithDocs(
         [
-          ['../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }],
-          ['../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }],
+          ['../test_data/usx/web_rut.usx', {
+            lang: 'eng',
+            abbr: 'ust',
+          }],
+          ['../test_data/usx/web_rut.usx', {
+            lang: 'eng',
+            abbr: 'ust',
+          }],
         ],
       );
       let query = '{ docSets { id documents { id } } }';

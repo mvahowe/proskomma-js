@@ -1,18 +1,17 @@
 import xre from 'xregexp';
 import {
+  addTag,
+  ByteArray,
   enumIndexes,
-  enumStringIndex,
   headerBytes,
-  succinctTokenChars,
-  succinctScopeLabel,
+  itemEnum,
+  removeTag,
   succinctGraftName,
   succinctGraftSeqId,
-  validateTags,
-  addTag,
-  removeTag,
-  ByteArray,
+  succinctScopeLabel,
+  succinctTokenChars,
   tokenEnumLabels,
-  itemEnum,
+  validateTags,
 } from 'proskomma-utils';
 
 class DocSet {
@@ -94,7 +93,7 @@ class DocSet {
 
       if (
         (typeof value === 'string' && expectedSelectors[name].type !== 'string') ||
-                (typeof value === 'number' && expectedSelectors[name].type !== 'integer')
+        (typeof value === 'number' && expectedSelectors[name].type !== 'integer')
       ) {
         throw new Error(`Selector '${name}' is of type ${typeof value} (expected ${expectedSelectors[name].type})`);
       }
@@ -421,8 +420,8 @@ class DocSet {
     const scopeTest = anyScope ? anyScopeInItem : allScopesInItem;
     const charsTest = (item) =>
       !options.withChars ||
-        options.withChars.length === 0 ||
-        (item[0] === 'token' && options.withChars.includes(item[2]));
+      options.withChars.length === 0 ||
+      (item[0] === 'token' && options.withChars.includes(item[2]));
     const ret = [];
 
     for (const item of this.unsuccinctifyItems(block.c, options, includeContext, openScopes)) {
@@ -472,21 +471,21 @@ class DocSet {
         ...this.unsuccinctifyScopes(b.is).map(s => s[1]),
       ].includes(`chapter/${fromC}`);
       return hasFirstChapterScope &&
-                this.blockHasMatchingItem(
-                  b,
-                  (items, openScopes) => {
-                    if (!openScopes.has(`chapter/${fromC}`)) {
-                      return false;
-                    }
-                    return (
-                      Array.from(openScopes)
-                        .filter(s => s.startsWith('verse/'))
-                        .filter(s => parseInt(s.split('/')[1]) >= fromV).length
-                            > 0
-                    );
-                  },
-                  {},
-                );
+        this.blockHasMatchingItem(
+          b,
+          (items, openScopes) => {
+            if (!openScopes.has(`chapter/${fromC}`)) {
+              return false;
+            }
+            return (
+              Array.from(openScopes)
+                .filter(s => s.startsWith('verse/'))
+                .filter(s => parseInt(s.split('/')[1]) >= fromV).length
+              > 0
+            );
+          },
+          {},
+        );
     };
 
     const hasLastChapter = (b, toC, toV) => {
@@ -495,21 +494,21 @@ class DocSet {
         ...this.unsuccinctifyScopes(b.is).map(s => s[1]),
       ].includes(`chapter/${toC}`);
       return hasLastChapterScope &&
-                this.blockHasMatchingItem(
-                  b,
-                  (items, openScopes) => {
-                    if (!openScopes.has(`chapter/${toC}`)) {
-                      return false;
-                    }
-                    return (
-                      Array.from(openScopes)
-                        .filter(s => s.startsWith('verse/'))
-                        .filter(s => parseInt(s.split('/')[1]) <= toV).length
-                            > 0
-                    );
-                  },
-                  {},
-                );
+        this.blockHasMatchingItem(
+          b,
+          (items, openScopes) => {
+            if (!openScopes.has(`chapter/${toC}`)) {
+              return false;
+            }
+            return (
+              Array.from(openScopes)
+                .filter(s => s.startsWith('verse/'))
+                .filter(s => parseInt(s.split('/')[1]) <= toV).length
+              > 0
+            );
+          },
+          {},
+        );
     };
 
     if (xre.exec(cv, xre('^[1-9][0-9]*$'))) {
@@ -560,10 +559,10 @@ class DocSet {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
-      ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
-      ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
-      blockScope[1],
-    ],
+        ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
+        ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
+        blockScope[1],
+      ],
     );
   }
 
@@ -716,8 +715,8 @@ class DocSet {
         const itemType = item[0];
         return (
           (itemType === 'token' && 'tokens' in options) ||
-                    (itemType === 'graft' && 'grafts' in options) ||
-                    (itemType.endsWith('Scope') && 'scopes' in options)
+          (itemType === 'graft' && 'grafts' in options) ||
+          (itemType.endsWith('Scope') && 'scopes' in options)
         );
       }
     };
@@ -860,13 +859,13 @@ class DocSet {
 
           for (
             const bs of [...allBlockScopes]
-              .filter(
-                s => {
-                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-                },
-              )
-          ) {
+            .filter(
+              s => {
+                const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+              },
+            )
+            ) {
             allBlockScopes.delete(bs);
           }
           allBlockScopes.add(blockScope);

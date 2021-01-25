@@ -1,5 +1,10 @@
 const {
-  GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLBoolean,
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLBoolean,
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
 const tokenType = require('./token');
@@ -34,52 +39,64 @@ const dumpBlock = b => {
 const blockType = new GraphQLObjectType({
   name: 'Block',
   fields: () => ({
-    cBL: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.c.length },
-    bgBL: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.bg.length },
-    osBL: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.os.length },
-    isBL: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.is.length },
+    cBL: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.c.length,
+    },
+    bgBL: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.bg.length,
+    },
+    osBL: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.os.length,
+    },
+    isBL: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.is.length,
+    },
     cL: {
       type: GraphQLNonNull(GraphQLInt),
       resolve:
-                (root, args, context) => context.docSet.countItems(root.c),
+        (root, args, context) => context.docSet.countItems(root.c),
     },
     bgL: {
       type: GraphQLNonNull(GraphQLInt),
       resolve:
-                (root, args, context) => context.docSet.countItems(root.bg),
+        (root, args, context) => context.docSet.countItems(root.bg),
     },
     osL: {
       type: GraphQLNonNull(GraphQLInt),
       resolve:
-                (root, args, context) => context.docSet.countItems(root.os),
+        (root, args, context) => context.docSet.countItems(root.os),
     },
     isL: {
       type: GraphQLNonNull(GraphQLInt),
       resolve:
-                (root, args, context) => context.docSet.countItems(root.is),
+        (root, args, context) => context.docSet.countItems(root.is),
     },
     is: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
       resolve:
-                (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
+        (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
     },
     os: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
       resolve:
-                (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
+        (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
     },
     bs: {
       type: GraphQLNonNull(scopeType),
       resolve:
-                (root, args, context) => {
-                  const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
-                  return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
-                },
+        (root, args, context) => {
+          const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
+          return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
+        },
     },
     bg: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(graftType))),
       resolve:
-                (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),
+        (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),
     },
     items: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
@@ -90,27 +107,27 @@ const blockType = new GraphQLObjectType({
         includeContext: { type: GraphQLBoolean },
       },
       resolve:
-                (root, args, context) => {
-                  if (args.withScopes && args.withScriptureCV) {
-                    throw new Error('Cannot specify both withScopes and withScriptureCV');
-                  }
+        (root, args, context) => {
+          if (args.withScopes && args.withScriptureCV) {
+            throw new Error('Cannot specify both withScopes and withScriptureCV');
+          }
 
-                  if (args.withScriptureCV) {
-                    return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {},args.includeContext || false);
-                  } else {
-                    return context.docSet.unsuccinctifyPrunedItems(
-                      root,
-                      {
-                        tokens: true,
-                        scopes: true,
-                        grafts: true,
-                        requiredScopes: args.withScopes || [],
-                        anyScope: args.anyScope || false,
-                      },
-                      args.includeContext || false,
-                    );
-                  }
-                },
+          if (args.withScriptureCV) {
+            return context.docSet.unsuccinctifyItemsWithScriptureCV(root, args.withScriptureCV, {}, args.includeContext || false);
+          } else {
+            return context.docSet.unsuccinctifyPrunedItems(
+              root,
+              {
+                tokens: true,
+                scopes: true,
+                grafts: true,
+                requiredScopes: args.withScopes || [],
+                anyScope: args.anyScope || false,
+              },
+              args.includeContext || false,
+            );
+          }
+        },
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
@@ -122,35 +139,35 @@ const blockType = new GraphQLObjectType({
         withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
       },
       resolve:
-                (root, args, context) => {
-                  let ret;
+        (root, args, context) => {
+          let ret;
 
-                  if (args.withScriptureCV) {
-                    ret = context.docSet.unsuccinctifyItemsWithScriptureCV(
-                      root,
-                      args.withScriptureCV,
-                      { tokens: true },
-                      args.includeContext || false,
-                    );
-                  } else {
-                    ret = context.docSet.unsuccinctifyPrunedItems(
-                      root,
-                      {
-                        tokens: true,
-                        scopes: true,
-                        requiredScopes: args.withScopes || [],
-                        anyScope: args.anyScope || false,
-                      },
-                      args.includeContext || false,
-                    );
-                  }
+          if (args.withScriptureCV) {
+            ret = context.docSet.unsuccinctifyItemsWithScriptureCV(
+              root,
+              args.withScriptureCV,
+              { tokens: true },
+              args.includeContext || false,
+            );
+          } else {
+            ret = context.docSet.unsuccinctifyPrunedItems(
+              root,
+              {
+                tokens: true,
+                scopes: true,
+                requiredScopes: args.withScopes || [],
+                anyScope: args.anyScope || false,
+              },
+              args.includeContext || false,
+            );
+          }
 
-                  if (args.withChars) {
-                    ret = ret.filter(i => args.withChars.includes(i[2]));
-                  }
+          if (args.withChars) {
+            ret = ret.filter(i => args.withChars.includes(i[2]));
+          }
 
-                  return ret.filter(i => i[0] === 'token');
-                },
+          return ret.filter(i => i[0] === 'token');
+        },
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
@@ -159,33 +176,33 @@ const blockType = new GraphQLObjectType({
         normalizeSpace: { type: GraphQLBoolean },
       },
       resolve:
-                (root, args, context) => {
-                  const tokens = args.withScriptureCV ?
-                    context.docSet.unsuccinctifyItemsWithScriptureCV(
-                      root,
-                      args.withScriptureCV,
-                      { tokens: true },
-                      false,
-                    ) :
-                    context.docSet.unsuccinctifyItems(root.c, { tokens: true }, false);
-                  let ret = tokens.map(t => t[2]).join('').trim();
+        (root, args, context) => {
+          const tokens = args.withScriptureCV ?
+            context.docSet.unsuccinctifyItemsWithScriptureCV(
+              root,
+              args.withScriptureCV,
+              { tokens: true },
+              false,
+            ) :
+            context.docSet.unsuccinctifyItems(root.c, { tokens: true }, false);
+          let ret = tokens.map(t => t[2]).join('').trim();
 
-                  if (args.normalizeSpace) {
-                    ret = ret.replace(/[ \t\n\r]+/g, ' ');
-                  }
-                  return ret;
-                },
+          if (args.normalizeSpace) {
+            ret = ret.replace(/[ \t\n\r]+/g, ' ');
+          }
+          return ret;
+        },
     },
     dump: {
       type: GraphQLNonNull(GraphQLString),
       resolve:
-                (root, args, context) => dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, false)),
+        (root, args, context) => dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, false)),
     },
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       resolve:
-                (root, args, context) =>
-                  [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)],
+        (root, args, context) =>
+          [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)],
     },
   }),
 });

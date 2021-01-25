@@ -1,7 +1,12 @@
 const {
-  GraphQLString, GraphQLList, GraphQLNonNull,
+  GraphQLString,
+  GraphQLList,
+  GraphQLNonNull,
 } = require('graphql');
-const { addTag, removeTag } = require('proskomma-utils');
+const {
+  addTag,
+  removeTag,
+} = require('proskomma-utils');
 
 const tagMutations = {
   addDocSetTags: {

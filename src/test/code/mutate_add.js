@@ -20,9 +20,9 @@ test(
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets.length, 0);
       query = `mutation { addDocument(` +
-          `selectors: [{key: "lang", value: "eng"}, {key: "abbr", value: "ust"}], `+
-          `contentType: "usx", ` +
-          `content: """${content}""") }`;
+        `selectors: [{key: "lang", value: "eng"}, {key: "abbr", value: "ust"}], ` +
+        `contentType: "usx", ` +
+        `content: """${content}""") }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.addDocument, true);

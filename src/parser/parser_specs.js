@@ -1,4 +1,7 @@
-const { labelForScope, generateId } = require('proskomma-utils');
+const {
+  labelForScope,
+  generateId,
+} = require('proskomma-utils');
 const PrintablePT = require('./lexers/preTokenClasses/printable_pt');
 
 const specs = (pt) => [
@@ -34,10 +37,10 @@ const specs = (pt) => [
             if (label === 'id') {
               if (
                 parser.headers[label].length === 3 ||
-                                (
-                                  parser.headers[label].length > 3 &&
-                                    parser.headers[label].substring(3, 4) === ' '
-                                )
+                (
+                  parser.headers[label].length > 3 &&
+                  parser.headers[label].substring(3, 4) === ' '
+                )
               ) {
                 const bookCode = parser.headers[label].substring(0, 3);
                 parser.headers['bookCode'] = bookCode;
@@ -428,12 +431,12 @@ const specs = (pt) => [
       ],
       during: (parser, pt) => {
         pt.numbers.map(n => {
-          const verseScope = {
-            label: () => labelForScope('verse', [n]),
-            endedBy: ['verses', 'chapter'],
-          };
-          parser.openNewScope(pt, verseScope, true, parser.sequences.main);
-        },
+            const verseScope = {
+              label: () => labelForScope('verse', [n]),
+              endedBy: ['verses', 'chapter'],
+            };
+            parser.openNewScope(pt, verseScope, true, parser.sequences.main);
+          },
         );
       },
     },
@@ -626,12 +629,12 @@ const specs = (pt) => [
       during: (parser, pt) => {
         if (parser.current.attributeContext) {
           [...pt.values.entries()].map(na => {
-            const attScope = {
-              label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
-              endedBy: [`$attributeContext$`],
-            };
-            parser.openNewScope(pt, attScope);
-          },
+              const attScope = {
+                label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
+                endedBy: [`$attributeContext$`],
+              };
+              parser.openNewScope(pt, attScope);
+            },
           );
         } else {
           parser.addToken(new PrintablePT('unknown', [pt.printValue]));

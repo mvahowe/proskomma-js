@@ -1,6 +1,8 @@
 const { generateId } = require('proskomma-utils');
 const {
-  Token, Scope, Graft,
+  Token,
+  Scope,
+  Graft,
 } = require('./items');
 
 const Block = class {
@@ -194,14 +196,14 @@ const Block = class {
   graftPassesOptions(item, options) {
     return (
       (!('includeGrafts' in options) || options.includeGrafts.includes(item.graftType)) &&
-            (!('excludeGrafts' in options) || !options.excludeGrafts.includes(item.graftType))
+      (!('excludeGrafts' in options) || !options.excludeGrafts.includes(item.graftType))
     );
   }
 
   scopePassesOptions(item, options) {
     return (
       (!('includeScopes' in options) || this.scopeMatchesOptionArray(item.label, options.includeScopes)) &&
-            (!('excludeScopes' in options) || !this.scopeMatchesOptionArray(item.label, options.excludeScopes))
+      (!('excludeScopes' in options) || !this.scopeMatchesOptionArray(item.label, options.excludeScopes))
     );
   }
 

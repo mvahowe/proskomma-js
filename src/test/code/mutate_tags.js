@@ -1,7 +1,10 @@
 const test = require('tape');
 const { pkWithDoc } = require('../lib/load');
 
-const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], [])[0];
+const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
 
 const testGroup = 'Mutate Tags';
 
@@ -24,7 +27,7 @@ test(
       query = `mutation { removeDocSetTags(docSetId: "${docSet.id}", tags: ["baa", "frob"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.data.removeDocSetTags.length, 1);
-      t.ok(result.data.removeDocSetTags.includes("foo"));
+      t.ok(result.data.removeDocSetTags.includes('foo'));
     } catch (err) {
       console.log(err);
     }
@@ -51,7 +54,7 @@ test(
       query = `mutation { removeDocumentTags(docSetId: "${docSet.id}", documentId: "${document.id}", tags: ["baa", "frob"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.data.removeDocumentTags.length, 1);
-      t.ok(result.data.removeDocumentTags.includes("foo"));
+      t.ok(result.data.removeDocumentTags.includes('foo'));
     } catch (err) {
       console.log(err);
     }
@@ -79,7 +82,7 @@ test(
       query = `mutation { removeSequenceTags(docSetId: "${docSet.id}", documentId: "${document.id}", sequenceId: "${sequence.id}", tags: ["baa", "frob"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.data.removeSequenceTags.length, 1);
-      t.ok(result.data.removeSequenceTags.includes("foo"));
+      t.ok(result.data.removeSequenceTags.includes('foo'));
     } catch (err) {
       console.log(err);
     }

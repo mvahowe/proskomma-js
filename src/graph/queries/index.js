@@ -1,5 +1,9 @@
 const {
-  GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
 } = require('graphql');
 
 const docSetType = require('./doc_set');

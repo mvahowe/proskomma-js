@@ -4,8 +4,14 @@ const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Graph Sequence';
 
-const [pk, pkDoc] = pkWithDoc('../test_data/usfm/hello.usfm', { lang: 'eng', abbr: 'ust' });
-const pk2 = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'web' })[0];
+const [pk, pkDoc] = pkWithDoc('../test_data/usfm/hello.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+});
+const pk2 = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
 
 test(
   `Scalars (${testGroup})`,

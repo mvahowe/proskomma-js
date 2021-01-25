@@ -1,7 +1,12 @@
-import {enumStringIndex} from "proskomma-utils";
+import { enumStringIndex } from 'proskomma-utils';
 
 const {
-  GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLList, GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLBoolean,
+  GraphQLList,
+  GraphQLNonNull,
 } = require('graphql');
 
 const blockType = require('./block');
@@ -25,10 +30,10 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
       for (const attSpec of attSpecs) {
         if (
           attType === attSpec.attType &&
-                    element === attSpec.tagName &&
-                    key === attSpec.attKey &&
-                    parseInt(count) === attSpec.valueN &&
-                    attValuesArray[n].includes(value)
+          element === attSpec.tagName &&
+          key === attSpec.attKey &&
+          parseInt(count) === attSpec.valueN &&
+          attValuesArray[n].includes(value)
         ) {
           if (!requireAll) {
             return true;
@@ -51,7 +56,10 @@ const sequenceType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLNonNull(GraphQLString) },
     type: { type: GraphQLNonNull(GraphQLString) },
-    nBlocks: { type: GraphQLNonNull(GraphQLInt), resolve: root => root.blocks.length },
+    nBlocks: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.blocks.length,
+    },
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
       args: {

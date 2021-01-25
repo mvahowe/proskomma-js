@@ -34,4 +34,7 @@ const lexingRegexes = [
 
 const mainRegex = xre.union(lexingRegexes.map((x) => x[2]));
 
-module.exports = { lexingRegexes, mainRegex };
+module.exports = {
+  lexingRegexes,
+  mainRegex,
+};

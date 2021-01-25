@@ -1,5 +1,8 @@
 const {
-  GraphQLString, GraphQLNonNull, GraphQLBoolean, GraphQLList,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLBoolean,
+  GraphQLList,
 } = require('graphql');
 const inputKeyValue = require('../queries/input_key_value');
 

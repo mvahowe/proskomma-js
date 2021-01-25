@@ -15,7 +15,9 @@ const {
   validateTags,
 } = require('proskomma-utils');
 const {
-  parseUsfm, parseUsx, parseLexicon,
+  parseUsfm,
+  parseUsx,
+  parseLexicon,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 

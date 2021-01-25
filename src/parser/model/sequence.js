@@ -12,7 +12,10 @@ const {
   tokenEnum,
 } = require('proskomma-utils');
 const { Block } = require('./block');
-const { Graft, Scope } = require('./items');
+const {
+  Graft,
+  Scope,
+} = require('./items');
 
 const Sequence = class {
   constructor(sType) {

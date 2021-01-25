@@ -4,8 +4,14 @@ const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Tokens withChars';
 
-const pk = pkWithDoc('../test_data/usfm/ugnt_3jn.usfm', { lang: 'grc', abbr: 'hello' })[0];
-const pk2 = pkWithDoc('../test_data/usfm/ult_3jn.usfm', { lang: 'eng', abbr: 'hello' })[0];
+const pk = pkWithDoc('../test_data/usfm/ugnt_3jn.usfm', {
+  lang: 'grc',
+  abbr: 'hello',
+})[0];
+const pk2 = pkWithDoc('../test_data/usfm/ult_3jn.usfm', {
+  lang: 'eng',
+  abbr: 'hello',
+})[0];
 
 const simplifyBlocks = blocks => {
   const ret = [];
@@ -30,22 +36,22 @@ test(
     try {
       t.plan(4);
       const query =
-                '{' +
-                '  documents(withBook:"3JN") {' +
-                '    mainSequence {' +
-                '      blocks (withScriptureCV: "1:3") {' +
-                '        tokens(' +
-                '          includeContext:true' +
-                '          withScriptureCV: "1:3"' +
-                '          withChars: ["ἐρχομένων", "ἀδελφῶν"]' +
-                '        ) {' +
-                '          chars position' +
-                '          scopes(startsWith:["attribute/spanWithAtts/w/lemma", "attribute/spanWithAtts/w/strong"])' +
-                '        }' +
-                '      }' +
-                '    }' +
-                '  }' +
-                '}';
+        '{' +
+        '  documents(withBook:"3JN") {' +
+        '    mainSequence {' +
+        '      blocks (withScriptureCV: "1:3") {' +
+        '        tokens(' +
+        '          includeContext:true' +
+        '          withScriptureCV: "1:3"' +
+        '          withChars: ["ἐρχομένων", "ἀδελφῶν"]' +
+        '        ) {' +
+        '          chars position' +
+        '          scopes(startsWith:["attribute/spanWithAtts/w/lemma", "attribute/spanWithAtts/w/strong"])' +
+        '        }' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const foundLemma = result.data.documents[0].mainSequence.blocks[0].tokens
@@ -67,24 +73,24 @@ test(
     try {
       t.plan(1);
       const query =
-                '{' +
-                '  documents(withBook:"3JN") {' +
-                '    mainSequence {' +
-                '      blocks (withScriptureCV: "1:3") {' +
-                '        tokens(' +
-                '          includeContext:true' +
-                '          withScopes:[' +
-                '            "attribute/milestone/zaln/x-lemma/0/ἔρχομαι"' +
-                '            "attribute/milestone/zaln/x-lemma/0/ἀδελφός"' +
-                '          ]' +
-                '          anyScope:true' +
-                '        ) {' +
-                '          subType chars position scopes' +
-                '        }' +
-                '      }' +
-                '    }' +
-                '  }' +
-                '}';
+        '{' +
+        '  documents(withBook:"3JN") {' +
+        '    mainSequence {' +
+        '      blocks (withScriptureCV: "1:3") {' +
+        '        tokens(' +
+        '          includeContext:true' +
+        '          withScopes:[' +
+        '            "attribute/milestone/zaln/x-lemma/0/ἔρχομαι"' +
+        '            "attribute/milestone/zaln/x-lemma/0/ἀδελφός"' +
+        '          ]' +
+        '          anyScope:true' +
+        '        ) {' +
+        '          subType chars position scopes' +
+        '        }' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       // console.log(JSON.stringify(simplifyBlocks(result.data.documents[0].mainSequence.blocks), null, 2));

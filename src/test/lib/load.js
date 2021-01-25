@@ -116,5 +116,10 @@ const pkWithDocSetDocs = (fps, selectors, options) => {
 const escapeStringQuotes = str => str.replace(/"/g, '\\"').replace(/'/, '\\\'');
 
 module.exports = {
-  pkWithDoc, customPkWithDoc, pkWithDocs, customPkWithDocs, pkWithDocSetDocs, escapeStringQuotes,
+  pkWithDoc,
+  customPkWithDoc,
+  pkWithDocs,
+  customPkWithDocs,
+  pkWithDocSetDocs,
+  escapeStringQuotes,
 };

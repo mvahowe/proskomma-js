@@ -4,13 +4,34 @@ const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Graph Block';
 
-const pk = pkWithDoc('../test_data/usfm/hello.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk2 = pkWithDoc('../test_data/usfm/headings.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk3 = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' })[0];
-const pk4 = pkWithDoc('../test_data/usfm/footnote.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk5 = pkWithDoc('../test_data/usfm/verse_breaks_in_blocks.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk6 = pkWithDoc('../test_data/usfm/whitespace.usfm', { lang: 'eng', abbr: 'ust' })[0];
-const pk7 = pkWithDoc('../test_data/usx/web_psa.usx', { lang: 'eng', abbr: 'ust' })[0];
+const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk2 = pkWithDoc('../test_data/usfm/headings.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk3 = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk4 = pkWithDoc('../test_data/usfm/footnote.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk5 = pkWithDoc('../test_data/usfm/verse_breaks_in_blocks.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk6 = pkWithDoc('../test_data/usfm/whitespace.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+const pk7 = pkWithDoc('../test_data/usx/web_psa.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
 
 const blocksText = blocks => blocks.map(
   b => b.items.map(
@@ -191,11 +212,11 @@ test(
       t.plan(15 + openScopes.length);
       const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
       const query = '{ documents { mainSequence { blocks {' +
-                `items ${itemFragment}` +
-                `bg {subType sequenceId}` +
-                `os {itemType label}` +
-                `is {itemType label}` +
-                '} } } }';
+        `items ${itemFragment}` +
+        `bg {subType sequenceId}` +
+        `os {itemType label}` +
+        `is {itemType label}` +
+        '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       let block = result.data.documents[0].mainSequence.blocks[0];
@@ -243,7 +264,7 @@ test(
       t.equal(
         texts,
         'Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. ' +
-                'They read and think every day and every night about what Yahweh teaches.',
+        'They read and think every day and every night about what Yahweh teaches.',
       );
     } catch (err) {
       console.log(err);
@@ -266,7 +287,7 @@ test(
       t.equal(
         texts,
         'Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. ' +
-                'They read and think every day and every night about what Yahweh teaches.',
+        'They read and think every day and every night about what Yahweh teaches.',
       );
     } catch (err) {
       console.log(err);
@@ -290,7 +311,7 @@ test(
       t.equal(
         texts,
         'Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. ' +
-                'They read and think every day and every night about what Yahweh teaches.',
+        'They read and think every day and every night about what Yahweh teaches.',
       );
     } catch (err) {
       console.log(err);
@@ -313,7 +334,7 @@ test(
       t.equal(
         texts,
         'Instead, those with whom Yahweh is pleased delight in understanding what he teaches us. ' +
-                'They read and think every day and every night about what Yahweh teaches.',
+        'They read and think every day and every night about what Yahweh teaches.',
       );
     } catch (err) {
       console.log(err);
@@ -327,8 +348,8 @@ test(
     try {
       t.plan(3);
       const requiredChars = '["tree"]';
-      const query = `{documents { mainSequence { blocks(withChars:${requiredChars}) {`+
-          `tokens(withChars:${requiredChars} includeContext:true) { chars scopes(startsWith:["chapter", "verses"])} } } } }`;
+      const query = `{documents { mainSequence { blocks(withChars:${requiredChars}) {` +
+        `tokens(withChars:${requiredChars} includeContext:true) { chars scopes(startsWith:["chapter", "verses"])} } } } }`;
       let result = await pk7.gqlQuery(query);
       t.equal(result.errors, undefined);
       const blocks = result.data.documents[0].mainSequence.blocks;

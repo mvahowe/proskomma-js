@@ -3,7 +3,10 @@ const fse = require('fs-extra');
 const path = require('path');
 const { pkWithDoc } = require('../lib/load');
 
-const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'web' }, {}, {}, [], [])[0];
+const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'web',
+}, {}, {}, [], [])[0];
 
 const testGroup = 'Rehash';
 
@@ -45,7 +48,10 @@ test(
       const firstDocumentId = result.data.docSets[0].documents[0].id;
       const nMainSequenceBlocks = result.data.docSets[0].documents[0].mainSequence.nBlocks;
       const content = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_rut.usx'));
-      pk.importDocument({ lang: 'eng', abbr: 'web' }, 'usx', content);
+      pk.importDocument({
+        lang: 'eng',
+        abbr: 'web',
+      }, 'usx', content);
       query = `mutation { rehashDocSet(docSetId: "${result.data.docSets[0].id}") }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);

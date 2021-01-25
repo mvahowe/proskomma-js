@@ -2,7 +2,10 @@ const test = require('tape');
 const { validateTags } = require('proskomma-utils');
 const { pkWithDoc } = require('../lib/load');
 
-const pk = pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], ['frob'])[0];
+const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], ['frob'])[0];
 pk.docSetList()[0].tags.add('foo');
 const document = Object.values(pk.documents)[0];
 document.sequences[document.mainId].tags.add('banana');
@@ -73,7 +76,10 @@ test(
     try {
       t.plan(2);
       const importFn = () =>
-        pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], ['FROB']);
+        pkWithDoc('../test_data/usx/web_rut.usx', {
+          lang: 'eng',
+          abbr: 'ust',
+        }, {}, {}, [], ['FROB']);
       t.throws(importFn, /Tag 'FROB' is not valid/);
       const addTagFn = () => {
         pk.docSetList()[0].tags.add('FROB');
@@ -93,7 +99,10 @@ test(
     try {
       t.plan(2);
       const importFn = () =>
-        pkWithDoc('../test_data/usx/web_rut.usx', { lang: 'eng', abbr: 'ust' }, {}, {}, [], ['FROB']);
+        pkWithDoc('../test_data/usx/web_rut.usx', {
+          lang: 'eng',
+          abbr: 'ust',
+        }, {}, {}, [], ['FROB']);
       t.throws(importFn, /Tag 'FROB' is not valid/);
       const addTagFn = () => {
         pk.docSetList()[0].tags.delete('FROB');
