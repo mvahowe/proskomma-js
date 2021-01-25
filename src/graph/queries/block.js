@@ -11,6 +11,7 @@ const tokenType = require('./token');
 const scopeType = require('./scope');
 const graftType = require('./graft');
 const itemType = require('./item');
+const itemObjectType = require('./itemObject');
 
 const dumpItem = i => {
   switch (i[0]) {
@@ -128,6 +129,12 @@ const blockType = new GraphQLObjectType({
             );
           }
         },
+    },
+    itemObjects: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemObjectType))),
+      resolve:
+        (root, args, context) =>
+          context.docSet.unsuccinctifyItemObjects(root.c, {}),
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),

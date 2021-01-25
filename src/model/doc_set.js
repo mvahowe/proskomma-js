@@ -281,6 +281,29 @@ class DocSet {
     return ret;
   }
 
+  unsuccinctifyItemObjects(succinct, options) {
+    const ret = [];
+
+    for (const itemArray of this.unsuccinctifyItems(succinct, options, false, [])) {
+      let item;
+      if (["startScope", "endScope"].includes(itemArray[0])) {
+        item = {
+          type: "scope",
+          subType: itemArray[0] === "startScope" ? "start" : "end",
+          payload: itemArray[1],
+        };
+      } else {
+        item = {
+          type: itemArray[0],
+          subType: itemArray[1],
+          payload: itemArray[2],
+        }
+      };
+      ret.push(item);
+    }
+    return ret;
+  }
+
   unsuccinctifyItems(succinct, options, includeContext, openScopes) {
     if (includeContext === undefined) {
       throw new Error('includeContext must now be provided to unsuccinctifyItems');
@@ -559,10 +582,10 @@ class DocSet {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
-        ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
-        ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
-        blockScope[1],
-      ],
+      ...this.unsuccinctifyScopes(block.os).map(s => s[1]),
+      ...this.unsuccinctifyScopes(block.is).map(s => s[1]),
+      blockScope[1],
+    ],
     );
   }
 
@@ -859,13 +882,13 @@ class DocSet {
 
           for (
             const bs of [...allBlockScopes]
-            .filter(
-              s => {
-                const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-              },
-            )
-            ) {
+              .filter(
+                s => {
+                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+                },
+              )
+          ) {
             allBlockScopes.delete(bs);
           }
           allBlockScopes.add(blockScope);
