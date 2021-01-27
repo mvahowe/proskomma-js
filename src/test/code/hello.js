@@ -84,3 +84,20 @@ test(
     }
   },
 );
+
+test(
+  `Query callback (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(1);
+      let callbackValue = 2;
+      const callback = () => callbackValue++;
+      const query =
+        '{ nDocuments }';
+      await pk.gqlQuery(query, callback);
+      t.equal(callbackValue, 3);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

@@ -1,6 +1,8 @@
 import xre from 'xregexp';
 import ByteArray from 'proskomma-utils/dist/lib/byte_array';
 
+const { Mutex } = require('async-mutex');
+
 const { graphql } = require('graphql');
 
 const packageJson = require('../package.json');
@@ -34,6 +36,7 @@ class ProsKomma {
         type: 'string',
       },
     ];
+    this.mutex = new Mutex();
   }
 
   validateSelectors() {
@@ -351,8 +354,19 @@ class ProsKomma {
     return docSet.id;
   }
 
-  async gqlQuery(query) {
-    return await graphql(gqlSchema, query, this, {});
+  async gqlQuery(query, callback) {
+    const release = await this.mutex.acquire();
+
+    try {
+      const result = await graphql(gqlSchema, query, this, {});
+
+      if (callback) {
+        callback(result);
+      }
+      return result;
+    } finally {
+      release();
+    }
   }
 
   serializeSuccinct(docSetId) {
