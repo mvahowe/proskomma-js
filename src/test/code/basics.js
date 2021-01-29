@@ -35,11 +35,12 @@ test(
   `Scalar Root Fields (${testGroup})`,
   async function (t) {
     try {
-      t.plan(8);
-      const query = '{ processor packageVersion nDocSets nDocuments }';
+      t.plan(9);
+      const query = '{ id processor packageVersion nDocSets nDocuments }';
       const pk = new ProsKomma();
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
+      t.ok('id' in result.data);
       t.ok('processor' in result.data);
       t.ok('packageVersion' in result.data);
       t.equal(result.data.packageVersion, pk.packageVersion());

@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import ByteArray from 'proskomma-utils/dist/lib/byte_array';
+const { ByteArray, generateId } = require('proskomma-utils');
 
 const { Mutex } = require('async-mutex');
 
@@ -12,6 +12,7 @@ const { gqlSchema } = require('./graph');
 
 class ProsKomma {
   constructor() {
+    this.processorId = generateId();
     this.documents = {};
     this.docSetsBySelector = {};
     this.docSets = {};

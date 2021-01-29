@@ -14,6 +14,10 @@ const selectorSpecType = require('./selector_spec');
 const schemaQueries = new GraphQLObjectType({
   name: 'Root',
   fields: {
+    id: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root.processorId,
+    },
     processor: { type: GraphQLNonNull(GraphQLString) },
     packageVersion: { type: GraphQLNonNull(GraphQLString) },
     selectors: {

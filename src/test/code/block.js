@@ -370,7 +370,7 @@ test(
       const query = '{documents { mainSequence { blocks { itemObjects { type subType payload } } } } }';
       let result = await pk3.gqlQuery(query);
       t.equal(result.errors, undefined);
-      console.log(JSON.stringify(result.data.documents[0].mainSequence.blocks[0].itemObjects, null, 2));
+      // console.log(JSON.stringify(result.data.documents[0].mainSequence.blocks[0].itemObjects, null, 2));
     } catch (err) {
       console.log(err);
     }
