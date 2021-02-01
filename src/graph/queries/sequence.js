@@ -64,6 +64,7 @@ const sequenceType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
       args: {
         withScopes: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        positions: { type: GraphQLList(GraphQLNonNull(GraphQLInt)) },
         withBlockScope: { type: GraphQLString },
         withScriptureCV: { type: GraphQLString },
         attSpecs: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))) },
@@ -90,14 +91,18 @@ const sequenceType = new GraphQLObjectType({
           throw new Error('attSpecs and attValues must be same length');
         }
 
-        let ret;
+        let ret = root.blocks;
+
+        if (args.positions) {
+          ret = Array.from(ret.entries()).filter(b => args.positions.includes(b[0])).map(b => b[1]);
+        }
 
         if (args.withScopes) {
-          ret = root.blocks.filter(b => context.docSet.allScopesInBlock(b, args.withScopes));
-        } else if (args.withScriptureCV) {
-          ret = context.docSet.blocksWithScriptureCV(root.blocks, args.withScriptureCV);
-        } else {
-          ret = root.blocks;
+          ret = ret.filter(b => context.docSet.allScopesInBlock(b, args.withScopes));
+        }
+
+        if (args.withScriptureCV) {
+          ret = context.docSet.blocksWithScriptureCV(ret, args.withScriptureCV);
         }
 
         if (args.attSpecs) {

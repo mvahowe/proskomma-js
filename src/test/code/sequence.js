@@ -49,6 +49,31 @@ test(
 );
 
 test(
+  `position (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ documents { mainSequence { blocks(positions: [0]) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      t.equal(result.data.documents[0].mainSequence.blocks.length, 1);
+      t.ok(result.data.documents[0].mainSequence.blocks[0].text.startsWith('In the days when the judges judged'));
+      query = '{ documents { mainSequence { blocks(positions: []) { text } } } }';
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      t.equal(result.data.documents[0].mainSequence.blocks.length, 0);
+      query = '{ documents { mainSequence { blocks(positions: [1, 3, 1]) { text } } } }';
+      result = await pk2.gqlQuery(query);
+      t.equal(result.data.documents[0].mainSequence.blocks.length, 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `withScopes (${testGroup})`,
   async function (t) {
     try {
