@@ -5,11 +5,17 @@ import {
   enumIndexes,
   headerBytes,
   itemEnum,
+  pushSuccinctGraftBytes,
+  pushSuccinctScopeBytes,
+  pushSuccinctTokenBytes,
   removeTag,
+  scopeEnum,
   succinctGraftName,
   succinctGraftSeqId,
   succinctScopeLabel,
   succinctTokenChars,
+  tokenCategory,
+  tokenEnum,
   tokenEnumLabels,
   validateTags,
 } from 'proskomma-utils';
@@ -140,6 +146,12 @@ class DocSet {
   documentWithBook(bookCode) {
     const docsWithBook = Object.values(this.documents()).filter(doc => 'bookCode' in doc.headers && doc.headers['bookCode'] === bookCode);
     return docsWithBook.length === 1 ? docsWithBook[0] : null;
+  }
+
+  maybeBuildPreEnums() {
+    if (Object.keys(this.preEnums).length === 0) {
+      this.buildPreEnums();
+    }
   }
 
   buildPreEnums() {
@@ -950,6 +962,55 @@ class DocSet {
       }
     }
     return ret;
+  }
+
+  updateItems(
+    documentId,
+    sequenceId,
+    blockPosition,
+    itemObjects) {
+    const document = this.processor.documents[documentId];
+
+    if (!document) {
+      throw new Error(`Document '${documentId}' not found`);
+    }
+
+    const sequence = document.sequences[sequenceId];
+
+    if (!sequence) {
+      throw new Error(`Sequence '${sequenceId}' not found`);
+    }
+
+    if (sequence.blocks.length <= blockPosition) {
+      throw new Error(`Could not find block ${blockPosition} (length=${sequence.blocks.length})`);
+    }
+
+    const block = sequence.blocks[blockPosition];
+    const newItemsBA = new ByteArray(itemObjects.length);
+    this.maybeBuildPreEnums();
+
+    for (const item of itemObjects) {
+      switch (item.type) {
+      case 'token':
+        const charsEnumIndex = this.enumForCategoryValue(tokenCategory[item.subType], item.payload);
+        pushSuccinctTokenBytes(newItemsBA, tokenEnum[item.subType], charsEnumIndex);
+        break;
+      case 'graft':
+        const graftTypeEnumIndex = this.enumForCategoryValue('graftTypes', item.subType);
+        const seqEnumIndex = this.enumForCategoryValue('ids', item.payload);
+        pushSuccinctGraftBytes(newItemsBA, graftTypeEnumIndex, seqEnumIndex);
+        break;
+      case 'scope':
+        const scopeBits = item.payload.split('/');
+        const scopeTypeByte = scopeEnum[scopeBits[0]];
+        const scopeBitBytes = scopeBits.slice(1).map(b => this.enumForCategoryValue('scopeBits', b));
+        pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
+        break;
+      }
+    }
+    newItemsBA.trim();
+    block.c = newItemsBA;
+    return true;
   }
 
   serializeSuccinct() {

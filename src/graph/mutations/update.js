@@ -18,13 +18,19 @@ const updateMutations = {
       blockPosition: { type: GraphQLNonNull(GraphQLInt) },
       itemObjects: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))) },
     },
-    resolve: (root, args) =>
-      root.updateItems(
-        args.docSetId,
+    resolve: (root, args) => {
+      const docSet = root.docSets[args.docSetId];
+
+      if (!docSet) {
+        throw new Error(`DocSet '${args.docSetId}' not found`);
+      }
+      return docSet.updateItems(
         args.documentId,
         args.sequenceId,
         args.blockPosition,
-        args.itemObjects),
+        args.itemObjects,
+      );
+    },
   },
 };
 
