@@ -286,19 +286,20 @@ class DocSet {
 
     for (const itemArray of this.unsuccinctifyItems(succinct, options, false, [])) {
       let item;
-      if (["startScope", "endScope"].includes(itemArray[0])) {
-        item = {
-          type: "scope",
-          subType: itemArray[0] === "startScope" ? "start" : "end",
-          payload: itemArray[1],
-        };
+
+      if (['startScope', 'endScope'].includes(itemArray[0])) {
+        item = [
+          'scope',
+          itemArray[0] === 'startScope' ? 'start' : 'end',
+          itemArray[1],
+        ];
       } else {
-        item = {
-          type: itemArray[0],
-          subType: itemArray[1],
-          payload: itemArray[2],
-        }
-      };
+        item = [
+          itemArray[0],
+          itemArray[1],
+          itemArray[2],
+        ];
+      }
       ret.push(item);
     }
     return ret;

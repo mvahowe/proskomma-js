@@ -7,9 +7,18 @@ const {
 const itemObjectType = new GraphQLObjectType({
   name: 'ItemObject',
   fields: () => ({
-    type: { 'type': GraphQLNonNull(GraphQLString) },
-    subType: { type: GraphQLNonNull(GraphQLString) },
-    payload: { type: GraphQLNonNull(GraphQLString) },
+    type: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root[0],
+    },
+    subType: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root[1],
+    },
+    payload: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root[2],
+    },
   }),
 });
 
