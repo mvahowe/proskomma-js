@@ -1019,6 +1019,11 @@ class DocSet {
       case 'scope':
         const scopeBits = item.payload.split('/');
         const scopeTypeByte = scopeEnum[scopeBits[0]];
+
+        if (!scopeTypeByte) {
+          throw new Error(`"${scopeBits[0]}" is not a scope type`);
+        }
+
         const scopeBitBytes = scopeBits.slice(1).map(b => this.enumForCategoryValue('scopeBits', b, true));
         pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
         break;

@@ -20,7 +20,9 @@ const blockSetup = async t => {
   let block = sequence.blocks[0];
   const itemObjects = block.itemObjects;
   return [pk, docSet, document, sequence, block, itemObjects];
-}
+};
+
+const searchScopes = (itemObjects, searchStr) => itemObjects.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
 
 test(
   `updateItems args exceptions (${testGroup})`,
@@ -141,6 +143,77 @@ test(
       block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
       t.ok(!block.text.includes('country'));
       t.ok(block.text.includes('nation'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems, new scope enum (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let [pk, docSet, document, sequence, block, itemObjects] = await blockSetup(t);
+      t.equal(searchScopes(itemObjects, '/1').length, 5);
+      t.equal(searchScopes(itemObjects, '/23').length, 0);
+
+      const newItemObjects = itemObjects
+        .map(i => (
+          {
+            type: i.type,
+            subType: i.subType,
+            payload: i.payload.replace(/1$/g, '23'),
+          }
+        ));
+
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` itemObjects: ${object2Query(newItemObjects)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { text itemObjects { type subType payload } } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.equal(searchScopes(block.itemObjects, '/1').length, 0);
+      t.equal(searchScopes(block.itemObjects, '/23').length, 5);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems, scope type exception (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      let [pk, docSet, document, sequence, block, itemObjects] = await blockSetup(t);
+
+      const newItemObjects = itemObjects
+        .map(i => (
+          {
+            type: i.type,
+            subType: i.subType,
+            payload: i.payload.replace(/chapter/g, 'BANANA'),
+          }
+        ));
+
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` itemObjects: ${object2Query(newItemObjects)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('BANANA'));
     } catch (err) {
       console.log(err);
     }
