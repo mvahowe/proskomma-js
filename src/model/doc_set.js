@@ -2,6 +2,7 @@ import xre from 'xregexp';
 import {
   addTag,
   ByteArray,
+  enumIndex,
   enumIndexes,
   headerBytes,
   itemEnum,
@@ -200,12 +201,24 @@ class DocSet {
     }
   }
 
-  enumForCategoryValue(category, value) {
+  enumForCategoryValue(category, value, addUnknown) {
+    if (!addUnknown) {
+      addUnknown = false;
+    }
+
     if (!(category in this.preEnums)) {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
 
     if (value in this.preEnums[category]) {
+      return this.preEnums[category][value].enum;
+    } else if (addUnknown) {
+      this.preEnums[category][value] = {
+        'enum': Object.keys(this.preEnums[category]).length,
+        'frequency': 1,
+      };
+      this.enums[category].pushCountedString(value);
+      this.buildEnumIndex(category);
       return this.preEnums[category][value].enum;
     } else {
       throw new Error(`Unknown value ${value} for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
@@ -238,6 +251,9 @@ class DocSet {
     this.enumIndexes = enumIndexes(this.enums);
   }
 
+  buildEnumIndex(category) {
+    this.enumIndexes[category] = enumIndex(category, this.enums[category]);
+  }
   unsuccinctifyBlock(block, options, includeContext) {
     this.maybeBuildEnumIndexes();
     const succinctBlockScope = block.bs;
@@ -992,18 +1008,18 @@ class DocSet {
     for (const item of itemObjects) {
       switch (item.type) {
       case 'token':
-        const charsEnumIndex = this.enumForCategoryValue(tokenCategory[item.subType], item.payload);
+        const charsEnumIndex = this.enumForCategoryValue(tokenCategory[item.subType], item.payload, true);
         pushSuccinctTokenBytes(newItemsBA, tokenEnum[item.subType], charsEnumIndex);
         break;
       case 'graft':
-        const graftTypeEnumIndex = this.enumForCategoryValue('graftTypes', item.subType);
-        const seqEnumIndex = this.enumForCategoryValue('ids', item.payload);
+        const graftTypeEnumIndex = this.enumForCategoryValue('graftTypes', item.subType, true);
+        const seqEnumIndex = this.enumForCategoryValue('ids', item.payload, true);
         pushSuccinctGraftBytes(newItemsBA, graftTypeEnumIndex, seqEnumIndex);
         break;
       case 'scope':
         const scopeBits = item.payload.split('/');
         const scopeTypeByte = scopeEnum[scopeBits[0]];
-        const scopeBitBytes = scopeBits.slice(1).map(b => this.enumForCategoryValue('scopeBits', b));
+        const scopeBitBytes = scopeBits.slice(1).map(b => this.enumForCategoryValue('scopeBits', b, true));
         pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
         break;
       }

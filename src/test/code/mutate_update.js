@@ -106,7 +106,7 @@ test(
   },
 );
 
-/*
+
 test(
   `updateItems, new token enum (${testGroup})`,
   async function (t) {
@@ -146,6 +146,3 @@ test(
     }
   },
 );
-
-
- */
