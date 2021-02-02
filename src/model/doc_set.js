@@ -1034,6 +1034,18 @@ class DocSet {
     return true;
   }
 
+  gcSequences() {
+    let changed = false;
+
+    Object.values(this.documents()).forEach(d => {
+      changed = changed || d.gcSequences();
+    });
+
+    if (changed) {
+      this.rehash();
+    }
+  }
+
   serializeSuccinct() {
     const ret = {
       id: this.id,

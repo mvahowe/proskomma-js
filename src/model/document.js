@@ -258,6 +258,41 @@ class Document {
       os: blockOb.os.base64(),
     };
   }
+
+  gcSequences() {
+    const usedSequences = new Set();
+    const docSet = this.processor.docSets[this.docSetId];
+
+    const followGrafts = (document, sequence, used) => {
+      used.add(sequence.id);
+
+      for (const block of sequence) {
+        for (const blockGraft of docSet.unsuccinctifyGrafts(block.bg)) {
+          if (!used.has(blockGraft[2])) {
+            followGrafts(document, document.sequences[blockGraft[2]], used);
+          }
+        }
+
+        for (const inlineGraft of docSet.unsuccinctifyItems(block.c, { grafts: true }, false)) {
+          if (!used.has(inlineGraft[2])) {
+            followGrafts(document, document.sequences[inlineGraft[2]], used);
+          }
+        }
+      }
+    };
+
+    followGrafts(this, this.sequences[this.mainId], usedSequences);
+    let changed = false;
+
+    for (const sequenceId of Object.keys(this.sequences)) {
+      if (!usedSequences.has(sequenceId)) {
+        delete this.sequences[sequenceId];
+        changed = true;
+      }
+    }
+
+    return changed;
+  }
 }
 
 module.exports = { Document };
