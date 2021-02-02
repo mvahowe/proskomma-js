@@ -23,6 +23,7 @@ const blockSetup = async t => {
 };
 
 const searchScopes = (itemObjects, searchStr) => itemObjects.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
+const searchGrafts = (itemObjects, searchStr) => itemObjects.filter(i => i.type === 'graft' && i.subType.includes(searchStr));
 
 test(
   `updateItems args exceptions (${testGroup})`,
@@ -214,6 +215,46 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
       t.ok(result.errors[0].message.includes('BANANA'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems, new graft enum (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let [pk, docSet, document, sequence, block, itemObjects] = await blockSetup(t);
+      t.equal(searchGrafts(itemObjects, 'footnote').length, 1);
+      t.equal(searchGrafts(itemObjects, 'BANANA').length, 0);
+
+      const newItemObjects = itemObjects
+        .map(i => (
+          {
+            type: i.type,
+            subType: i.subType.replace(/footnote/g, 'BANANA'),
+            payload: i.payload,
+          }
+        ));
+
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` itemObjects: ${object2Query(newItemObjects)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { text itemObjects { type subType payload } } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.equal(searchGrafts(block.itemObjects, 'footnote').length, 0);
+      t.equal(searchGrafts(block.itemObjects, 'BANANA').length, 1);
     } catch (err) {
       console.log(err);
     }
