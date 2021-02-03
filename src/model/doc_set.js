@@ -254,6 +254,7 @@ class DocSet {
   buildEnumIndex(category) {
     this.enumIndexes[category] = enumIndex(category, this.enums[category]);
   }
+
   unsuccinctifyBlock(block, options, includeContext) {
     this.maybeBuildEnumIndexes();
     const succinctBlockScope = block.bs;
@@ -352,8 +353,8 @@ class DocSet {
             item.push(item[0] === 'token' && item[1] === 'wordLike' ? tokenCount++ : null);
             item.push([...scopes]);
           }
+          ret.push(item);
         }
-        ret.push(item);
       } else if (item[0] === 'startScope') {
         scopes.add(item[1]);
 
@@ -1031,7 +1032,81 @@ class DocSet {
     }
     newItemsBA.trim();
     block.c = newItemsBA;
+    this.updateBlockIndexes(sequence, blockPosition);
     return true;
+  }
+
+  updateBlockIndexes(sequence, blockPosition) {
+    const labelsMatch = (firstA, secondA) => {
+
+      for (const first of Array.from(firstA)) {
+        if (!secondA.has(first)) {
+          return false;
+        }
+      }
+
+      for (const second of Array.from(secondA)) {
+        if (!firstA.has(second)) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    const addSuccinctScope = (docSet, succinct, scopeLabel) => {
+      const scopeBits = scopeLabel.split('/');
+      const scopeTypeByte = scopeEnum[scopeBits[0]];
+
+      if (!scopeTypeByte) {
+        throw new Error(`"${scopeBits[0]}" is not a scope type`);
+      }
+
+      const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
+      pushSuccinctScopeBytes(succinct, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
+    };
+
+    const block = sequence.blocks[blockPosition];
+    const includedScopeLabels = new Set();
+    const openScopeLabels = new Set();
+
+    for (const openScope of this.unsuccinctifyScopes(block.os)) {
+      openScopeLabels.add(openScope[1]);
+    }
+
+    for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, false)) {
+      if (scope[0] === 'startScope') {
+        includedScopeLabels.add(scope[1]);
+        openScopeLabels.add(scope[1]);
+      } else {
+        openScopeLabels.delete(scope[1]);
+      }
+    }
+
+    const isArray = Array.from(includedScopeLabels);
+    const isBA = new ByteArray(isArray.length);
+
+    for (const scopeLabel of isArray) {
+      addSuccinctScope(this, isBA, scopeLabel);
+    }
+    isBA.trim();
+    block.is = isBA;
+
+    if (blockPosition < (sequence.blocks.length - 1)) {
+      const nextOsBlock = sequence.blocks[blockPosition + 1];
+      const nextOsBA = nextOsBlock.os;
+      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[1]));
+
+      if (!labelsMatch(openScopeLabels, nextOSLabels)) {
+        const osBA = new ByteArray(nextOSLabels.length);
+
+        for (const scopeLabel of Array.from(openScopeLabels)) {
+          addSuccinctScope(this, osBA, scopeLabel);
+        }
+        osBA.trim();
+        nextOsBlock.os = osBA;
+        this.updateBlockIndexes(sequence, blockPosition + 1);
+      }
+    }
   }
 
   gcSequences() {
