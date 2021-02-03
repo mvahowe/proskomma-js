@@ -35,32 +35,29 @@ const updateMutations = {
   gcSequences: {
     type: GraphQLNonNull(GraphQLBoolean),
     args: {
-      documentId: {
-        docSetId: { type: GraphQLNonNull(GraphQLString) },
-        type: GraphQLNonNull(GraphQLString),
-      },
-      resolve: (root, args) => {
-        const docSet = root.docSets[args.docSetId];
-
-        if (!docSet) {
-          throw new Error(`DocSet '${args.docSetId}' not found`);
-        }
-
-        const document = root.documents[args.documentId];
-
-        if (!document) {
-          throw new Error(`Document '${args.documentId}' not found`);
-        }
-
-        if (document.gcSequences()) {
-          docSet.rehash();
-          return true;
-        } else {
-          return false;
-        }
-      },
+      documentId: { type: GraphQLNonNull(GraphQLString) },
+      docSetId: { type: GraphQLNonNull(GraphQLString) },
     },
+    resolve: (root, args) => {
+      const docSet = root.docSets[args.docSetId];
 
+      if (!docSet) {
+        throw new Error(`DocSet '${args.docSetId}' not found`);
+      }
+
+      const document = root.documents[args.documentId];
+
+      if (!document) {
+        throw new Error(`Document '${args.documentId}' not found`);
+      }
+
+      if (document.gcSequences()) {
+        docSet.rehash();
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 
