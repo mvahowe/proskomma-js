@@ -10,7 +10,7 @@ const blockSetup = async t => {
     lang: 'eng',
     abbr: 'ust',
   }, {}, {}, [], [])[0];
-  let query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { text itemObjects { type subType payload } } } } } }';
+  let query = '{docSets { id documents { id nSequences mainSequence { id blocks(positions: [0]) { text itemObjects { type subType payload } } } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
   t.equal(result.data.docSets.length, 1);
@@ -255,6 +255,44 @@ test(
       block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
       t.equal(searchGrafts(block.itemObjects, 'footnote').length, 0);
       t.equal(searchGrafts(block.itemObjects, 'BANANA').length, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `gcSequences (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let [pk, docSet, document, sequence, block, itemObjects] = await blockSetup(t);
+      const nSequences = document.nSequences;
+      const newItemObjects = itemObjects.filter(i => i.type !== 'graft');
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` itemObjects: ${object2Query(newItemObjects)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { documents { nSequences } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].documents[0].nSequences, nSequences);
+      query = `mutation { gcSequences(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        `) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.gcSequences, true);
+      query = '{docSets { documents { nSequences } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].documents[0].nSequences, nSequences - 2);
     } catch (err) {
       console.log(err);
     }

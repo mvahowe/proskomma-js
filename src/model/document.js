@@ -266,7 +266,7 @@ class Document {
     const followGrafts = (document, sequence, used) => {
       used.add(sequence.id);
 
-      for (const block of sequence) {
+      for (const block of sequence.blocks) {
         for (const blockGraft of docSet.unsuccinctifyGrafts(block.bg)) {
           if (!used.has(blockGraft[2])) {
             followGrafts(document, document.sequences[blockGraft[2]], used);

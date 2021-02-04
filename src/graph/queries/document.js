@@ -4,6 +4,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLBoolean,
+  GraphQLInt,
 } = require('graphql');
 
 const sequenceType = require('./sequence');
@@ -32,15 +33,22 @@ const documentType = new GraphQLObjectType({
     },
     mainSequence: {
       type: GraphQLNonNull(sequenceType),
-      resolve: (root, args, context, info) => {
+      resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return root.sequences[root.mainId];
       },
 
     },
+    nSequences: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return Object.keys(root.sequences).length;
+      },
+    },
     sequences: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
-      resolve: (root, args, context, info) => {
+      resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return Object.values(root.sequences);
       },
