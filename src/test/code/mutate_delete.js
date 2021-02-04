@@ -50,7 +50,7 @@ test(
             lang: 'eng',
             abbr: 'ust',
           }],
-          ['../test_data/usx/web_rut.usx', {
+          ['../test_data/usx/web_psa150.usx', {
             lang: 'eng',
             abbr: 'ust',
           }],
@@ -76,6 +76,49 @@ test(
       query = '{ docSets { id documents { id } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      const pk = pkWithDocs(
+        [
+          ['../test_data/usx/web_rut.usx', {
+            lang: 'eng',
+            abbr: 'ust',
+          }],
+        ],
+      );
+      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { itemObjects { type subType payload } } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 1);
+      const docId = result.data.documents[0].id;
+      const itemObjects = result.data.documents[0].mainSequence.blocks[0].itemObjects;
+      const mainId = result.data.documents[0].mainSequence.id;
+      const graft = itemObjects.filter(i => i.type === 'graft')[0];
+      query = `mutation { deleteSequence(documentId: "foo" sequenceId: "${graft.payload}") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.startsWith('Document \'foo\' not found'));
+      query = `mutation { deleteSequence(documentId: "${docId}" sequenceId: "${mainId}") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.startsWith('Cannot delete main sequence'));
+      query = `mutation { deleteSequence(documentId: "${docId}" sequenceId: "baa") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.deleteSequence, false);
+      query = `mutation { deleteSequence(documentId: "${docId}" sequenceId: "${graft.payload}") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.deleteSequence, true);
     } catch (err) {
       console.log(err);
     }

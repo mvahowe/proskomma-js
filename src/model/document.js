@@ -25,6 +25,18 @@ class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
     this.docSetId = docSetId;
+    this.baseSequenceTypes = { // Copied from parser: revisit with generic parsing
+      main: '1',
+      introduction: '*',
+      introTitle: '?',
+      introEndTitle: '?',
+      title: '?',
+      endTitle: '?',
+      heading: '*',
+      header: '*',
+      remark: '*',
+      sidebar: '*',
+    };
 
     if (contentType) {
       this.id = generateId();
@@ -296,29 +308,40 @@ class Document {
 
   newSequence(seqType) {
     const seqId = generateId();
-    const baseSequenceTypes = { // Copied from parser: revisit with generic parsing
-      main: '1',
-      introduction: '*',
-      introTitle: '?',
-      introEndTitle: '?',
-      title: '?',
-      endTitle: '?',
-      heading: '*',
-      header: '*',
-      remark: '*',
-      sidebar: '*',
-    };
 
     this.sequences[seqId] = {
       id: seqId,
       type: seqType,
       tags: new Set(),
-      isBaseType: (seqType in baseSequenceTypes),
+      isBaseType: (seqType in this.baseSequenceTypes),
       blocks: [],
     };
 
     return seqId;
   }
+
+  deleteSequence(seqId) {
+    if (!(seqId in this.sequences)) {
+      return false;
+    }
+
+    if (this.sequences[seqId].type === 'main') {
+      throw new Error('Cannot delete main sequence');
+    }
+
+    if (this.sequences[seqId].type in this.baseSequenceTypes) {
+      this.gcBlockSequenceReferences(seqId);
+    } else {
+      this.gcInlineSequenceReferences(seqId);
+    }
+    //delete this.sequences[seqId];
+    this.gcSequences();
+    return true;
+  }
+
+  gcBlockSequenceReferences(seqId) {}
+
+  gcInlineSequenceReferences(seqId) {}
 }
 
 module.exports = { Document };
