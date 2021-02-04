@@ -25,6 +25,22 @@ const addMutations = {
       return !!root.importDocument(selectorsObject, args.contentType, args.content);
     },
   },
+  newSequence: {
+    type: GraphQLNonNull(GraphQLString),
+    args: {
+      documentId: { type: GraphQLNonNull(GraphQLString) },
+      type: { type: GraphQLNonNull(GraphQLString) },
+    },
+    resolve: (root, args) => {
+      const document = root.documents[args.documentId];
+
+      if (!document) {
+        throw new Error(`Document '${args.documentId}' not found`);
+      }
+
+      return document.newSequence(args.type);
+    },
+  },
 };
 
 module.exports = addMutations;

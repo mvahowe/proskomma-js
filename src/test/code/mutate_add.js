@@ -2,6 +2,7 @@ const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
 const { ProsKomma } = require('../../../src');
+const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Mutate Add Operations';
 
@@ -10,8 +11,13 @@ let content = fse.readFileSync(
   path.resolve(__dirname, '../test_data/usx/web_rut.usx'),
 ).toString();
 
+const pk2 = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 test(
-  `DocSet (${testGroup})`,
+  `Document (${testGroup})`,
   async function (t) {
     try {
       t.plan(7);
@@ -31,6 +37,35 @@ test(
       t.equal(result.data.docSets.length, 1);
       t.equal(result.data.docSets[0].documents.length, 1);
       t.ok(result.data.docSets[0].documents[0].mainSequence.nBlocks > 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      let query = '{ documents { id nSequences sequences { id type } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const nSequences = result.data.documents[0].nSequences;
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'banana').length, 0);
+      query = `mutation { newSequence(` +
+        ` documentId: "${docId}"` +
+        ` type: "banana") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newSequenceId = result.data.newSequence;
+      query = '{ documents { id nSequences sequences { id type } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].nSequences, nSequences + 1);
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'banana').length, 1);
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.id === newSequenceId).length, 1);
     } catch (err) {
       console.log(err);
     }

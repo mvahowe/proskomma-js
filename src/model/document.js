@@ -293,6 +293,32 @@ class Document {
 
     return changed;
   }
+
+  newSequence(seqType) {
+    const seqId = generateId();
+    const baseSequenceTypes = { // Copied from parser: revisit with generic parsing
+      main: '1',
+      introduction: '*',
+      introTitle: '?',
+      introEndTitle: '?',
+      title: '?',
+      endTitle: '?',
+      heading: '*',
+      header: '*',
+      remark: '*',
+      sidebar: '*',
+    };
+
+    this.sequences[seqId] = {
+      id: seqId,
+      type: seqType,
+      tags: new Set(),
+      isBaseType: (seqType in baseSequenceTypes),
+      blocks: [],
+    };
+
+    return seqId;
+  }
 }
 
 module.exports = { Document };
