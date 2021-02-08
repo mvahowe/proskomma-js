@@ -365,6 +365,20 @@ class Document {
       }
     }
   }
+
+  deleteBlock(seqId, blockN) {
+    if (!(seqId in this.sequences)) {
+      return false;
+    }
+
+    const sequence = this.sequences[seqId];
+
+    if (blockN < 0 || blockN >= sequence.blocks.length) {
+      return false;
+    }
+    sequence.blocks.splice(blockN, 1);
+    return true;
+  }
 }
 
 module.exports = { Document };

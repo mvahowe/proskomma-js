@@ -2,6 +2,7 @@ const {
   GraphQLString,
   GraphQLNonNull,
   GraphQLBoolean,
+  GraphQLInt,
 } = require('graphql');
 
 const deleteMutations = {
@@ -34,6 +35,23 @@ const deleteMutations = {
       }
 
       return document.deleteSequence(args.sequenceId);
+    },
+  },
+  deleteBlock: {
+    type: GraphQLNonNull(GraphQLBoolean),
+    args: {
+      documentId: { type: GraphQLNonNull(GraphQLString) },
+      sequenceId: { type: GraphQLNonNull(GraphQLString) },
+      blockN: { type: GraphQLNonNull(GraphQLInt) },
+    },
+    resolve: (root, args) => {
+      const document = root.documents[args.documentId];
+
+      if (!document) {
+        throw new Error(`Document '${args.documentId}' not found`);
+      }
+
+      return document.deleteBlock(args.sequenceId, args.blockN);
     },
   },
 };

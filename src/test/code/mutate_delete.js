@@ -131,7 +131,7 @@ test(
 );
 
 test(
-  `Block Sequence (${testGroup})`,
+  `Block-Grafted Sequence (${testGroup})`,
   async function (t) {
     try {
       t.plan(6);
@@ -157,7 +157,41 @@ test(
       query = '{ documents { id nSequences } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      t.equal(result.data.documents[0].nSequences, nSequences -1);
+      t.equal(result.data.documents[0].nSequences, nSequences - 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Block (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const pk = pkWithDocs(
+        [
+          ['../test_data/usfm/1pe_webbe.usfm', {
+            lang: 'eng',
+            abbr: 'web',
+          }],
+        ],
+      );
+      let query = '{ documents { id mainSequence { id nBlocks } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const seqId = result.data.documents[0].mainSequence.id;
+      const nBlocks = result.data.documents[0].mainSequence.nBlocks;
+      t.equal(nBlocks, 3);
+      query = `mutation { deleteBlock(documentId: "${docId}" sequenceId: "${seqId}" blockN: 1) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.deleteBlock, true);
+      query = '{ documents { id mainSequence { id nBlocks } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].mainSequence.nBlocks, nBlocks - 1);
     } catch (err) {
       console.log(err);
     }
