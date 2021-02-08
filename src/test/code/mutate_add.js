@@ -2,7 +2,7 @@ const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
 const { ProsKomma } = require('../../../src');
-const { pkWithDoc } = require('../lib/load');
+const { pkWithDoc, pkWithDocs } = require('../lib/load');
 
 const testGroup = 'Mutate Add Operations';
 
@@ -71,3 +71,39 @@ test(
     }
   },
 );
+
+test(
+  `Block (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      const pk = pkWithDocs(
+        [
+          ['../test_data/usfm/1pe_webbe.usfm', {
+            lang: 'eng',
+            abbr: 'web',
+          }],
+        ],
+      );
+      let query = '{ documents { id mainSequence { id nBlocks } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const seqId = result.data.documents[0].mainSequence.id;
+      const nBlocks = result.data.documents[0].mainSequence.nBlocks;
+      t.equal(nBlocks, 3);
+      query = `mutation { newBlock(documentId: "${docId}" sequenceId: "${seqId}" blockN: 1, blockScope: "blockTag/q4") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.newBlock, true);
+      query = '{ documents { id mainSequence { id nBlocks blocks(positions:[1]) { bs { label } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].mainSequence.nBlocks, nBlocks + 1);
+      t.equal(result.data.documents[0].mainSequence.blocks[0].bs.label, 'blockTag/q4');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+

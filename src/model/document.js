@@ -1,3 +1,5 @@
+import { scopeEnum } from 'proskomma-utils';
+
 const {
   addTag,
   ByteArray,
@@ -377,6 +379,41 @@ class Document {
       return false;
     }
     sequence.blocks.splice(blockN, 1);
+    return true;
+  }
+
+  newBlock(seqId, blockN, blockScope) {
+    if (!(seqId in this.sequences)) {
+      return false;
+    }
+
+    const sequence = this.sequences[seqId];
+
+    if (blockN < 0 || blockN > sequence.blocks.length) {
+      return false;
+    }
+
+    const docSet = this.processor.docSets[this.docSetId];
+    docSet.maybeBuildPreEnums();
+
+    const newBlock = {
+      bs: new ByteArray(0),
+      bg: new ByteArray(0),
+      c: new ByteArray(0),
+      os: new ByteArray(0),
+      is: new ByteArray(0),
+    };
+    const scopeBits = blockScope.split('/');
+    const scopeTypeByte = scopeEnum[scopeBits[0]];
+    const expectedNScopeBits = nComponentsForScope(scopeBits[0]);
+
+    if (scopeBits.length !== expectedNScopeBits) {
+      throw new Error(`Scope ${blockScope} has ${scopeBits.length} component(s) (expected ${expectedNScopeBits}`);
+    }
+
+    const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
+    pushSuccinctScopeBytes(newBlock.bs, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
+    sequence.blocks.splice(blockN, 0, newBlock);
     return true;
   }
 }

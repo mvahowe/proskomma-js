@@ -3,6 +3,7 @@ const {
   GraphQLNonNull,
   GraphQLBoolean,
   GraphQLList,
+  GraphQLInt
 } = require('graphql');
 const inputKeyValue = require('../queries/input_key_value');
 
@@ -39,6 +40,24 @@ const addMutations = {
       }
 
       return document.newSequence(args.type);
+    },
+  },
+  newBlock: {
+    type: GraphQLNonNull(GraphQLBoolean),
+    args: {
+      documentId: { type: GraphQLNonNull(GraphQLString) },
+      sequenceId: { type: GraphQLNonNull(GraphQLString) },
+      blockN: { type: GraphQLNonNull(GraphQLInt) },
+      blockScope: { type: GraphQLNonNull(GraphQLString) },
+    },
+    resolve: (root, args) => {
+      const document = root.documents[args.documentId];
+
+      if (!document) {
+        throw new Error(`Document '${args.documentId}' not found`);
+      }
+
+      return document.newBlock(args.sequenceId, args.blockN, args.blockScope);
     },
   },
 };
