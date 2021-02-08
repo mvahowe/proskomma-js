@@ -83,7 +83,7 @@ test(
 );
 
 test(
-  `Sequence (${testGroup})`,
+  `Inline Sequence (${testGroup})`,
   async function (t) {
     try {
       t.plan(12);
@@ -124,6 +124,40 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].nSequences, nSequences - 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Block Sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const pk = pkWithDocs(
+        [
+          ['../test_data/usx/not_nfc18_phm.usx', {
+            lang: 'fra',
+            abbr: 'nfc18',
+          }],
+        ],
+      );
+      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { bg { subType sequenceId } } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 1);
+      const docId = result.data.documents[0].id;
+      const nSequences = result.data.documents[0].nSequences;
+      const graftSeqId = result.data.documents[0].mainSequence.blocks[0].bg[0].sequenceId;
+      query = `mutation { deleteSequence(documentId: "${docId}" sequenceId: "${graftSeqId}") }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.deleteSequence, true);
+      query = '{ documents { id nSequences } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].nSequences, nSequences -1);
     } catch (err) {
       console.log(err);
     }
