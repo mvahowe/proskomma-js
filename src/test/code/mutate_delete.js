@@ -86,7 +86,7 @@ test(
   `Sequence (${testGroup})`,
   async function (t) {
     try {
-      t.plan(10);
+      t.plan(12);
       const pk = pkWithDocs(
         [
           ['../test_data/usx/web_rut.usx', {
@@ -100,6 +100,7 @@ test(
       t.equal(result.errors, undefined);
       t.equal(result.data.documents.length, 1);
       const docId = result.data.documents[0].id;
+      const nSequences = result.data.documents[0].nSequences;
       const itemObjects = result.data.documents[0].mainSequence.blocks[0].itemObjects;
       const mainId = result.data.documents[0].mainSequence.id;
       const graft = itemObjects.filter(i => i.type === 'graft')[0];
@@ -119,6 +120,10 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.deleteSequence, true);
+      query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { itemObjects { type subType payload } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].nSequences, nSequences - 2);
     } catch (err) {
       console.log(err);
     }

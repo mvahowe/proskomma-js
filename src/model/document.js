@@ -1,9 +1,8 @@
-import { headerBytes } from 'proskomma-utils';
-
 const {
   addTag,
   ByteArray,
   generateId,
+  headerBytes,
   itemEnum,
   nComponentsForScope,
   pushSuccinctGraftBytes,
@@ -11,6 +10,7 @@ const {
   pushSuccinctTokenBytes,
   removeTag,
   scopeEnumLabels,
+  succinctGraftSeqId,
   tokenEnum,
   validateTags,
 } = require('proskomma-utils');
@@ -330,18 +330,41 @@ class Document {
     }
 
     if (this.sequences[seqId].type in this.baseSequenceTypes) {
-      this.gcBlockSequenceReferences(seqId);
+      this.gcSequenceReferences('block', seqId);
     } else {
-      this.gcInlineSequenceReferences(seqId);
+      this.gcSequenceReferences('inline', seqId);
     }
-    //delete this.sequences[seqId];
+    delete this.sequences[seqId];
     this.gcSequences();
     return true;
   }
 
-  gcBlockSequenceReferences(seqId) {}
+  gcSequenceReferences(seqContext, seqId) {
+    const docSet = this.processor.docSets[this.docSetId];
 
-  gcInlineSequenceReferences(seqId) {}
+    for (const sequence of Object.values(this.sequences)) {
+      for (const block of sequence.blocks) {
+        const succinct = seqContext === 'block' ? block.bg : block.c;
+        let pos = 0;
+
+        while (pos < succinct.length) {
+          const [itemLength, itemType] = headerBytes(succinct, pos);
+
+          if (itemType !== itemEnum.graft) {
+            pos += itemLength;
+          } else {
+            const graftSeqId = succinctGraftSeqId(docSet.enums, docSet.enumIndexes, succinct, pos);
+
+            if (graftSeqId === seqId) {
+              succinct.deleteItem(pos);
+            } else {
+              pos += itemLength;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 module.exports = { Document };
