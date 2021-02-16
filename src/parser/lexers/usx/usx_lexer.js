@@ -124,7 +124,7 @@ class UsxLexer {
     handleCharOpen(lexer, oOrC, name, atts) {
         const [tagName, tagNo] = lexer.splitTagNumber(atts.style);
         lexer.parser.parseItem(new ptClasses.TagPT("startTag", [null, null, `+${tagName}`, tagNo]));
-        const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id"];
+        const ignoredAtts = ["sid", "eid", "style", "srcloc", "link-href", "link-title", "link-id", "closed"];
         for (const [attName, attValue] of Object.entries(atts)) {
             if (!ignoredAtts.includes(attName)) {
                 lexer.parser.parseItem(new ptClasses.AttributePT("attribute", [null, null, attName, attValue]));

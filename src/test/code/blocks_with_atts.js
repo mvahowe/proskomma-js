@@ -8,10 +8,6 @@ const pk = pkWithDoc('../test_data/usfm/1pe_webbe.usfm', {
   lang: 'eng',
   abbr: 'hello',
 })[0];
-const pk2 = pkWithDoc('../test_data/usfm/en_ust_oba.usfm', {
-  lang: 'eng',
-  abbr: 'hello',
-})[0];
 
 test(
   `attSpecs +  !attValues (${testGroup})`,

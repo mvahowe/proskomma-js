@@ -11,11 +11,6 @@ let content = fse.readFileSync(
   path.resolve(__dirname, '../test_data/usx/web_rut.usx'),
 ).toString();
 
-const pk2 = pkWithDoc('../test_data/usx/web_rut.usx', {
-  lang: 'eng',
-  abbr: 'ust',
-}, {}, {}, [], [])[0];
-
 test(
   `Document (${testGroup})`,
   async function (t) {
