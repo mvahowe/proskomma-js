@@ -25,12 +25,15 @@ try {
 }
 const pk = new ProsKomma();
 //try {
+    let selectors = {
+        lang: {name: 'eng'}, 
+        abbr: {name: 'eng'}
+    };
+
     pk.importDocument(
-        "eng",
-        "ust",
+        selectors,
         contentType,
-        content,
-        {}
+        content
     );
     /*
 } catch (err) {
