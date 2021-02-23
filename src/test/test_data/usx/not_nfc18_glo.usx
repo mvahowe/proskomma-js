@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+  <book code="GLO" style="id" />
+  <para style="mt1">Vocabulaire</para>
+  <para style="ip">
+    <char style="k">Aaron</char> The older brother of Moses (<char style="xt"><ref loc="EXO 6:20">Ex 6.20</ref></char>). 1st priest and ancestor of the priest of Israel (<char style="xt"><ref loc="LEV 8:1-9:24">Lév 8.1–9.24</ref></char>). He is named 5 times in the NT (<char style="xt"><ref loc="LUK 1:5">Luc 1.5</ref>; <ref loc="ACT 7:40">Act 7.40</ref>; <ref loc="HEB 5:4">Hébr 5.4</ref>; <ref loc="HEB 7:11">7.11</ref>; <ref loc="HEB 9:4">9.4</ref></char>).</para>
+  <para style="ip">
+    <char style="k">Abyss</char> The Hebrew term often describes the mysterious world of the unformed ocean (<char style="xt"><ref loc="GEN 1:2">Gen 1.2</ref>; <ref loc="ISA 51:10">És 51.10</ref></char>), the sea, the flood and water sources. The term is sometimes positive, but often appears as a threat (see the flood, <char style="xt"><ref loc="GEN 7:11">Gen 7.11</ref>; <ref loc="GEN 8:2">8.2</ref></char>). In the NT, it refers to the place where the forces of evil are provisionally held captive (<char style="xt"><ref loc="REV 20:3">Apoc 20.3</ref></char>).</para>
+</usx>
