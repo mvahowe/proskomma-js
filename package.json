@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A Model for Complex Text Documents such as Bibles",
   "main": "dist/index.js",
   "files": [
