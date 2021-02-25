@@ -23,6 +23,7 @@ test(
       t.equal(result.errors, undefined);
       const queryHeaders = result.data.documents[0].headers;
       t.equal(queryHeaders.length, expectedHeaders.length);
+
       for (const [expectedKey, expectedValue] of expectedHeaders) {
         const queryTuple = queryHeaders.filter(kv => kv.key === expectedKey);
         t.ok(queryTuple.length === 1);

@@ -426,14 +426,14 @@ const specs = (pt) => [
       newScopes: [
         {
           label: pt => labelForScope('verses', [pt.numberString]),
-          endedBy: ['verses', 'chapter'],
+          endedBy: ['verses', 'chapter', 'pubchapter'],
         },
       ],
       during: (parser, pt) => {
         pt.numbers.map(n => {
             const verseScope = {
               label: () => labelForScope('verse', [n]),
-              endedBy: ['verses', 'chapter'],
+              endedBy: ['verses', 'chapter', 'pubchapter'],
             };
             parser.openNewScope(pt, verseScope, true, parser.sequences.main);
           },
@@ -464,7 +464,7 @@ const specs = (pt) => [
         const scopeId = generateId();
         const vpScope = {
           label: () => labelForScope('pubVerse', [scopeId]),
-          endedBy: ['startTag/vp', 'verses', 'chapter'],
+          endedBy: ['startTag/vp', 'verses', 'chapter', 'pubchapter'],
         };
         parser.openNewScope(pt, vpScope, true, parser.sequences.main);
       },
@@ -493,7 +493,7 @@ const specs = (pt) => [
         const scopeId = generateId();
         const vpScope = {
           label: () => labelForScope('altVerse', [scopeId]),
-          endedBy: ['startTag/va', 'verses', 'chapter'],
+          endedBy: ['startTag/va', 'verses', 'chapter', 'pubchapter'],
         };
         parser.openNewScope(pt, vpScope, true, parser.sequences.main);
       },

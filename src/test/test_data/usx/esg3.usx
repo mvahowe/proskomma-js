@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<usx version="3.0">
+    <book code="ESG" style="id">French : La Nouvelle Français courant 2018</book>
+    <para style="h">ESTHER GREC</para>
+    <para style="toc1">Forme grecque du livre de Esther</para>
+    <para style="mt1">Forme grecque du livre de Esther</para>
+    <chapter number="3" style="c" sid="ESG 3"/>
+    <para style="p">
+        <verse number="1" style="v" pubnumber="1" sid="ESG 3:1"/>
+        Après cela, le roi Artaxerxès honora Haman, l'orgueilleux, fils d'Amadatos. Il lui confia un poste supérieur à
+        ceux de tous ses amis
+        <note caller="+" style="f">
+            <char style="fr" closed="false">3.1</char>
+            <char style="fq" closed="false">l'orgueilleux</char>
+            <char style="ft" closed="false">: voir la note sur A.17. –</char>
+            <char style="fq" closed="false">amis</char>
+            <char style="ft" closed="false">: voir la note sur
+                <char style="xt">
+                    <ref loc="ESG 1:2-3">1.2-3</ref>
+                </char>
+                .
+            </char>
+        </note>
+        .
+        <verse eid="ESG 3:1"/>
+        <verse number="2" style="v" pubnumber="2" sid="ESG 3:2"/>
+        Tous ceux qui étaient à la cour se prosternaient devant Haman, car le roi en avait donné l'ordre. Seul Mardochée
+        refusait de le faire.
+        <verse eid="ESG 3:2"/>
+    </para>
+    <para style="cp">B</para>
+    <para style="p">
+        <verse number="14" style="v" pubnumber="1" sid="ESG 3:14"/>
+        Voici le texte de la lettre royale :
+    </para>
+    <para style="p" vid="ESG 3:14">« Artaxerxès, le grand roi, écrit ce qui suit aux gouverneurs des 127 provinces du
+        royaume, de l'Inde jusqu'à l'Éthiopie, ainsi qu'aux fonctionnaires à leur service.
+        <verse eid="ESG 3:14"/>
+    </para>
+    <chapter eid="ESG 3"/>
+</usx>
