@@ -154,6 +154,10 @@ class UsxLexer {
     const sAtts = lexer.stackPop()[1];
     const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
     lexer.parser.parseItem(new ptClasses.TagPT('endTag', [null, null, `+${tagName}`, tagNo]));
+
+    if ('closed' in sAtts && sAtts.closed === 'false') {
+      lexer.parser.parseItem(new ptClasses.PrintablePT('lineSpace', [' ']));
+    }
   }
 
   handleRowOpen(lexer, oOrC, name, atts) {
