@@ -101,6 +101,7 @@ class Document {
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);
+    this.buildChapterVerseIndex(this.sequences[this.mainId]);
   }
 
   processLexicon(lexiconString) {
@@ -196,6 +197,39 @@ class Document {
         blocks: seq.succinctifyBlocks(docSet),
       };
     }
+  }
+
+  buildChapterVerseIndex(mainSequence) {
+    const docSet = this.processor.docSets[this.docSetId];
+    docSet.buildEnumIndexes();
+    const chapterIndexes = {};
+    let chapterN = '0';
+    let verseN = '0';
+
+    for (const [blockN, block] of mainSequence.blocks.entries()) {
+      for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, false).entries()) {
+        if (item[0] === 'startScope' && item[1].startsWith('chapter/')) {
+          chapterN = item[1].split('/')[1];
+          chapterIndexes[chapterN] = {};
+        } else if (item[0] === 'startScope' && item[1].startsWith('verse/')) {
+          verseN = item[1].split('/')[1];
+
+          if (!(verseN in chapterIndexes[chapterN])) {
+            chapterIndexes[chapterN][verseN] = [];
+          }
+          chapterIndexes[chapterN][verseN].push({
+            startBlock: blockN,
+            startItem: itemN,
+          });
+        } else if (item[0] === 'endScope' && item[1].startsWith('verse/')) {
+          verseN = item[1].split('/')[1];
+          const verseRecord = chapterIndexes[chapterN][verseN][chapterIndexes[chapterN][verseN].length - 1];
+          verseRecord.endBlock = blockN;
+          verseRecord.endItem = itemN;
+        }
+      }
+    }
+    // console.log(JSON.stringify(chapterIndexes, null, 2));
   }
 
   rewriteSequenceBlocks(sequenceId, oldToNew) {
