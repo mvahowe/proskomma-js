@@ -229,7 +229,32 @@ class Document {
         }
       }
     }
-    // console.log(JSON.stringify(chapterIndexes, null, 2));
+    mainSequence.chapters = {};
+    for (const [chapterN, chapterVerses] of Object.entries(chapterIndexes)) {
+      const sortedVerses = Object.keys(chapterVerses)
+        .map(n => parseInt(n))
+        .sort((a, b) => a - b);
+      const maxVerse = sortedVerses[sortedVerses.length - 1];
+      const verseSlots = Array.from(Array(maxVerse + 1).keys());
+      for (const verseSlot of verseSlots) {
+        const verseKey = `${verseSlot}`;
+        if (verseKey in chapterVerses) {
+          console.log(
+            verseKey,
+            chapterVerses[verseKey]
+              .map(
+                vb =>
+                  vb.startBlock === vb.endBlock ?
+                    `${vb.startBlock}:${vb.startItem}-${vb.endItem}` :
+                    `${vb.startBlock}:${vb.startItem}-${vb.endBlock}:${vb.endItem}`
+              )
+          );
+        } else {
+          console.log(verseKey, "empty");
+        }
+      }
+      console.log();
+    }
   }
 
   rewriteSequenceBlocks(sequenceId, oldToNew) {
