@@ -230,31 +230,55 @@ class Document {
       }
     }
     mainSequence.chapters = {};
+
     for (const [chapterN, chapterVerses] of Object.entries(chapterIndexes)) {
+      const ba = new ByteArray();
+      mainSequence.chapters[chapterN] = ba;
       const sortedVerses = Object.keys(chapterVerses)
         .map(n => parseInt(n))
         .sort((a, b) => a - b);
+
+      if (sortedVerses.length === 0) {
+        continue;
+      }
+
       const maxVerse = sortedVerses[sortedVerses.length - 1];
       const verseSlots = Array.from(Array(maxVerse + 1).keys());
+      const emptyType = 0;
+      const shortType = 2;
+      const longType = 3;
+      let pos = 0;
+
       for (const verseSlot of verseSlots) {
         const verseKey = `${verseSlot}`;
+
         if (verseKey in chapterVerses) {
-          console.log(
-            verseKey,
-            chapterVerses[verseKey]
-              .map(
-                vb =>
-                  vb.startBlock === vb.endBlock ?
-                    `${vb.startBlock}:${vb.startItem}-${vb.endItem}` :
-                    `${vb.startBlock}:${vb.startItem}-${vb.endBlock}:${vb.endItem}`
-              )
-          );
+          const verseElements = chapterVerses[verseKey];
+          const nVerseElements = verseElements.length;
+
+          for (const [verseElementN, verseElement] of verseElements.entries()) {
+            const recordType = verseElement.startBlock === verseElement.endBlock ? shortType : longType;
+            ba.pushByte(0);
+            ba.pushNByte(verseElement.startBlock);
+
+            if (recordType === longType) {
+              ba.pushNByte(verseElement.endBlock);
+            }
+            ba.pushNByte(verseElement.startItem);
+            ba.pushNByte(verseElement.endItem);
+            ba.setByte(pos, this.verseLengthByte(recordType, verseElementN === (nVerseElements - 1), ba.length - pos));
+            pos = ba.length;
+          }
         } else {
-          console.log(verseKey, "empty");
+          ba.pushByte(this.verseLengthByte(emptyType, true, 1));
+          pos++;
         }
       }
-      console.log();
     }
+  }
+
+  verseLengthByte(recordType, isLast, length) {
+    return length + (isLast ? 32 : 0) + (recordType * 64);
   }
 
   rewriteSequenceBlocks(sequenceId, oldToNew) {
