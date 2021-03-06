@@ -23,6 +23,10 @@ const {
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 
+const emptyCVIndexType = 0;
+const shortCVIndexType = 2;
+const longCVIndexType = 3;
+
 class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
@@ -244,9 +248,6 @@ class Document {
 
       const maxVerse = sortedVerses[sortedVerses.length - 1];
       const verseSlots = Array.from(Array(maxVerse + 1).keys());
-      const emptyType = 0;
-      const shortType = 2;
-      const longType = 3;
       let pos = 0;
 
       for (const verseSlot of verseSlots) {
@@ -257,28 +258,87 @@ class Document {
           const nVerseElements = verseElements.length;
 
           for (const [verseElementN, verseElement] of verseElements.entries()) {
-            const recordType = verseElement.startBlock === verseElement.endBlock ? shortType : longType;
+            const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
             ba.pushByte(0);
-            ba.pushNByte(verseElement.startBlock);
 
-            if (recordType === longType) {
-              ba.pushNByte(verseElement.endBlock);
+            if (recordType === shortCVIndexType) {
+              ba.pushNBytes([verseElement.startBlock, verseElement.startItem, verseElement.endItem]);
+            } else {
+              ba.pushNBytes([verseElement.startBlock, verseElement.endBlock, verseElement.startItem, verseElement.endItem]);
             }
-            ba.pushNByte(verseElement.startItem);
-            ba.pushNByte(verseElement.endItem);
-            ba.setByte(pos, this.verseLengthByte(recordType, verseElementN === (nVerseElements - 1), ba.length - pos));
+            ba.setByte(pos, this.makeVerseLengthByte(recordType, verseElementN === (nVerseElements - 1), ba.length - pos));
             pos = ba.length;
           }
         } else {
-          ba.pushByte(this.verseLengthByte(emptyType, true, 1));
+          ba.pushByte(this.makeVerseLengthByte(emptyCVIndexType, true, 1));
           pos++;
         }
       }
     }
   }
 
-  verseLengthByte(recordType, isLast, length) {
+  chapterVerseIndexes() {
+    const ret = {};
+
+    for (const chapN of Object.keys(this.sequences[this.mainId].chapters)) {
+      ret[chapN] = this.chapterVerseIndex(chapN);
+    }
+    return ret;
+  }
+
+
+  chapterVerseIndex(chapN) {
+    const ret = [];
+    const succinct = this.sequences[this.mainId].chapters[chapN];
+
+    if (succinct) {
+      let pos = 0;
+      let currentVerseRecord = [];
+
+      while (pos < succinct.length) {
+        const [recordType, isLast, recordLength] = this.verseLengthByte(succinct, pos);
+
+        if (recordType === shortCVIndexType) {
+          const nBytes = succinct.nBytes(pos + 1, 3);
+
+          currentVerseRecord.push({
+            startBlock: nBytes[0],
+            endBlock: nBytes[0],
+            startItem: nBytes[1],
+            endItem: nBytes[2],
+          });
+        } else if (recordType === longCVIndexType) {
+          const nBytes = succinct.nBytes(pos + 1, 4);
+
+          currentVerseRecord.push({
+            startBlock: nBytes[0],
+            endBlock: nBytes[1],
+            startItem: nBytes[2],
+            endItem: nBytes[3],
+          });
+        }
+
+        if (isLast) {
+          ret.push(currentVerseRecord);
+          currentVerseRecord = [];
+        }
+        pos += recordLength;
+      }
+    }
+    return ret;
+  }
+
+  makeVerseLengthByte(recordType, isLast, length) {
     return length + (isLast ? 32 : 0) + (recordType * 64);
+  }
+
+  verseLengthByte(succinct, pos) {
+    const sByte = succinct.byte(pos);
+    return [
+      sByte >> 6,
+      (sByte >> 5) % 2 === 1,
+      sByte % 32,
+    ];
   }
 
   rewriteSequenceBlocks(sequenceId, oldToNew) {

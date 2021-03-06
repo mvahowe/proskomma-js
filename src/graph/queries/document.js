@@ -9,6 +9,7 @@ const {
 
 const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
+const cvIndexType = require('./cvIndex');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -24,11 +25,7 @@ const documentType = new GraphQLObjectType({
     },
     header: {
       type: GraphQLString,
-      args: {
-        id: {
-          type: GraphQLNonNull(GraphQLString),
-        },
-      },
+      args: { id: { type: GraphQLNonNull(GraphQLString) } },
       resolve: (root, args) => headerById(root, args.id),
     },
     mainSequence: {
@@ -59,12 +56,12 @@ const documentType = new GraphQLObjectType({
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),
-      args: {
-        tagName: {
-          type: GraphQLNonNull(GraphQLString),
-        },
-      },
+      args: { tagName: { type: GraphQLNonNull(GraphQLString) } },
       resolve: (root, args) => root.tags.has(args.tagName),
+    },
+    cvIndexes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cvIndexType))),
+      resolve: root => Object.entries(root.chapterVerseIndexes()),
     },
   }),
 });
