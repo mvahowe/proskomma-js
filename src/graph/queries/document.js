@@ -10,6 +10,7 @@ const {
 const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
+const cIndexType = require('./cIndex');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -73,7 +74,25 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         context.doc = root;
-        return [args.chapter, root.chapterVerseIndex(args.chapter)];
+        return [args.chapter, root.chapterVerseIndex(args.chapter) || []];
+      },
+    },
+    cIndexes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cIndexType))),
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        context.doc = root;
+        return Object.entries(root.chapterIndexes());
+      },
+    },
+    cIndex: {
+      type: GraphQLNonNull(cIndexType),
+      args: { chapter: { type: GraphQLNonNull(GraphQLInt) } },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        context.doc = root;
+        const ci = root.chapterIndex(args.chapter);
+        return [args.chapter, ci || {}];
       },
     },
   }),

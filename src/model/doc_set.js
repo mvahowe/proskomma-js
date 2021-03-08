@@ -383,7 +383,8 @@ class DocSet {
 
     while (currentBlock <= index.endBlock) {
       let blockItems = this.unsuccinctifyItemObjects(mainSequence.blocks[currentBlock].c, {});
-
+      const blockScope = this.unsuccinctifyScopes(mainSequence.blocks[currentBlock].bs)[0];
+      const blockGrafts = this.unsuccinctifyGrafts(mainSequence.blocks[currentBlock].bg);
       if (currentBlock === index.startBlock && currentBlock === index.endBlock) {
         blockItems = blockItems.slice(index.startItem, index.endItem);
       } else if (currentBlock === index.startBlock) {
@@ -391,7 +392,7 @@ class DocSet {
       } else if (currentBlock === index.endBlock) {
         blockItems = blockItems.slice(0, index.endItem);
       }
-      ret.push(blockItems);
+      ret.push([...blockGrafts, ['scope', 'start', blockScope[1]], ...blockItems, ['scope', 'end', blockScope[1]]]);
       currentBlock++;
     }
     return ret;

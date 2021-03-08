@@ -233,11 +233,12 @@ class Document {
         }
       }
     }
+    mainSequence.chapterVerses = {};
     mainSequence.chapters = {};
 
     for (const [chapterN, chapterVerses] of Object.entries(chapterIndexes)) {
       const ba = new ByteArray();
-      mainSequence.chapters[chapterN] = ba;
+      mainSequence.chapterVerses[chapterN] = ba;
       const sortedVerses = Object.keys(chapterVerses)
         .map(n => parseInt(n))
         .sort((a, b) => a - b);
@@ -249,6 +250,8 @@ class Document {
       const maxVerse = sortedVerses[sortedVerses.length - 1];
       const verseSlots = Array.from(Array(maxVerse + 1).keys());
       let pos = 0;
+      let chapterStart = [];
+      let chapterEnd = [];
 
       for (const verseSlot of verseSlots) {
         const verseKey = `${verseSlot}`;
@@ -258,6 +261,22 @@ class Document {
           const nVerseElements = verseElements.length;
 
           for (const [verseElementN, verseElement] of verseElements.entries()) {
+            if (
+              chapterStart.length === 0 ||
+              verseElement.startBlock < chapterStart[0] ||
+              (verseElement.startBlock === chapterStart[0] && verseElement.startItem < chapterStart[1])
+            ) {
+              chapterStart = [verseElement.startBlock, verseElement.startItem];
+            }
+
+            if (
+              chapterEnd.length === 0 ||
+              verseElement.endBlock > chapterEnd[0] ||
+              (verseElement.endBlock === chapterEnd[0] && verseElement.endItem > chapterEnd[1])
+            ) {
+              chapterEnd = [verseElement.endBlock, verseElement.endItem];
+            }
+
             const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
             ba.pushByte(0);
 
@@ -274,22 +293,46 @@ class Document {
           pos++;
         }
       }
+      ba.trim();
+
+      if (chapterStart.length > 0) {
+        const cba = new ByteArray();
+        mainSequence.chapters[chapterN] = cba;
+        const chapterRecordType = chapterStart[0] === chapterEnd[0] ? shortCVIndexType : longCVIndexType;
+        cba.pushByte(0);
+
+        if (chapterRecordType === shortCVIndexType) {
+          cba.pushNBytes([chapterStart[0], chapterStart[1], chapterEnd[1]]);
+        } else {
+          cba.pushNBytes([chapterStart[0], chapterEnd[0], chapterStart[1], chapterEnd[1]]);
+        }
+        cba.setByte(0, this.makeVerseLengthByte(chapterRecordType, true, cba.length));
+        cba.trim();
+      }
     }
   }
 
   chapterVerseIndexes() {
     const ret = {};
 
-    for (const chapN of Object.keys(this.sequences[this.mainId].chapters)) {
+    for (const chapN of Object.keys(this.sequences[this.mainId].chapterVerses)) {
       ret[chapN] = this.chapterVerseIndex(chapN);
     }
     return ret;
   }
 
+  chapterIndexes() {
+    const ret = {};
+
+    for (const chapN of Object.keys(this.sequences[this.mainId].chapters)) {
+      ret[chapN] = this.chapterIndex(chapN);
+    }
+    return ret;
+  }
 
   chapterVerseIndex(chapN) {
     const ret = [];
-    const succinct = this.sequences[this.mainId].chapters[chapN];
+    const succinct = this.sequences[this.mainId].chapterVerses[chapN];
 
     if (succinct) {
       let pos = 0;
@@ -326,6 +369,34 @@ class Document {
       }
     }
     return ret;
+  }
+
+  chapterIndex(chapN) {
+    const succinct = this.sequences[this.mainId].chapters[chapN];
+
+    if (succinct) {
+      const recordType = this.verseLengthByte(succinct, 0)[0];
+
+      if (recordType === shortCVIndexType) {
+        const nBytes = succinct.nBytes(1, 3);
+
+        return {
+          startBlock: nBytes[0],
+          endBlock: nBytes[0],
+          startItem: nBytes[1],
+          endItem: nBytes[2],
+        };
+      } else if (recordType === longCVIndexType) {
+        const nBytes = succinct.nBytes(1, 4);
+
+        return {
+          startBlock: nBytes[0],
+          endBlock: nBytes[1],
+          startItem: nBytes[2],
+          endItem: nBytes[3],
+        };
+      }
+    }
   }
 
   makeVerseLengthByte(recordType, isLast, length) {
