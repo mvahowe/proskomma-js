@@ -16,12 +16,12 @@ test(
       const bsScopes = ['q', 'q', 'q2', 'q', 'q2', 'q', 'q2', 'q', 'q2', 'q', 'q2', 'q', 'q'];
       t.plan(1 + bsScopes.length);
       const query =
-        '{ documents { mainSequence { blocks { bs { label } } } } }';
+        '{ documents { mainSequence { blocks { bs { payload } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const blocks = result.data.documents[0].mainSequence.blocks;
       for (const [n, block] of blocks.entries()) {
-        t.equal(block.bs.label, `blockTag/${bsScopes[n]}`);
+        t.equal(block.bs.payload, `blockTag/${bsScopes[n]}`);
       }
     } catch (err) {
       console.log(err);

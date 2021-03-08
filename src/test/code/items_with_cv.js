@@ -8,7 +8,6 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'fra',
   abbr: 'hello',
 })[0];
-const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
 
 test(
   `Bad cv (${testGroup})`,
@@ -17,7 +16,7 @@ test(
       t.plan(2);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"x=y") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"x=y") {type subType payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
@@ -35,7 +34,7 @@ test(
       t.plan(2);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2" withScopes:[]) ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2" withScopes:[]) {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
@@ -53,7 +52,7 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"2") { items(withScriptureCV:"2") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -75,7 +74,7 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"1-3") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"1-3") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -97,7 +96,7 @@ test(
       t.plan(2);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"3-1") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"1-3") { items(withScriptureCV:"3-1") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
@@ -115,7 +114,7 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1:15") { items(withScriptureCV:"1:15") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"1:15") { items(withScriptureCV:"1:15") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -137,7 +136,7 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1:10-13") { items(withScriptureCV:"1:10-13") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"1:10-13") { items(withScriptureCV:"1:10-13") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -159,7 +158,7 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { items(withScriptureCV:"1:22-3:3") ${itemFragment} } } } }
+                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { items(withScriptureCV:"1:22-3:3") {type, subType, payload} } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);

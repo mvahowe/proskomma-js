@@ -36,7 +36,7 @@ const customPk = customPkWithDoc(customProsKomma, '../test_data/usfm/en_ust_psa_
   abbr: 'hello',
 }, {})[0];
 
-const query = `{ documents { sequences { type blocks { bg { subType sequenceId } bs { label } text } } } }`;
+const query = `{ documents { sequences { type blocks { bg { subType payload } bs { payload } text } } } }`;
 
 test(
   `Without Custom (${testGroup})`,
@@ -47,7 +47,7 @@ test(
       t.equal(result.errors, undefined);
       const sequences = result.data.documents[0].sequences;
       t.equal(sequences.filter(s => s.type === 'heading').length, 0);
-      t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.label, 'blockTag/q');
+      t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.payload, 'blockTag/q');
     } catch (err) {
       console.log(err);
     }
@@ -63,8 +63,8 @@ test(
       t.equal(result.errors, undefined);
       const sequences = result.data.documents[0].sequences;
       t.equal(sequences.filter(s => s.type === 'heading').length, 3);
-      t.equal(sequences.filter(s => s.type === 'heading' && s.blocks[0].bs.label === 'blockTag/s5').length, 3);
-      t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.label, 'blockTag/m');
+      t.equal(sequences.filter(s => s.type === 'heading' && s.blocks[0].bs.payload === 'blockTag/s5').length, 3);
+      t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.payload, 'blockTag/m');
     } catch (err) {
       console.log(err);
     }

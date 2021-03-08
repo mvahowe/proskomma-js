@@ -14,11 +14,11 @@ const pk2 = pkWithDoc('../test_data/usfm/section_intros.usfm', {
 })[0];
 
 test(
-  `One Introduction (${testGroup})`,
+  `Main Intro (${testGroup})`,
   async function (t) {
     try {
       t.plan(23);
-      const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } bs { label } text } } mainSequence { id } } }';
+      const query = '{ documents { sequences { id type blocks { bg { subType, payload } bs { payload } text } } mainSequence { id } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
@@ -31,30 +31,30 @@ test(
       t.equal(mainSequence.blocks[0].bg[0].subType, 'title');
       t.equal(mainSequence.blocks[0].bg[1].subType, 'introduction');
       t.equal(mainSequence.blocks[0].bg[2].subType, 'heading');
-      const introSequence = sequences[mainSequence.blocks[0].bg[1].sequenceId];
+      const introSequence = sequences[mainSequence.blocks[0].bg[1].payload];
       t.equal(introSequence.blocks.length, 3);
-      t.equal(introSequence.blocks[0].bs.label.split('/')[1], 'ip');
+      t.equal(introSequence.blocks[0].bs.payload.split('/')[1], 'ip');
       const titleGraft = introSequence.blocks[0].bg[0];
       t.equal(titleGraft.subType, 'title');
-      const titleSequence = sequences[titleGraft.sequenceId];
+      const titleSequence = sequences[titleGraft.payload];
       t.equal(titleSequence.blocks.length, 3);
-      t.equal(titleSequence.blocks[0].bs.label, 'blockTag/imt2');
-      t.equal(titleSequence.blocks[1].bs.label, 'blockTag/imt3');
-      t.equal(titleSequence.blocks[2].bs.label, 'blockTag/imt');
-      t.equal(introSequence.blocks[1].bs.label.split('/')[1], 'ip');
+      t.equal(titleSequence.blocks[0].bs.payload, 'blockTag/imt2');
+      t.equal(titleSequence.blocks[1].bs.payload, 'blockTag/imt3');
+      t.equal(titleSequence.blocks[2].bs.payload, 'blockTag/imt');
+      t.equal(introSequence.blocks[1].bs.payload.split('/')[1], 'ip');
       const headingGraft = introSequence.blocks[1].bg[0];
       t.equal(headingGraft.subType, 'heading');
-      const headingSequence = sequences[headingGraft.sequenceId];
+      const headingSequence = sequences[headingGraft.payload];
       t.equal(headingSequence.blocks.length, 1);
-      t.equal(headingSequence.blocks[0].bs.label, 'blockTag/is');
-      t.equal(introSequence.blocks[2].bs.label.split('/')[1], 'hangingGraft');
+      t.equal(headingSequence.blocks[0].bs.payload, 'blockTag/is');
+      t.equal(introSequence.blocks[2].bs.payload.split('/')[1], 'hangingGraft');
       const endTitleGraft = introSequence.blocks[2].bg[0];
       t.equal(endTitleGraft.subType, 'endTitle');
-      const endTitleSequence = sequences[endTitleGraft.sequenceId];
+      const endTitleSequence = sequences[endTitleGraft.payload];
       t.equal(endTitleSequence.blocks.length, 3);
-      t.equal(endTitleSequence.blocks[0].bs.label, 'blockTag/imte2');
-      t.equal(endTitleSequence.blocks[1].bs.label, 'blockTag/imte3');
-      t.equal(endTitleSequence.blocks[2].bs.label, 'blockTag/imte');
+      t.equal(endTitleSequence.blocks[0].bs.payload, 'blockTag/imte2');
+      t.equal(endTitleSequence.blocks[1].bs.payload, 'blockTag/imte3');
+      t.equal(endTitleSequence.blocks[2].bs.payload, 'blockTag/imte');
     } catch (err) {
       console.log(err);
     }
@@ -62,11 +62,11 @@ test(
 );
 
 test(
-  `One Introduction (${testGroup})`,
+  `Section Intro (${testGroup})`,
   async function (t) {
     try {
       t.plan(12);
-      const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } bs { label } text } } mainSequence { id } } }';
+      const query = '{ documents { sequences { id type blocks { bg { subType, payload } bs { payload } text } } mainSequence { id } } }';
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
@@ -80,11 +80,11 @@ test(
       t.equal(mainSequence.blocks[0].bg[0].subType, 'title');
       t.equal(mainSequence.blocks[1].bg.length, 6);
       t.equal(mainSequence.blocks[1].bg[2].subType, 'introduction');
-      t.equal(sequences[mainSequence.blocks[1].bg[2].sequenceId].blocks.length, 2);
-      t.equal(sequences[mainSequence.blocks[1].bg[2].sequenceId].blocks[0].bs.label, 'blockTag/ip');
+      t.equal(sequences[mainSequence.blocks[1].bg[2].payload].blocks.length, 2);
+      t.equal(sequences[mainSequence.blocks[1].bg[2].payload].blocks[0].bs.payload, 'blockTag/ip');
       t.equal(mainSequence.blocks[1].bg[5].subType, 'introduction');
-      t.equal(sequences[mainSequence.blocks[1].bg[5].sequenceId].blocks.length, 1);
-      t.equal(sequences[mainSequence.blocks[1].bg[5].sequenceId].blocks[0].bs.label, 'blockTag/ip');
+      t.equal(sequences[mainSequence.blocks[1].bg[5].payload].blocks.length, 1);
+      t.equal(sequences[mainSequence.blocks[1].bg[5].payload].blocks[0].bs.payload, 'blockTag/ip');
     } catch (err) {
       console.log(err);
     }

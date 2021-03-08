@@ -212,11 +212,11 @@ class Document {
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
       for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, false).entries()) {
-        if (item[0] === 'startScope' && item[1].startsWith('chapter/')) {
-          chapterN = item[1].split('/')[1];
+        if (item[0] === 'scope' && item[1] === 'start' && item[2].startsWith('chapter/')) {
+          chapterN = item[2].split('/')[1];
           chapterIndexes[chapterN] = {};
-        } else if (item[0] === 'startScope' && item[1].startsWith('verse/')) {
-          verseN = item[1].split('/')[1];
+        } else if (item[0] === 'scope' && item[1] === 'start' && item[2].startsWith('verse/')) {
+          verseN = item[2].split('/')[1];
 
           if (!(verseN in chapterIndexes[chapterN])) {
             chapterIndexes[chapterN][verseN] = [];
@@ -225,8 +225,8 @@ class Document {
             startBlock: blockN,
             startItem: itemN,
           });
-        } else if (item[0] === 'endScope' && item[1].startsWith('verse/')) {
-          verseN = item[1].split('/')[1];
+        } else if (item[0] === 'scope' && item[1] === 'end' && item[2].startsWith('verse/')) {
+          verseN = item[2].split('/')[1];
           const verseRecord = chapterIndexes[chapterN][verseN][chapterIndexes[chapterN][verseN].length - 1];
           verseRecord.endBlock = blockN;
           verseRecord.endItem = itemN;

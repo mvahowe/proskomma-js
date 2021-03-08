@@ -15,15 +15,15 @@ test(
     try {
       t.plan(6);
       const query =
-        '{ documents { mainSequence { blocks { is { label } } } } }';
+        '{ documents { mainSequence { blocks { is { payload } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const block = result.data.documents[0].mainSequence.blocks[0];
       t.equal(block.is.length, 4);
-      t.equal(block.is[0].label, 'chapter/1');
-      t.equal(block.is[1].label, 'verse/1');
-      t.equal(block.is[2].label, 'verse/2');
-      t.equal(block.is[3].label, 'verses/1-2');
+      t.equal(block.is[0].payload, 'chapter/1');
+      t.equal(block.is[1].payload, 'verse/1');
+      t.equal(block.is[2].payload, 'verse/2');
+      t.equal(block.is[3].payload, 'verses/1-2');
     } catch (err) {
       console.log(err);
     }

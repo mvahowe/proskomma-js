@@ -20,19 +20,18 @@ const pk3 = pkWithDoc('../test_data/usfm/table_at_end.usfm', {
 const checkResult = (t, result) => {
   const blocks = result.data.documents[0].mainSequence.blocks;
   t.equal(blocks.length, 6);
-  t.equal(blocks[0].bs.label, 'blockTag/p');
+  t.equal(blocks[0].bs.payload, 'blockTag/p');
   t.false(blocks[0].scopeLabels.includes('table'));
-  t.equal(blocks[1].bs.label, 'blockTag/tr');
+  t.equal(blocks[1].bs.payload, 'blockTag/tr');
   t.ok(blocks[1].scopeLabels.includes('cell/body/left/2'));
   t.ok(blocks[1].scopeLabels.includes('table'));
   t.ok(blocks[2].scopeLabels.includes('cell/body/left/1'));
   t.ok(blocks[2].scopeLabels.includes('cell/body/right/1'));
-  t.equal(blocks[5].bs.label, 'blockTag/p');
+  t.equal(blocks[5].bs.payload, 'blockTag/p');
   t.false(blocks[5].scopeLabels.includes('table'));
 };
 
-const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-const query = `{ documents { mainSequence { blocks { scopeLabels bs { label } items ${itemFragment} } } } }`;
+const query = `{ documents { mainSequence { blocks { scopeLabels bs { payload } items {type subType payload} } } } }`;
 
 test(
   `USX (${testGroup})`,
@@ -70,7 +69,7 @@ test(
       const result = await pk3.gqlQuery(query);
       t.equal(result.errors, undefined);
       const lastBlockItems = result.data.documents[0].mainSequence.blocks[2].items;
-      t.equal(lastBlockItems.filter(i => i.itemType === 'endScope' && i.label === 'table').length, 1);
+      t.equal(lastBlockItems.filter(i => i.subType === 'end' && i.payload === 'table').length, 1);
     } catch (err) {
       console.log(err);
     }

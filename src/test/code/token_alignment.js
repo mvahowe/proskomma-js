@@ -13,23 +13,6 @@ const pk2 = pkWithDoc('../test_data/usfm/ult_3jn.usfm', {
   abbr: 'hello',
 })[0];
 
-const simplifyBlocks = blocks => {
-  const ret = [];
-
-  for (const [n, block] of blocks.entries()) {
-    for (const token of block.tokens) {
-      ret.push({
-        chars: token.chars,
-        block: n,
-        position: token.position,
-        lemma: token.scopes.filter(s => s.includes('lemma'))[0].split('/')[5],
-        content: token.scopes.filter(s => s.includes('content'))[0].split('/')[5],
-      });
-    }
-  }
-  return ret;
-};
-
 test(
   `Find lemmas by word (${testGroup})`,
   async function (t) {
@@ -45,7 +28,7 @@ test(
         '          withScriptureCV: "1:3"' +
         '          withChars: ["ἐρχομένων", "ἀδελφῶν"]' +
         '        ) {' +
-        '          chars position' +
+        '          payload position' +
         '          scopes(startsWith:["attribute/spanWithAtts/w/lemma", "attribute/spanWithAtts/w/strong"])' +
         '        }' +
         '      }' +
@@ -85,7 +68,7 @@ test(
         '          ]' +
         '          anyScope:true' +
         '        ) {' +
-        '          subType chars position scopes' +
+        '          subType payload position scopes' +
         '        }' +
         '      }' +
         '    }' +

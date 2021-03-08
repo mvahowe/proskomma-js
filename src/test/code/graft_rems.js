@@ -14,7 +14,7 @@ test(
   async function (t) {
     try {
       t.plan(4);
-      const query = '{ documents { sequences { id type blocks { bg { subType, sequenceId } text } } mainSequence { id } } }';
+      const query = '{ documents { sequences { id type blocks { bg { subType, payload } text } } mainSequence { id } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
@@ -24,7 +24,7 @@ test(
       const mainSequence = sequences[result.data.documents[0].mainSequence.id];
       t.equal(mainSequence.blocks[0].bg.length, 1);
       t.equal(mainSequence.blocks[0].bg[0].subType, 'remark');
-      t.equal(sequences[mainSequence.blocks[0].bg[0].sequenceId].blocks[0].text, 'Need to finish this sentence');
+      t.equal(sequences[mainSequence.blocks[0].bg[0].payload].blocks[0].text, 'Need to finish this sentence');
     } catch (err) {
       console.log(err);
     }

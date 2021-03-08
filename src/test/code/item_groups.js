@@ -42,22 +42,21 @@ test(
   async function (t) {
     try {
       t.plan(8);
-      const itemFragment = '{ ... on Token { itemType subType chars } ... on Scope { itemType label } ... on Graft { itemType subType sequenceId } }';
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
         'scopeLabels ' +
-        `items ${itemFragment} ` +
-        'tokens { chars }' +
+        `items {type subType payload} ` +
+        'tokens { payload }' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].scopeLabels.length, 3);
-      t.equal(itemGroups[1].items.filter(i => i.itemType === 'token')[0].chars, 'Instead');
-      t.equal(itemGroups[1].items.filter(i => i.itemType === 'token').reverse()[0].chars, '.');
-      t.equal(itemGroups[1].tokens[0].chars, 'Instead');
-      t.equal([...itemGroups[1].tokens].reverse()[0].chars, '.');
-      t.equal(itemGroups[0].items.filter(i => i.itemType === 'graft').length, 1);
+      t.equal(itemGroups[1].items.filter(i => i.type === 'token')[0].payload, 'Instead');
+      t.equal(itemGroups[1].items.filter(i => i.type === 'token').reverse()[0].payload, '.');
+      t.equal(itemGroups[1].tokens[0].payload, 'Instead');
+      t.equal([...itemGroups[1].tokens].reverse()[0].payload, '.');
+      t.equal(itemGroups[0].items.filter(i => i.type === 'graft').length, 1);
     } catch (err) {
       console.log(err);
     }

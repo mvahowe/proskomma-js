@@ -24,7 +24,7 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
   let matched = new Set([]);
 
   for (const item of docSet.unsuccinctifyPrunedItems(block, options, false)) {
-    const [att, attType, element, key, count, value] = item[1].split('/');
+    const [att, attType, element, key, count, value] = item[2].split('/');
 
     for (const [n, attSpecs] of attSpecsArray.entries()) {
       for (const attSpec of attSpecs) {

@@ -18,7 +18,7 @@ test(
         '  documents {' +
         '    mainSequence {' +
         '      blocks(withScopes:["attribute/milestone/zlexentry/x-strongs/0/G0008"]) {' +
-        '        bs { label }' +
+        '        bs { payload }' +
         '        text' +
         '      }' +
         '    }' +
@@ -32,7 +32,7 @@ test(
         '  documents {' +
         '    mainSequence {' +
         '      blocks(withScopes:["attribute/milestone/zlexentry/x-lemma/0/Ἀβιαθάρ"]) {' +
-        '        bs { label }' +
+        '        bs { payload }' +
         '        text' +
         '      }' +
         '    }' +

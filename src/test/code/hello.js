@@ -48,14 +48,14 @@ test(
     try {
       t.plan(6);
       const query =
-        '{ documents { sequences { type blocks { bs { label } text } } } }';
+        '{ documents { sequences { type blocks { bs { payload } text } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = result.data.documents[0].sequences;
       t.equal(sequences.length, 1);
       t.equal(sequences[0].type, 'main');
       t.equal(sequences[0].blocks.length, 1);
-      t.equal(sequences[0].blocks[0].bs.label, 'blockTag/p');
+      t.equal(sequences[0].blocks[0].bs.payload, 'blockTag/p');
       const expectedText = 'This is how the Good News of JC began...';
       t.equal(sequences[0].blocks[0].text, expectedText);
     } catch (err) {
@@ -70,15 +70,15 @@ test(
     try {
       t.plan(6);
       const query =
-        '{ documents { sequences { type blocks { os { label } is { label } } } } }';
+        '{ documents { sequences { type blocks { os { payload } is { payload } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const block = result.data.documents[0].sequences[0].blocks[0];
       t.equal(block.os.length, 0);
       t.equal(block.is.length, 3);
-      t.equal(block.is[0].label, 'chapter/1');
-      t.equal(block.is[1].label, 'verse/1');
-      t.equal(block.is[2].label, 'verses/1');
+      t.equal(block.is[0].payload, 'chapter/1');
+      t.equal(block.is[1].payload, 'verse/1');
+      t.equal(block.is[2].payload, 'verses/1');
     } catch (err) {
       console.log(err);
     }

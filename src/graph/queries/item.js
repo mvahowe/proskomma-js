@@ -2,7 +2,9 @@ const { GraphQLUnionType } = require('graphql');
 const tokenType = require('./token');
 const graftType = require('./graft');
 const scopeType = require('./scope');
+const itemObjectType = require('./itemObject');
 
+/*
 const itemType = new GraphQLUnionType({
   name: 'Item',
   types: [tokenType, graftType, scopeType],
@@ -20,5 +22,6 @@ const itemType = new GraphQLUnionType({
     }
   },
 });
+*/
 
-module.exports = itemType;
+module.exports = itemObjectType;

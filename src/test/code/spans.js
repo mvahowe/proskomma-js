@@ -34,10 +34,10 @@ test(
     try {
       t.plan(8);
       const query =
-        `{ documents { mainSequence { blocks { tokens(includeContext:true) { subType chars position scopes } } } } }`;
+        `{ documents { mainSequence { blocks { tokens(includeContext:true) { subType payload position scopes } } } } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      const joel = result.data.documents[0].mainSequence.blocks[0].tokens.filter(t => t.chars === 'Joel')[0];
+      const joel = result.data.documents[0].mainSequence.blocks[0].tokens.filter(t => t.payload === 'Joel')[0];
       t.ok('position' in joel);
       t.ok('scopes' in joel);
       for (const scope of ['chapter/1', 'verse/1', 'verses/1', 'span/it', 'span/bd']) {

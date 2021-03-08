@@ -17,10 +17,9 @@ const dumpItem = i => {
   switch (i[0]) {
   case 'token':
     return `|${i[2]}`;
-  case 'startScope':
-    return `+${i[1]}+`;
-  case 'endScope':
-    return `-${i[1]}-`;
+  case 'scope':
+    const wrapper = i[1] === 'start' ? '+' : '-';
+    return `${wrapper}${i[2]}${wrapper}`;
   case 'graft':
     return `>${i[1]}<`;
   }
@@ -32,7 +31,7 @@ const dumpBlock = b => {
   if (b.bg.length > 0) {
     b.bg.forEach(bbg => ret.push(`   ${bbg[1]} graft to ${bbg[2]}`));
   }
-  ret.push(`   Scope ${b.bs[1]}`);
+  ret.push(`   Scope ${b.bs[2]}`);
   ret.push(`   ${b.c.map(bci => dumpItem(bci)).join('')}`);
   return ret.join('\n');
 };
@@ -77,17 +76,17 @@ const blockType = new GraphQLObjectType({
         (root, args, context) => context.docSet.countItems(root.is),
     },
     is: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
     },
     os: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(scopeType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
     },
     bs: {
-      type: GraphQLNonNull(scopeType),
+      type: GraphQLNonNull(itemType),
       resolve:
         (root, args, context) => {
           const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
@@ -95,7 +94,7 @@ const blockType = new GraphQLObjectType({
         },
     },
     bg: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(graftType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),
     },
@@ -137,7 +136,7 @@ const blockType = new GraphQLObjectType({
           context.docSet.unsuccinctifyItemObjects(root.c, {}),
     },
     tokens: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tokenType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       args: {
         withScopes: { type: GraphQLList(GraphQLString) },
         anyScope: { type: GraphQLBoolean },

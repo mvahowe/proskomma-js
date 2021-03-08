@@ -18,8 +18,7 @@ test(
   async function (t) {
     try {
       t.plan(2);
-      const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-      const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
+      const query = `{ documents { mainSequence { blocks { items { type subType payload } } } } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const firstItem = result.data.documents[0].mainSequence.blocks[0].items[0];
@@ -35,8 +34,7 @@ test(
   async function (t) {
     try {
       t.plan(2);
-      const itemFragment = '{ ... on Token { subType chars } ... on Scope { itemType label } ... on Graft { subType sequenceId } }';
-      const query = `{ documents { mainSequence { blocks { items ${itemFragment} } } } }`;
+      const query = `{ documents { mainSequence { blocks { items { type subType payload } } } } }`;
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       const firstItem = result.data.documents[0].mainSequence.blocks[0].items[0];

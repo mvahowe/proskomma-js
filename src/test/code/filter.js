@@ -9,15 +9,14 @@ const queryToBlock = async (t, filter) => {
     lang: 'fra',
     abbr: 'hello',
   }, filter)[0];
-  const itemFragment = '{ ... on Token { itemType subType chars dump } ... on Scope { itemType label dump } ... on Graft { itemType subType sequenceId dump } }';
-  const query = `{ documents { mainSequence { blocks { bg { subType } bs { label } scopeLabels items ${itemFragment} } } } }`;
+  const query = `{ documents { mainSequence { blocks { bg { subType } bs { payload } scopeLabels items {type subType payload} } } } }`;
   const result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
   return result.data.documents[0].mainSequence.blocks[0];
 };
 
 const inlineGrafts = block => {
-  return block.items.filter(i => i.itemType === 'graft');
+  return block.items.filter(i => i.type === 'graft');
 };
 
 test(

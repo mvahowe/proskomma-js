@@ -34,7 +34,6 @@ test(
       t.equal(result.errors, undefined);
       const index = result.data.documents[0].cvIndexes[0];
       checkIndexFields(t, index.verses[1].verse[0]);
-      // console.log(JSON.stringify(result.data.documents[0].cvIndexes, null, 2));
     } catch (err) {
       console.log(err);
     }
