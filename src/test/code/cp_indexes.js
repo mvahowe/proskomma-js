@@ -14,7 +14,7 @@ test(
   async function (t) {
     try {
       const query =
-        '{ documents { cvIndexes { chapter verses { verse { startBlock startItem endBlock endItem } } } mainSequence { blocks { items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
+        '{ documents { cvIndexes { chapter verses { verse { text } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       // console.log(JSON.stringify(result.data.documents[0].cvIndexes, null, 2));
@@ -29,7 +29,7 @@ test(
   async function (t) {
     try {
       const query =
-        '{ documents { cvIndex(chapter:3) { chapter verses { verse { startBlock startItem endBlock endItem } } } mainSequence { blocks { items { ... on Token { subType chars }... on Scope { itemType label }... on Graft { subType sequenceId } } } } } }';
+        '{ documents { cvIndex(chapter:3) { chapter verses { verse { startBlock startItem endBlock endItem tokens { type subType payload } } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       // console.log(JSON.stringify(result.data.documents[0].cvIndex, null, 2));

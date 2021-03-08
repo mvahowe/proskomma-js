@@ -377,6 +377,26 @@ class DocSet {
     return ret;
   }
 
+  itemsByIndex(mainSequence, index) {
+    let ret = [];
+    let currentBlock = index.startBlock;
+
+    while (currentBlock <= index.endBlock) {
+      let blockItems = this.unsuccinctifyItemObjects(mainSequence.blocks[currentBlock].c, {});
+
+      if (currentBlock === index.startBlock && currentBlock === index.endBlock) {
+        blockItems = blockItems.slice(index.startItem, index.endItem);
+      } else if (currentBlock === index.startBlock) {
+        blockItems = blockItems.slice(index.startItem);
+      } else if (currentBlock === index.endBlock) {
+        blockItems = blockItems.slice(0, index.endItem);
+      }
+      ret.push(blockItems);
+      currentBlock++;
+    }
+    return ret;
+  }
+
   unsuccinctifyItem(succinct, pos, options) {
     let item = null;
     const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
@@ -1038,7 +1058,6 @@ class DocSet {
 
   updateBlockIndexes(sequence, blockPosition) {
     const labelsMatch = (firstA, secondA) => {
-
       for (const first of Array.from(firstA)) {
         if (!secondA.has(first)) {
           return false;

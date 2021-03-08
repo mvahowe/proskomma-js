@@ -1,9 +1,12 @@
 const {
   GraphQLObjectType,
   GraphQLInt,
+  GraphQLString,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql');
+
+const itemObjectType = require('./itemObject');
 
 const cvVerseElementType = new GraphQLObjectType({
   name: 'cvVerseElement',
@@ -23,6 +26,29 @@ const cvVerseElementType = new GraphQLObjectType({
     endItem: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: root => root.endItem,
+    },
+    items: {
+      type: GraphQLNonNull(GraphQLList(itemObjectType)),
+      resolve: (root, args, context) =>
+        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
+          .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
+    },
+    tokens: {
+      type: GraphQLNonNull(GraphQLList(itemObjectType)),
+      resolve: (root, args, context) =>
+        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
+          .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)))
+          .filter(i => i[0] === 'token'),
+    },
+    text: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: (root, args, context) =>
+        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
+          .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)))
+          .filter(i => i[0] === 'token')
+          .map(t => t[1] === 'lineSpace' ? ' ' : t[2])
+          .join('')
+          .trim(),
     },
   }),
 });

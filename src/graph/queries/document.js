@@ -61,12 +61,20 @@ const documentType = new GraphQLObjectType({
     },
     cvIndexes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cvIndexType))),
-      resolve: root => Object.entries(root.chapterVerseIndexes()),
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        context.doc = root;
+        return Object.entries(root.chapterVerseIndexes());
+      },
     },
     cvIndex: {
       type: GraphQLNonNull(cvIndexType),
       args: { chapter: { type: GraphQLNonNull(GraphQLInt) } },
-      resolve: (root, args) => [args.chapter, root.chapterVerseIndex(args.chapter)],
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        context.doc = root;
+        return [args.chapter, root.chapterVerseIndex(args.chapter)];
+      },
     },
   }),
 });
