@@ -1,12 +1,9 @@
 const {
   GraphQLObjectType,
-  GraphQLInt,
   GraphQLList,
   GraphQLString,
   GraphQLNonNull,
-  GraphQLBoolean,
 } = require('graphql');
-const tokenType = require('./token');
 const itemType = require('./item');
 
 // [items, scopeLabels]

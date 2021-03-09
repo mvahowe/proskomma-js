@@ -7,11 +7,7 @@ const {
   GraphQLBoolean,
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
-const tokenType = require('./token');
-const scopeType = require('./scope');
-const graftType = require('./graft');
 const itemType = require('./item');
-const itemObjectType = require('./itemObject');
 
 const dumpItem = i => {
   switch (i[0]) {
@@ -130,7 +126,7 @@ const blockType = new GraphQLObjectType({
         },
     },
     itemObjects: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemObjectType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       resolve:
         (root, args, context) =>
           context.docSet.unsuccinctifyItemObjects(root.c, {}),

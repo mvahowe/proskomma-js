@@ -6,7 +6,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const itemObjectType = require('./itemObject');
+const itemType = require('./item');
 
 const cvVerseElementType = new GraphQLObjectType({
   name: 'cvVerseElement',
@@ -28,13 +28,13 @@ const cvVerseElementType = new GraphQLObjectType({
       resolve: root => root.endItem,
     },
     items: {
-      type: GraphQLNonNull(GraphQLList(itemObjectType)),
+      type: GraphQLNonNull(GraphQLList(itemType)),
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
     },
     tokens: {
-      type: GraphQLNonNull(GraphQLList(itemObjectType)),
+      type: GraphQLNonNull(GraphQLList(itemType)),
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)))
