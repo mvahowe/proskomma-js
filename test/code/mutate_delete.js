@@ -188,7 +188,7 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.deleteBlock, true);
-      query = '{ documents { id mainSequence { id nBlocks } } }';
+      query = '{ documents { id mainSequence { id nBlocks  blocks { items { type subType payload } } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].mainSequence.nBlocks, nBlocks - 1);

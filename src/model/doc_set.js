@@ -1030,6 +1030,7 @@ class DocSet {
     newItemsBA.trim();
     block.c = newItemsBA;
     this.updateBlockIndexes(sequence, blockPosition);
+    document.buildChapterVerseIndex(document.sequences[document.mainId]);
     return true;
   }
 

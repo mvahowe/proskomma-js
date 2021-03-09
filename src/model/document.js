@@ -227,6 +227,10 @@ class Document {
           });
         } else if (item[0] === 'scope' && item[1] === 'end' && item[2].startsWith('verse/')) {
           verseN = item[2].split('/')[1];
+          let versesRecord = chapterIndexes[chapterN][verseN];
+          if (!versesRecord) { // Start verse has been deleted
+            continue;
+          }
           const verseRecord = chapterIndexes[chapterN][verseN][chapterIndexes[chapterN][verseN].length - 1];
           verseRecord.endBlock = blockN;
           verseRecord.endItem = itemN;
@@ -551,6 +555,7 @@ class Document {
       this.gcSequenceReferences('inline', seqId);
     }
     delete this.sequences[seqId];
+    this.buildChapterVerseIndex(this.sequences[this.mainId]);
     this.gcSequences();
     return true;
   }
@@ -593,6 +598,7 @@ class Document {
       return false;
     }
     sequence.blocks.splice(blockN, 1);
+    // this.buildChapterVerseIndex(this.sequences[this.mainId]);
     return true;
   }
 
@@ -628,6 +634,7 @@ class Document {
     const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
     pushSuccinctScopeBytes(newBlock.bs, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
     sequence.blocks.splice(blockN, 0, newBlock);
+    this.buildChapterVerseIndex(this.sequences[this.mainId]);
     return true;
   }
 }
