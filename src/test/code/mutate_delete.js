@@ -95,15 +95,15 @@ test(
           }],
         ],
       );
-      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { itemObjects { type subType payload } } } } }';
+      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { items { type subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents.length, 1);
       const docId = result.data.documents[0].id;
       const nSequences = result.data.documents[0].nSequences;
-      const itemObjects = result.data.documents[0].mainSequence.blocks[0].itemObjects;
+      const items = result.data.documents[0].mainSequence.blocks[0].items;
       const mainId = result.data.documents[0].mainSequence.id;
-      const graft = itemObjects.filter(i => i.type === 'graft')[0];
+      const graft = items.filter(i => i.type === 'graft')[0];
       query = `mutation { deleteSequence(documentId: "foo" sequenceId: "${graft.payload}") }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
@@ -120,7 +120,7 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.deleteSequence, true);
-      query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { itemObjects { type subType payload } } } } }';
+      query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { items { type subType payload } } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].nSequences, nSequences - 2);

@@ -125,12 +125,6 @@ const blockType = new GraphQLObjectType({
           }
         },
     },
-    itemObjects: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-      resolve:
-        (root, args, context) =>
-          context.docSet.unsuccinctifyItems(root.c, {}, false),
-    },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       args: {

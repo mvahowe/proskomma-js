@@ -16,7 +16,7 @@ const updateMutations = {
       documentId: { type: GraphQLNonNull(GraphQLString) },
       sequenceId: { type: GraphQLNonNull(GraphQLString) },
       blockPosition: { type: GraphQLNonNull(GraphQLInt) },
-      itemObjects: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))) },
+      items: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))) },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -28,7 +28,7 @@ const updateMutations = {
         args.documentId,
         args.sequenceId,
         args.blockPosition,
-        args.itemObjects,
+        args.items,
       );
     },
   },

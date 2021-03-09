@@ -990,13 +990,11 @@ class DocSet {
     if (!document) {
       throw new Error(`Document '${documentId}' not found`);
     }
-
     const sequence = document.sequences[sequenceId];
 
     if (!sequence) {
       throw new Error(`Sequence '${sequenceId}' not found`);
     }
-
     if (sequence.blocks.length <= blockPosition) {
       throw new Error(`Could not find block ${blockPosition} (length=${sequence.blocks.length})`);
     }
