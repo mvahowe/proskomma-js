@@ -91,11 +91,11 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.newBlock, true);
-      query = '{ documents { id mainSequence { id nBlocks blocks(positions:[1]) { bs { label } } } } }';
+      query = '{ documents { id mainSequence { id nBlocks blocks(positions:[1]) { bs { payload } } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].mainSequence.nBlocks, nBlocks + 1);
-      t.equal(result.data.documents[0].mainSequence.blocks[0].bs.label, 'blockTag/q4');
+      t.equal(result.data.documents[0].mainSequence.blocks[0].bs.payload, 'blockTag/q4');
     } catch (err) {
       console.log(err);
     }

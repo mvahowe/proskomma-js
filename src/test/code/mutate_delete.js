@@ -143,13 +143,13 @@ test(
           }],
         ],
       );
-      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { bg { subType sequenceId } } } } }';
+      let query = '{ documents { id nSequences mainSequence { id blocks(positions:[0]) { bg { subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents.length, 1);
       const docId = result.data.documents[0].id;
       const nSequences = result.data.documents[0].nSequences;
-      const graftSeqId = result.data.documents[0].mainSequence.blocks[0].bg[0].sequenceId;
+      const graftSeqId = result.data.documents[0].mainSequence.blocks[0].bg[0].payload;
       query = `mutation { deleteSequence(documentId: "${docId}" sequenceId: "${graftSeqId}") }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);

@@ -174,11 +174,11 @@ class Document {
         }
       } else if (item[0] === 'graft') {
         docSet.recordPreEnum('graftTypes', item[1]);
-      } else if (item[0] === 'startScope') {
-        const labelBits = item[1].split('/');
+      } else if (item[0] === 'scope' && item[1] === 'start') {
+        const labelBits = item[2].split('/');
 
         if (labelBits.length !== nComponentsForScope(labelBits[0])) {
-          throw new Error(`Scope ${item[1]} has unexpected number of components`);
+          throw new Error(`Scope ${item[2]} has unexpected number of components`);
         }
 
         for (const labelBit of labelBits.slice(1)) {
