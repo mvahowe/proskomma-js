@@ -263,7 +263,7 @@ class DocSet {
     const blockGrafts = this.unsuccinctifyGrafts(block.bg);
     const openScopes = this.unsuccinctifyScopes(block.os);
     const includedScopes = this.unsuccinctifyScopes(block.is);
-    const blockItems = this.unsuccinctifyItemObjects(block.c, options || {}, includeContext);
+    const blockItems = this.unsuccinctifyItems(block.c, options || {}, includeContext);
     return {
       bs: blockScope,
       bg: blockGrafts,
@@ -310,10 +310,6 @@ class DocSet {
     return ret;
   }
 
-  unsuccinctifyItemObjects(succinct, options, includeContext, openScopes) {
-    return this.unsuccinctifyItems(succinct, options || {}, includeContext || false, openScopes || []);
-  }
-
   unsuccinctifyItems(succinct, options, includeContext, openScopes) {
     if (includeContext === undefined) {
       throw new Error('includeContext must now be provided to unsuccinctifyItems');
@@ -326,6 +322,7 @@ class DocSet {
 
     while (pos < succinct.length) {
       const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
+
       if (item[0] === 'token') {
         if ((Object.keys(options).length === 0) || options.tokens) {
           if (includeContext) {
@@ -361,9 +358,10 @@ class DocSet {
     let currentBlock = index.startBlock;
 
     while (currentBlock <= index.endBlock) {
-      let blockItems = this.unsuccinctifyItemObjects(mainSequence.blocks[currentBlock].c, {});
+      let blockItems = this.unsuccinctifyItems(mainSequence.blocks[currentBlock].c, {}, false);
       const blockScope = this.unsuccinctifyScopes(mainSequence.blocks[currentBlock].bs)[0];
       const blockGrafts = this.unsuccinctifyGrafts(mainSequence.blocks[currentBlock].bg);
+
       if (currentBlock === index.startBlock && currentBlock === index.endBlock) {
         blockItems = blockItems.slice(index.startItem, index.endItem);
       } else if (currentBlock === index.startBlock) {
@@ -478,7 +476,7 @@ class DocSet {
       (item[0] === 'token' && options.withChars.includes(item[2]));
     const ret = [];
 
-    for (const item of this.unsuccinctifyItemObjects(block.c, options, includeContext, openScopes)) {
+    for (const item of this.unsuccinctifyItems(block.c, options, includeContext, openScopes)) {
       if (item[0] === 'scope' && item[1] === 'start') {
         openScopes.add(item[2]);
       }
@@ -673,6 +671,7 @@ class DocSet {
   unsuccinctifyItemsWithScriptureCV(block, cv, options, includeContext) {
     options = options || {};
     const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
+
     const cvMatchFunction = () => {
       if (xre.exec(cv, xre('^[1-9][0-9]*$'))) {
         return () => openScopes.has(`chapter/${cv}`);
