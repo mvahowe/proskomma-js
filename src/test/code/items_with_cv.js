@@ -59,8 +59,8 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].items;
       const lastBlockItems = blocks[blocks.length - 1].items;
-      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].chars, 'Naomi');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'law');
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'Naomi');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'law');
     } catch (err) {
       console.log(err);
     }
@@ -81,8 +81,8 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].items;
       const lastBlockItems = blocks[blocks.length - 1].items;
-      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].chars, 'In');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'today');
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'In');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'today');
     } catch (err) {
       console.log(err);
     }
@@ -121,8 +121,8 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].items;
       const lastBlockItems = blocks[blocks.length - 1].items;
-      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].chars, 'She');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'law');
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'She');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'law');
     } catch (err) {
       console.log(err);
     }
@@ -143,8 +143,8 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].items;
       const lastBlockItems = blocks[blocks.length - 1].items;
-      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].chars, 'They');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'me');
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'They');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'me');
     } catch (err) {
       console.log(err);
     }
@@ -165,8 +165,8 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].items;
       const lastBlockItems = blocks[blocks.length - 1].items;
-      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].chars, 'So');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'drinking');
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'So');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'drinking');
     } catch (err) {
       console.log(err);
     }
@@ -180,15 +180,15 @@ test(
       t.plan(3);
       const query =
         `{ docSets { document(bookCode:"RUT") {
-                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { tokens(withScriptureCV:"1:22-3:3") { subType chars } } } } }
+                     mainSequence { blocks(withScriptureCV:"1:22-3:3") { tokens(withScriptureCV:"1:22-3:3") { subType payload } } } } }
                 }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       const firstBlockItems = blocks[0].tokens;
       const lastBlockItems = blocks[blocks.length - 1].tokens;
-      t.equal(firstBlockItems[0].chars, 'So');
-      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].chars, 'drinking');
+      t.equal(firstBlockItems[0].payload, 'So');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'drinking');
     } catch (err) {
       console.log(err);
     }

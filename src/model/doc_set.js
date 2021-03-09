@@ -513,16 +513,16 @@ class DocSet {
   blocksWithScriptureCV(blocks, cv) {
     const hasMiddleChapter = (b, fromC, toC) => {
       const blockChapterScopes = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[1]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[1]),
+        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
+        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
       ].filter(s => s.startsWith('chapter/'));
       return blockChapterScopes.map(s => parseInt(s.split('/')[1])).filter(n => n > fromC && n < toC).length > 0;
     };
 
     const hasFirstChapter = (b, fromC, fromV) => {
       const hasFirstChapterScope = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[1]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[1]),
+        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
+        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
       ].includes(`chapter/${fromC}`);
       return hasFirstChapterScope &&
         this.blockHasMatchingItem(
@@ -544,8 +544,8 @@ class DocSet {
 
     const hasLastChapter = (b, toC, toV) => {
       const hasLastChapterScope = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[1]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[1]),
+        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
+        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
       ].includes(`chapter/${toC}`);
       return hasLastChapterScope &&
         this.blockHasMatchingItem(
@@ -672,8 +672,7 @@ class DocSet {
 
   unsuccinctifyItemsWithScriptureCV(block, cv, options, includeContext) {
     options = options || {};
-    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
-
+    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
     const cvMatchFunction = () => {
       if (xre.exec(cv, xre('^[1-9][0-9]*$'))) {
         return () => openScopes.has(`chapter/${cv}`);
@@ -770,7 +769,7 @@ class DocSet {
         return (
           (itemType === 'token' && 'tokens' in options) ||
           (itemType === 'graft' && 'grafts' in options) ||
-          (itemType.endsWith('Scope') && 'scopes' in options)
+          (itemType === 'scope' && 'scopes' in options)
         );
       }
     };
@@ -778,35 +777,35 @@ class DocSet {
     const ret = [];
 
     for (const item of this.unsuccinctifyItems(block.c, {}, includeContext)) {
-      if (item[0] === 'startScope') {
-        openScopes.add(item[1]);
+      if (item[0] === 'scope' && item[1] === 'start') {
+        openScopes.add(item[2]);
       }
 
       if (itemMatchesCV() && itemInOptions(item)) {
         ret.push(item);
       }
 
-      if (item[0] === 'endScope') {
-        openScopes.delete(item[1]);
+      if (item[0] === 'scope' && item[1] === 'end') {
+        openScopes.delete(item[2]);
       }
     }
     return ret;
   }
 
   blockHasMatchingItem(block, testFunction, options) {
-    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[1]));
+    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
 
     for (const item of this.unsuccinctifyItems(block.c, options, false)) {
-      if (item[0] === 'startScope') {
-        openScopes.add(item[1]);
+      if (item[0] === 'scope' && item[1] === 'start') {
+        openScopes.add(item[2]);
       }
 
       if (testFunction(item, openScopes)) {
         return true;
       }
 
-      if (item[0] === 'endScope') {
-        openScopes.delete(item[1]);
+      if (item[0] === 'scope' && item[1] === 'end') {
+        openScopes.delete(item[2]);
       }
     }
     return false;
