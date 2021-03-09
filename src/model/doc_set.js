@@ -1070,11 +1070,11 @@ class DocSet {
     }
 
     for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, false)) {
-      if (scope[0] === 'startScope') {
-        includedScopeLabels.add(scope[1]);
-        openScopeLabels.add(scope[1]);
+      if (scope[1] === 'start') {
+        includedScopeLabels.add(scope[2]);
+        openScopeLabels.add(scope[2]);
       } else {
-        openScopeLabels.delete(scope[1]);
+        openScopeLabels.delete(scope[2]);
       }
     }
 
@@ -1102,18 +1102,6 @@ class DocSet {
         nextOsBlock.os = osBA;
         this.updateBlockIndexes(sequence, blockPosition + 1);
       }
-    }
-  }
-
-  gcSequences() {
-    let changed = false;
-
-    Object.values(this.documents()).forEach(d => {
-      changed = changed || d.gcSequences();
-    });
-
-    if (changed) {
-      this.rehash();
     }
   }
 
