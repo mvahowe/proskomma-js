@@ -1,6 +1,6 @@
 const test = require('tape');
 
-const { ProsKomma } = require('../..');
+const { ProsKomma } = require('../../src');
 const {
   pkWithDoc,
   customPkWithDoc,

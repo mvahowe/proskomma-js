@@ -2,7 +2,7 @@ const test = require('tape');
 const fse = require('fs-extra');
 const path = require('path');
 
-const { ProsKomma } = require('../../');
+const { ProsKomma } = require('../../src');
 const {
   customPkWithDoc,
   customPkWithDocs,

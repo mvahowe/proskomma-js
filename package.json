@@ -7,13 +7,13 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "babel-tape-runner src/test/code/*.js | node_modules/tap-summary/bin/cmd.js",
-    "rawTest": "babel-tape-runner src/test/code/*.js",
-    "oneTest": "babel-tape-runner src/test/code/$TESTSCRIPT.js",
-    "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner src/test/code/*.js | node_modules/tap-nyc/bin/cmd.js",
+    "test": "babel-tape-runner test/code/*.js | node_modules/tap-summary/bin/cmd.js",
+    "rawTest": "babel-tape-runner test/code/*.js",
+    "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.js",
+    "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.js",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
-    "serialize": "babel-tape-runner src/test/code/serialize.js"
+    "serialize": "babel-tape-runner test/code/serialize.js"
   },
   "repository": {
     "type": "git",
@@ -53,7 +53,6 @@
     "eslint-plugin-import": "^2.20.2",
     "fs-extra": "^9.0.1",
     "nyc": "^15.1.0",
-    "tap-nyc": "^1.0.3",
     "tap-summary": "^4.0.0",
     "tape": "^5.0.1"
   }

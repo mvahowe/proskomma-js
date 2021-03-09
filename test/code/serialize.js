@@ -4,7 +4,7 @@ const {
   serializedSchema,
   unpackEnum,
 } = require('proskomma-utils');
-const { ProsKomma } = require('../../');
+const { ProsKomma } = require('../../src');
 
 const { pkWithDoc } = require('../lib/load');
 

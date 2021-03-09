@@ -1,7 +1,7 @@
 const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
-const { ProsKomma } = require('../../../src');
+const { ProsKomma } = require('../../src');
 const { pkWithDoc, pkWithDocs } = require('../lib/load');
 
 const testGroup = 'Mutate Add Operations';

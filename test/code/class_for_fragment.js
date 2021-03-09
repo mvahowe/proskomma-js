@@ -1,6 +1,6 @@
 const test = require('tape');
-const { preTokenClassForFragment } = require('../../parser/lexers/class_for_fragment');
-const { lexingRegexes } = require('../../parser/lexers/lexingRegexes');
+const { preTokenClassForFragment } = require('../../src/parser/lexers/class_for_fragment');
+const { lexingRegexes } = require('../../src/parser/lexers/lexingRegexes');
 
 const testGroup = 'Class for Fragment';
 
