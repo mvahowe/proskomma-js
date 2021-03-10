@@ -363,13 +363,13 @@ class DocSet {
       const blockGrafts = this.unsuccinctifyGrafts(mainSequence.blocks[currentBlock].bg);
 
       if (currentBlock === index.startBlock && currentBlock === index.endBlock) {
-        blockItems = blockItems.slice(index.startItem, index.endItem);
+        blockItems = blockItems.slice(index.startItem, index.endItem + 1);
       } else if (currentBlock === index.startBlock) {
         blockItems = blockItems.slice(index.startItem);
       } else if (currentBlock === index.endBlock) {
-        blockItems = blockItems.slice(0, index.endItem);
+        blockItems = blockItems.slice(0, index.endItem + 1);
       }
-      ret.push([...blockGrafts, ['scope', 'start', blockScope[1]], ...blockItems, ['scope', 'end', blockScope[1]]]);
+      ret.push([...blockGrafts, ['scope', 'start', blockScope[2]], ...blockItems, ['scope', 'end', blockScope[2]]]);
       currentBlock++;
     }
     return ret;
