@@ -206,41 +206,59 @@ class Document {
   buildChapterVerseIndex(mainSequence) {
     const docSet = this.processor.docSets[this.docSetId];
     docSet.buildEnumIndexes();
+    const chapterVerseIndexes = {};
     const chapterIndexes = {};
     let chapterN = '0';
     let verseN = '0';
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
       for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, false).entries()) {
-        if (item[0] === 'scope' && item[1] === 'start' && item[2].startsWith('chapter/')) {
-          chapterN = item[2].split('/')[1];
-          chapterIndexes[chapterN] = {};
-        } else if (item[0] === 'scope' && item[1] === 'start' && item[2].startsWith('verse/')) {
-          verseN = item[2].split('/')[1];
+        if (item[0] === 'scope'){
+          if (item[1] === 'start') {
+            if (item[2].startsWith('chapter/')) {
+              chapterN = item[2].split('/')[1];
+              chapterVerseIndexes[chapterN] = {};
+              chapterIndexes[chapterN] = {
+                startBlock: blockN,
+                startItem: itemN,
+              };
+            } else if (item[2].startsWith('verse/')) {
+              verseN = item[2].split('/')[1];
 
-          if (!(verseN in chapterIndexes[chapterN])) {
-            chapterIndexes[chapterN][verseN] = [];
+              if (!(verseN in chapterVerseIndexes[chapterN])) {
+                chapterVerseIndexes[chapterN][verseN] = [];
+              }
+              chapterVerseIndexes[chapterN][verseN].push({
+                startBlock: blockN,
+                startItem: itemN,
+              });
+            }
+          } else if (item[1] === 'end') {
+            if (item[2].startsWith('chapter/')) {
+              chapterN = item[2].split('/')[1];
+              let chapterRecord = chapterIndexes[chapterN];
+
+              if (chapterRecord) { // Check start chapter has not been deleted
+                chapterRecord.endBlock = blockN;
+                chapterRecord.endItem = itemN;
+              }
+            } else if (item[2].startsWith('verse/')) {
+              verseN = item[2].split('/')[1];
+              let versesRecord = chapterVerseIndexes[chapterN][verseN];
+
+              if (versesRecord) { // Check start verse has not been deleted
+                const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
+                verseRecord.endBlock = blockN;
+                verseRecord.endItem = itemN;
+              }
+            }
           }
-          chapterIndexes[chapterN][verseN].push({
-            startBlock: blockN,
-            startItem: itemN,
-          });
-        } else if (item[0] === 'scope' && item[1] === 'end' && item[2].startsWith('verse/')) {
-          verseN = item[2].split('/')[1];
-          let versesRecord = chapterIndexes[chapterN][verseN];
-          if (!versesRecord) { // Start verse has been deleted
-            continue;
-          }
-          const verseRecord = chapterIndexes[chapterN][verseN][chapterIndexes[chapterN][verseN].length - 1];
-          verseRecord.endBlock = blockN;
-          verseRecord.endItem = itemN;
         }
       }
     }
     mainSequence.chapterVerses = {};
-    mainSequence.chapters = {};
 
-    for (const [chapterN, chapterVerses] of Object.entries(chapterIndexes)) {
+    for (const [chapterN, chapterVerses] of Object.entries(chapterVerseIndexes)) {
       const ba = new ByteArray();
       mainSequence.chapterVerses[chapterN] = ba;
       const sortedVerses = Object.keys(chapterVerses)
@@ -254,8 +272,6 @@ class Document {
       const maxVerse = sortedVerses[sortedVerses.length - 1];
       const verseSlots = Array.from(Array(maxVerse + 1).keys());
       let pos = 0;
-      let chapterStart = [];
-      let chapterEnd = [];
 
       for (const verseSlot of verseSlots) {
         const verseKey = `${verseSlot}`;
@@ -265,22 +281,6 @@ class Document {
           const nVerseElements = verseElements.length;
 
           for (const [verseElementN, verseElement] of verseElements.entries()) {
-            if (
-              chapterStart.length === 0 ||
-              verseElement.startBlock < chapterStart[0] ||
-              (verseElement.startBlock === chapterStart[0] && verseElement.startItem < chapterStart[1])
-            ) {
-              chapterStart = [verseElement.startBlock, verseElement.startItem];
-            }
-
-            if (
-              chapterEnd.length === 0 ||
-              verseElement.endBlock > chapterEnd[0] ||
-              (verseElement.endBlock === chapterEnd[0] && verseElement.endItem > chapterEnd[1])
-            ) {
-              chapterEnd = [verseElement.endBlock, verseElement.endItem];
-            }
-
             const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
             ba.pushByte(0);
 
@@ -298,21 +298,22 @@ class Document {
         }
       }
       ba.trim();
+    }
+    mainSequence.chapters = {};
 
-      if (chapterStart.length > 0) {
-        const cba = new ByteArray();
-        mainSequence.chapters[chapterN] = cba;
-        const chapterRecordType = chapterStart[0] === chapterEnd[0] ? shortCVIndexType : longCVIndexType;
-        cba.pushByte(0);
+    for (const [chapterN, chapterElement] of Object.entries(chapterIndexes)) {
+      const ba = new ByteArray();
+      mainSequence.chapters[chapterN] = ba;
+      const recordType = chapterElement.startBlock === chapterElement.endBlock ? shortCVIndexType : longCVIndexType;
+      ba.pushByte(0);
 
-        if (chapterRecordType === shortCVIndexType) {
-          cba.pushNBytes([chapterStart[0], chapterStart[1], chapterEnd[1]]);
-        } else {
-          cba.pushNBytes([chapterStart[0], chapterEnd[0], chapterStart[1], chapterEnd[1]]);
-        }
-        cba.setByte(0, this.makeVerseLengthByte(chapterRecordType, true, cba.length));
-        cba.trim();
+      if (recordType === shortCVIndexType) {
+        ba.pushNBytes([chapterElement.startBlock, chapterElement.startItem, chapterElement.endItem]);
+      } else {
+        ba.pushNBytes([chapterElement.startBlock, chapterElement.endBlock, chapterElement.startItem, chapterElement.endItem]);
       }
+      ba.setByte(0, this.makeVerseLengthByte(recordType, true, ba.length));
+      ba.trim();
     }
   }
 
