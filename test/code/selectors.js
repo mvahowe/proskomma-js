@@ -145,7 +145,7 @@ test(
   async function (t) {
     try {
       t.plan(8);
-      const customProsKomma = class extends Proskomma {
+      const customProskomma = class extends Proskomma {
         constructor() {
           super();
           this.selectors = [
@@ -166,7 +166,7 @@ test(
           this.validateSelectors();
         }
       };
-      const pk = new customProsKomma();
+      const pk = new customProskomma();
       const content = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_rut.usx'));
       let selectors = {};
       const importFn = () => pk.importDocument(
@@ -217,7 +217,7 @@ test(
   `selectors in graph for docSet (${testGroup})`,
   async function (t) {
     try {
-      const customProsKomma = class extends Proskomma {
+      const customProskomma = class extends Proskomma {
         constructor() {
           super();
           this.selectors = [
@@ -233,7 +233,7 @@ test(
           this.validateSelectors();
         }
       };
-      let cpk = customPkWithDoc(customProsKomma, '../test_data/usx/web_rut.usx', {
+      let cpk = customPkWithDoc(customProskomma, '../test_data/usx/web_rut.usx', {
         foo: 'banana',
         baa: 23,
       })[0];
@@ -248,7 +248,7 @@ test(
       t.equal(selectors[1].key, 'baa');
       t.equal(selectors[1].value, '23');
       t.equal(result.data.docSets[0].selectorString, 'banana_23');
-      cpk = customPkWithDocs(customProsKomma, [
+      cpk = customPkWithDocs(customProskomma, [
         ['../test_data/usx/web_rut.usx', {
           foo: 'banana',
           baa: 23,

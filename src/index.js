@@ -122,7 +122,7 @@ class Proskomma {
   }
 
   processor() {
-    return 'ProsKomma JS';
+    return 'Proskomma JS';
   }
 
   packageVersion() {
