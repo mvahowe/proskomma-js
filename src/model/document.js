@@ -302,6 +302,9 @@ class Document {
     mainSequence.chapters = {};
 
     for (const [chapterN, chapterElement] of Object.entries(chapterIndexes)) {
+      if (!chapterElement.startBlock || !chapterElement.endBlock) {
+        continue;
+      }
       const ba = new ByteArray();
       mainSequence.chapters[chapterN] = ba;
       const recordType = chapterElement.startBlock === chapterElement.endBlock ? shortCVIndexType : longCVIndexType;

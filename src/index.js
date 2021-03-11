@@ -10,7 +10,7 @@ const { DocSet } = require('./model/doc_set');
 const { Document } = require('./model/document');
 const { gqlSchema } = require('./graph');
 
-class ProsKomma {
+class Proskomma {
   constructor() {
     this.processorId = generateId();
     this.documents = {};
@@ -375,4 +375,4 @@ class ProsKomma {
   }
 }
 
-module.exports = { ProsKomma };
+module.exports = { Proskomma };

@@ -1,6 +1,6 @@
 const test = require('tape');
 
-const { ProsKomma } = require('../../src');
+const { Proskomma } = require('../../src');
 
 const testGroup = 'Document';
 
@@ -9,7 +9,7 @@ test(
   async function (t) {
     try {
       t.plan(1);
-      const pk = new ProsKomma();
+      const pk = new Proskomma();
       t.throws(() => pk.importDocument({
         lang: 'deu',
         abbr: 'xyz',

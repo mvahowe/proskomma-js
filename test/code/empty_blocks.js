@@ -1,6 +1,6 @@
 const test = require('tape');
 
-const { ProsKomma } = require('../../src');
+const { Proskomma } = require('../../src');
 const {
   pkWithDoc,
   customPkWithDoc,
@@ -13,7 +13,7 @@ const pk = pkWithDoc('../test_data/usfm/en_ust_psa_1.usfm', {
   abbr: 'hello',
 })[0];
 
-const customProsKomma = class extends ProsKomma {
+const customProskomma = class extends Proskomma {
 
   constructor() {
     super();
@@ -31,7 +31,7 @@ const customProsKomma = class extends ProsKomma {
 
 };
 
-const customPk = customPkWithDoc(customProsKomma, '../test_data/usfm/en_ust_psa_1.usfm', {
+const customPk = customPkWithDoc(customProskomma, '../test_data/usfm/en_ust_psa_1.usfm', {
   lang: 'fra',
   abbr: 'hello',
 }, {})[0];

@@ -1,6 +1,6 @@
 const test = require('tape');
 
-const { ProsKomma } = require('../../src');
+const { Proskomma } = require('../../src');
 const {
   pkWithDoc,
   pkWithDocs,
@@ -37,7 +37,7 @@ test(
     try {
       t.plan(9);
       const query = '{ id processor packageVersion nDocSets nDocuments }';
-      const pk = new ProsKomma();
+      const pk = new Proskomma();
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('id' in result.data);

@@ -1,3 +1,3 @@
-const { ProsKomma } = require('./src');
+const { Proskomma } = require('./src');
 
-module.exports = { ProsKomma };
+module.exports = { Proskomma };

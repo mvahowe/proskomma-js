@@ -1,12 +1,12 @@
 const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
-const { ProsKomma } = require('../../src');
-const { pkWithDoc, pkWithDocs } = require('../lib/load');
+const { Proskomma } = require('../../src');
+const { pkWithDocs } = require('../lib/load');
 
 const testGroup = 'Mutate Add Operations';
 
-const pk = new ProsKomma();
+const pk = new Proskomma();
 let content = fse.readFileSync(
   path.resolve(__dirname, '../test_data/usx/web_rut.usx'),
 ).toString();

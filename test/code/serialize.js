@@ -4,7 +4,8 @@ const {
   serializedSchema,
   unpackEnum,
 } = require('proskomma-utils');
-const { ProsKomma } = require('../../src');
+
+const { Proskomma } = require('../../src');
 
 const { pkWithDoc } = require('../lib/load');
 
@@ -45,7 +46,7 @@ test(
       const docSetId = result.data.docSets[0].id;
       const serialized = pk.serializeSuccinct(docSetId);
       // console.log(JSON.stringify(serialized, null, 2));
-      const pk2 = new (ProsKomma);
+      const pk2 = new (Proskomma);
       pk2.loadSuccinctDocSet(serialized);
       t.equal(pk2.nDocSets(), 1);
       t.equal(pk2.nDocuments(), 1);

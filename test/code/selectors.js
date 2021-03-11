@@ -1,8 +1,8 @@
+const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
-const path = require('path');
 
-const { ProsKomma } = require('../../src');
+const { Proskomma } = require('../../src');
 const {
   customPkWithDoc,
   customPkWithDocs,
@@ -16,7 +16,7 @@ test(
     try {
       t.plan(9);
       const query = '{ selectors { name type regex min max enum } }';
-      const pk = new ProsKomma();
+      const pk = new Proskomma();
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('selectors' in result.data);
@@ -40,84 +40,84 @@ test(
     try {
       t.plan(15);
       let selectors = [];
-      const customProsKomma = class extends ProsKomma {
+      const customProskomma = class extends Proskomma {
         constructor() {
           super();
           this.selectors = selectors;
           this.validateSelectors();
         }
       };
-      t.throws(() => new customProsKomma(), /No selectors found/);
+      t.throws(() => new customProskomma(), /No selectors found/);
       selectors = [{}];
-      t.throws(() => new customProsKomma(), /Selector.+has no name/);
+      t.throws(() => new customProskomma(), /Selector.+has no name/);
       selectors = [{ name: 'foo' }];
-      t.throws(() => new customProsKomma(), /Selector.+has no type/);
+      t.throws(() => new customProskomma(), /Selector.+has no type/);
       selectors = [{
         name: 'foo',
         type: 'banana',
       }];
-      t.throws(() => new customProsKomma(), /Type for selector/);
+      t.throws(() => new customProskomma(), /Type for selector/);
       selectors = [{
         name: 'foo',
         type: 'string',
         banana: 'split',
       }];
-      t.throws(() => new customProsKomma(), /Unexpected key/);
+      t.throws(() => new customProskomma(), /Unexpected key/);
       selectors = [{
         name: 'foo',
         type: 'string',
         min: 23,
       }];
-      t.throws(() => new customProsKomma(), /should not include 'min'/);
+      t.throws(() => new customProskomma(), /should not include 'min'/);
       selectors = [{
         name: 'foo',
         type: 'string',
         max: 23,
       }];
-      t.throws(() => new customProsKomma(), /should not include 'max'/);
+      t.throws(() => new customProskomma(), /should not include 'max'/);
       selectors = [{
         name: 'foo',
         type: 'string',
         regex: '[',
       }];
-      t.throws(() => new customProsKomma(), /is not valid/);
+      t.throws(() => new customProskomma(), /is not valid/);
       selectors = [{
         name: 'foo',
         type: 'string',
         enum: ['a', 'b', 23],
       }];
-      t.throws(() => new customProsKomma(), /should be strings/);
+      t.throws(() => new customProskomma(), /should be strings/);
       selectors = [{
         name: 'foo',
         type: 'integer',
         regex: '[a]',
       }];
-      t.throws(() => new customProsKomma(), /should not include 'regex'/);
+      t.throws(() => new customProskomma(), /should not include 'regex'/);
       selectors = [{
         name: 'foo',
         type: 'integer',
         min: '23',
       }];
-      t.throws(() => new customProsKomma(), /'min' must be a number/);
+      t.throws(() => new customProskomma(), /'min' must be a number/);
       selectors = [{
         name: 'foo',
         type: 'integer',
         max: '23',
       }];
-      t.throws(() => new customProsKomma(), /'max' must be a number/);
+      t.throws(() => new customProskomma(), /'max' must be a number/);
       selectors = [{
         name: 'foo',
         type: 'integer',
         min: 23,
         max: 22,
       }];
-      t.throws(() => new customProsKomma(), /'min' cannot be greater than 'max'/);
+      t.throws(() => new customProskomma(), /'min' cannot be greater than 'max'/);
       selectors = [{
         name: 'foo',
         type: 'integer',
         enum: [1, 2, '3'],
       }];
-      t.throws(() => new customProsKomma(), /should be numbers/);
+      t.throws(() => new customProskomma(), /should be numbers/);
       selectors = [
         {
           name: 'foo',
@@ -133,7 +133,7 @@ test(
           enum: [2, 4, 6],
         },
       ];
-      t.doesNotThrow(() => new customProsKomma());
+      t.doesNotThrow(() => new customProskomma());
     } catch (err) {
       console.log(err);
     }
@@ -145,7 +145,7 @@ test(
   async function (t) {
     try {
       t.plan(8);
-      const customProsKomma = class extends ProsKomma {
+      const customProsKomma = class extends Proskomma {
         constructor() {
           super();
           this.selectors = [
@@ -217,7 +217,7 @@ test(
   `selectors in graph for docSet (${testGroup})`,
   async function (t) {
     try {
-      const customProsKomma = class extends ProsKomma {
+      const customProsKomma = class extends Proskomma {
         constructor() {
           super();
           this.selectors = [

@@ -1,7 +1,7 @@
 {
   "name": "proskomma",
-  "version": "0.3.3",
-  "description": "A Model for Complex Text Documents such as Bibles",
+  "version": "0.3.4",
+  "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
   "files": [
     "dist/*"
