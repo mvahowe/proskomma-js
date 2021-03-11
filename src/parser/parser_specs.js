@@ -408,11 +408,11 @@ const specs = (pt) => [
       ],
       during: (parser, pt) => {
         const scopeId = generateId();
-        const vpScope = {
+        const caScope = {
           label: () => labelForScope('altChapter', [scopeId]),
           endedBy: ['startTag/ca', 'chapter'],
         };
-        parser.openNewScope(pt, vpScope, true, parser.sequences.main);
+        parser.openNewScope(pt, caScope, true, parser.sequences.main);
       },
     },
   },

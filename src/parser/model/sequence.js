@@ -171,7 +171,7 @@ const Sequence = class {
       }
 
       for (const item of [...block.items].reverse()) {
-        if (item.itemType !== 'startScope') {
+        if (item.itemType !== 'startScope' || item.label.startsWith('altChapter')) {
           break;
         }
         this.blocks[blockNo + 1].items.unshift(this.blocks[blockNo].items.pop());
