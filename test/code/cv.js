@@ -9,10 +9,10 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'web',
 })[0];
 
-const chapterQuery = `cv (chapter:"3") {type subType payload }`;
-const verseQuery = `cv (chapter:"3" verses:["6"]) {type subType payload }`;
-const versesQuery = `cv (chapter:"3" verses:["6", "7"]) {type subType payload }`;
-const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1") {type subType payload }`;
+const chapterQuery = `cv (chapter:"3") { items { type subType payload } tokens { subType payload } text }`;
+const verseQuery = `cv (chapter:"3" verses:["6"]) { items { type subType payload } tokens { subType payload } text }`;
+const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { items { type subType payload } tokens { subType payload } text }`;
+const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1") { items { type subType payload } tokens { subType payload } text }`;
 
 test(
   `Chapter (${testGroup})`,

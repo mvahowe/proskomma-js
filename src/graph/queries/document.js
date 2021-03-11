@@ -11,7 +11,7 @@ const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
 const cIndexType = require('./cIndex');
-const itemType = require('./item');
+const itemListType = require('./itemList');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -62,7 +62,7 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args) => root.tags.has(args.tagName),
     },
     cv: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      type: GraphQLNonNull(itemListType),
       args: {
         chapter: { type: GraphQLString },
         verses: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
