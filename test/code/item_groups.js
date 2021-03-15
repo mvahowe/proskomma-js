@@ -17,9 +17,9 @@ test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(8);
+      t.plan(10);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
-        'scopeLabels text ' +
+        'scopeLabels text items { type subType payload }' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -31,6 +31,8 @@ test(
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
       t.ok(itemGroups[1].text.startsWith('Instead'));
       t.ok(itemGroups[1].text.endsWith('Yahweh teaches.'));
+      t.equal(itemGroups[1].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 0);
+      t.equal(itemGroups[2].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 1);
     } catch (err) {
       console.log(err);
     }

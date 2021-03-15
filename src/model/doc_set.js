@@ -846,6 +846,8 @@ class DocSet {
     for (const block of blocks) {
       const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
       const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
+      const startBlockScope = ['scope', 'start', blockScope];
+      const endBlockScope = ['scope', 'end', blockScope];
       const blockGrafts = this.unsuccinctifyGrafts(block.bg);
 
       allBlockScopes = new Set(this.unsuccinctifyScopes(block.os)
@@ -853,7 +855,15 @@ class DocSet {
         .concat([blockScope]),
       );
 
-      for (const item of blockGrafts.concat(this.unsuccinctifyItems(block.c, {}, includeContext))) {
+      for (
+        const item of blockGrafts.concat(
+          [
+            startBlockScope,
+            ...this.unsuccinctifyItems(block.c, {}, includeContext),
+            endBlockScope,
+          ],
+        )
+      ) {
         if (item[0] === 'scope' && item[1] === 'start') {
           allBlockScopes.add(item[2]);
         }
@@ -990,11 +1000,13 @@ class DocSet {
     if (!document) {
       throw new Error(`Document '${documentId}' not found`);
     }
+
     const sequence = document.sequences[sequenceId];
 
     if (!sequence) {
       throw new Error(`Sequence '${sequenceId}' not found`);
     }
+
     if (sequence.blocks.length <= blockPosition) {
       throw new Error(`Could not find block ${blockPosition} (length=${sequence.blocks.length})`);
     }
