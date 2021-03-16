@@ -1,0 +1,19 @@
+{
+   __type(name: "Root") {
+     name
+     description
+     fields {
+       name
+       args { name }
+       type {
+         name
+         kind
+         fields { name args { name } }
+         ofType { name }
+         }
+       }
+     }
+   }
+
+
+
