@@ -12,18 +12,22 @@ const pk2 = pkWithDoc('../test_data/usfm/ust_psa_with_ts.usfm', {
   lang: 'eng',
   abbr: 'ust',
 })[0];
+const pk3 = pkWithDoc('../test_data/usx/web_psa.usx', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
 
 test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(10);
+      t.plan(8);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"] includeContext:true) {' +
-        'scopeLabels text items { type subType payload position scopes }' +
+        'scopeLabels text' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      // console.log(result.data.documents[0].mainSequence.itemGroups[0])
+      // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups[0], null, 2))
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].scopeLabels.length, 3);
@@ -32,8 +36,6 @@ test(
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
       t.ok(itemGroups[1].text.startsWith('Instead'));
       t.ok(itemGroups[1].text.endsWith('Yahweh teaches.'));
-      t.equal(itemGroups[1].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 0);
-      t.equal(itemGroups[2].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 1);
     } catch (err) {
       console.log(err);
     }
@@ -44,10 +46,10 @@ test(
   `Items & tokens by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(8);
+      t.plan(10);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
         'scopeLabels ' +
-        `items {type subType payload} ` +
+        `items {type subType payload position scopes } ` +
         'tokens { payload }' +
         '} } } }';
       let result = await pk.gqlQuery(query);
@@ -60,6 +62,8 @@ test(
       t.equal(itemGroups[1].tokens[0].payload, 'Instead');
       t.equal([...itemGroups[1].tokens].reverse()[0].payload, '.');
       t.equal(itemGroups[0].items.filter(i => i.type === 'graft').length, 1);
+      t.equal(itemGroups[1].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 0);
+      t.equal(itemGroups[2].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 1);
     } catch (err) {
       console.log(err);
     }
