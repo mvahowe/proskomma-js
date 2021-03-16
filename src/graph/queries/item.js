@@ -42,7 +42,7 @@ const itemType = new GraphQLObjectType({
       type: GraphQLList(GraphQLNonNull(GraphQLString)),
       args: { startsWith: { type: GraphQLList(GraphQLNonNull(GraphQLString)) } },
       resolve: (root, args) =>
-        root[4].filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)),
+        root[4] ? root[4].filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)) : [],
     },
   }),
 });

@@ -859,7 +859,7 @@ class DocSet {
         const item of blockGrafts.concat(
           [
             startBlockScope,
-            ...this.unsuccinctifyItems(block.c, {}, includeContext),
+            ...this.unsuccinctifyItems(block.c, {}, includeContext, allBlockScopes),
             endBlockScope,
           ],
         )

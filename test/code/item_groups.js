@@ -18,11 +18,12 @@ test(
   async function (t) {
     try {
       t.plan(10);
-      const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
-        'scopeLabels text items { type subType payload }' +
+      const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"] includeContext:true) {' +
+        'scopeLabels text items { type subType payload position scopes }' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
+      // console.log(result.data.documents[0].mainSequence.itemGroups[0])
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].scopeLabels.length, 3);
