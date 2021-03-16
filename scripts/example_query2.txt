@@ -1,1 +1,1 @@
-{ documents { sequences { type blocks { bs {payload} os { payload } items(includeContext:true) { type subType payload position scopes } } } } }
+{ documents { sequences { type blocks { bs { payload } os { payload } items(includeContext:true) { type subType payload position scopes } } } } }
