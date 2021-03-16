@@ -17,8 +17,9 @@ const itemGroupType = new GraphQLObjectType({
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      args: { withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) } },
       resolve: (root, args, context) =>
-        root[1].filter(i => i[0] === 'token'),
+        root[1].filter(i => i[0] === 'token' && (!args.withChars || args.withChars.includes(i[2]))),
     },
     text: {
       type: GraphQLNonNull(GraphQLString),

@@ -357,3 +357,36 @@ test(
     }
   },
 );
+
+test(
+  `Tokens filtered by payload (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '{ documents { mainSequence { blocks {' +
+        'text tokens(includeContext:true withChars: ["righteous", "upright"]) { payload position }' +
+        '} } } }';
+      let result = await pk7.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blockEntriesWithContent = [...result.data.documents[0].mainSequence.blocks.entries()].filter(be => be[1].tokens.length > 0);
+      const matches = [];
+
+      for (const [blockN, block] of blockEntriesWithContent) {
+        for (const token of block.tokens) {
+          matches.push({
+            block: blockN,
+            token: token.position,
+            payload: token.payload,
+          });
+        }
+      }
+      // console.log(JSON.stringify(matches, null, 2));
+      t.equal(matches.filter(m => m.payload === 'upright').length, 23);
+      t.equal(matches.filter(m => m.payload === 'righteous').length, 66);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+
