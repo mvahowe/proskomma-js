@@ -611,7 +611,7 @@ class Document {
       return false;
     }
     sequence.blocks.splice(blockN, 1);
-    // this.buildChapterVerseIndex(this.sequences[this.mainId]);
+    this.buildChapterVerseIndex(this.sequences[this.mainId]);
     return true;
   }
 
