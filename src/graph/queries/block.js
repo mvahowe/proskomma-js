@@ -51,6 +51,10 @@ const blockType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLInt),
       resolve: root => root.is.length,
     },
+    ntBL: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.nt.length,
+    },
     cL: {
       type: GraphQLNonNull(GraphQLInt),
       resolve:
@@ -93,6 +97,11 @@ const blockType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),
+    },
+    nt: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve:
+        root => root.nt.nByte(0),
     },
     items: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),

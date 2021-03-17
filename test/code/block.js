@@ -51,9 +51,10 @@ test(
         bgBL: 0,
         osBL: 0,
         isBL: 9,
+        ntBL: 1,
       };
       t.plan(2 + Object.keys(lengths).length);
-      const query = '{ documents { mainSequence { blocks { cBL bgBL osBL isBL } } } }';
+      const query = '{ documents { mainSequence { blocks { cBL bgBL osBL isBL ntBL } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('blocks' in result.data.documents[0].mainSequence);
@@ -68,7 +69,7 @@ test(
 );
 
 test(
-  `Length in Items (${testGroup})`,
+  `Length in Items; nt (${testGroup})`,
   async function (t) {
     try {
       const lengths = [
@@ -85,8 +86,8 @@ test(
           isL: 2,
         },
       ];
-      t.plan(2 + (lengths.length * Object.keys(lengths[0]).length));
-      const query = '{ documents { mainSequence { blocks { cL bgL osL isL } } } }';
+      t.plan(4 + (lengths.length * Object.keys(lengths[0]).length));
+      const query = '{ documents { mainSequence { blocks { cL bgL osL isL nt text } } } }';
       const result = await pk3.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('blocks' in result.data.documents[0].mainSequence);
@@ -98,6 +99,10 @@ test(
           t.equal(block[field], value);
         }
       }
+
+      const nts = result.data.documents[0].mainSequence.blocks.map(b => b.nt);
+      t.equal(nts[0], 0);
+      t.ok(nts[1] > 0);
     } catch (err) {
       console.log(err);
     }

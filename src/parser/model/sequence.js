@@ -247,11 +247,16 @@ const Sequence = class {
       }
     };
 
+    let nextToken = 0;
+
     for (const block of this.blocks) {
       const contentBA = new ByteArray(block.length);
       const blockGraftsBA = new ByteArray(1);
       const openScopesBA = new ByteArray(1);
       const includedScopesBA = new ByteArray(1);
+      const nextTokenBA = new ByteArray(1);
+
+      nextTokenBA.pushNByte(nextToken);
 
       for (const bg of block.blockGrafts) {
         this.pushSuccinctGraft(blockGraftsBA, docSet, bg);
@@ -274,6 +279,10 @@ const Sequence = class {
         case 'bareSlash':
         case 'unknown':
           this.pushSuccinctToken(contentBA, docSet, item);
+
+          if (item.itemType === 'wordLike') {
+            nextToken++;
+          }
           break;
         case 'graft':
           this.pushSuccinctGraft(contentBA, docSet, item);
@@ -309,6 +318,7 @@ const Sequence = class {
         bg: blockGraftsBA,
         os: openScopesBA,
         is: includedScopesBA,
+        nt: nextTokenBA,
       });
     }
     return ret;
