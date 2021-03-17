@@ -210,6 +210,7 @@ class Document {
     const chapterIndexes = {};
     let chapterN = '0';
     let verseN = '0';
+    let nextTokenN = 0;
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
       for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, false).entries()) {
@@ -221,6 +222,7 @@ class Document {
               chapterIndexes[chapterN] = {
                 startBlock: blockN,
                 startItem: itemN,
+                nextToken: nextTokenN,
               };
             } else if (item[2].startsWith('verse/')) {
               verseN = item[2].split('/')[1];
@@ -231,6 +233,7 @@ class Document {
               chapterVerseIndexes[chapterN][verseN].push({
                 startBlock: blockN,
                 startItem: itemN,
+                nextToken: nextTokenN,
               });
             }
           } else if (item[1] === 'end') {
@@ -253,6 +256,8 @@ class Document {
               }
             }
           }
+        } else if (item[0] === 'token' && item[1] === 'wordLike') {
+          nextTokenN++;
         }
       }
     }
@@ -285,9 +290,9 @@ class Document {
             ba.pushByte(0);
 
             if (recordType === shortCVIndexType) {
-              ba.pushNBytes([verseElement.startBlock, verseElement.startItem, verseElement.endItem]);
+              ba.pushNBytes([verseElement.startBlock, verseElement.startItem, verseElement.endItem, verseElement.nextToken]);
             } else {
-              ba.pushNBytes([verseElement.startBlock, verseElement.endBlock, verseElement.startItem, verseElement.endItem]);
+              ba.pushNBytes([verseElement.startBlock, verseElement.endBlock, verseElement.startItem, verseElement.endItem, verseElement.nextToken]);
             }
             ba.setByte(pos, this.makeVerseLengthByte(recordType, verseElementN === (nVerseElements - 1), ba.length - pos));
             pos = ba.length;
@@ -302,7 +307,7 @@ class Document {
     mainSequence.chapters = {};
 
     for (const [chapterN, chapterElement] of Object.entries(chapterIndexes)) {
-      if (!chapterElement.startBlock || !chapterElement.endBlock) {
+      if (!("startBlock" in chapterElement) || !("endBlock" in chapterElement)) {
         continue;
       }
       const ba = new ByteArray();
@@ -311,9 +316,9 @@ class Document {
       ba.pushByte(0);
 
       if (recordType === shortCVIndexType) {
-        ba.pushNBytes([chapterElement.startBlock, chapterElement.startItem, chapterElement.endItem]);
+        ba.pushNBytes([chapterElement.startBlock, chapterElement.startItem, chapterElement.endItem, chapterElement.nextToken]);
       } else {
-        ba.pushNBytes([chapterElement.startBlock, chapterElement.endBlock, chapterElement.startItem, chapterElement.endItem]);
+        ba.pushNBytes([chapterElement.startBlock, chapterElement.endBlock, chapterElement.startItem, chapterElement.endItem, chapterElement.nextToken]);
       }
       ba.setByte(0, this.makeVerseLengthByte(recordType, true, ba.length));
       ba.trim();
@@ -350,22 +355,24 @@ class Document {
         const [recordType, isLast, recordLength] = this.verseLengthByte(succinct, pos);
 
         if (recordType === shortCVIndexType) {
-          const nBytes = succinct.nBytes(pos + 1, 3);
+          const nBytes = succinct.nBytes(pos + 1, 4);
 
           currentVerseRecord.push({
             startBlock: nBytes[0],
             endBlock: nBytes[0],
             startItem: nBytes[1],
             endItem: nBytes[2],
+            nextToken: nBytes[3],
           });
         } else if (recordType === longCVIndexType) {
-          const nBytes = succinct.nBytes(pos + 1, 4);
+          const nBytes = succinct.nBytes(pos + 1, 5);
 
           currentVerseRecord.push({
             startBlock: nBytes[0],
             endBlock: nBytes[1],
             startItem: nBytes[2],
             endItem: nBytes[3],
+            nextToken: nBytes[4],
           });
         }
 
@@ -386,22 +393,24 @@ class Document {
       const recordType = this.verseLengthByte(succinct, 0)[0];
 
       if (recordType === shortCVIndexType) {
-        const nBytes = succinct.nBytes(1, 3);
+        const nBytes = succinct.nBytes(1, 4);
 
         return {
           startBlock: nBytes[0],
           endBlock: nBytes[0],
           startItem: nBytes[1],
           endItem: nBytes[2],
+          nextToken: nBytes[3],
         };
       } else if (recordType === longCVIndexType) {
-        const nBytes = succinct.nBytes(1, 4);
+        const nBytes = succinct.nBytes(1, 5);
 
         return {
           startBlock: nBytes[0],
           endBlock: nBytes[1],
           startItem: nBytes[2],
           endItem: nBytes[3],
+          nextToken: nBytes[4],
         };
       }
     }

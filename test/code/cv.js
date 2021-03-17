@@ -12,7 +12,7 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
 const chapterQuery = `cv (chapter:"3") { items { type subType payload } tokens { subType payload } text }`;
 const verseQuery = `cv (chapter:"3" verses:["6"]) { items { type subType payload } tokens { subType payload } text }`;
 const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { items { type subType payload } tokens { subType payload } text }`;
-const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1") { items { type subType payload } tokens { subType payload } text }`;
+const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { items { type subType payload position } tokens { subType payload position } text }`;
 
 test(
   `Chapter (${testGroup})`,

@@ -353,9 +353,10 @@ class DocSet {
     return ret;
   }
 
-  itemsByIndex(mainSequence, index) {
+  itemsByIndex(mainSequence, index, includeContext) {
     let ret = [];
     let currentBlock = index.startBlock;
+    let nextToken = index.nextToken;
 
     while (currentBlock <= index.endBlock) {
       let blockItems = this.unsuccinctifyItems(mainSequence.blocks[currentBlock].c, {}, false);
@@ -368,6 +369,15 @@ class DocSet {
         blockItems = blockItems.slice(index.startItem);
       } else if (currentBlock === index.endBlock) {
         blockItems = blockItems.slice(0, index.endItem + 1);
+      }
+
+      if (includeContext) {
+        let extendedBlockItems = [];
+
+        for (const bi of blockItems) {
+          extendedBlockItems.push(bi.concat([bi[0] === 'token' && bi[1] === 'wordLike' ? nextToken++ : null]));
+        }
+        blockItems = extendedBlockItems;
       }
       ret.push([...blockGrafts, ['scope', 'start', blockScope[2]], ...blockItems, ['scope', 'end', blockScope[2]]]);
       currentBlock++;

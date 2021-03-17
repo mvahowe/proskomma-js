@@ -67,6 +67,7 @@ const documentType = new GraphQLObjectType({
         chapter: { type: GraphQLString },
         verses: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
         chapterVerses: { type: GraphQLString },
+        includeContext: { type: GraphQLBoolean },
       },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
@@ -88,7 +89,7 @@ const documentType = new GraphQLObjectType({
           const ci = root.chapterIndex(args.chapter);
 
           if (ci) {
-            return context.docSet.itemsByIndex(mainSequence, ci)
+            return context.docSet.itemsByIndex(mainSequence, ci, args.includeContext || false)
               .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)));
           } else {
             return [];
@@ -102,7 +103,7 @@ const documentType = new GraphQLObjectType({
             for (const verse of args.verses.map(v => parseInt(v))) {
               if (cvi[verse]) {
                 for (const ve of cvi[verse]) {
-                  ret = ret.concat(context.docSet.itemsByIndex(mainSequence, ve)
+                  ret = ret.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || false)
                     .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))));
                 }
               }
@@ -127,12 +128,13 @@ const documentType = new GraphQLObjectType({
             endBlock: toCVI[parseInt(toV)][0].endBlock,
             startItem: fromCVI[parseInt(fromV)][0].startItem,
             endItem: toCVI[parseInt(toV)][0].endItem,
+            nextToken: toCVI[parseInt(toV)][0].nextToken,
           };
 
           if (index.startBlock > index.endBlock || (index.startBlock === index.endBlock && index.startItem >= index.endItem)) {
             return [];
           }
-          return context.docSet.itemsByIndex(mainSequence, index)
+          return context.docSet.itemsByIndex(mainSequence, index, args.includeContext || false)
             .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)));
         }
       },

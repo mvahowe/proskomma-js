@@ -2,6 +2,7 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql');
@@ -31,18 +32,27 @@ const cIndexType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve: root => root[1].endItem,
     },
+    nextToken: {
+      type: GraphQLInt,
+      resolve: root => root[1].nextToken,
+    },
     items: {
       type: GraphQLNonNull(GraphQLList(itemType)),
+      args: { includeContext: { type: GraphQLBoolean } },
       resolve: (root, args, context) =>
-        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1])
+        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1], args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)), []),
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(itemType)),
+      args: {
+        includeContext: { type: GraphQLBoolean },
+        withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+      },
       resolve: (root, args, context) =>
-        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1])
+        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1], args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)), [])
-          .filter(i => i[0] === 'token'),
+          .filter(i => i[0] === 'token' && (!args.withChars || args.withChars.includes(i[2]))),
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
