@@ -129,7 +129,6 @@ const blockType = new GraphQLObjectType({
                 requiredScopes: args.withScopes || [],
                 anyScope: args.anyScope || false,
               },
-              args.includeContext || false,
             );
           }
         },
@@ -163,7 +162,6 @@ const blockType = new GraphQLObjectType({
                 requiredScopes: args.withScopes || [],
                 anyScope: args.anyScope || false,
               },
-              args.includeContext || false,
             );
           }
 
@@ -189,7 +187,7 @@ const blockType = new GraphQLObjectType({
               { tokens: true },
               false,
             ) :
-            context.docSet.unsuccinctifyItems(root.c, { tokens: true }, false);
+            context.docSet.unsuccinctifyItems(root.c, { tokens: true }, null);
           let ret = tokens.map(t => t[2]).join('').trim();
 
           if (args.normalizeSpace) {
@@ -201,7 +199,7 @@ const blockType = new GraphQLObjectType({
     dump: {
       type: GraphQLNonNull(GraphQLString),
       resolve:
-        (root, args, context) => dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, false)),
+        (root, args, context) => dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, null)),
     },
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),

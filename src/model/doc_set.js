@@ -255,7 +255,7 @@ class DocSet {
     this.enumIndexes[category] = enumIndex(category, this.enums[category]);
   }
 
-  unsuccinctifyBlock(block, options, includeContext) {
+  unsuccinctifyBlock(block, options) {
     this.maybeBuildEnumIndexes();
     const succinctBlockScope = block.bs;
     const [itemLength, itemType, itemSubtype] = headerBytes(succinctBlockScope, 0);
@@ -263,13 +263,15 @@ class DocSet {
     const blockGrafts = this.unsuccinctifyGrafts(block.bg);
     const openScopes = this.unsuccinctifyScopes(block.os);
     const includedScopes = this.unsuccinctifyScopes(block.is);
-    const blockItems = this.unsuccinctifyItems(block.c, options || {}, includeContext);
+    const nextToken = block.nt.nByte(0);
+    const blockItems = this.unsuccinctifyItems(block.c, options || {}, nextToken);
     return {
       bs: blockScope,
       bg: blockGrafts,
       c: blockItems,
       os: openScopes,
       is: includedScopes,
+      nt: nextToken,
     };
   }
 
@@ -310,14 +312,17 @@ class DocSet {
     return ret;
   }
 
-  unsuccinctifyItems(succinct, options, includeContext, openScopes) {
-    if (includeContext === undefined) {
-      throw new Error('includeContext must now be provided to unsuccinctifyItems');
+  unsuccinctifyItems(succinct, options, nextToken, openScopes) {
+    if (nextToken === undefined) {
+      throw new Error('nextToken (previously includeContext) must now be provided to unsuccinctifyItems');
+    }
+    if (nextToken !== null && typeof nextToken !== 'number') {
+      throw new Error('nextToken (previously includeContext) must be null or an integer in unsuccinctifyItems');
     }
 
     const ret = [];
     let pos = 0;
-    let tokenCount = 0;
+    let tokenCount = nextToken || 0;
     const scopes = new Set(openScopes || []);
 
     while (pos < succinct.length) {
@@ -325,7 +330,7 @@ class DocSet {
 
       if (item[0] === 'token') {
         if ((Object.keys(options).length === 0) || options.tokens) {
-          if (includeContext) {
+          if (nextToken !== null) {
             item.push(item[0] === 'token' && item[1] === 'wordLike' ? tokenCount++ : null);
             item.push([...scopes]);
           }
@@ -359,7 +364,7 @@ class DocSet {
     let nextToken = index.nextToken;
 
     while (currentBlock <= index.endBlock) {
-      let blockItems = this.unsuccinctifyItems(mainSequence.blocks[currentBlock].c, {}, false);
+      let blockItems = this.unsuccinctifyItems(mainSequence.blocks[currentBlock].c, {}, nextToken);
       const blockScope = this.unsuccinctifyScopes(mainSequence.blocks[currentBlock].bs)[0];
       const blockGrafts = this.unsuccinctifyGrafts(mainSequence.blocks[currentBlock].bg);
 
@@ -456,7 +461,7 @@ class DocSet {
         .map(ri => ri[2]));
   }
 
-  unsuccinctifyPrunedItems(block, options, includeContext) {
+  unsuccinctifyPrunedItems(block, options) {
     const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
     const requiredScopes = options.requiredScopes || [];
     const anyScope = options.anyScope || false;
@@ -486,7 +491,7 @@ class DocSet {
       (item[0] === 'token' && options.withChars.includes(item[2]));
     const ret = [];
 
-    for (const item of this.unsuccinctifyItems(block.c, options, includeContext, openScopes)) {
+    for (const item of this.unsuccinctifyItems(block.c, options, block.nt.nByte(0), openScopes)) {
       if (item[0] === 'scope' && item[1] === 'start') {
         openScopes.add(item[2]);
       }
@@ -785,7 +790,7 @@ class DocSet {
 
     const ret = [];
 
-    for (const item of this.unsuccinctifyItems(block.c, {}, includeContext)) {
+    for (const item of this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0))) {
       if (item[0] === 'scope' && item[1] === 'start') {
         openScopes.add(item[2]);
       }
@@ -804,7 +809,7 @@ class DocSet {
   blockHasMatchingItem(block, testFunction, options) {
     const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
 
-    for (const item of this.unsuccinctifyItems(block.c, options, false)) {
+    for (const item of this.unsuccinctifyItems(block.c, options, 0)) {
       if (item[0] === 'scope' && item[1] === 'start') {
         openScopes.add(item[2]);
       }
@@ -820,7 +825,7 @@ class DocSet {
     return false;
   }
 
-  sequenceItemsByScopes(blocks, byScopes, includeContext) {
+  sequenceItemsByScopes(blocks, byScopes) {
     // Return array of [scopes, items]
     // Scan block items, track scopes
     // If all scopes found:
@@ -869,7 +874,7 @@ class DocSet {
         const item of blockGrafts.concat(
           [
             startBlockScope,
-            ...this.unsuccinctifyItems(block.c, {}, includeContext, allBlockScopes),
+            ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
             endBlockScope,
           ],
         )
@@ -896,7 +901,7 @@ class DocSet {
     return ret;
   }
 
-  sequenceItemsByMilestones(blocks, byMilestones, includeContext) {
+  sequenceItemsByMilestones(blocks, byMilestones) {
     // Return array of [scopes, items]
     // Scan block items
     // If milestone found:
@@ -916,7 +921,7 @@ class DocSet {
       this.unsuccinctifyScopes(block.os).forEach(s => allBlockScopes.add(s[2]));
       const items = blockGrafts.concat(
         [blockScope].concat(
-          this.unsuccinctifyItems(block.c, {}, includeContext),
+          this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0)),
         ),
       );
 
@@ -1092,7 +1097,7 @@ class DocSet {
       openScopeLabels.add(openScope[1]);
     }
 
-    for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, false)) {
+    for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
       if (scope[1] === 'start') {
         includedScopeLabels.add(scope[2]);
         openScopeLabels.add(scope[2]);

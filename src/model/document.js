@@ -165,7 +165,7 @@ class Document {
   }
 
   rerecordBlockPreEnums(docSet, ba) {
-    for (const item of docSet.unsuccinctifyItems(ba, {}, false)) {
+    for (const item of docSet.unsuccinctifyItems(ba, {}, 0)) {
       if (item[0] === 'token') {
         if (item[1] === 'wordLike') {
           docSet.recordPreEnum('wordLike', item[2]);
@@ -213,7 +213,7 @@ class Document {
     let nextTokenN = 0;
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
-      for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, false).entries()) {
+      for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, nextTokenN).entries()) {
         if (item[0] === 'scope'){
           if (item[1] === 'start') {
             if (item[2].startsWith('chapter/')) {
@@ -518,7 +518,7 @@ class Document {
           }
         }
 
-        for (const inlineGraft of docSet.unsuccinctifyItems(block.c, { grafts: true }, false)) {
+        for (const inlineGraft of docSet.unsuccinctifyItems(block.c, { grafts: true }, 0)) {
           if (!used.has(inlineGraft[2])) {
             followGrafts(document, document.sequences[inlineGraft[2]], used);
           }
