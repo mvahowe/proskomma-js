@@ -103,7 +103,7 @@ const documentType = new GraphQLObjectType({
             for (const verse of args.verses.map(v => parseInt(v))) {
               if (cvi[verse]) {
                 for (const ve of cvi[verse]) {
-                  ret = ret.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || false)
+                  ret = ret.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || null)
                     .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))));
                 }
               }
