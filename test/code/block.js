@@ -367,27 +367,44 @@ test(
   `Tokens filtered by payload (${testGroup})`,
   async function (t) {
     try {
-      t.plan(3);
+      const charClauses = [
+        [`withChars: ["righteous", "upright"]`, 66, 23, 89],
+        [`withAnyCaseChars: ["rIGHteous", "UPright"]`, 66, 23, 89],
+        [`withCharsMatchingRegex: "right"`, 66, 23, 213],
+      ];
+      t.plan((4 * charClauses.length) + 2);
+
+      for (const charClause of charClauses) {
+        const query = '{ documents { mainSequence { blocks {' +
+          `text tokens(includeContext:true ${charClause[0]}) { payload position scopes(startsWith:["chapter/", "verses/"]) }` +
+          '} } } }';
+        let result = await pk7.gqlQuery(query);
+        t.equal(result.errors, undefined);
+        const blockEntriesWithContent = [...result.data.documents[0].mainSequence.blocks.entries()].filter(be => be[1].tokens.length > 0);
+        const matches = [];
+
+        for (const [blockN, block] of blockEntriesWithContent) {
+          for (const token of block.tokens) {
+            matches.push({
+              block: blockN,
+              token: token.position,
+              payload: token.payload,
+              scopes: token.scopes,
+            });
+          }
+        }
+        // console.log(JSON.stringify(matches, null, 2));
+        t.equal(matches.filter(m => m.payload === 'righteous').length, charClause[1]);
+        t.equal(matches.filter(m => m.payload === 'upright').length, charClause[2]);
+        t.equal(matches.length, charClause[3]);
+      }
+
       const query = '{ documents { mainSequence { blocks {' +
-        'text tokens(includeContext:true withChars: ["righteous", "upright"]) { payload position }' +
+        `text tokens(includeContext:true ${charClauses[0][0]} ${charClauses[1][0]}) { payload position scopes(startsWith:["chapter/", "verses/"]) }` +
         '} } } }';
       let result = await pk7.gqlQuery(query);
-      t.equal(result.errors, undefined);
-      const blockEntriesWithContent = [...result.data.documents[0].mainSequence.blocks.entries()].filter(be => be[1].tokens.length > 0);
-      const matches = [];
-
-      for (const [blockN, block] of blockEntriesWithContent) {
-        for (const token of block.tokens) {
-          matches.push({
-            block: blockN,
-            token: token.position,
-            payload: token.payload,
-          });
-        }
-      }
-      // console.log(JSON.stringify(matches, null, 2));
-      t.equal(matches.filter(m => m.payload === 'upright').length, 23);
-      t.equal(matches.filter(m => m.payload === 'righteous').length, 66);
+      t.notEqual(result.errors, undefined);
+      t.ok(result.errors[0].message.includes('Only one of'));
     } catch (err) {
       console.log(err);
     }

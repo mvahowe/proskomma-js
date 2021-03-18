@@ -1,3 +1,4 @@
+import xre from 'xregexp';
 const {
   GraphQLObjectType,
   GraphQLInt,
@@ -141,9 +142,14 @@ const blockType = new GraphQLObjectType({
         withScriptureCV: { type: GraphQLString },
         includeContext: { type: GraphQLBoolean },
         withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        withAnyCaseChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        withCharsMatchingRegex: { type: GraphQLString },
       },
       resolve:
         (root, args, context) => {
+          if (Object.keys(args).filter(a => a.includes('Chars')).length > 1) {
+            throw new Error('Only one of "withChars", "withAnyCaseChars" and "withCharsMatchingRegex" may be specified');
+          }
           let ret;
 
           if (args.withScriptureCV) {
@@ -167,6 +173,10 @@ const blockType = new GraphQLObjectType({
 
           if (args.withChars) {
             ret = ret.filter(i => args.withChars.includes(i[2]));
+          } else if (args.withAnyCaseChars) {
+            ret = ret.filter(i => args.withAnyCaseChars.map(a => a.toLowerCase()).includes(i[2].toLowerCase()));
+          } else if (args.withCharsMatchingRegex) {
+            ret = ret.filter(i => xre.test(i, xre(args.withCharsMatchingRegex)));
           }
 
           return ret.filter(i => i[0] === 'token');
