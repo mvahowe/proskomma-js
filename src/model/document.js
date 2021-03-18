@@ -501,6 +501,7 @@ class Document {
       c: blockOb.c.base64(),
       is: blockOb.is.base64(),
       os: blockOb.os.base64(),
+      nt: blockOb.os.base64(),
     };
   }
 
