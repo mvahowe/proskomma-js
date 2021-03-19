@@ -9,10 +9,10 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'web',
 })[0];
 
-const chapterQuery = `cv (chapter:"3") { items { type subType payload } tokens { subType payload } text }`;
-const verseQuery = `cv (chapter:"3" verses:["6"]) { items { type subType payload } tokens { subType payload } text }`;
-const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { items { type subType payload } tokens { subType payload } text }`;
-const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { items { type subType payload position } tokens { subType payload position } text }`;
+const chapterQuery = `cv (chapter:"3") { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
+const verseQuery = `cv (chapter:"3" verses:["6"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
+const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
+const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
 
 test(
   `Chapter (${testGroup})`,
@@ -83,7 +83,6 @@ test(
       t.equal([...wordTokens].reverse()[0].payload, 'down');
       t.ok(cv.text.startsWith('She went down'));
       t.ok(cv.text.endsWith('and lay down. '));
-      // console.log(JSON.stringify(cv, null, 2));
     } catch (err) {
       console.log(err);
     }

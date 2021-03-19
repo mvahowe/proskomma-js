@@ -11,7 +11,7 @@ const sequenceType = require('./sequence');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
 const cIndexType = require('./cIndex');
-const itemListType = require('./itemList');
+const itemGroupType = require('./itemGroup');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -62,7 +62,7 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args) => root.tags.has(args.tagName),
     },
     cv: {
-      type: GraphQLNonNull(itemListType),
+      type: GraphQLNonNull(itemGroupType),
       args: {
         chapter: { type: GraphQLString },
         verses: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
@@ -70,6 +70,25 @@ const documentType = new GraphQLObjectType({
         includeContext: { type: GraphQLBoolean },
       },
       resolve: (root, args, context) => {
+        const updatedOpenScopes = (openScopes, items) => {
+          let ret = openScopes;
+
+          for (const item of items) {
+            if (item[0] === 'scope') {
+              if (item[1] === 'start') {
+                const existingScopes = ret.filter(s => s[2] === item[2]);
+
+                if (existingScopes.length === 0) {
+                  ret.push(item[2]);
+                }
+              } else {
+                ret = openScopes.filter(s => s[2] !== item[2]);
+              }
+            }
+          }
+          return ret;
+        };
+
         context.docSet = root.processor.docSets[root.docSetId];
         const mainSequence = root.sequences[root.mainId];
 
@@ -85,30 +104,50 @@ const documentType = new GraphQLObjectType({
           throw new Error('Must not specify both chapterVerses and verses for cv');
         }
 
-        if (args.chapter && !args.verses) {
+        if (args.chapter && !args.verses) { // whole chapter
           const ci = root.chapterIndex(args.chapter);
 
           if (ci) {
-            return context.docSet.itemsByIndex(mainSequence, ci, args.includeContext || false)
-              .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)));
+            const block = mainSequence.blocks[ci.startBlock];
+            return [
+              updatedOpenScopes(
+                context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+                context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, ci.startItem),
+              ),
+              context.docSet.itemsByIndex(mainSequence, ci, args.includeContext || false)
+                .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
+            ];
           } else {
             return [];
           }
-        } else if (args.verses) {
+        } else if (args.verses) { // c:v, c:v-v
           const cvi = root.chapterVerseIndex(args.chapter);
 
           if (cvi) {
-            let ret = [];
-
+            let retItems = [];
+            let firstStartBlock;
+            let firstStartItem;
             for (const verse of args.verses.map(v => parseInt(v))) {
               if (cvi[verse]) {
                 for (const ve of cvi[verse]) {
-                  ret = ret.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || null)
+                  if (!firstStartBlock) {
+                    firstStartBlock = ve.startBlock;
+                    firstStartItem = ve.startItem;
+                  }
+                  retItems = retItems.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || null)
                     .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))));
                 }
               }
             }
-            return ret;
+
+            const block = mainSequence.blocks[firstStartBlock];
+            return [
+              updatedOpenScopes(
+                context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+                context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
+              ),
+              retItems,
+            ];
           } else {
             return [];
           }
@@ -134,8 +173,16 @@ const documentType = new GraphQLObjectType({
           if (index.startBlock > index.endBlock || (index.startBlock === index.endBlock && index.startItem >= index.endItem)) {
             return [];
           }
-          return context.docSet.itemsByIndex(mainSequence, index, args.includeContext || false)
-            .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)));
+
+          const block = mainSequence.blocks[index.startBlock];
+          return [
+            updatedOpenScopes(
+              context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+              context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, index.startItem),
+            ),
+            context.docSet.itemsByIndex(mainSequence, index, args.includeContext || false)
+              .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
+          ];
         }
       },
     },

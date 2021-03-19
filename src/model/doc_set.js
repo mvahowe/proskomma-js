@@ -317,7 +317,7 @@ class DocSet {
       throw new Error('nextToken (previously includeContext) must now be provided to unsuccinctifyItems');
     }
     if (nextToken !== null && typeof nextToken !== 'number') {
-      throw new Error('nextToken (previously includeContext) must be null or an integer in unsuccinctifyItems');
+      throw new Error(`nextToken (previously includeContext) must be null or an integer, not ${typeof nextToken} '${JSON.stringify(nextToken)}' in unsuccinctifyItems`);
     }
 
     const ret = [];

@@ -6,7 +6,7 @@ const {
 } = require('graphql');
 const itemType = require('./item');
 
-// [items, scopeLabels]
+// [scopeLabels, items]
 
 const itemGroupType = new GraphQLObjectType({
   name: 'ItemGroup',
