@@ -84,6 +84,10 @@ const cvIndexType = new GraphQLObjectType({
       type: GraphQLList(cvVersesType),
       resolve: root => root[1],
     },
+    verseNumbers: {
+      type: GraphQLList(GraphQLNonNull(GraphQLInt)),
+      resolve: root => [...root[1].entries()].filter(v => v[1].length > 0).map(v => v[0]),
+    },
   }),
 });
 

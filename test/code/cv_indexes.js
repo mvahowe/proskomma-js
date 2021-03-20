@@ -10,7 +10,7 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
 })[0];
 
 const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text';
-const cvQuery = `{ chapter verses { verse { ${rangeQuery} } } }`;
+const cvQuery = `{ chapter verseNumbers verses { verse { ${rangeQuery} } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
 const cvCharsQuery = `{ chapter verses { verse { tokens(includeContext:true withChars:["Ruth", "Boaz", "Naomi"]) { payload position} text } } }`;
 
@@ -64,7 +64,7 @@ test(
   `cvIndex (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2 + 8 + 3);
+      t.plan(2 + 8 + 6);
       let query =
         `{ documents { cvIndex(chapter:3) ${cvQuery} } }`;
       let result = await pk.gqlQuery(query);
@@ -72,6 +72,10 @@ test(
       let index = result.data.documents[0].cvIndex;
       t.equal(index.chapter, 3);
       checkIndexFields(t, index.verses[1].verse[0]);
+      const verseNumbers = result.data.documents[0].cvIndex.verseNumbers;
+      t.equal(verseNumbers.length, 18);
+      t.equal(Math.max(...verseNumbers), 18);
+      t.equal(Math.min(...verseNumbers), 1);
       query =
         `{ documents { cvIndex(chapter:9) ${cvQuery} } }`;
       result = await pk.gqlQuery(query);

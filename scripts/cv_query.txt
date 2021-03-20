@@ -1,0 +1,2 @@
+# { documents { bookCode: header(id:"bookCode") title: header(id:"toc") cvIndexes { chapter verseNumbers verses { verse { text } } } } }
+{ documents { bookCode: header(id:"bookCode") cvIndexes { chapter verseNumbers } } }
