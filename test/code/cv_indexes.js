@@ -9,6 +9,11 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'web',
 })[0];
 
+const pk2 = pkWithDoc('../test_data/usfm/web_psa51.usfm', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
+
 const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text';
 const cvQuery = `{ chapter verseNumbers verses { verse { ${rangeQuery} } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
@@ -83,6 +88,26 @@ test(
       index = result.data.documents[0].cvIndex;
       t.equal(index.chapter, 9);
       t.equal(index.verses.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `cvIndex v0 (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      let query =
+        `{ documents { cvIndex(chapter:51) ${cvQuery} } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const verseNumbers = result.data.documents[0].cvIndex.verseNumbers;
+      t.equal(verseNumbers.length, 20);
+      t.equal(Math.max(...verseNumbers), 19);
+      t.equal(Math.min(...verseNumbers), 0);
+      // console.log(JSON.stringify(result.data.documents[0].cvIndex));
     } catch (err) {
       console.log(err);
     }

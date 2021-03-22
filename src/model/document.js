@@ -227,6 +227,18 @@ class Document {
             } else if (item[2].startsWith('verse/')) {
               verseN = item[2].split('/')[1];
 
+              if (verseN === '1' && !('0' in chapterVerseIndexes[chapterN])) {
+                if (chapterIndexes[chapterN].nextToken < nextTokenN) {
+                  chapterVerseIndexes[chapterN]['0'] = [{
+                    startBlock: chapterIndexes[chapterN].startBlock,
+                    startItem: chapterIndexes[chapterN].startItem,
+                    endBlock: blockN,
+                    endItem: Math.max(itemN - 1, 0),
+                    nextToken: chapterIndexes[chapterN].nextToken,
+                  }];
+                }
+              }
+
               if (!(verseN in chapterVerseIndexes[chapterN])) {
                 chapterVerseIndexes[chapterN][verseN] = [];
               }
@@ -307,9 +319,10 @@ class Document {
     mainSequence.chapters = {};
 
     for (const [chapterN, chapterElement] of Object.entries(chapterIndexes)) {
-      if (!("startBlock" in chapterElement) || !("endBlock" in chapterElement)) {
+      if (!('startBlock' in chapterElement) || !('endBlock' in chapterElement)) {
         continue;
       }
+
       const ba = new ByteArray();
       mainSequence.chapters[chapterN] = ba;
       const recordType = chapterElement.startBlock === chapterElement.endBlock ? shortCVIndexType : longCVIndexType;
