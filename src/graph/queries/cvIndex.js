@@ -32,6 +32,10 @@ const cvVerseElementType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve: root => root.nextToken,
     },
+    verseRange: {
+      type: GraphQLString,
+      resolve: root => root.verses,
+    },
     items: {
       type: GraphQLNonNull(GraphQLList(itemType)),
       args: { includeContext: { type: GraphQLBoolean } },
@@ -87,6 +91,10 @@ const cvIndexType = new GraphQLObjectType({
     verseNumbers: {
       type: GraphQLList(GraphQLNonNull(GraphQLInt)),
       resolve: root => [...root[1].entries()].filter(v => v[1].length > 0).map(v => v[0]),
+    },
+    verseRanges: {
+      type: GraphQLList(GraphQLNonNull(GraphQLString)),
+      resolve: root => root[1].filter(v => v.length > 0).map(v => v[v.length - 1].verses),
     },
   }),
 });

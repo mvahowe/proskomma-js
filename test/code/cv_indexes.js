@@ -14,8 +14,13 @@ const pk2 = pkWithDoc('../test_data/usfm/web_psa51.usfm', {
   abbr: 'web',
 })[0];
 
+const pk3 = pkWithDoc('../test_data/usfm/verse_range.usfm', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
+
 const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text';
-const cvQuery = `{ chapter verseNumbers verses { verse { ${rangeQuery} } } }`;
+const cvQuery = `{ chapter verseNumbers verseRanges verses { verse { ${rangeQuery} verseRange } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
 const cvCharsQuery = `{ chapter verses { verse { tokens(includeContext:true withChars:["Ruth", "Boaz", "Naomi"]) { payload position} text } } }`;
 
@@ -107,7 +112,26 @@ test(
       t.equal(verseNumbers.length, 20);
       t.equal(Math.max(...verseNumbers), 19);
       t.equal(Math.min(...verseNumbers), 0);
-      // console.log(JSON.stringify(result.data.documents[0].cvIndex));
+      // console.log(JSON.stringify(result.data.documents[0].cvIndex.verseRanges, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `cvIndex verseRanges (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      let query =
+        `{ documents { cvIndex(chapter:1) ${cvQuery} } }`;
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const verseRanges = result.data.documents[0].cvIndex.verseRanges;
+      t.equal(verseRanges.length, 2);
+      t.equal(verseRanges[0], '1-2');
+      t.equal(verseRanges[1],  '1-2');
     } catch (err) {
       console.log(err);
     }

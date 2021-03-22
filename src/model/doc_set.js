@@ -173,6 +173,7 @@ class DocSet {
       };
       pos += succinct.byte(pos) + 1;
     }
+
     return ret;
   }
 
@@ -316,6 +317,7 @@ class DocSet {
     if (nextToken === undefined) {
       throw new Error('nextToken (previously includeContext) must now be provided to unsuccinctifyItems');
     }
+
     if (nextToken !== null && typeof nextToken !== 'number') {
       throw new Error(`nextToken (previously includeContext) must be null or an integer, not ${typeof nextToken} '${JSON.stringify(nextToken)}' in unsuccinctifyItems`);
     }

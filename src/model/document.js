@@ -131,6 +131,8 @@ class Document {
   }
 
   recordPreEnums(docSet, seq) {
+    docSet.recordPreEnum('scopeBits', '0');
+
     for (const block of seq.blocks) {
       for (const item of [...block.items, block.blockScope, ...block.blockGrafts]) {
         if (item.itemType === 'wordLike') {
@@ -155,6 +157,7 @@ class Document {
   }
 
   rerecordPreEnums(docSet, seq) {
+    docSet.recordPreEnum('scopeBits', '0');
     docSet.recordPreEnum('ids', seq.id);
 
     for (const block of seq.blocks) {
@@ -205,16 +208,18 @@ class Document {
 
   buildChapterVerseIndex(mainSequence) {
     const docSet = this.processor.docSets[this.docSetId];
+    docSet.buildPreEnums();
     docSet.buildEnumIndexes();
     const chapterVerseIndexes = {};
     const chapterIndexes = {};
     let chapterN = '0';
     let verseN = '0';
+    let verses = '1';
     let nextTokenN = 0;
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
       for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, nextTokenN).entries()) {
-        if (item[0] === 'scope'){
+        if (item[0] === 'scope') {
           if (item[1] === 'start') {
             if (item[2].startsWith('chapter/')) {
               chapterN = item[2].split('/')[1];
@@ -235,6 +240,7 @@ class Document {
                     endBlock: blockN,
                     endItem: Math.max(itemN - 1, 0),
                     nextToken: chapterIndexes[chapterN].nextToken,
+                    verses: '0',
                   }];
                 }
               }
@@ -247,6 +253,8 @@ class Document {
                 startItem: itemN,
                 nextToken: nextTokenN,
               });
+            } else if (item[2].startsWith('verses/')) {
+              verses = item[2].split('/')[1];
             }
           } else if (item[1] === 'end') {
             if (item[2].startsWith('chapter/')) {
@@ -265,6 +273,7 @@ class Document {
                 const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
                 verseRecord.endBlock = blockN;
                 verseRecord.endItem = itemN;
+                verseRecord.verses = verses;
               }
             }
           }
@@ -298,13 +307,27 @@ class Document {
           const nVerseElements = verseElements.length;
 
           for (const [verseElementN, verseElement] of verseElements.entries()) {
+            const versesEnumIndex = docSet.enumForCategoryValue('scopeBits', verseElement.verses);
             const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
             ba.pushByte(0);
 
             if (recordType === shortCVIndexType) {
-              ba.pushNBytes([verseElement.startBlock, verseElement.startItem, verseElement.endItem, verseElement.nextToken]);
+              ba.pushNBytes([
+                verseElement.startBlock,
+                verseElement.startItem,
+                verseElement.endItem,
+                verseElement.nextToken,
+                versesEnumIndex,
+              ]);
             } else {
-              ba.pushNBytes([verseElement.startBlock, verseElement.endBlock, verseElement.startItem, verseElement.endItem, verseElement.nextToken]);
+              ba.pushNBytes([
+                verseElement.startBlock,
+                verseElement.endBlock,
+                verseElement.startItem,
+                verseElement.endItem,
+                verseElement.nextToken,
+                versesEnumIndex,
+              ]);
             }
             ba.setByte(pos, this.makeVerseLengthByte(recordType, verseElementN === (nVerseElements - 1), ba.length - pos));
             pos = ba.length;
@@ -357,6 +380,8 @@ class Document {
   }
 
   chapterVerseIndex(chapN) {
+    const docSet = this.processor.docSets[this.docSetId];
+    docSet.buildEnumIndexes();
     const ret = [];
     const succinct = this.sequences[this.mainId].chapterVerses[chapN];
 
@@ -368,7 +393,7 @@ class Document {
         const [recordType, isLast, recordLength] = this.verseLengthByte(succinct, pos);
 
         if (recordType === shortCVIndexType) {
-          const nBytes = succinct.nBytes(pos + 1, 4);
+          const nBytes = succinct.nBytes(pos + 1, 5);
 
           currentVerseRecord.push({
             startBlock: nBytes[0],
@@ -376,9 +401,10 @@ class Document {
             startItem: nBytes[1],
             endItem: nBytes[2],
             nextToken: nBytes[3],
+            verses: docSet.enums.scopeBits.countedString(docSet.enumIndexes.scopeBits[nBytes[4]]),
           });
         } else if (recordType === longCVIndexType) {
-          const nBytes = succinct.nBytes(pos + 1, 5);
+          const nBytes = succinct.nBytes(pos + 1, 6);
 
           currentVerseRecord.push({
             startBlock: nBytes[0],
@@ -386,6 +412,7 @@ class Document {
             startItem: nBytes[2],
             endItem: nBytes[3],
             nextToken: nBytes[4],
+            verses: docSet.enums.scopeBits.countedString(docSet.enumIndexes.scopeBits[nBytes[5]]),
           });
         }
 
