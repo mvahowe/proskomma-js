@@ -20,7 +20,7 @@ const pk3 = pkWithDoc('../test_data/usfm/verse_range.usfm', {
 })[0];
 
 const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text';
-const cvQuery = `{ chapter verseNumbers verseRanges verses { verse { ${rangeQuery} verseRange } } }`;
+const cvQuery = `{ chapter verseNumbers { number range } verseRanges { range numbers } verses { verse { ${rangeQuery} verseRange } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
 const cvCharsQuery = `{ chapter verses { verse { tokens(includeContext:true withChars:["Ruth", "Boaz", "Naomi"]) { payload position} text } } }`;
 
@@ -84,8 +84,8 @@ test(
       checkIndexFields(t, index.verses[1].verse[0]);
       const verseNumbers = result.data.documents[0].cvIndex.verseNumbers;
       t.equal(verseNumbers.length, 18);
-      t.equal(Math.max(...verseNumbers), 18);
-      t.equal(Math.min(...verseNumbers), 1);
+      t.equal(Math.max(...verseNumbers.map(n => n.number)), 18);
+      t.equal(Math.min(...verseNumbers.map(n => n.number)), 1);
       query =
         `{ documents { cvIndex(chapter:9) ${cvQuery} } }`;
       result = await pk.gqlQuery(query);
@@ -110,8 +110,8 @@ test(
       t.equal(result.errors, undefined);
       const verseNumbers = result.data.documents[0].cvIndex.verseNumbers;
       t.equal(verseNumbers.length, 20);
-      t.equal(Math.max(...verseNumbers), 19);
-      t.equal(Math.min(...verseNumbers), 0);
+      t.equal(Math.max(...verseNumbers.map(n => n.number)), 19);
+      t.equal(Math.min(...verseNumbers.map(n => n.number)), 0);
       // console.log(JSON.stringify(result.data.documents[0].cvIndex.verseRanges, null, 2));
     } catch (err) {
       console.log(err);
@@ -123,15 +123,18 @@ test(
   `cvIndex verseRanges (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
+      t.plan(6);
       let query =
         `{ documents { cvIndex(chapter:1) ${cvQuery} } }`;
       let result = await pk3.gqlQuery(query);
       t.equal(result.errors, undefined);
+      // console.log(JSON.stringify(result.data.documents[0].cvIndex.verseRanges, null, 2));
       const verseRanges = result.data.documents[0].cvIndex.verseRanges;
-      t.equal(verseRanges.length, 2);
-      t.equal(verseRanges[0], '1-2');
-      t.equal(verseRanges[1],  '1-2');
+      t.equal(verseRanges.length, 1);
+      t.equal(verseRanges[0].range, '1-2');
+      t.equal(verseRanges[0].numbers.length, 2);
+      t.equal(verseRanges[0].numbers[0], 1);
+      t.equal(verseRanges[0].numbers[1], 2);
     } catch (err) {
       console.log(err);
     }

@@ -77,6 +77,34 @@ const cvVersesType = new GraphQLObjectType({
   }),
 });
 
+const verseNumber = new GraphQLObjectType({
+  name: 'verseNumber',
+  fields: () => ({
+    number: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: root => root.number,
+    },
+    range: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root.range,
+    },
+  }),
+});
+
+const verseRange = new GraphQLObjectType({
+  name: 'verseRange',
+  fields: () => ({
+    range: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: root => root.range,
+    },
+    numbers: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInt))),
+      resolve: root => root.numbers,
+    },
+  }),
+});
+
 const cvIndexType = new GraphQLObjectType({
   name: 'cvIndex',
   fields: () => ({
@@ -89,12 +117,23 @@ const cvIndexType = new GraphQLObjectType({
       resolve: root => root[1],
     },
     verseNumbers: {
-      type: GraphQLList(GraphQLNonNull(GraphQLInt)),
-      resolve: root => [...root[1].entries()].filter(v => v[1].length > 0).map(v => v[0]),
+      type: GraphQLList(GraphQLNonNull(verseNumber)),
+      resolve: root => [...root[1].entries()].filter(v => v[1].length > 0).map(v => ({ number: v[0], range: v[1][v[1].length - 1].verses })),
     },
     verseRanges: {
-      type: GraphQLList(GraphQLNonNull(GraphQLString)),
-      resolve: root => root[1].filter(v => v.length > 0).map(v => v[v.length - 1].verses),
+      type: GraphQLList(GraphQLNonNull(verseRange)),
+      resolve: root => {
+        const ret = [];
+
+        for (const [vn, vo] of [...root[1].entries()].filter(v => v[1].length > 0)) {
+          if (ret.length === 0 || ret[ret.length - 1].range !== vo[vo.length - 1].verses) {
+            ret.push({ range: vo[vo.length - 1].verses, numbers: [vn] });
+          } else {
+            ret[ret.length - 1].numbers.push(vn);
+          }
+        }
+        return ret;
+      },
     },
   }),
 });
