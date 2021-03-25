@@ -18,9 +18,7 @@ const versificationMutations = {
   },
   unsetVerseMapping: {
     type: GraphQLNonNull(GraphQLBoolean),
-    args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-    },
+    args: { docSetId: { type: GraphQLNonNull(GraphQLString) } },
     resolve: () => {
       throw new Error('Not implemented');
     },
