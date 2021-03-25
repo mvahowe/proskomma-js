@@ -186,6 +186,17 @@ const documentType = new GraphQLObjectType({
         }
       },
     },
+    origCv: {
+      type: GraphQLNonNull(itemGroupType),
+      args: {
+        chapter: { type: GraphQLNonNull(GraphQLString) },
+        verses: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+        includeContext: { type: GraphQLBoolean },
+      },
+      resolve: () => {
+        throw new Error('Not implemented');
+      },
+    },
     cvIndexes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cvIndexType))),
       resolve: (root, args, context) => {

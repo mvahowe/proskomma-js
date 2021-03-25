@@ -4,6 +4,7 @@ const deleteMutations = require('./delete');
 const addMutations = require('./add');
 const rehashMutations = require('./rehash');
 const updateMutations = require('./update');
+const versificationMutations = require('./versification');
 
 const schemaFields = {
   ...tagMutations,
@@ -11,6 +12,7 @@ const schemaFields = {
   ...addMutations,
   ...rehashMutations,
   ...updateMutations,
+  ...versificationMutations,
 };
 
 const schemaMutations = new GraphQLObjectType({

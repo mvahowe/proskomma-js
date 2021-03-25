@@ -43,6 +43,12 @@ const docSetType = new GraphQLObjectType({
       args: { bookCode: { type: GraphQLNonNull(GraphQLString) } },
       resolve: (root, args) => root.documentWithBook(args.bookCode),
     },
+    hasMapping: {
+      type: GraphQLBoolean,
+      resolve: () => {
+        throw new Error('Not Implemented');
+      },
+    },
   },
 });
 

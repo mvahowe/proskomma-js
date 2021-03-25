@@ -77,6 +77,30 @@ const cvVersesType = new GraphQLObjectType({
   }),
 });
 
+const orig = new GraphQLObjectType({
+  name: 'orig',
+  fields: () => ({
+    book: {
+      type: GraphQLString,
+      resolve: () => {
+        throw new Error('Not implemented');
+      },
+    },
+    chapter: {
+      type: GraphQLInt,
+      resolve: () => {
+        throw new Error('Not implemented');
+      },
+    },
+    verses: {
+      type: GraphQLList(GraphQLNonNull(GraphQLInt)),
+      resolve: () => {
+        throw new Error('Not implemented');
+      },
+    },
+  }),
+});
+
 const verseNumber = new GraphQLObjectType({
   name: 'verseNumber',
   fields: () => ({
@@ -87,6 +111,12 @@ const verseNumber = new GraphQLObjectType({
     range: {
       type: GraphQLNonNull(GraphQLString),
       resolve: root => root.range,
+    },
+    orig: {
+      type: GraphQLNonNull(orig),
+      resolve: () => {
+        throw new Error('Not implemented');
+      },
     },
   }),
 });
