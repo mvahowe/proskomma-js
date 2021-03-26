@@ -7,7 +7,7 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "babel-tape-runner test/code/*.js | node_modules/tap-summary/bin/cmd.js",
+    "test": "bash -c \"babel-tape-runner test/code/*.js | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "babel-tape-runner test/code/*.js",
     "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.js",
     "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.js",
