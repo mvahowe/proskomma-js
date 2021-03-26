@@ -45,9 +45,7 @@ const docSetType = new GraphQLObjectType({
     },
     hasMapping: {
       type: GraphQLBoolean,
-      resolve: () => {
-        throw new Error('Not Implemented');
-      },
+      resolve: root => root.tags.has('hasMapping'),
     },
   },
 });
