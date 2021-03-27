@@ -50,7 +50,23 @@ const versificationMutations = {
       );
 
       for (const document of docSet.documents().filter(doc => 'bookCode' in doc.headers)) {
-        console.log('* versification.js *', document.headers['bookCode']);
+        const bookCode = document.headers['bookCode'];
+        const bookDocument = docSet.documentWithBook(bookCode);
+
+        if (!bookDocument) {
+          continue;
+        }
+
+        const bookMainSequence = bookDocument.sequences[bookDocument.mainId];
+        bookMainSequence.verseMapping = {};
+
+        if (bookCode in forwardSuccinctTree) {
+          bookMainSequence.verseMapping.forward = forwardSuccinctTree[bookCode];
+        }
+
+        if (bookCode in reversedSuccinctTree) {
+          bookMainSequence.verseMapping.reversed = reversedSuccinctTree[bookCode];
+        }
       }
       docSet.tags.add('hasMapping');
       return true;
@@ -59,8 +75,24 @@ const versificationMutations = {
   unsetVerseMapping: {
     type: GraphQLNonNull(GraphQLBoolean),
     args: { docSetId: { type: GraphQLNonNull(GraphQLString) } },
-    resolve: () => {
-      throw new Error('Not implemented');
+    resolve: (root, args) => {
+      const docSet = root.docSets[args.docSetId];
+
+      if (!docSet) {
+        return false;
+      }
+
+      for (const document of docSet.documents().filter(doc => 'bookCode' in doc.headers)) {
+        const bookCode = document.headers['bookCode'];
+        const bookDocument = docSet.documentWithBook(bookCode);
+
+        if (bookDocument) {
+          const bookMainSequence = bookDocument.sequences[bookDocument.mainId];
+          bookMainSequence.verseMapping = {};
+        }
+      }
+      docSet.tags.delete('hasMapping');
+      return true;
     },
   },
 };

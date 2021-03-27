@@ -7,6 +7,8 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const { mapVerse } = require('proskomma-utils');
+
 const itemType = require('./item');
 
 const cvVerseElementType = new GraphQLObjectType({
@@ -77,26 +79,30 @@ const cvVersesType = new GraphQLObjectType({
   }),
 });
 
+const cvType = new GraphQLObjectType({
+  name: 'cv',
+  fields: () => ({
+    chapter: {
+      type: GraphQLInt,
+      resolve: root => root[0],
+    },
+    verse: {
+      type: GraphQLInt,
+      resolve: root => root[1],
+    },
+  }),
+});
+
 const orig = new GraphQLObjectType({
   name: 'orig',
   fields: () => ({
     book: {
       type: GraphQLString,
-      resolve: () => {
-        throw new Error('Not implemented');
-      },
+      resolve: root => root.book,
     },
-    chapter: {
-      type: GraphQLInt,
-      resolve: () => {
-        throw new Error('Not implemented');
-      },
-    },
-    verses: {
-      type: GraphQLList(GraphQLNonNull(GraphQLInt)),
-      resolve: () => {
-        throw new Error('Not implemented');
-      },
+    cvs: {
+      type: GraphQLNonNull(GraphQLList(cvType)),
+      resolve: root => root.cvs,
     },
   }),
 });
@@ -114,8 +120,28 @@ const verseNumber = new GraphQLObjectType({
     },
     orig: {
       type: GraphQLNonNull(orig),
-      resolve: () => {
-        throw new Error('Not implemented');
+      resolve: (root, args, context) => {
+        const localBook = context.doc.headers.bookCode;
+        const localChapter = context.cvIndex[0];
+        const localVerse = root.number;
+        const mainSequence = context.doc.sequences[context.doc.mainId];
+
+        if (
+          mainSequence.verseMapping &&
+          'forward' in mainSequence.verseMapping &&
+          `${localChapter}` in mainSequence.verseMapping.forward
+        ) {
+          const mapping = mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
+          return ({
+            book: mapping[0],
+            cvs: mapping[1],
+          });
+        } else {
+          return ({
+            book: localBook,
+            cvs: [[localChapter, localVerse]],
+          });
+        }
       },
     },
   }),
@@ -148,7 +174,15 @@ const cvIndexType = new GraphQLObjectType({
     },
     verseNumbers: {
       type: GraphQLList(GraphQLNonNull(verseNumber)),
-      resolve: root => [...root[1].entries()].filter(v => v[1].length > 0).map(v => ({ number: v[0], range: v[1][v[1].length - 1].verses })),
+      resolve: (root, args, context) => {
+        context.cvIndex = root;
+        return [...root[1].entries()]
+          .filter(v => v[1].length > 0)
+          .map(v => ({
+            number: v[0],
+            range: v[1][v[1].length - 1].verses,
+          }));
+      },
     },
     verseRanges: {
       type: GraphQLList(GraphQLNonNull(verseRange)),
@@ -157,7 +191,10 @@ const cvIndexType = new GraphQLObjectType({
 
         for (const [vn, vo] of [...root[1].entries()].filter(v => v[1].length > 0)) {
           if (ret.length === 0 || ret[ret.length - 1].range !== vo[vo.length - 1].verses) {
-            ret.push({ range: vo[vo.length - 1].verses, numbers: [vn] });
+            ret.push({
+              range: vo[vo.length - 1].verses,
+              numbers: [vn],
+            });
           } else {
             ret[ret.length - 1].numbers.push(vn);
           }

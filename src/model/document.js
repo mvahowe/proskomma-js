@@ -204,6 +204,7 @@ class Document {
         blocks: seq.succinctifyBlocks(docSet),
       };
     }
+    this.sequences[this.mainId].verseMapping = {};
   }
 
   buildChapterVerseIndex(mainSequence) {

@@ -33,10 +33,10 @@ test(
 );
 
 test(
-  `setVerseMapping (${testGroup})`,
+  `setVerseMapping/unsetVerseMapping (${testGroup})`,
   async function (t) {
     try {
-      t.plan(5);
+      t.plan(8);
       const pk = pkWithDoc('../test_data/usx/web_psa.usx', {
         lang: 'eng',
         abbr: 'web',
@@ -47,16 +47,25 @@ test(
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets[0].hasMapping, false);
       const docSetId = result.data.docSets[0].id;
-      const vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/truncated_versification.vrs'))
+      const vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
         .toString();
-      const query = `mutation { setVerseMapping(docSetId: "${docSetId}" vrsSource: """${vrs}""")}`;
-      result = await pk.gqlQuery(query);
+      let mutationQuery = `mutation { setVerseMapping(docSetId: "${docSetId}" vrsSource: """${vrs}""")}`;
+      result = await pk.gqlQuery(mutationQuery);
       t.equal(result.errors, undefined);
       docSetQuery =
-        '{ docSets { id hasMapping } }';
+        '{ docSets { id hasMapping documents { cvIndex(chapter: 51) { chapter verseNumbers { number orig { book cvs { chapter verse } } } } } } }';
       result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
+      // console.log(JSON.stringify(result.data.docSets[0].documents[0].cvIndex, null, 2));
       t.equal(result.data.docSets[0].hasMapping, true);
+      mutationQuery = `mutation { unsetVerseMapping(docSetId: "${docSetId}")}`;
+      result = await pk.gqlQuery(mutationQuery);
+      t.equal(result.errors, undefined);
+      docSetQuery =
+        '{ docSets { id hasMapping} }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].hasMapping, false);
     } catch (err) {
       console.log(err);
     }
