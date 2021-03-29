@@ -1,8 +1,8 @@
-const test = require('tape');
-const fse = require('fs-extra');
 const path = require('path');
+const fse = require('fs-extra');
+const test = require('tape');
 
-const { pkWithDoc } = require('../lib/load');
+const { pkWithDoc, pkWithDocs } = require('../lib/load');
 
 const testGroup = 'Verse Mapping';
 
@@ -66,6 +66,42 @@ test(
       result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets[0].hasMapping, false);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `origCv (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = pkWithDocs([
+        ['../test_data/usx/web_psa.usx', {
+          lang: 'eng',
+          abbr: 'webbe',
+        }],
+        ['../test_data/usx/douay_rheims_PSA.usx', {
+          lang: 'eng',
+          abbr: 'drh',
+        }],
+      ]);
+      let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
+        .toString();
+      let mutationQuery = `mutation { setVerseMapping(docSetId: "eng_webbe" vrsSource: """${vrs}""")}`;
+      let result = await pk.gqlQuery(mutationQuery);
+      t.equal(result.errors, undefined);
+      vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/douay_rheims.vrs'))
+        .toString();
+      mutationQuery = `mutation { setVerseMapping(docSetId: "eng_drh" vrsSource: """${vrs}""")}`;
+      result = await pk.gqlQuery(mutationQuery);
+      t.equal(result.errors, undefined);
+      let docSetQuery =
+        '{ docSets { id documents { bookCode: header(id: "bookCode") cv(chapter: "51" verses: ["3"]) { text } origCv(chapter: "51" verses: ["3"]) { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      // console.log(JSON.stringify(result.data, null, 2));
     } catch (err) {
       console.log(err);
     }
