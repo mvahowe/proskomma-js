@@ -101,7 +101,7 @@ test(
         '{ docSets { id documents { bookCode: header(id: "bookCode") psa_51_1: origCv(chapter: "51" verses: ["1"]) { text } psa_51_2: origCv(chapter: "51" verses: ["2"]) { text } } } }';
       result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
-      console.log(JSON.stringify(result.data, null, 2));
+      // console.log(JSON.stringify(result.data, null, 2));
     } catch (err) {
       console.log(err);
     }
