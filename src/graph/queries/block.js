@@ -35,59 +35,72 @@ const dumpBlock = b => {
 
 const blockType = new GraphQLObjectType({
   name: 'Block',
+  description: 'Part of a sequence, roughly equivalent to a USFM paragraph',
   fields: () => ({
     cBL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The length in bytes of the succinct representation of c (block items)',
       resolve: root => root.c.length,
     },
     bgBL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The length in bytes of the succinct representation of bg (block grafts)',
       resolve: root => root.bg.length,
     },
     osBL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The length in bytes of the succinct representation of os (open scopes)',
       resolve: root => root.os.length,
     },
     isBL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The length in bytes of the succinct representation of is (included scopes)',
       resolve: root => root.is.length,
     },
     ntBL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The length in bytes of the succinct representation of nt (nextToken at the start of the block)',
       resolve: root => root.nt.length,
     },
     cL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of items in the succinct representation of c (block items)',
       resolve:
         (root, args, context) => context.docSet.countItems(root.c),
     },
     bgL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of items in the succinct representation of bg (block grafts)',
       resolve:
         (root, args, context) => context.docSet.countItems(root.bg),
     },
     osL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of items in the succinct representation of os (open scopes)',
       resolve:
         (root, args, context) => context.docSet.countItems(root.os),
     },
     isL: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of items in the succinct representation of is (included scopes)',
       resolve:
         (root, args, context) => context.docSet.countItems(root.is),
     },
     is: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      description: 'A list of included scopes for this block',
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
     },
     os: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      description: 'A list of open scopes for this block',
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
     },
     bs: {
       type: GraphQLNonNull(itemType),
+      description: 'The block scope for this block',
       resolve:
         (root, args, context) => {
           const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
@@ -96,21 +109,37 @@ const blockType = new GraphQLObjectType({
     },
     bg: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      description: 'A list of block grafts for this block',
       resolve:
         (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),
     },
     nt: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The value of nextToken at the start of this block',
       resolve:
         root => root.nt.nByte(0),
     },
     items: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      description: 'A list of items from the c (content) field of the block',
       args: {
-        withScopes: { type: GraphQLList(GraphQLString) },
-        anyScope: { type: GraphQLBoolean },
-        withScriptureCV: { type: GraphQLString },
-        includeContext: { type: GraphQLBoolean },
+        withScopes: {
+          type: GraphQLList(GraphQLString),
+          description: 'Only return items that are within specific scopes',
+        },
+        anyScope: {
+          type: GraphQLBoolean,
+          description: 'If true, withScopes filtering matches items within at least one of the specified scopes',
+
+        },
+        withScriptureCV: {
+          type: GraphQLString,
+          description: 'Only return items that are within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
       },
       resolve:
         (root, args, context) => {
@@ -136,14 +165,36 @@ const blockType = new GraphQLObjectType({
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
+      description: 'A list of tokens from the c (content) field of the block',
       args: {
-        withScopes: { type: GraphQLList(GraphQLString) },
-        anyScope: { type: GraphQLBoolean },
-        withScriptureCV: { type: GraphQLString },
-        includeContext: { type: GraphQLBoolean },
-        withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        withAnyCaseChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        withCharsMatchingRegex: { type: GraphQLString },
+        withScopes: {
+          type: GraphQLList(GraphQLString),
+          description: 'Only return tokens that are within specific scopes',
+        },
+        anyScope: {
+          type: GraphQLBoolean,
+          description: 'If true, withScopes filtering matches tokens within at least one of the specified scopes',
+        },
+        withScriptureCV: {
+          type: GraphQLString,
+          description: 'Only return tokens that are within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
+        withChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return tokens whose payload is an exact match to one of the specified strings',
+        },
+        withAnyCaseChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return tokens whose payload is a case-independent match to one of the specified strings',
+        },
+        withCharsMatchingRegex: {
+          type: GraphQLString,
+          description: 'Return tokens whose payload matches the specified regex',
+        },
       },
       resolve:
         (root, args, context) => {
@@ -184,9 +235,16 @@ const blockType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The text of the block as a single string',
       args: {
-        withScriptureCV: { type: GraphQLString },
-        normalizeSpace: { type: GraphQLBoolean },
+        withScriptureCV: {
+          type: GraphQLString,
+          description: 'Only return text that is within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)',
+        },
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
       },
       resolve:
         (root, args, context) => {
@@ -208,11 +266,13 @@ const blockType = new GraphQLObjectType({
     },
     dump: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The block content as a string in a compact eyeballable format',
       resolve:
         (root, args, context) => dumpBlock(context.docSet.unsuccinctifyBlock(root, {}, null)),
     },
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of the labels for the block\'s bs, os and is scopes',
       resolve:
         (root, args, context) =>
           [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)],

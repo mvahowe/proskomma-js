@@ -13,43 +13,63 @@ const itemType = require('./item');
 
 const cvVerseElementType = new GraphQLObjectType({
   name: 'cvVerseElement',
+  description: 'Information about a verse element',
   fields: () => ({
     startBlock: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The zero-indexed number of the block where the verse starts',
       resolve: root => root.startBlock,
     },
     endBlock: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The zero-indexed number of the block where the verse ends',
       resolve: root => root.endBlock,
     },
     startItem: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The zero-indexed position of the item where the verse starts',
       resolve: root => root.startItem,
     },
     endItem: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The zero-indexed position of the item where the verse ends',
       resolve: root => root.endItem,
     },
     nextToken: {
       type: GraphQLInt,
+      description: 'The value of nextToken at the beginning of the verse',
       resolve: root => root.nextToken,
     },
     verseRange: {
       type: GraphQLString,
+      description: 'The verse range for this verse as it would be printed in a Bible',
       resolve: root => root.verses,
     },
     items: {
       type: GraphQLNonNull(GraphQLList(itemType)),
-      args: { includeContext: { type: GraphQLBoolean } },
+      description: 'A list of items for this verse',
+      args: {
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each item',
+        },
+      },
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root, args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b))),
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(itemType)),
+      description: 'A list of tokens for this verse',
       args: {
-        includeContext: { type: GraphQLBoolean },
-        withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
+        withChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return tokens whose payload is an exact match to one of the specified strings',
+        },
       },
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root, args.includeContext)
@@ -58,6 +78,7 @@ const cvVerseElementType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The text of the verse as a single string',
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b)))
@@ -71,6 +92,7 @@ const cvVerseElementType = new GraphQLObjectType({
 
 const cvVersesType = new GraphQLObjectType({
   name: 'cvVerses',
+  description: 'Information about a verse in the chapter',
   fields: () => ({
     verse: {
       type: GraphQLList(cvVerseElementType),
@@ -81,13 +103,16 @@ const cvVersesType = new GraphQLObjectType({
 
 const cvType = new GraphQLObjectType({
   name: 'cv',
+  description: 'A chapter-verse reference',
   fields: () => ({
     chapter: {
       type: GraphQLInt,
+      description: 'The chapter number',
       resolve: root => root[0],
     },
     verse: {
       type: GraphQLInt,
+      description: 'The verse number',
       resolve: root => root[1],
     },
   }),
@@ -95,13 +120,16 @@ const cvType = new GraphQLObjectType({
 
 const orig = new GraphQLObjectType({
   name: 'orig',
+  description: 'Mapped verse information',
   fields: () => ({
     book: {
       type: GraphQLString,
+      description: 'The book code',
       resolve: root => root.book,
     },
     cvs: {
       type: GraphQLNonNull(GraphQLList(cvType)),
+      description: 'A list of chapter-verse references',
       resolve: root => root.cvs,
     },
   }),
@@ -109,17 +137,21 @@ const orig = new GraphQLObjectType({
 
 const verseNumber = new GraphQLObjectType({
   name: 'verseNumber',
+  description: 'Information about a verse number (which may be part of a verse range)',
   fields: () => ({
     number: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The verse number',
       resolve: root => root.number,
     },
     range: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The verse range to which the verse number belongs',
       resolve: root => root.range,
     },
     orig: {
       type: GraphQLNonNull(orig),
+      description: 'The reference for this verse when mapped to \'original\' versification',
       resolve: (root, args, context) => {
         const localBook = context.doc.headers.bookCode;
         const localChapter = context.cvIndex[0];
@@ -149,13 +181,16 @@ const verseNumber = new GraphQLObjectType({
 
 const verseRange = new GraphQLObjectType({
   name: 'verseRange',
+  description: 'Information about a verse range (which may only cover one verse)',
   fields: () => ({
     range: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The range, as it would be printed in a Bible',
       resolve: root => root.range,
     },
     numbers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInt))),
+      description: 'A list of verse numbers for this range',
       resolve: root => root.numbers,
     },
   }),
@@ -163,17 +198,21 @@ const verseRange = new GraphQLObjectType({
 
 const cvIndexType = new GraphQLObjectType({
   name: 'cvIndex',
+  description: 'A chapterVerse index entry',
   fields: () => ({
     chapter: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The chapter number',
       resolve: root => root[0],
     },
     verses: {
       type: GraphQLList(cvVersesType),
+      description: 'Information about the verses in the chapter',
       resolve: root => root[1],
     },
     verseNumbers: {
       type: GraphQLList(GraphQLNonNull(verseNumber)),
+      description: 'A list of verse number and range information, organized by verse number',
       resolve: (root, args, context) => {
         context.cvIndex = root;
         return [...root[1].entries()]
@@ -186,6 +225,7 @@ const cvIndexType = new GraphQLObjectType({
     },
     verseRanges: {
       type: GraphQLList(GraphQLNonNull(verseRange)),
+      description: 'A list of verse number and range information, organized by verse range',
       resolve: root => {
         const ret = [];
 
