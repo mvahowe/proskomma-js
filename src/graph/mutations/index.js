@@ -17,6 +17,7 @@ const schemaFields = {
 
 const schemaMutations = new GraphQLObjectType({
   name: 'Mutation',
+  description: 'Operations that change the state of Proskomma',
   fields: schemaFields,
 });
 

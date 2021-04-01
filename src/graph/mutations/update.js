@@ -11,12 +11,28 @@ const inputItemObject = require('../queries/inputItemObject');
 const updateMutations = {
   updateItems: {
     type: GraphQLNonNull(GraphQLBoolean),
+    description: 'Replaces the items of a block with a new set of items',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      sequenceId: { type: GraphQLNonNull(GraphQLString) },
-      blockPosition: { type: GraphQLNonNull(GraphQLInt) },
-      items: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document containing the sequence containing the block for which the items will be updated',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document containing the sequence containing the block for which the items will be updated',
+      },
+      sequenceId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the sequence containing the block for which the items will be updated',
+      },
+      blockPosition: {
+        type: GraphQLNonNull(GraphQLInt),
+        description: 'The zero-indexed number of the block for which the items will be updated',
+      },
+      items: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))),
+        description: 'The new items for the block',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -34,9 +50,16 @@ const updateMutations = {
   },
   gcSequences: {
     type: GraphQLNonNull(GraphQLBoolean),
+    description: 'Garbage collects unused sequences within a document. (You probably don\'t need to do this.)',
     args: {
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document to be garbage collected',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document to be garbage collected',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
