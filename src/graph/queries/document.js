@@ -58,62 +58,87 @@ const do_cv = (root, args, context, doMap) => {
 
     if (ci) {
       const block = mainSequence.blocks[ci.startBlock];
-      return [
+      return [[
         updatedOpenScopes(
           context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
           context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, ci.startItem),
         ),
         context.docSet.itemsByIndex(mainSequence, ci, args.includeContext || false)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
-      ];
+      ]];
     } else {
       return [];
     }
-  } else if (args.verses) { // c:v, c:v-v, map be mapped
-    let chapter = args.chapter;
-    let verses = args.verses;
-    if (doMap && 'reversed' in mainSequence.verseMapping && `${chapter}` in mainSequence.verseMapping.reversed) {
-      const mapping = mapVerse(
-        mainSequence.verseMapping.reversed[`${chapter}`],
-        root.headers.bookCode,
-        chapter,
-        verses[0],
-      );
-      chapter = mapping[1][0][0].toString();
-      verses = [mapping[1][0][1].toString()];
+  } else if (args.verses) { // c:v, c:v-v, may be mapped
+    let book = root.headers.bookCode;
+    let chapterVerses = args.verses.map(v => [parseInt(args.chapter), parseInt(v)]);
+
+    if (doMap && 'reversed' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.reversed) {
+      const mappings = [];
+
+      for (const verse of args.verses) { // May handle multiple verses one day, but, eg, may map to multiple books
+        mappings.push(
+          mapVerse(
+            mainSequence.verseMapping.reversed[args.chapter],
+            root.headers.bookCode,
+            args.chapter,
+            verse,
+          ),
+        );
+      }
+
+      const mapping = mappings[0];
+      book = mapping[0];
+      chapterVerses = mapping[1];
+    }
+    const cvis = {};
+
+    const document = context.docSet.documentWithBook(book);
+
+    if (!document) {
+      return [];
     }
 
-    const cvi = root.chapterVerseIndex(chapter);
+    const documentMainSequence = document.sequences[document.mainId];
 
-    if (cvi) {
-      let retItems = [];
-      let firstStartBlock;
-      let firstStartItem;
+    for (const chapter of chapterVerses.map(cv => cv[0])) {
+      if (!(chapter in cvis)) {
+        cvis[chapter] = document.chapterVerseIndex(chapter);
+      }
+    }
 
-      for (const verse of verses.map(v => parseInt(v))) {
-        if (cvi[verse]) {
-          for (const ve of cvi[verse]) {
+    const retItemGroups = [];
+
+    for (const [chapter, verse] of chapterVerses) {
+      if (cvis[chapter]) {
+        let retItems = [];
+        let firstStartBlock;
+        let firstStartItem;
+
+        if (cvis[chapter][verse]) {
+          for (const ve of cvis[chapter][verse]) {
             if (!firstStartBlock) {
               firstStartBlock = ve.startBlock;
               firstStartItem = ve.startItem;
             }
-            retItems = retItems.concat(context.docSet.itemsByIndex(mainSequence, ve, args.includeContext || null)
+            retItems = retItems.concat(context.docSet.itemsByIndex(documentMainSequence, ve, args.includeContext || null)
               .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))));
           }
+
+          const block = documentMainSequence.blocks[firstStartBlock];
+
+          retItemGroups.push([
+            updatedOpenScopes(
+              context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+              context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
+            ),
+            retItems,
+          ]);
         }
       }
-
-      const block = mainSequence.blocks[firstStartBlock];
-      return [
-        updatedOpenScopes(
-          context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-          context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
-        ),
-        retItems,
-      ];
-    } else {
-      return [];
     }
+    // console.log(JSON.stringify(retItemGroups, null, 2));
+    return retItemGroups;
   } else { // ChapterVerse, c:v-c:v
     const [fromCV, toCV] = args.chapterVerses.split('-');
     const [fromC, fromV] = fromCV.split(':');
@@ -138,14 +163,14 @@ const do_cv = (root, args, context, doMap) => {
     }
 
     const block = mainSequence.blocks[index.startBlock];
-    return [
+    return [[
       updatedOpenScopes(
         context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
         context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, index.startItem),
       ),
       context.docSet.itemsByIndex(mainSequence, index, args.includeContext || false)
         .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
-    ];
+    ]];
   }
 };
 
@@ -195,7 +220,7 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args) => root.tags.has(args.tagName),
     },
     cv: {
-      type: GraphQLNonNull(itemGroupType),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
       args: {
         chapter: { type: GraphQLString },
         verses: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
@@ -205,7 +230,7 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args, context) => do_cv(root, args, context, false),
     },
     origCv: {
-      type: GraphQLNonNull(itemGroupType),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
       args: {
         chapter: { type: GraphQLNonNull(GraphQLString) },
         verses: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
