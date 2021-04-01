@@ -176,20 +176,35 @@ const do_cv = (root, args, context, doMap) => {
 
 const documentType = new GraphQLObjectType({
   name: 'Document',
+  description: 'A document, typically corresponding to USFM for one book',
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLString) },
-    docSetId: { type: GraphQLNonNull(GraphQLString) },
+    id: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The id of the document',
+    },
+    docSetId: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The id of the docSet to which this document belongs',
+    },
     headers: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
+      description: 'USFM header information such as TOC',
       resolve: root => Object.entries(root.headers),
     },
     header: {
       type: GraphQLString,
-      args: { id: { type: GraphQLNonNull(GraphQLString) } },
+      description: 'One USFM header',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The header id, corresponding to the tag name minus any trailing \'1\'',
+        },
+      },
       resolve: (root, args) => headerById(root, args.id),
     },
     mainSequence: {
       type: GraphQLNonNull(sequenceType),
+      description: 'The main sequence',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return root.sequences[root.mainId];
@@ -198,6 +213,7 @@ const documentType = new GraphQLObjectType({
     },
     nSequences: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of sequences',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return Object.keys(root.sequences).length;
@@ -205,6 +221,7 @@ const documentType = new GraphQLObjectType({
     },
     sequences: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
+      description: 'A list of sequences for this document',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return Object.values(root.sequences);
@@ -212,29 +229,59 @@ const documentType = new GraphQLObjectType({
     },
     tags: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of the tags of this document',
       resolve: root => Array.from(root.tags),
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),
-      args: { tagName: { type: GraphQLNonNull(GraphQLString) } },
+      description: 'Whether or not the document has the specified tag',
+      args: {
+        tagName: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The tag',
+        },
+      },
       resolve: (root, args) => root.tags.has(args.tagName),
     },
     cv: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+      description: 'Content for a Scripture reference within this document, using local versification',
       args: {
-        chapter: { type: GraphQLString },
-        verses: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        chapterVerses: { type: GraphQLString },
-        includeContext: { type: GraphQLBoolean },
+        chapter: {
+          type: GraphQLString,
+          description: 'The chapter number (as a string)',
+        },
+        verses: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'A list of verse numbers (as strings)',
+        },
+        chapterVerses: {
+          type: GraphQLString,
+          description: 'A chapterVerse Reference (ch:v-ch:v)',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
       },
       resolve: (root, args, context) => do_cv(root, args, context, false),
     },
     origCv: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+      description: 'Content for a Scripture reference within this document, using \'original\' versification',
       args: {
-        chapter: { type: GraphQLNonNull(GraphQLString) },
-        verses: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
-        includeContext: { type: GraphQLBoolean },
+        chapter: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The chapter number (as a string)',
+        },
+        verses: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+          description: 'A list of verse numbers (as strings)',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
       },
       resolve: (root, args, context) => {
         if (args.verses.length !== 1) {
@@ -245,6 +292,7 @@ const documentType = new GraphQLObjectType({
     },
     cvIndexes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cvIndexType))),
+      description: 'The content of the main sequence indexed by chapterVerse',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         context.doc = root;
@@ -253,7 +301,13 @@ const documentType = new GraphQLObjectType({
     },
     cvIndex: {
       type: GraphQLNonNull(cvIndexType),
-      args: { chapter: { type: GraphQLNonNull(GraphQLInt) } },
+      description: 'The content of the specified chapter indexed by chapterVerse',
+      args: {
+        chapter: {
+          type: GraphQLNonNull(GraphQLInt),
+          description: 'The chapter number',
+        },
+      },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         context.doc = root;
@@ -262,6 +316,7 @@ const documentType = new GraphQLObjectType({
     },
     cIndexes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cIndexType))),
+      description: 'The content of the main sequence indexed by chapter',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         context.doc = root;
@@ -270,7 +325,13 @@ const documentType = new GraphQLObjectType({
     },
     cIndex: {
       type: GraphQLNonNull(cIndexType),
-      args: { chapter: { type: GraphQLNonNull(GraphQLInt) } },
+      description: 'The content of a chapter',
+      args: {
+        chapter: {
+          type: GraphQLNonNull(GraphQLInt),
+          description: 'The chapter number',
+        },
+      },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         context.doc = root;

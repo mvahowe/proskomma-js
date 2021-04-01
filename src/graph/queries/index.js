@@ -13,18 +13,30 @@ const selectorSpecType = require('./selector_spec');
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Root',
+  description: 'The top level of Proskomma',
   fields: {
     id: {
       type: GraphQLNonNull(GraphQLString),
+      description: 'The id of the processor, which is different for each Proskomma instance',
       resolve: root => root.processorId,
     },
-    processor: { type: GraphQLNonNull(GraphQLString) },
-    packageVersion: { type: GraphQLNonNull(GraphQLString) },
+    processor: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'A string describing the processor class',
+    },
+    packageVersion: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The NPM package version',
+    },
     selectors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(selectorSpecType))),
+      description: 'The selectors used to define docSets',
       resolve: root => root.selectors,
     },
-    nDocSets: { type: GraphQLNonNull(GraphQLInt) },
+    nDocSets: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of docSets',
+    },
     docSets: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
       args: {
