@@ -39,10 +39,20 @@ const schemaQueries = new GraphQLObjectType({
     },
     docSets: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(docSetType))),
+      description: 'The docSets in the processor',
       args: {
-        ids: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        withSelectors: { type: GraphQLList(GraphQLNonNull(inputKeyValueType)) },
-        withBook: { type: GraphQLString },
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'A whitelist of ids of docSets to include',
+        },
+        withSelectors: {
+          type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
+          description: 'Only return docSets that match the list of selector values',
+        },
+        withBook: {
+          type: GraphQLString,
+          description: 'Only return docSets containing a document with the specified bookCode',
+        },
       },
       resolve: (root, args) => {
         const docSetMatchesSelectors = (ds, selectors) => {
@@ -66,15 +76,31 @@ const schemaQueries = new GraphQLObjectType({
     },
     docSet: {
       type: docSetType,
-      args: { id: { type: GraphQLNonNull(GraphQLString) } },
+      description: 'The docSet with the specified id',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the docSet',
+        },
+      },
       resolve: (root, args) => root.docSetById(args.id),
     },
-    nDocuments: { type: GraphQLNonNull(GraphQLInt) },
+    nDocuments: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of documents in the processor',
+    },
     documents: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
+      description: 'The documents in the processor',
       args: {
-        ids: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        withBook: { type: GraphQLString },
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'A whitelist of ids of documents to include',
+        },
+        withBook: {
+          type: GraphQLString,
+          description: 'Only return docSets containing a document with the specified bookCode',
+        },
       },
       resolve: (root, args) => {
         const documentValues = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
@@ -83,7 +109,13 @@ const schemaQueries = new GraphQLObjectType({
     },
     document: {
       type: documentType,
-      args: { id: { type: GraphQLNonNull(GraphQLString) } },
+      description: 'The document with the specified id',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the document',
+        },
+      },
       resolve: (root, args) => root.documentById(args.id),
     },
   },

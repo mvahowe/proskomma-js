@@ -53,24 +53,57 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
 
 const sequenceType = new GraphQLObjectType({
   name: 'Sequence',
+  description: 'A contiguous flow of content',
   fields: () => ({
-    id: { type: GraphQLNonNull(GraphQLString) },
-    type: { type: GraphQLNonNull(GraphQLString) },
+    id: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The id of the sequence',
+    },
+    type: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The type of the sequence (main, heading...)',
+    },
     nBlocks: {
       type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of blocks in the sequence',
       resolve: root => root.blocks.length,
     },
     blocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
+      description: 'The blocks in the sequence',
       args: {
-        withScopes: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        positions: { type: GraphQLList(GraphQLNonNull(GraphQLInt)) },
-        withBlockScope: { type: GraphQLString },
-        withScriptureCV: { type: GraphQLString },
-        attSpecs: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))) },
-        attValues: { type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))) },
-        allAtts: { type: GraphQLBoolean },
-        withChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        withScopes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return blocks where the list of scopes is open',
+        },
+        positions: {
+          type: GraphQLList(GraphQLNonNull(GraphQLInt)),
+          description: 'Only return blocks whose zero-indexed position is in the list',
+        },
+        withBlockScope: {
+          type: GraphQLString,
+          description: 'Only return blocks with the specified block scope (eg \'blockScope/p\')',
+        },
+        withScriptureCV: {
+          type: GraphQLString,
+          description: 'Only return blocks that contain items within the specified chapter, verse or chapterVerse range',
+        },
+        attSpecs: {
+          type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(inputAttSpecType)))),
+          description: 'Ordered list of attribute specs whose values must match those in \'attValues\'',
+        },
+        attValues: {
+          type: GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))),
+          description: 'Ordered list of attribute values, used in conjunction with \'attSpecs\'',
+        },
+        allAtts: {
+          type: GraphQLBoolean,
+          description: 'If true, blocks where at least one attSpec matches will be included',
+        },
+        withChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return blocks containing a token whose payload is an exact match to one of the specified strings',
+        },
       },
       resolve: (root, args, context) => {
         context.docSet.maybeBuildEnumIndexes();
@@ -122,10 +155,20 @@ const sequenceType = new GraphQLObjectType({
     },
     itemGroups: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+      description: 'Sequence content grouped by scopes or milestones',
       args: {
-        byScopes: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        byMilestones: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        includeContext: { type: GraphQLBoolean },
+        byScopes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Produce one itemGroup for every different match of the list of scopes',
+        },
+        byMilestones: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Start a new itemGroup whenever a milestone in the list is encountered',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
       },
       resolve: (root, args, context) => {
         if (args.byScopes && args.byMilestones) {
@@ -145,11 +188,18 @@ const sequenceType = new GraphQLObjectType({
     },
     tags: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of the tags of this sequence',
       resolve: root => Array.from(root.tags),
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),
-      args: { tagName: { type: GraphQLNonNull(GraphQLString) } },
+      description: 'Whether or not the document has the specified tag',
+      args: {
+        tagName: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'Whether or not the document has the specified tag',
+        },
+      },
       resolve: (root, args) => root.tags.has(args.tagName),
     },
   }),
