@@ -12,8 +12,8 @@ const inputKeyValueType = require('./input_key_value');
 const selectorSpecType = require('./selector_spec');
 
 const schemaQueries = new GraphQLObjectType({
-  name: 'Root',
-  description: 'The top level of Proskomma',
+  name: 'Query',
+  description: 'The top level of Proskomma queries',
   fields: {
     id: {
       type: GraphQLNonNull(GraphQLString),
