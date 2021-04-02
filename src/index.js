@@ -312,6 +312,7 @@ class Proskomma {
 
     for (const [seqId, seq] of Object.entries(succinctDocOb.sequences)) {
       doc.sequences[seqId] = {
+        id: seqId,
         type: seq.type,
         tags: new Set(seq.tags),
         blocks: [],

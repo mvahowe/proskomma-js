@@ -52,7 +52,7 @@ test(
       t.equal(pk2.nDocuments(), 1);
       const wordLikes = unpackEnum(pk.docSets[docSetId].enums['wordLike']);
       t.ok(wordLikes.includes('Ruth'));
-      query = '{ documents { mainSequence { blocks { text } } } }';
+      query = '{ documents { mainSequence { id blocks { text } } } }';
       result = await pk2.gqlQuery(query);
       const firstBlock = result.data.documents[0].mainSequence.blocks[0];
       t.ok(firstBlock.text.startsWith('In the days when the judges judged'));
