@@ -40,7 +40,7 @@ test(
   `Load WEB RUT (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
+      t.plan(5);
       let query = '{ docSets { id } }';
       let result = await pk.gqlQuery(query);
       const docSetId = result.data.docSets[0].id;
@@ -52,8 +52,9 @@ test(
       t.equal(pk2.nDocuments(), 1);
       const wordLikes = unpackEnum(pk.docSets[docSetId].enums['wordLike']);
       t.ok(wordLikes.includes('Ruth'));
-      query = '{ documents { mainSequence { id blocks { text } } } }';
+      query = '{ documents { mainSequence { id blocks { text items { type } } } } }';
       result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
       const firstBlock = result.data.documents[0].mainSequence.blocks[0];
       t.ok(firstBlock.text.startsWith('In the days when the judges judged'));
     } catch (err) {
