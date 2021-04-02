@@ -1,15 +1,18 @@
 const test = require('tape');
+const deepCopy = require('deep-copy-all');
 const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Mutate Update Operations';
 
 const object2Query = obs => '[' + obs.map(ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`).join(', ') + ']';
 
+const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 const blockSetup = async t => {
-  const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
-    lang: 'eng',
-    abbr: 'ust',
-  }, {}, {}, [], [])[0];
+  const pk = deepCopy(cleanPk);
   let query = '{docSets { id documents { id nSequences mainSequence { id blocks(positions: [0]) { text items { type subType payload } } } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
