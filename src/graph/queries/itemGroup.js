@@ -31,7 +31,7 @@ const itemGroupType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
-      description: 'The text of the block as a single string',
+      description: 'The text of the itemGroup as a single string',
       resolve: (root, args, context) =>
         root[1].filter(i => i[0] === 'token').map(t => t[2]).join(''),
     },
@@ -40,6 +40,14 @@ const itemGroupType = new GraphQLObjectType({
       description: 'The labels of scopes that were open at the beginning of the itemGroup',
       resolve: (root, args, context) => root[0],
     },
+    /*
+    includedScopes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of scopes from the items of the itemGroup',
+      resolve: (root, args, context) =>
+        Array.from(new Set(root[1].filter(i => i[0] === 'scope' && i[1] === 'start').map(t => t[2]))),
+    },
+ */
   }),
 });
 

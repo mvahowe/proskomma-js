@@ -12,6 +12,30 @@ const cleanPk = pkWithDoc('../test_data/usx/web_psa_40_60.usx', {
   abbr: 'web',
 })[0];
 
+const cleanPk2 = pkWithDocs([
+  ['../test_data/usx/web_psa_40_60.usx', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+  ['../test_data/usx/douay_rheims_psa_40_60.usx', {
+    lang: 'eng',
+    abbr: 'drh',
+  }],
+]);
+
+const addPk2Vrs = async () => {
+  let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
+    .toString();
+  let mutationQuery = `mutation { setVerseMapping(docSetId: "eng_webbe" vrsSource: """${vrs}""")}`;
+  await cleanPk2.gqlQuery(mutationQuery);
+  vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/douay_rheims.vrs'))
+    .toString();
+  mutationQuery = `mutation { setVerseMapping(docSetId: "eng_drh" vrsSource: """${vrs}""")}`;
+  await cleanPk2.gqlQuery(mutationQuery);
+};
+
+Promise.all([addPk2Vrs()]).then();
+
 test(
   `hasMapping (${testGroup})`,
   async function (t) {
@@ -78,41 +102,19 @@ test(
 );
 
 test(
-  `mappedCv to original (${testGroup})`,
+  `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(7);
-      const pk = pkWithDocs([
-        ['../test_data/usx/web_psa_40_60.usx', {
-          lang: 'eng',
-          abbr: 'webbe',
-        }],
-        ['../test_data/usx/douay_rheims_psa_40_60.usx', {
-          lang: 'eng',
-          abbr: 'drh',
-        }],
-      ]);
-      let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
-        .toString();
-      let mutationQuery = `mutation { setVerseMapping(docSetId: "eng_webbe" vrsSource: """${vrs}""")}`;
-      let result = await pk.gqlQuery(mutationQuery);
-      t.equal(result.errors, undefined);
-      vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/douay_rheims.vrs'))
-        .toString();
-      mutationQuery = `mutation { setVerseMapping(docSetId: "eng_drh" vrsSource: """${vrs}""")}`;
-      result = await pk.gqlQuery(mutationQuery);
-      t.equal(result.errors, undefined);
+      t.plan(5);
+      const pk = deepCopy(cleanPk2);
       let docSetQuery =
-        '{ docSets { id documents { bookCode: header(id: "bookCode") psa_51_1: mappedCv(chapter: "51" verses: ["1"]) { text } psa_51_2: mappedCv(chapter: "51" verses: ["2"]) { text } } } }';
-      result = await pk.gqlQuery(docSetQuery);
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      const result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
-      // console.log(JSON.stringify(result.data, null, 2));
-      const web_doc = result.data.docSets.filter(ds => ds.id === "eng_webbe")[0].documents[0];
-      t.ok(web_doc.psa_51_1[0].text.startsWith('For the Chief'));
-      t.ok(web_doc.psa_51_2[0].text.startsWith('For the Chief'));
-      const dr_doc = result.data.docSets.filter(ds => ds.id === "eng_drh")[0].documents[0];
-      t.ok(dr_doc.psa_51_1[0].text.startsWith('Unto the end'));
-      t.ok(dr_doc.psa_51_2[0].text.startsWith('When Nathan'));
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('Great is'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Great is'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('mountain.'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('mountain.'));
     } catch (err) {
       console.log(err);
     }

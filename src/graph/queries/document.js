@@ -18,7 +18,7 @@ const itemGroupType = require('./itemGroup');
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
 
-const do_cv = (root, args, context, doMap) => {
+const do_cv = (root, args, context, doMap, mappedDocSetId) => {
   const updatedOpenScopes = (openScopes, items) => {
     let ret = openScopes;
 
@@ -70,16 +70,17 @@ const do_cv = (root, args, context, doMap) => {
       return [];
     }
   } else if (args.verses) { // c:v, c:v-v, may be mapped
+    let docSet = context.docSet;
     let book = root.headers.bookCode;
     let chapterVerses = args.verses.map(v => [parseInt(args.chapter), parseInt(v)]);
 
-    if (doMap && 'reversed' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.reversed) {
-      const mappings = [];
+    if (doMap && 'forward' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.forward) {
+      let mappings = [];
 
       for (const verse of args.verses) { // May handle multiple verses one day, but, eg, may map to multiple books
         mappings.push(
           mapVerse(
-            mainSequence.verseMapping.reversed[args.chapter],
+            mainSequence.verseMapping.forward[args.chapter],
             root.headers.bookCode,
             args.chapter,
             verse,
@@ -90,10 +91,41 @@ const do_cv = (root, args, context, doMap) => {
       const mapping = mappings[0];
       book = mapping[0];
       chapterVerses = mapping[1];
+
+      if (mappedDocSetId) {
+        const mappedDocSet = root.processor.docSets[mappedDocSetId];
+        if (mappedDocSet) {
+          docSet = mappedDocSet;
+          const mappedDocument = docSet.documentWithBook(book);
+          if (mappedDocument) {
+            const mappedMainSequence = mappedDocument.sequences[mappedDocument.mainId];
+            if (mappedMainSequence.verseMapping && 'reversed' in mappedMainSequence.verseMapping) {
+              const doubleMappings = [];
+              for (const [origC, origV] of chapterVerses) {
+                if (`${origC}` in mappedMainSequence.verseMapping.reversed) {
+                  doubleMappings.push(
+                    mapVerse(
+                      mappedMainSequence.verseMapping.reversed[`${origC}`],
+                      book,
+                      origC,
+                      origV,
+                    ),
+                  );
+                } else {
+                  doubleMappings.push([origC, origV]);
+                }
+                book = doubleMappings[0][0];
+                chapterVerses = doubleMappings.map(bcv => bcv[1]).reduce((a, b) => a.concat(b));
+              }
+            }
+          }
+        }
+      }
     }
+
     const cvis = {};
 
-    const document = context.docSet.documentWithBook(book);
+    const document = docSet.documentWithBook(book);
 
     if (!document) {
       return [];
@@ -121,7 +153,7 @@ const do_cv = (root, args, context, doMap) => {
               firstStartBlock = ve.startBlock;
               firstStartItem = ve.startItem;
             }
-            retItems = retItems.concat(context.docSet.itemsByIndex(documentMainSequence, ve, args.includeContext || null)
+            retItems = retItems.concat(docSet.itemsByIndex(documentMainSequence, ve, args.includeContext || null)
               .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))));
           }
 
@@ -129,8 +161,8 @@ const do_cv = (root, args, context, doMap) => {
 
           retItemGroups.push([
             updatedOpenScopes(
-              context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-              context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
+              docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+              docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
             ),
             retItems,
           ]);
@@ -268,14 +300,14 @@ const documentType = new GraphQLObjectType({
     },
     mappedCv: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
-      description: 'Content for a Scripture reference within this document, using the versification of the specified docSet or, by default, \'original\' versification on the current document',
+      description: 'Content for a Scripture reference within this document, using the versification of the specified docSet',
       args: {
         chapter: {
           type: GraphQLNonNull(GraphQLString),
           description: 'The chapter number (as a string)',
         },
         mappedDocSetId: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
           description: 'The id of the mapped docSet',
         },
         verses: {
@@ -289,9 +321,9 @@ const documentType = new GraphQLObjectType({
       },
       resolve: (root, args, context) => {
         if (args.verses.length !== 1) {
-          throw new Error(`origCv expects exactly one verse, not ${args.verses.length}`);
+          throw new Error(`mappedCv expects exactly one verse, not ${args.verses.length}`);
         }
-        return do_cv(root, args, context, true);
+        return do_cv(root, args, context, true, args.mappedDocSetId);
       },
     },
     cvIndexes: {
