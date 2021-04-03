@@ -78,7 +78,7 @@ test(
 );
 
 test(
-  `origCv (${testGroup})`,
+  `mappedCv to original (${testGroup})`,
   async function (t) {
     try {
       t.plan(7);
@@ -103,7 +103,7 @@ test(
       result = await pk.gqlQuery(mutationQuery);
       t.equal(result.errors, undefined);
       let docSetQuery =
-        '{ docSets { id documents { bookCode: header(id: "bookCode") psa_51_1: origCv(chapter: "51" verses: ["1"]) { text } psa_51_2: origCv(chapter: "51" verses: ["2"]) { text } } } }';
+        '{ docSets { id documents { bookCode: header(id: "bookCode") psa_51_1: mappedCv(chapter: "51" verses: ["1"]) { text } psa_51_2: mappedCv(chapter: "51" verses: ["2"]) { text } } } }';
       result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
       // console.log(JSON.stringify(result.data, null, 2));

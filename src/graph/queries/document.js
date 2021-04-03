@@ -266,13 +266,17 @@ const documentType = new GraphQLObjectType({
       },
       resolve: (root, args, context) => do_cv(root, args, context, false),
     },
-    origCv: {
+    mappedCv: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
-      description: 'Content for a Scripture reference within this document, using \'original\' versification',
+      description: 'Content for a Scripture reference within this document, using the versification of the specified docSet or, by default, \'original\' versification on the current document',
       args: {
         chapter: {
           type: GraphQLNonNull(GraphQLString),
           description: 'The chapter number (as a string)',
+        },
+        mappedDocSetId: {
+          type: GraphQLString,
+          description: 'The id of the mapped docSet',
         },
         verses: {
           type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
