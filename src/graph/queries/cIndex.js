@@ -7,6 +7,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const { dumpItems } = require('../lib/dump');
 const itemType = require('./item');
 
 const cIndexType = new GraphQLObjectType({
@@ -55,6 +56,19 @@ const cIndexType = new GraphQLObjectType({
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1], args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)), []),
+    },
+    dumpItems: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The items as a string in a compact eyeballable format',
+      resolve: (root, args, context) => {
+        const items = context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1], args.includeContext);
+
+        if (items.length > 0) {
+          return dumpItems(items.reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b))));
+        } else {
+          return '';
+        }
+      },
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(itemType)),

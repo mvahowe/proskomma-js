@@ -9,6 +9,7 @@ const {
 
 const { mapVerse } = require('proskomma-utils');
 
+const { dumpItems } = require('../lib/dump');
 const itemType = require('./item');
 
 const cvVerseElementType = new GraphQLObjectType({
@@ -57,6 +58,15 @@ const cvVerseElementType = new GraphQLObjectType({
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root, args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b))),
+    },
+    dumpItems: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The items as a string in a compact eyeballable format',
+      resolve: (root, args, context) =>
+        dumpItems(
+          context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root, args.includeContext)
+            .reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b))),
+        ),
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(itemType)),

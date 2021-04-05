@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLNonNull,
 } = require('graphql');
+const { dumpItemGroup } = require('../lib/dump');
 const itemType = require('./item');
 
 // [scopeLabels, items]
@@ -39,6 +40,11 @@ const itemGroupType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'The labels of scopes that were open at the beginning of the itemGroup',
       resolve: (root, args, context) => root[0],
+    },
+    dump: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The itemGroup content as a string in a compact eyeballable format',
+      resolve: root => dumpItemGroup(root),
     },
     /*
     includedScopes: {

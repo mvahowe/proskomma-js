@@ -19,7 +19,7 @@ const pk3 = pkWithDoc('../test_data/usfm/verse_range.usfm', {
   abbr: 'web',
 })[0];
 
-const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text';
+const rangeQuery = 'startBlock startItem endBlock endItem nextToken items { type subType payload } tokens { type subType payload } text dumpItems';
 const cvQuery = `{ chapter verseNumbers { number range } verseRanges { range numbers } verses { verse { ${rangeQuery} verseRange } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
 const cvCharsQuery = `{ chapter verses { verse { tokens(includeContext:true withChars:["Ruth", "Boaz", "Naomi"]) { payload position} text } } }`;
@@ -33,13 +33,14 @@ const checkIndexFields = (t, index) => {
   t.ok(index.text.length > 0);
   t.ok(index.items.length > 0);
   t.ok(index.tokens.length > 0);
-}
+  t.ok(index.dumpItems.length > 0);
+};
 
 test(
   `cvIndexes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(1 + 8);
+      t.plan(1 + 9);
       const query =
         `{ documents { cvIndexes ${cvQuery} } }`;
       const result = await pk.gqlQuery(query);
@@ -56,7 +57,7 @@ test(
   `cIndexes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(1 + 8);
+      t.plan(1 + 9);
       const query =
         `{ documents { cIndexes ${cQuery} } }`;
       const result = await pk.gqlQuery(query);
@@ -74,7 +75,7 @@ test(
   `cvIndex (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2 + 8 + 6);
+      t.plan(2 + 9 + 6);
       let query =
         `{ documents { cvIndex(chapter:3) ${cvQuery} } }`;
       let result = await pk.gqlQuery(query);
@@ -112,7 +113,7 @@ test(
       t.equal(verseNumbers.length, 20);
       t.equal(Math.max(...verseNumbers.map(n => n.number)), 19);
       t.equal(Math.min(...verseNumbers.map(n => n.number)), 0);
-      // console.log(JSON.stringify(result.data.documents[0].cvIndex.verseRanges, null, 2));
+      // console.log(JSON.stringify(result.data.documents[0].cvIndex.verses.map(v => v.verse[0].dumpItems), null, 2));
     } catch (err) {
       console.log(err);
     }
@@ -145,7 +146,7 @@ test(
   `cIndex (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2 + 8 + 3);
+      t.plan(2 + 9 + 3);
       let query =
         `{ documents { cIndex(chapter:3) ${cQuery} } }`;
       let result = await pk.gqlQuery(query);
