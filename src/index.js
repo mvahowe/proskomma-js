@@ -291,7 +291,6 @@ class Proskomma {
 
     for (const docId of Object.keys(succinctOb.docs)) {
       let doc = this.newDocumentFromSuccinct(docId, succinctOb);
-      this.addDocument(doc, docSetId);
       docs.push(doc);
     }
     docSet.preEnums = {};
