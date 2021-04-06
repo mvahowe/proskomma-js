@@ -328,6 +328,7 @@ class Proskomma {
         doc.sequences[seqId].blocks.push(block);
       }
     }
+    doc.buildChapterVerseIndex(doc.sequences[doc.mainId]);
     this.addDocument(doc, succinctOb.id);
     return doc;
   }
