@@ -24,8 +24,7 @@ test(
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `Headers (${testGroup})`,
@@ -45,8 +44,7 @@ test(
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `mainSequence (${testGroup})`,
@@ -64,8 +62,7 @@ test(
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `Sequences (${testGroup})`,
@@ -83,5 +80,22 @@ test(
       console.log(err);
     }
   },
-)
-;
+);
+
+test(
+  `Sequences (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { sequences { id } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sequences' in result.data.documents[0]);
+      t.ok('id' in result.data.documents[0].sequences[0]);
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);

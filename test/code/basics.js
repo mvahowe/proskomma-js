@@ -185,3 +185,48 @@ test(
     }
   },
 );
+
+test(
+  `Enum index for string (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{' +
+        '  docSets {' +
+        '    boaz: enumIndexForString(enumType:"wordLike" searchString:"Boaz")' +
+        '    banana: enumIndexForString(enumType:"wordLike" searchString:"Banana")' +
+        '  }' +
+        '}';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSets[0].boaz > 0);
+      t.equal(result.data.docSets[0].banana, -1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Enum regex indexes for string (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{' +
+        '  docSets {' +
+        '    kin: enumRegexIndexesForString(enumType:"wordLike" searchRegex:"kinsm[ae]n") { index matched }' +
+        '    banana: enumRegexIndexesForString(enumType:"wordLike" searchRegex:"Banana") { index matched }' +
+        '  }' +
+        '}';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].kin.length, 2);
+      t.equal(result.data.docSets[0].banana.length, 0);
+      // console.log(JSON.stringify(result.data, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

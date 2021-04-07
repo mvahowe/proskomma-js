@@ -369,8 +369,7 @@ test(
     try {
       const charClauses = [
         [`withChars: ["righteous", "upright"]`, 66, 23, 89],
-        [`withAnyCaseChars: ["rIGHteous", "UPright"]`, 66, 23, 89],
-        [`withCharsMatchingRegex: "right"`, 66, 23, 213],
+        [`withMatchingChars: ["right"]`, 66, 23, 213],
       ];
       t.plan((4 * charClauses.length) + 2);
 

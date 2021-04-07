@@ -1,12 +1,16 @@
+import { enumStringIndex, enumRegexIndexTuples } from 'proskomma-utils';
+
 const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
   GraphQLNonNull,
   GraphQLBoolean,
+  GraphQLInt,
 } = require('graphql');
 const documentType = require('./document');
 const keyValueType = require('./key_value');
+const regexIndexType = require('./regex_index');
 
 const docSetType = new GraphQLObjectType({
   name: 'DocSet',
@@ -66,7 +70,40 @@ const docSetType = new GraphQLObjectType({
       type: GraphQLBoolean,
       resolve: root => root.tags.has('hasMapping'),
     },
+    enumIndexForString: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'The internal index number corresponding to a string in a given docset enum',
+      args: {
+        enumType: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The enum to be searched',
+        },
+        searchString: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The string to match',
+        },
+      },
+      resolve: (root, args, context) =>
+        enumStringIndex(root.enums[args.enumType], args.searchString),
+    },
+    enumRegexIndexesForString: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(regexIndexType))),
+      description: 'Information about internal indexes matching the case-insensitive regex in a given docset enum',
+      args: {
+        enumType: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The enum to be searched',
+        },
+        searchRegex: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The regex to match',
+        },
+      },
+      resolve: (root, args, context) =>
+        enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
+    },
   },
+
 });
 
 module.exports = docSetType;
