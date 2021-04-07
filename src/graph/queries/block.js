@@ -8,8 +8,8 @@ const {
   GraphQLBoolean,
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
-const itemType = require('./item');
 const { dumpBlock } = require('../lib/dump');
+const itemType = require('./item');
 
 const blockType = new GraphQLObjectType({
   name: 'Block',
@@ -165,13 +165,9 @@ const blockType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Return tokens whose payload is an exact match to one of the specified strings',
         },
-        withAnyCaseChars: {
+        withMatchingChars: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return tokens whose payload is a case-independent match to one of the specified strings',
-        },
-        withCharsMatchingRegex: {
-          type: GraphQLString,
-          description: 'Return tokens whose payload matches the specified regex',
+          description: 'Return tokens whose payload matches one of the specified regexes',
         },
       },
       resolve:
@@ -179,6 +175,7 @@ const blockType = new GraphQLObjectType({
           if (Object.keys(args).filter(a => a.includes('Chars')).length > 1) {
             throw new Error('Only one of "withChars", "withAnyCaseChars" and "withCharsMatchingRegex" may be specified');
           }
+
           let ret;
 
           if (args.withScriptureCV) {
@@ -202,10 +199,15 @@ const blockType = new GraphQLObjectType({
 
           if (args.withChars) {
             ret = ret.filter(i => args.withChars.includes(i[2]));
-          } else if (args.withAnyCaseChars) {
-            ret = ret.filter(i => args.withAnyCaseChars.map(a => a.toLowerCase()).includes(i[2].toLowerCase()));
-          } else if (args.withCharsMatchingRegex) {
-            ret = ret.filter(i => xre.test(i, xre(args.withCharsMatchingRegex)));
+          } else if (args.withMatchingChars) {
+            ret = ret.filter(i => {
+              for (const re of args.withMatchingChars) {
+                if (xre.test(i, xre(re))) {
+                  return true;
+                }
+              }
+              return false;
+            });
           }
 
           return ret.filter(i => i[0] === 'token');

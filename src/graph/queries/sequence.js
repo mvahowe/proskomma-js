@@ -1,4 +1,4 @@
-import { enumStringIndex } from 'proskomma-utils';
+import { enumStringIndex, enumRegexIndexTuples } from 'proskomma-utils';
 
 const {
   GraphQLObjectType,
@@ -104,6 +104,10 @@ const sequenceType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Return blocks containing a token whose payload is an exact match to one of the specified strings',
         },
+        withMatchingChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return blocks containing a token whose payload matches the specified regex',
+        },
       },
       resolve: (root, args, context) => {
         context.docSet.maybeBuildEnumIndexes();
@@ -122,6 +126,10 @@ const sequenceType = new GraphQLObjectType({
 
         if (args.attSpecs && args.attValues && (args.attSpecs.length !== args.attValues.length)) {
           throw new Error('attSpecs and attValues must be same length');
+        }
+
+        if (args.withChars && args.withMatchingChars) {
+          throw new Error('Cannot specify both withChars and withMatchingChars');
         }
 
         let ret = root.blocks;
@@ -147,7 +155,19 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withChars) {
-          const charsIndexes = args.withChars.map(c => enumStringIndex(context.docSet.enums.wordLike, c));
+          const charsIndexes = args.withChars
+            .map(
+              c => enumStringIndex(context.docSet.enums.wordLike, c));
+          ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
+        }
+
+        if (args.withMatchingChars) {
+          const charsIndexes = args.withMatchingChars
+            .map(
+              c =>
+                enumRegexIndexTuples(context.docSet.enums.wordLike, c)
+                  .map(tup => tup[0]),
+            ).reduce((a, b) => a.concat(b));
           ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
         }
         return ret;
