@@ -264,6 +264,7 @@ class Proskomma {
   addDocument(doc, docSetId) {
     this.documents[doc.id] = doc;
     this.docSets[docSetId].docIds.push(doc.id);
+    this.docSets[docSetId].buildEnumIndexes();
   }
 
   loadSuccinctDocSet(succinctOb) {
@@ -317,6 +318,23 @@ class Proskomma {
         blocks: [],
       };
 
+      if (seq.type === 'main') {
+        doc.sequences[seqId].chapters = {};
+
+        for (const [chK, chV] of Object.entries(seq.chapters)) {
+          const bA = new ByteArray();
+          bA.fromBase64(chV);
+          doc.sequences[seqId].chapters[chK] = bA;
+        }
+        doc.sequences[seqId].chapterVerses = {};
+
+        for (const [chvK, chvV] of Object.entries(seq.chapterVerses)) {
+          const bA = new ByteArray();
+          bA.fromBase64(chvV);
+          doc.sequences[seqId].chapterVerses[chvK] = bA;
+        }
+      }
+
       for (const succinctBlock of seq.blocks) {
         const block = {};
 
@@ -328,7 +346,6 @@ class Proskomma {
         doc.sequences[seqId].blocks.push(block);
       }
     }
-    doc.buildChapterVerseIndex(doc.sequences[doc.mainId]);
     this.addDocument(doc, succinctOb.id);
     return doc;
   }
