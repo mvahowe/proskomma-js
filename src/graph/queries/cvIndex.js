@@ -7,10 +7,10 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const { mapVerse } = require('proskomma-utils');
-
 const { dumpItems } = require('../lib/dump');
 const itemType = require('./item');
+const verseNumberType = require('./verseNumber');
+const verseRangeType = require('./verseRange');
 
 const cvVerseElementType = new GraphQLObjectType({
   name: 'cvVerseElement',
@@ -111,101 +111,6 @@ const cvVersesType = new GraphQLObjectType({
   }),
 });
 
-const cvType = new GraphQLObjectType({
-  name: 'cv',
-  description: 'A chapter-verse reference',
-  fields: () => ({
-    chapter: {
-      type: GraphQLInt,
-      description: 'The chapter number',
-      resolve: root => root[0],
-    },
-    verse: {
-      type: GraphQLInt,
-      description: 'The verse number',
-      resolve: root => root[1],
-    },
-  }),
-});
-
-const orig = new GraphQLObjectType({
-  name: 'orig',
-  description: 'Mapped verse information',
-  fields: () => ({
-    book: {
-      type: GraphQLString,
-      description: 'The book code',
-      resolve: root => root.book,
-    },
-    cvs: {
-      type: GraphQLNonNull(GraphQLList(cvType)),
-      description: 'A list of chapter-verse references',
-      resolve: root => root.cvs,
-    },
-  }),
-});
-
-const verseNumber = new GraphQLObjectType({
-  name: 'verseNumber',
-  description: 'Information about a verse number (which may be part of a verse range)',
-  fields: () => ({
-    number: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The verse number',
-      resolve: root => root.number,
-    },
-    range: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The verse range to which the verse number belongs',
-      resolve: root => root.range,
-    },
-    orig: {
-      type: GraphQLNonNull(orig),
-      description: 'The reference for this verse when mapped to \'original\' versification',
-      resolve: (root, args, context) => {
-        const localBook = context.doc.headers.bookCode;
-        const localChapter = context.cvIndex[0];
-        const localVerse = root.number;
-        const mainSequence = context.doc.sequences[context.doc.mainId];
-
-        if (
-          mainSequence.verseMapping &&
-          'forward' in mainSequence.verseMapping &&
-          `${localChapter}` in mainSequence.verseMapping.forward
-        ) {
-          const mapping = mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
-          return ({
-            book: mapping[0],
-            cvs: mapping[1],
-          });
-        } else {
-          return ({
-            book: localBook,
-            cvs: [[localChapter, localVerse]],
-          });
-        }
-      },
-    },
-  }),
-});
-
-const verseRange = new GraphQLObjectType({
-  name: 'verseRange',
-  description: 'Information about a verse range (which may only cover one verse)',
-  fields: () => ({
-    range: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The range, as it would be printed in a Bible',
-      resolve: root => root.range,
-    },
-    numbers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInt))),
-      description: 'A list of verse numbers for this range',
-      resolve: root => root.numbers,
-    },
-  }),
-});
-
 const cvIndexType = new GraphQLObjectType({
   name: 'cvIndex',
   description: 'A chapterVerse index entry',
@@ -221,7 +126,7 @@ const cvIndexType = new GraphQLObjectType({
       resolve: root => root[1],
     },
     verseNumbers: {
-      type: GraphQLList(GraphQLNonNull(verseNumber)),
+      type: GraphQLList(GraphQLNonNull(verseNumberType)),
       description: 'A list of verse number and range information, organized by verse number',
       resolve: (root, args, context) => {
         context.cvIndex = root;
@@ -234,7 +139,7 @@ const cvIndexType = new GraphQLObjectType({
       },
     },
     verseRanges: {
-      type: GraphQLList(GraphQLNonNull(verseRange)),
+      type: GraphQLList(GraphQLNonNull(verseRangeType)),
       description: 'A list of verse number and range information, organized by verse range',
       resolve: root => {
         const ret = [];

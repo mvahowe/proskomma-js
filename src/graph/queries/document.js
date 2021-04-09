@@ -14,6 +14,7 @@ const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
 const cIndexType = require('./cIndex');
 const itemGroupType = require('./itemGroup');
+const cvNavigationType = require('./cvNavigation');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -325,6 +326,28 @@ const documentType = new GraphQLObjectType({
         }
         return do_cv(root, args, context, true, args.mappedDocSetId);
       },
+    },
+    cvNavigation: {
+      type: cvNavigationType,
+      description: 'What\'s previous and next with respect to the specified verse',
+      args: {
+        chapter: {
+          type: GraphQLString,
+          description: 'The chapter number (as a string)',
+        },
+        verse: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'A verse number (as a string)',
+        },
+      },
+      resolve:
+        (root, args, context) => [
+          args.chapter,
+          args.verse,
+          root.chapterVerseIndex((parseInt(args.chapter) - 1).toString()),
+          root.chapterVerseIndex(args.chapter),
+          root.chapterVerseIndex((parseInt(args.chapter) + 1).toString()),
+        ],
     },
     cvIndexes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cvIndexType))),
