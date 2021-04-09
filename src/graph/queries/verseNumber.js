@@ -7,23 +7,7 @@ const {
 } = require('graphql');
 
 const { mapVerse } = require('proskomma-utils');
-
-const cvType = new GraphQLObjectType({
-  name: 'cv',
-  description: 'A chapter-verse reference',
-  fields: () => ({
-    chapter: {
-      type: GraphQLInt,
-      description: 'The chapter number',
-      resolve: root => root[0],
-    },
-    verse: {
-      type: GraphQLInt,
-      description: 'The verse number',
-      resolve: root => root[1],
-    },
-  }),
-});
+const cvType = require('./cv');
 
 const orig = new GraphQLObjectType({
   name: 'orig',
