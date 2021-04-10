@@ -79,14 +79,6 @@ const cvNavigationType = new GraphQLObjectType({
         return ret;
       },
     },
-    nextVerseRange: {
-      type: cvType,
-      description: 'The verse range for the next verse',
-    },
-    previousVerseRange: {
-      type: cvType,
-      description: 'The verse range for the previous verse',
-    },
     nextChapter: {
       type: GraphQLString,
       description: 'The next chapter number (as a string)',

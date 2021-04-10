@@ -20,14 +20,14 @@ test(
   `Serialize WEB RUT (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
+      t.plan(3);
       const query = '{ docSets { id } }';
       const result = await pk.gqlQuery(query);
       const docSetId = result.data.docSets[0].id;
       const serialized = pk.serializeSuccinct(docSetId);
       t.ok(serialized);
       const validationReport = new Validator().validate(serialized, serializedSchema);
-      // t.equal(validationReport.errors.length, 0);
+      t.equal(validationReport.errors.length, 0);
       const wordLikes = unpackEnum(pk.docSets[docSetId].enums['wordLike']);
       t.ok(wordLikes.includes('Ruth'));
     } catch (err) {
