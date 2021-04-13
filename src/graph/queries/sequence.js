@@ -159,10 +159,22 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withChars) {
-          const charsIndexes = args.withChars
-            .map(
-              c => enumStringIndex(context.docSet.enums.wordLike, c));
-          ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
+          let charsIndexesArray = [
+            args.withChars
+              .map(
+                c => [enumStringIndex(context.docSet.enums.wordLike, c)],
+              ),
+          ];
+
+          if (args.allChars) {
+            charsIndexesArray = charsIndexesArray[0];
+          } else {
+            charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+          }
+
+          for (const charsIndexes of charsIndexesArray) {
+            ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
+          }
         }
 
         if (args.withMatchingChars) {

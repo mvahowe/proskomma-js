@@ -117,19 +117,40 @@ test(
 );
 
 test(
-  `withChars (${testGroup})`,
+  `withChars 'or' (${testGroup})`,
   async function (t) {
     try {
-      t.plan(21);
-      let query = '{ documents { mainSequence { blocks(withChars:"Boaz") { text } } } }';
+      t.plan(27);
+      let query = '{ documents { mainSequence { blocks(withChars:["Boaz" "Naomi"]) { text } } } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('blocks' in result.data.documents[0].mainSequence);
       const blocks = result.data.documents[0].mainSequence.blocks;
-      t.equal(blocks.length, 18);
+      t.equal(blocks.length, 24);
 
       for (const block of blocks) {
-        t.ok(block.text.includes('Boaz'));
+        t.ok(block.text.includes('Boaz') || block.text.includes('Naomi'));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `withChars 'and' (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      let query = '{ documents { mainSequence { blocks(withChars:["Boaz" "Naomi"] allChars: true) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      t.equal(blocks.length, 8);
+
+      for (const block of blocks) {
+        t.ok(block.text.includes('Boaz') && block.text.includes('Naomi'));
       }
     } catch (err) {
       console.log(err);
