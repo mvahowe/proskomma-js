@@ -98,7 +98,7 @@ const sequenceType = new GraphQLObjectType({
         },
         allAtts: {
           type: GraphQLBoolean,
-          description: 'If true, blocks where at least one attSpec matches will be included',
+          description: 'If true, blocks where all attSpecs match will be included',
         },
         withChars: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
@@ -106,7 +106,11 @@ const sequenceType = new GraphQLObjectType({
         },
         withMatchingChars: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return blocks containing a token whose payload matches the specified regex',
+          description: 'Return blocks containing a token whose payload matches the specified regexes',
+        },
+        allChars: {
+          type: GraphQLBoolean,
+          description: 'If true, blocks where all regexes match will be included',
         },
       },
       resolve: (root, args, context) => {
@@ -162,13 +166,24 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withMatchingChars) {
-          const charsIndexes = args.withMatchingChars
-            .map(
-              c =>
-                enumRegexIndexTuples(context.docSet.enums.wordLike, c)
-                  .map(tup => tup[0]),
-            ).reduce((a, b) => a.concat(b));
-          ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
+          let charsIndexesArray = [
+            args.withMatchingChars
+              .map(
+                c =>
+                  enumRegexIndexTuples(context.docSet.enums.wordLike, c)
+                    .map(tup => tup[0]),
+              ),
+          ];
+
+          if (args.allChars) {
+            charsIndexesArray = charsIndexesArray[0];
+          } else {
+            charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+          }
+
+          for (const charsIndexes of charsIndexesArray) {
+            ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
+          }
         }
         return ret;
       },

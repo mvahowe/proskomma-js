@@ -138,7 +138,7 @@ test(
 );
 
 test(
-  `withMatchingChars (${testGroup})`,
+  `withMatchingChars 'or' (${testGroup})`,
   async function (t) {
     try {
       t.plan(3);
@@ -148,6 +148,24 @@ test(
       t.ok('blocks' in result.data.documents[0].mainSequence);
       const blocks = result.data.documents[0].mainSequence.blocks;
       t.equal(blocks.length, 2);
+      // console.log(JSON.stringify(blocks, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `withMatchingChars 'and' (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      let query = '{ documents { mainSequence { blocks(withMatchingChars:["naomi", "ruth", "boaz", "field"] allChars:true) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      t.equal(blocks.length, 3);
       // console.log(JSON.stringify(blocks, null, 2));
     } catch (err) {
       console.log(err);
