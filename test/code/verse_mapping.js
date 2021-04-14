@@ -34,6 +34,17 @@ const pk3 = pkWithDocs([
   }],
 ]);
 
+const pk4 = pkWithDocs([
+  ['../test_data/usfm/web_ecc.usfm', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+  ['../test_data/usx/douay_rheims_ecc.usx', {
+    lang: 'eng',
+    abbr: 'drh',
+  }],
+]);
+
 const addPk2Vrs = async () => {
   let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
     .toString();
@@ -56,8 +67,19 @@ const addPk3Vrs = async () => {
   await pk3.gqlQuery(mutationQuery);
 };
 
+const addPk4Vrs = async () => {
+  let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
+    .toString();
+  let mutationQuery = `mutation { setVerseMapping(docSetId: "eng_webbe" vrsSource: """${vrs}""")}`;
+  await pk4.gqlQuery(mutationQuery);
+  vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/douay_rheims.vrs'))
+    .toString();
+  mutationQuery = `mutation { setVerseMapping(docSetId: "eng_drh" vrsSource: """${vrs}""")}`;
+  await pk4.gqlQuery(mutationQuery);
+};
 
-Promise.all([addPk2Vrs(), addPk3Vrs]).then();
+
+Promise.all([addPk2Vrs(), addPk3Vrs, addPk4Vrs()]).then();
 
 test(
   `hasMapping (${testGroup})`,
@@ -128,7 +150,7 @@ test(
   `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(35);
+      t.plan(40);
       const pk = deepCopy(cleanPk2);
       let docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
@@ -190,7 +212,14 @@ test(
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('In the days of one of the judges'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('his two sons. '));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('his two sons. '));
-      console.log(JSON.stringify(result, null, 2))
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "1" verses: ["1"]) { text } drh: mappedCv(chapter: "1" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk4.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('The words of the Preacher'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('The words of Ecclesiastes'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('king in Jerusalem:'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('king of Jerusalem. '));
     } catch (err) {
       console.log(err);
     }

@@ -119,7 +119,7 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
                 ),
               );
             } else {
-              doubleMappings.push([origC, origV]);
+              doubleMappings.push([book, [[origC, origV]]]);
             }
             book = doubleMappings[0][0];
             chapterVerses = doubleMappings.map(bcv => bcv[1]).reduce((a, b) => a.concat(b));
