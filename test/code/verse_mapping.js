@@ -23,6 +23,17 @@ const cleanPk2 = pkWithDocs([
   }],
 ]);
 
+const pk3 = pkWithDocs([
+  ['../test_data/usx/web_rut.usx', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+  ['../test_data/usx/douay_rheims_rut.usx', {
+    lang: 'eng',
+    abbr: 'drh',
+  }],
+]);
+
 const addPk2Vrs = async () => {
   let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
     .toString();
@@ -34,7 +45,19 @@ const addPk2Vrs = async () => {
   await cleanPk2.gqlQuery(mutationQuery);
 };
 
-Promise.all([addPk2Vrs()]).then();
+const addPk3Vrs = async () => {
+  let vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/webbe.vrs'))
+    .toString();
+  let mutationQuery = `mutation { setVerseMapping(docSetId: "eng_webbe" vrsSource: """${vrs}""")}`;
+  await pk3.gqlQuery(mutationQuery);
+  vrs = fse.readFileSync(path.resolve(__dirname, '../test_data/vrs/douay_rheims.vrs'))
+    .toString();
+  mutationQuery = `mutation { setVerseMapping(docSetId: "eng_drh" vrsSource: """${vrs}""")}`;
+  await pk3.gqlQuery(mutationQuery);
+};
+
+
+Promise.all([addPk2Vrs(), addPk3Vrs]).then();
 
 test(
   `hasMapping (${testGroup})`,
@@ -105,7 +128,7 @@ test(
   `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(30);
+      t.plan(35);
       const pk = deepCopy(cleanPk2);
       let docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
@@ -159,6 +182,15 @@ test(
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Blessed is the man who hath'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('scoffers;'));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('pestilence.'));
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "1" verses: ["1"]) { text } drh: mappedCv(chapter: "1" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk3.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('In the days when the judges judged'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('In the days of one of the judges'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('his two sons. '));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('his two sons. '));
+      console.log(JSON.stringify(result, null, 2))
     } catch (err) {
       console.log(err);
     }
