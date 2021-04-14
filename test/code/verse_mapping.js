@@ -105,7 +105,7 @@ test(
   `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(10);
+      t.plan(15);
       const pk = deepCopy(cleanPk2);
       let docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
@@ -123,6 +123,14 @@ test(
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Blessed is the man who hath'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('scoffers;'));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('pestilence.'));
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "10" verses: ["1"]) { text } drh: mappedCv(chapter: "10" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('Why do you stand far off'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Why, O Lord,'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('times of trouble?'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('the time of trouble?'));
     } catch (err) {
       console.log(err);
     }
