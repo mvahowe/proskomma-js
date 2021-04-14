@@ -75,28 +75,30 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
     let book = root.headers.bookCode;
     let chapterVerses = args.verses.map(v => [parseInt(args.chapter), parseInt(v)]);
 
-    if (doMap && 'forward' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.forward) {
-      let mappings = [];
-
-      for (const verse of args.verses) { // May handle multiple verses one day, but, eg, may map to multiple books
-        mappings.push(
-          mapVerse(
-            mainSequence.verseMapping.forward[args.chapter],
-            root.headers.bookCode,
-            args.chapter,
-            verse,
-          ),
-        );
+    if (doMap) {
+      const mappedDocSet = root.processor.docSets[mappedDocSetId];
+      if (mappedDocSet) {
+        docSet = mappedDocSet;
       }
+      if ('forward' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.forward) {
+        let mappings = [];
 
-      const mapping = mappings[0];
-      book = mapping[0];
-      chapterVerses = mapping[1];
+        for (const verse of args.verses) { // May handle multiple verses one day, but, eg, may map to multiple books
+          mappings.push(
+            mapVerse(
+              mainSequence.verseMapping.forward[args.chapter],
+              root.headers.bookCode,
+              args.chapter,
+              verse,
+            ),
+          );
+        }
 
-      if (mappedDocSetId) {
-        const mappedDocSet = root.processor.docSets[mappedDocSetId];
-        if (mappedDocSet) {
-          docSet = mappedDocSet;
+        const mapping = mappings[0];
+        book = mapping[0];
+        chapterVerses = mapping[1];
+
+        if (mappedDocSetId) {
           const mappedDocument = docSet.documentWithBook(book);
           if (mappedDocument) {
             const mappedMainSequence = mappedDocument.sequences[mappedDocument.mainId];

@@ -13,11 +13,11 @@ const cleanPk = pkWithDoc('../test_data/usx/web_psa_40_60.usx', {
 })[0];
 
 const cleanPk2 = pkWithDocs([
-  ['../test_data/usx/web_psa_40_60.usx', {
+  ['../test_data/usx/web_psa.usx', {
     lang: 'eng',
     abbr: 'webbe',
   }],
-  ['../test_data/usx/douay_rheims_psa_40_60.usx', {
+  ['../test_data/usx/douay_rheims_psa.usx', {
     lang: 'eng',
     abbr: 'drh',
   }],
@@ -105,16 +105,24 @@ test(
   `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(5);
+      t.plan(10);
       const pk = deepCopy(cleanPk2);
       let docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
-      const result = await pk.gqlQuery(docSetQuery);
+      let result = await pk.gqlQuery(docSetQuery);
       t.equal(result.errors, undefined);
       t.ok(result.data.docSet.documents[0].web[0].text.startsWith('Great is'));
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Great is'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('mountain.'));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('mountain.'));
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "1" verses: ["1"]) { text } drh: mappedCv(chapter: "1" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('Blessed is the man who does'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Blessed is the man who hath'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('scoffers;'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('pestilence.'));
     } catch (err) {
       console.log(err);
     }
