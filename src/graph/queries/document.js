@@ -77,9 +77,11 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
 
     if (doMap) {
       const mappedDocSet = root.processor.docSets[mappedDocSetId];
+
       if (mappedDocSet) {
         docSet = mappedDocSet;
       }
+
       if ('forward' in mainSequence.verseMapping && args.chapter in mainSequence.verseMapping.forward) {
         let mappings = [];
 
@@ -98,28 +100,29 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
         book = mapping[0];
         chapterVerses = mapping[1];
       }
-      if (mappedDocSetId) {
-        const mappedDocument = docSet.documentWithBook(book);
-        if (mappedDocument) {
-          const mappedMainSequence = mappedDocument.sequences[mappedDocument.mainId];
-          if (mappedMainSequence.verseMapping && 'reversed' in mappedMainSequence.verseMapping) {
-            const doubleMappings = [];
-            for (const [origC, origV] of chapterVerses) {
-              if (`${origC}` in mappedMainSequence.verseMapping.reversed) {
-                doubleMappings.push(
-                  mapVerse(
-                    mappedMainSequence.verseMapping.reversed[`${origC}`],
-                    book,
-                    origC,
-                    origV,
-                  ),
-                );
-              } else {
-                doubleMappings.push([origC, origV]);
-              }
-              book = doubleMappings[0][0];
-              chapterVerses = doubleMappings.map(bcv => bcv[1]).reduce((a, b) => a.concat(b));
+
+      const mappedDocument = docSet.documentWithBook(book);
+
+      if (mappedDocument) {
+        const mappedMainSequence = mappedDocument.sequences[mappedDocument.mainId];
+
+        if (mappedMainSequence.verseMapping && 'reversed' in mappedMainSequence.verseMapping) {
+          const doubleMappings = [];
+          for (const [origC, origV] of chapterVerses) {
+            if (`${origC}` in mappedMainSequence.verseMapping.reversed) {
+              doubleMappings.push(
+                mapVerse(
+                  mappedMainSequence.verseMapping.reversed[`${origC}`],
+                  book,
+                  origC,
+                  origV,
+                ),
+              );
+            } else {
+              doubleMappings.push([origC, origV]);
             }
+            book = doubleMappings[0][0];
+            chapterVerses = doubleMappings.map(bcv => bcv[1]).reduce((a, b) => a.concat(b));
           }
         }
       }

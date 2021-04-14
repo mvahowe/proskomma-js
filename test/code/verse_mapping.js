@@ -105,7 +105,7 @@ test(
   `mappedCv between docSets (${testGroup})`,
   async function (t) {
     try {
-      t.plan(15);
+      t.plan(30);
       const pk = deepCopy(cleanPk2);
       let docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "48" verses: ["1"]) { text } drh: mappedCv(chapter: "48" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
@@ -131,6 +131,34 @@ test(
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Why, O Lord,'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('times of trouble?'));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('the time of trouble?'));
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "11" verses: ["1"]) { text } drh: mappedCv(chapter: "11" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('In the LORD, I take refuge'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('In the Lord'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('to your mountain”?'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('like a sparrow?'));
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "11" verses: ["1"]) { text } drh: mappedCv(chapter: "11" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('In the LORD, I take refuge'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('In the Lord'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('to your mountain”?'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('like a sparrow?'));
+      for (const docSetId of ['eng_webbe', 'eng_drh']) {
+        let mutationQuery = `mutation { unsetVerseMapping(docSetId: "${docSetId}")}`;
+        result = await pk.gqlQuery(mutationQuery);
+      }
+      docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "1" verses: ["1"]) { text } drh: mappedCv(chapter: "1" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
+      result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.docSet.documents[0].web[0].text.startsWith('Blessed is the man who does'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('Blessed is the man who hath'));
+      t.ok(result.data.docSet.documents[0].web[0].text.endsWith('scoffers;'));
+      t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('pestilence.'));
     } catch (err) {
       console.log(err);
     }
