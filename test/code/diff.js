@@ -32,7 +32,7 @@ test(
          diff(
            document1: "${docIds[0]}" document2: "${docIds[1]}" mode: "%mode%"
          ) {
-           chapter verse diffType text1 text2 tokensDiff wordsDiff
+             chapter verse diffType text1 text2 tokensDiff wordsDiff
          }
        }`.replace('%mode%', expectation[0]);
         const result = await pk.gqlQuery(query);
