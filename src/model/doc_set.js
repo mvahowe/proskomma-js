@@ -362,6 +362,9 @@ class DocSet {
 
   itemsByIndex(mainSequence, index, includeContext) {
     let ret = [];
+    if (!index) {
+      return ret;
+    }
     let currentBlock = index.startBlock;
     let nextToken = index.nextToken;
 

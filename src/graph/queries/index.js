@@ -10,6 +10,7 @@ const docSetType = require('./doc_set');
 const documentType = require('./document');
 const inputKeyValueType = require('./input_key_value');
 const selectorSpecType = require('./selector_spec');
+const diffRecordType = require('./diff_record');
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -117,6 +118,116 @@ const schemaQueries = new GraphQLObjectType({
         },
       },
       resolve: (root, args) => root.documentById(args.id),
+    },
+    diff: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(diffRecordType))),
+      args: {
+        document1: { type: GraphQLNonNull(GraphQLString) },
+        document2: { type: GraphQLNonNull(GraphQLString) },
+        mode: { type: GraphQLNonNull(GraphQLString) },
+      },
+      resolve: (root, args) => {
+        if (args.document1 === args.document2) {
+          throw new Error('document1 and document2 should not be equal');
+        }
+
+        if (!['words', 'tokens'].includes(args.mode)) {
+          throw new Error(`mode should be 'words' or 'tokens', not '${args.mode}'`);
+        }
+
+        if (!(args.document1 in root.documents)) {
+          throw new Error(`document1 id '${args.document1}' does not exist`);
+        }
+
+        if (!(args.document2 in root.documents)) {
+          throw new Error(`document2 id '${args.document2}' does not exist`);
+        }
+
+        const docSet1 = root.docSets[root.documents[args.document1].docSetId];
+        docSet1.maybeBuildEnumIndexes();
+
+        if (!docSet1) {
+          throw new Error(`No docSet for document '${args.document1}'`);
+        }
+
+        const docSet2 = root.docSets[root.documents[args.document2].docSetId];
+        docSet1.maybeBuildEnumIndexes();
+
+        if (!docSet2) {
+          throw new Error(`No docSet for document '${args.document2}'`);
+        }
+
+        const doc1 = root.documents[args.document1];
+        const doc2 = root.documents[args.document2];
+        const doc1Indexes = doc1.chapterVerseIndexes();
+        const doc2Indexes = doc2.chapterVerseIndexes();
+        const diffRecords = [];
+
+        for (const [chapterN, chapter1Index] of Object.entries(doc1Indexes)) {
+          if (!(chapterN in doc2Indexes)) { // Removed chapter
+            diffRecords.push([chapterN, null, 'removedChapter', null, null]);
+            continue;
+          }
+
+          const chapter2Index = doc2Indexes[chapterN];
+
+          for (const verseN of [...chapter1Index.entries()].map(e => e[0])) {
+            if ((chapter1Index[verseN].length > 0) && (verseN >= chapter2Index.length || chapter2Index[verseN].length === 0)) { // removed verse
+              const doc1Items = docSet1.itemsByIndex(doc1.sequences[doc1.mainId], chapter1Index[verseN][0])
+                .reduce((a, b) => a.concat([b]), [])
+                .reduce((a, b) => a.concat(b), []);
+              diffRecords.push([chapterN, verseN, 'removedVerse', doc1Items, null]);
+              continue;
+            }
+
+            if ((chapter1Index[verseN].length === 0) && (chapter2Index[verseN].length > 0)) { // added Verse
+              const doc2Items = docSet2.itemsByIndex(doc2.sequences[doc2.mainId], chapter2Index[verseN][0])
+                .reduce((a, b) => a.concat([b]), [])
+                .reduce((a, b) => a.concat(b), []);
+              diffRecords.push([chapterN, verseN, 'addedVerse', null, doc2Items]);
+              continue;
+            }
+
+            const doc1Items = docSet1
+              .itemsByIndex(doc1.sequences[doc1.mainId], chapter1Index[verseN][0])
+              .reduce((a, b) => a.concat([b]), [])
+              .reduce((a, b) => a.concat(b), []);
+            const doc2Items = docSet2
+              .itemsByIndex(doc2.sequences[doc2.mainId], chapter2Index[verseN][0])
+              .reduce((a, b) => a.concat([b]), [])
+              .reduce((a, b) => a.concat(b), []);
+            let doc1Tokens = doc1Items.filter(i => i[0] === 'token');
+            let doc2Tokens = doc2Items.filter(i => i[0] === 'token');
+            let doc1Text;
+            let doc2Text;
+            if (args.mode === 'words') {
+              doc1Tokens = doc1Tokens.filter(t => t[1] === 'wordLike');
+              doc2Tokens = doc2Tokens.filter(t => t[1] === 'wordLike');
+              doc1Text = doc1Tokens.map(t => t[2]).join(' ');
+              doc2Text = doc2Tokens.map(t => t[2]).join(' ');
+            } else {
+              doc1Text = doc1Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
+              doc2Text = doc2Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
+            }
+            if (doc1Text !== doc2Text) {
+              diffRecords.push([chapterN, verseN, 'changedVerse', doc1Items, doc2Items]);
+            }
+          }
+
+          if (chapter2Index.length > chapter1Index.length) { // Extra verses at end of doc2
+            for (const v of [...Array(chapter2Index.length - chapter1Index.length).keys()].map(i => i + chapter1Index.length)) {
+              diffRecords.push([chapterN, v, 'addedVerse', null, null]);
+            }
+          }
+        }
+
+        for (const doc2Key of Object.keys(doc2Indexes)) {
+          if (!(doc2Key in doc1Indexes)) { // Added chapters
+            diffRecords.push([doc2Key, null, 'addedChapter', null, null]);
+          }
+        }
+        return diffRecords;
+      },
     },
   },
 });
