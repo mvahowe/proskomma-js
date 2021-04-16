@@ -55,6 +55,14 @@ const docSetType = new GraphQLObjectType({
         return root.documents();
       },
     },
+    nDocuments: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'The number documents in the docSet',
+      resolve: (root, args, context) => {
+        context.docSet = root;
+        return root.documents().length;
+      },
+    },
     document: {
       type: documentType,
       description: 'The document with the specified book code',

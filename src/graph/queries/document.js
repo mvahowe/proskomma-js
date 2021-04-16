@@ -336,7 +336,7 @@ const documentType = new GraphQLObjectType({
       description: 'What\'s previous and next with respect to the specified verse',
       args: {
         chapter: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
           description: 'The chapter number (as a string)',
         },
         verse: {

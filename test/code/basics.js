@@ -72,6 +72,22 @@ test(
 );
 
 test(
+  `nDocuments in docSet (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '{ docSets { nDocuments } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('nDocuments' in result.data.docSets[0]);
+      t.equal(result.data.docSets[0].nDocuments, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `DocSet (${testGroup})`,
   async function (t) {
     try {
