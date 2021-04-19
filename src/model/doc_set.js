@@ -162,15 +162,18 @@ class DocSet {
   }
 
   buildPreEnum(succinct) {
-    const ret = {};
+    const ret = new Map();
     let pos = 0;
     let enumCount = 0;
 
     while (pos < succinct.length) {
-      ret[succinct.countedString(pos)] = {
-        'enum': enumCount++,
-        'frequency': 0,
-      };
+      ret.set(
+        succinct.countedString(pos),
+        {
+          'enum': enumCount++,
+          'frequency': 0,
+        },
+      );
       pos += succinct.byte(pos) + 1;
     }
 
@@ -181,22 +184,26 @@ class DocSet {
     if (!(category in this.preEnums)) {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
-
-    if (!(value in this.preEnums[category])) {
-      this.preEnums[category][value] = {
-        'enum': Object.keys(this.preEnums[category]).length,
-        'frequency': 1,
-      };
+    if (!this.preEnums[category].has(value)) {
+      this.preEnums[category].set(
+        value,
+        {
+          'enum': this.preEnums[category].size,
+          'frequency': 1,
+        },
+      );
     } else {
-      this.preEnums[category][value].frequency++;
+      this.preEnums[category].get(value).frequency++;
     }
   }
 
   sortPreEnums() {
-    for (const category of Object.values(this.preEnums)) {
+    for (const catKey of Object.keys(this.preEnums)) {
+      this.preEnums[catKey] = new Map([...this.preEnums[catKey].entries()].sort((a, b) => b[1].frequency - a[1].frequency));
+
       let count = 0;
 
-      for (const [k, v] of Object.entries(category).sort((a, b) => b[1].frequency - a[1].frequency)) {
+      for (const [k, v] of this.preEnums[catKey]) {
         v.enum = count++;
       }
     }
@@ -211,16 +218,19 @@ class DocSet {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
 
-    if (value in this.preEnums[category]) {
-      return this.preEnums[category][value].enum;
+    if (this.preEnums[category].has(value)) {
+      return this.preEnums[category].get(value).enum;
     } else if (addUnknown) {
-      this.preEnums[category][value] = {
-        'enum': Object.keys(this.preEnums[category]).length,
-        'frequency': 1,
-      };
+      this.preEnums[category].set(
+        value,
+        {
+          'enum': this.preEnums[category].size,
+          'frequency': 1,
+        },
+      );
       this.enums[category].pushCountedString(value);
       this.buildEnumIndex(category);
-      return this.preEnums[category][value].enum;
+      return this.preEnums[category].get(value).enum;
     } else {
       throw new Error(`Unknown value ${value} for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
     }
@@ -234,9 +244,9 @@ class DocSet {
   }
 
   buildEnum(category, preEnumOb) {
-    const sortedPreEnums = Object.entries(preEnumOb).sort((a, b) => a[1].enum - b[1].enum);
+    const sortedPreEnums = new Map([...preEnumOb.entries()].sort((a, b) => b[1].frequency - a[1].frequency));
 
-    for (const enumText of sortedPreEnums.map(pe => pe[0])) {
+    for (const enumText of sortedPreEnums.keys()) {
       this.enums[category].pushCountedString(enumText);
     }
     this.enums[category].trim();
@@ -631,10 +641,10 @@ class DocSet {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
-      ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
-      ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
-      blockScope[2],
-    ],
+        ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
+        ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
+        blockScope[2],
+      ],
     );
   }
 
@@ -877,13 +887,13 @@ class DocSet {
 
       for (
         const item of blockGrafts.concat(
-          [
-            startBlockScope,
-            ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
-            endBlockScope,
-          ],
-        )
-      ) {
+        [
+          startBlockScope,
+          ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
+          endBlockScope,
+        ],
+      )
+        ) {
         if (item[0] === 'scope' && item[1] === 'start') {
           allBlockScopes.add(item[2]);
         }
@@ -941,13 +951,13 @@ class DocSet {
 
           for (
             const bs of [...allBlockScopes]
-              .filter(
-                s => {
-                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-                },
-              )
-          ) {
+            .filter(
+              s => {
+                const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+              },
+            )
+            ) {
             allBlockScopes.delete(bs);
           }
           allBlockScopes.add(blockScope);

@@ -89,23 +89,37 @@ class Document {
 
   processUsfm(usfmString) {
     const parser = this.makeParser();
+    const t = Date.now();
     parseUsfm(usfmString, parser);
+    console.log(`Parse in ${Date.now()-t} msec`);
     this.postParseScripture(parser);
   }
 
   processUsx(usxString) {
     const parser = this.makeParser();
+    const t = Date.now();
     parseUsx(usxString, parser);
+    console.log(`Parse in ${Date.now()-t} msec`);
     this.postParseScripture(parser);
   }
 
   postParseScripture(parser) {
+    let t = Date.now();
     parser.tidy();
+    console.log(`Tidy in ${Date.now()-t} msec`);
+    t = Date.now();
     parser.filter();
+    console.log(`Filter in ${Date.now()-t} msec`);
+    t = Date.now();
     this.headers = parser.headers;
     this.succinctPass1(parser);
+    console.log(`Succinct pass 1 in ${Date.now()-t} msec`);
+    t = Date.now();
     this.succinctPass2(parser);
+    console.log(`Succinct pass 2 in ${Date.now()-t} msec`);
+    t = Date.now();
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
+    console.log(`CV indexes in ${Date.now()-t} msec`);
   }
 
   processLexicon(lexiconString) {
@@ -119,15 +133,20 @@ class Document {
   succinctPass1(parser) {
     const docSet = this.processor.docSets[this.docSetId];
 
+    let t = Date.now();
     for (const seq of parser.allSequences()) {
       docSet.recordPreEnum('ids', seq.id);
       this.recordPreEnums(docSet, seq);
     }
-
+    console.log(`   recordPreEnums in ${Date.now()-t} msec`);
+    t = Date.now();
     if (docSet.enums.wordLike.length === 0) {
       docSet.sortPreEnums();
+      console.log(`   sortPreEnums in ${Date.now()-t} msec`);
+      t = Date.now();
     }
     docSet.buildEnums();
+    console.log(`   buildEnums in ${Date.now()-t} msec`);
   }
 
   recordPreEnums(docSet, seq) {
