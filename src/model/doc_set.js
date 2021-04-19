@@ -244,8 +244,7 @@ class DocSet {
   }
 
   buildEnum(category, preEnumOb) {
-    const sortedPreEnums = new Map([...preEnumOb.entries()].sort((a, b) => b[1].frequency - a[1].frequency));
-
+    const sortedPreEnums = new Map([...preEnumOb.entries()]);
     for (const enumText of sortedPreEnums.keys()) {
       this.enums[category].pushCountedString(enumText);
     }
@@ -975,7 +974,7 @@ class DocSet {
     this.preEnums = {};
 
     for (const category of Object.keys(this.enums)) {
-      this.preEnums[category] = {};
+      this.preEnums[category] = new Map();
     }
     this.maybeBuildEnumIndexes();
 
@@ -1008,8 +1007,8 @@ class DocSet {
         const stringLength = enumSuccinct.byte(pos);
         const enumString = enumSuccinct.countedString(pos);
 
-        if (enumString in this.preEnums[category]) {
-          ret[category].push(this.preEnums[category][enumString].enum);
+        if (this.preEnums[category].has(enumString)) {
+          ret[category].push(this.preEnums[category].get(enumString).enum);
         } else {
           ret[category].push(null);
         }
