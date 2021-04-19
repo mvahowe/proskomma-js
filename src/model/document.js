@@ -27,6 +27,9 @@ const emptyCVIndexType = 0;
 const shortCVIndexType = 2;
 const longCVIndexType = 3;
 
+// const maybePrint = str => console.log(str);
+const maybePrint = str => str;
+
 class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
@@ -91,35 +94,39 @@ class Document {
     const parser = this.makeParser();
     const t = Date.now();
     parseUsfm(usfmString, parser);
-    console.log(`Parse in ${Date.now()-t} msec`);
+    const t2 = Date.now()
+    maybePrint(`\nParse USFM in ${t2-t} msec`);
     this.postParseScripture(parser);
+    maybePrint(`Total USFM import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`)
   }
 
   processUsx(usxString) {
     const parser = this.makeParser();
     const t = Date.now();
     parseUsx(usxString, parser);
-    console.log(`Parse in ${Date.now()-t} msec`);
+    const t2 = Date.now()
+    maybePrint(`\nParse USX in ${t2-t} msec`);
     this.postParseScripture(parser);
+    maybePrint(`Total USX import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`)
   }
 
   postParseScripture(parser) {
     let t = Date.now();
     parser.tidy();
-    console.log(`Tidy in ${Date.now()-t} msec`);
+    maybePrint(`Tidy in ${Date.now()-t} msec`);
     t = Date.now();
     parser.filter();
-    console.log(`Filter in ${Date.now()-t} msec`);
+    maybePrint(`Filter in ${Date.now()-t} msec`);
     t = Date.now();
     this.headers = parser.headers;
     this.succinctPass1(parser);
-    console.log(`Succinct pass 1 in ${Date.now()-t} msec`);
+    maybePrint(`Succinct pass 1 in ${Date.now()-t} msec`);
     t = Date.now();
     this.succinctPass2(parser);
-    console.log(`Succinct pass 2 in ${Date.now()-t} msec`);
+    maybePrint(`Succinct pass 2 in ${Date.now()-t} msec`);
     t = Date.now();
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
-    console.log(`CV indexes in ${Date.now()-t} msec`);
+    maybePrint(`CV indexes in ${Date.now()-t} msec`);
   }
 
   processLexicon(lexiconString) {
@@ -138,15 +145,15 @@ class Document {
       docSet.recordPreEnum('ids', seq.id);
       this.recordPreEnums(docSet, seq);
     }
-    console.log(`   recordPreEnums in ${Date.now()-t} msec`);
+    maybePrint(`   recordPreEnums in ${Date.now()-t} msec`);
     t = Date.now();
     if (docSet.enums.wordLike.length === 0) {
       docSet.sortPreEnums();
-      console.log(`   sortPreEnums in ${Date.now()-t} msec`);
+      maybePrint(`   sortPreEnums in ${Date.now()-t} msec`);
       t = Date.now();
     }
     docSet.buildEnums();
-    console.log(`   buildEnums in ${Date.now()-t} msec`);
+    maybePrint(`   buildEnums in ${Date.now()-t} msec`);
   }
 
   recordPreEnums(docSet, seq) {
@@ -310,7 +317,6 @@ class Document {
       const sortedVerses = Object.keys(chapterVerses)
         .map(n => parseInt(n))
         .sort((a, b) => a - b);
-
       if (sortedVerses.length === 0) {
         continue;
       }
