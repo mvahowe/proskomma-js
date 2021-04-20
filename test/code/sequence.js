@@ -193,3 +193,43 @@ test(
     }
   },
 );
+
+test(
+  `wordLikes (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const query = '{ documents { mainSequence { wordLikes } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.documents[0].mainSequence.wordLikes.includes('Good'));
+    } catch
+    (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `hasChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(1);
+      const query = '' +
+        '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      orLogic: hasChars(chars:["Ruth", "Boaz", "banana"])' +
+        '      andLogic: hasChars(chars:["Ruth", "Boaz", "banana"] allChars:true)' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+    } catch
+    (err) {
+      console.log(err);
+    }
+  },
+);
+

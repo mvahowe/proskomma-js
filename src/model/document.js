@@ -5,7 +5,6 @@ import { scopeEnum } from 'proskomma-utils';
 const {
   addTag,
   ByteArray,
-  enumIndex,
   generateId,
   headerBytes,
   itemEnum,
@@ -23,7 +22,6 @@ const {
   parseUsfm,
   parseUsx,
   parseLexicon,
-  tokenCategory,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 

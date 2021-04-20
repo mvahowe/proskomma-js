@@ -402,26 +402,6 @@ const documentType = new GraphQLObjectType({
         return [args.chapter, ci || {}];
       },
     },
-    mainWordLikes: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of wordLike token strings in the main sequence of this document',
-      resolve: root => {
-        const docSet = root.processor.docSets[root.docSetId];
-        const mainSequence = root.sequences[root.mainId];
-        docSet.maybeBuildEnumIndexes();
-        let ret = [];
-        let n = 0;
-        for (const b of mainSequence.tokensPresent) {
-          if (b) {
-            const enumOffset = docSet.enumIndexes['wordLike'][n];
-            const tokenString = docSet.enums['wordLike'].countedString(enumOffset);
-            ret.push(tokenString);
-          }
-          n++;
-        }
-        return ret.sort();
-      },
-    },
   }),
 });
 

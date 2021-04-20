@@ -249,6 +249,79 @@ const sequenceType = new GraphQLObjectType({
       },
       resolve: (root, args) => root.tags.has(args.tagName),
     },
+    wordLikes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of wordLike token strings in a main sequence',
+      resolve: (root, args, context) => {
+        if (root.type !== 'main') {
+          throw new Error(`Only available for the main sequence, not ${root.type}`);
+        }
+        context.docSet.maybeBuildEnumIndexes();
+        let ret = [];
+        let n = 0;
+
+        for (const b of root.tokensPresent) {
+          if (b) {
+            const enumOffset = context.docSet.enumIndexes['wordLike'][n];
+            const tokenString = context.docSet.enums['wordLike'].countedString(enumOffset);
+            ret.push(tokenString);
+          }
+          n++;
+        }
+        return ret.sort();
+      },
+    },
+    hasChars: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      description: `Returns true if a main sequence contains the specified tokens`,
+      args: {
+        chars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Token strings to be matched exactly',
+        },
+        allChars: {
+          type: GraphQLBoolean,
+          description: 'If true all tokens must match',
+        },
+      },
+      resolve: (root, args, context) => {
+        if (root.type !== 'main') {
+          throw new Error(`Only available for the main sequence, not ${root.type}`);
+        }
+
+        let charsIndexesArray = [
+          args.chars
+            .map(
+              c => [enumStringIndex(context.docSet.enums.wordLike, c)],
+            ),
+        ];
+
+        if (args.allChars) {
+          charsIndexesArray = charsIndexesArray[0];
+        } else {
+          charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+        }
+
+        for (const charsIndexes of charsIndexesArray) {
+          let found = false;
+
+          for (const charsIndex of charsIndexes) {
+            const isPresent = charsIndex >= 0 && root.tokensPresent.get(charsIndex) > 0;
+
+            if (isPresent) {
+              found = true;
+            }
+          }
+
+          if (args.allChars && !found) {
+            return false;
+          } else if (!args.allChars && found) {
+            return true;
+          }
+        }
+        return true;
+      },
+    },
   }),
 });
 

@@ -81,21 +81,3 @@ test(
     }
   },
 );
-
-test(
-  `mainWordLikes (${testGroup})`,
-  async function (t) {
-    try {
-      t.plan(3);
-      const query = '{ documents { mainWordLikes } }';
-      const ts = Date.now();
-      const result = await pk.gqlQuery(query);
-      t.equal(result.errors, undefined);
-      t.ok(result.data.documents[0].mainWordLikes.includes('Ruth'));
-      t.ok(!result.data.documents[0].mainWordLikes.includes('Abraham'));
-    } catch
-    (err) {
-      console.log(err);
-    }
-  },
-);
