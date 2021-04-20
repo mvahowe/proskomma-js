@@ -94,20 +94,20 @@ class Document {
     const parser = this.makeParser();
     const t = Date.now();
     parseUsfm(usfmString, parser);
-    const t2 = Date.now()
+    const t2 = Date.now();
     maybePrint(`\nParse USFM in ${t2-t} msec`);
     this.postParseScripture(parser);
-    maybePrint(`Total USFM import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`)
+    maybePrint(`Total USFM import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`);
   }
 
   processUsx(usxString) {
     const parser = this.makeParser();
     const t = Date.now();
     parseUsx(usxString, parser);
-    const t2 = Date.now()
+    const t2 = Date.now();
     maybePrint(`\nParse USX in ${t2-t} msec`);
     this.postParseScripture(parser);
-    maybePrint(`Total USX import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`)
+    maybePrint(`Total USX import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`);
   }
 
   postParseScripture(parser) {
@@ -141,12 +141,14 @@ class Document {
     const docSet = this.processor.docSets[this.docSetId];
 
     let t = Date.now();
+
     for (const seq of parser.allSequences()) {
       docSet.recordPreEnum('ids', seq.id);
       this.recordPreEnums(docSet, seq);
     }
     maybePrint(`   recordPreEnums in ${Date.now()-t} msec`);
     t = Date.now();
+
     if (docSet.enums.wordLike.length === 0) {
       docSet.sortPreEnums();
       maybePrint(`   sortPreEnums in ${Date.now()-t} msec`);
@@ -244,72 +246,86 @@ class Document {
     let verses = '1';
     let nextTokenN = 0;
 
+    mainSequence.chapterVerses = {};
+
     for (const [blockN, block] of mainSequence.blocks.entries()) {
-      for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, nextTokenN).entries()) {
-        if (item[0] === 'scope') {
-          if (item[1] === 'start') {
-            if (item[2].startsWith('chapter/')) {
-              chapterN = item[2].split('/')[1];
-              chapterVerseIndexes[chapterN] = {};
-              chapterIndexes[chapterN] = {
-                startBlock: blockN,
-                startItem: itemN,
-                nextToken: nextTokenN,
-              };
-            } else if (item[2].startsWith('verse/')) {
-              verseN = item[2].split('/')[1];
+      let pos = 0;
+      let succinct = block.c;
+      let itemN = -1;
 
-              if (verseN === '1' && !('0' in chapterVerseIndexes[chapterN])) {
-                if (chapterIndexes[chapterN].nextToken < nextTokenN) {
-                  chapterVerseIndexes[chapterN]['0'] = [{
-                    startBlock: chapterIndexes[chapterN].startBlock,
-                    startItem: chapterIndexes[chapterN].startItem,
-                    endBlock: blockN,
-                    endItem: Math.max(itemN - 1, 0),
-                    nextToken: chapterIndexes[chapterN].nextToken,
-                    verses: '0',
-                  }];
-                }
-              }
+      while (pos < succinct.length) {
+        itemN++;
+        const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
 
-              if (!(verseN in chapterVerseIndexes[chapterN])) {
-                chapterVerseIndexes[chapterN][verseN] = [];
+        if (itemType === itemEnum['startScope']) {
+          let scopeLabel = docSet.succinctScopeLabel(succinct, itemSubtype, pos);
+
+          if (scopeLabel.startsWith('chapter/')) {
+            chapterN = scopeLabel.split('/')[1];
+            chapterVerseIndexes[chapterN] = {};
+            chapterIndexes[chapterN] = {
+              startBlock: blockN,
+              startItem: itemN,
+              nextToken: nextTokenN,
+            };
+          } else if (scopeLabel.startsWith('verse/')) {
+            verseN = scopeLabel.split('/')[1];
+
+            if (verseN === '1' && !('0' in chapterVerseIndexes[chapterN])) {
+              if (chapterIndexes[chapterN].nextToken < nextTokenN) {
+                chapterVerseIndexes[chapterN]['0'] = [{
+                  startBlock: chapterIndexes[chapterN].startBlock,
+                  startItem: chapterIndexes[chapterN].startItem,
+                  endBlock: blockN,
+                  endItem: Math.max(itemN - 1, 0),
+                  nextToken: chapterIndexes[chapterN].nextToken,
+                  verses: '0',
+                }];
               }
-              chapterVerseIndexes[chapterN][verseN].push({
-                startBlock: blockN,
-                startItem: itemN,
-                nextToken: nextTokenN,
-              });
-            } else if (item[2].startsWith('verses/')) {
-              verses = item[2].split('/')[1];
             }
-          } else if (item[1] === 'end') {
-            if (item[2].startsWith('chapter/')) {
-              chapterN = item[2].split('/')[1];
-              let chapterRecord = chapterIndexes[chapterN];
 
-              if (chapterRecord) { // Check start chapter has not been deleted
-                chapterRecord.endBlock = blockN;
-                chapterRecord.endItem = itemN;
-              }
-            } else if (item[2].startsWith('verse/')) {
-              verseN = item[2].split('/')[1];
-              let versesRecord = chapterVerseIndexes[chapterN][verseN];
+            if (!(verseN in chapterVerseIndexes[chapterN])) {
+              chapterVerseIndexes[chapterN][verseN] = [];
+            }
+            chapterVerseIndexes[chapterN][verseN].push({
+              startBlock: blockN,
+              startItem: itemN,
+              nextToken: nextTokenN,
+            });
+          } else if (scopeLabel.startsWith('verses/')) {
+            verses = scopeLabel.split('/')[1];
+          }
+        } else if (itemType === itemEnum['endScope']) {
+          let scopeLabel = docSet.succinctScopeLabel(succinct, itemSubtype, pos);
 
-              if (versesRecord) { // Check start verse has not been deleted
-                const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
-                verseRecord.endBlock = blockN;
-                verseRecord.endItem = itemN;
-                verseRecord.verses = verses;
-              }
+          if (scopeLabel.startsWith('chapter/')) {
+            chapterN = scopeLabel.split('/')[1];
+            let chapterRecord = chapterIndexes[chapterN];
+
+            if (chapterRecord) { // Check start chapter has not been deleted
+              chapterRecord.endBlock = blockN;
+              chapterRecord.endItem = itemN;
+            }
+          } else if (scopeLabel.startsWith('verse/')) {
+            verseN = scopeLabel.split('/')[1];
+            let versesRecord = chapterVerseIndexes[chapterN][verseN];
+
+            if (versesRecord) { // Check start verse has not been deleted
+              const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
+              verseRecord.endBlock = blockN;
+              verseRecord.endItem = itemN;
+              verseRecord.verses = verses;
             }
           }
-        } else if (item[0] === 'token' && item[1] === 'wordLike') {
-          nextTokenN++;
+        } else if (itemType === itemEnum['token']) {
+
+          if (itemSubtype === tokenEnum['wordLike']) {
+            nextTokenN++;
+          }
         }
+        pos += itemLength;
       }
     }
-    mainSequence.chapterVerses = {};
 
     for (const [chapterN, chapterVerses] of Object.entries(chapterVerseIndexes)) {
       const ba = new ByteArray();
@@ -317,6 +333,7 @@ class Document {
       const sortedVerses = Object.keys(chapterVerses)
         .map(n => parseInt(n))
         .sort((a, b) => a - b);
+
       if (sortedVerses.length === 0) {
         continue;
       }
