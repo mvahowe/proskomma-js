@@ -20,7 +20,7 @@ test(
       t.ok('documents' in result.data);
       t.ok('docSetId' in result.data.documents[0]);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
@@ -40,7 +40,7 @@ test(
       t.equal(result.data.documents[0].headers.filter(h => h.key === 'toc')[0].value, 'The Book of Ruth');
       t.equal(result.data.documents[0].toc, 'The Book of Ruth');
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
@@ -58,7 +58,7 @@ test(
       t.ok('mainSequence' in result.data.documents[0]);
       t.ok('id' in result.data.documents[0].mainSequence);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
@@ -76,25 +76,25 @@ test(
       t.ok('sequences' in result.data.documents[0]);
       t.ok('id' in result.data.documents[0].sequences[0]);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
 );
 
 test(
-  `Sequences (${testGroup})`,
+  `mainWordLikes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
-      const query = '{ documents { sequences { id } } }';
+      t.plan(3);
+      const query = '{ documents { mainWordLikes } }';
+      const ts = Date.now();
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      t.ok('documents' in result.data);
-      t.ok('sequences' in result.data.documents[0]);
-      t.ok('id' in result.data.documents[0].sequences[0]);
+      t.ok(result.data.documents[0].mainWordLikes.includes('Ruth'));
+      t.ok(!result.data.documents[0].mainWordLikes.includes('Abraham'));
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },

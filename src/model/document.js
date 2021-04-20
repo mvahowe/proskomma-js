@@ -1,8 +1,11 @@
+const BitSet = require('bitset');
+
 import { scopeEnum } from 'proskomma-utils';
 
 const {
   addTag,
   ByteArray,
+  enumIndex,
   generateId,
   headerBytes,
   itemEnum,
@@ -20,6 +23,7 @@ const {
   parseUsfm,
   parseUsx,
   parseLexicon,
+  tokenCategory,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 
@@ -95,9 +99,9 @@ class Document {
     const t = Date.now();
     parseUsfm(usfmString, parser);
     const t2 = Date.now();
-    maybePrint(`\nParse USFM in ${t2-t} msec`);
+    maybePrint(`\nParse USFM in ${t2 - t} msec`);
     this.postParseScripture(parser);
-    maybePrint(`Total USFM import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`);
+    maybePrint(`Total USFM import time = ${Date.now() - t} msec (parse = ${((t2 - t) * 100) / (Date.now() - t)}%)`);
   }
 
   processUsx(usxString) {
@@ -105,28 +109,28 @@ class Document {
     const t = Date.now();
     parseUsx(usxString, parser);
     const t2 = Date.now();
-    maybePrint(`\nParse USX in ${t2-t} msec`);
+    maybePrint(`\nParse USX in ${t2 - t} msec`);
     this.postParseScripture(parser);
-    maybePrint(`Total USX import time = ${Date.now()-t} msec (parse = ${((t2-t) * 100)/(Date.now()-t)}%)`);
+    maybePrint(`Total USX import time = ${Date.now() - t} msec (parse = ${((t2 - t) * 100) / (Date.now() - t)}%)`);
   }
 
   postParseScripture(parser) {
     let t = Date.now();
     parser.tidy();
-    maybePrint(`Tidy in ${Date.now()-t} msec`);
+    maybePrint(`Tidy in ${Date.now() - t} msec`);
     t = Date.now();
     parser.filter();
-    maybePrint(`Filter in ${Date.now()-t} msec`);
+    maybePrint(`Filter in ${Date.now() - t} msec`);
     t = Date.now();
     this.headers = parser.headers;
     this.succinctPass1(parser);
-    maybePrint(`Succinct pass 1 in ${Date.now()-t} msec`);
+    maybePrint(`Succinct pass 1 in ${Date.now() - t} msec`);
     t = Date.now();
     this.succinctPass2(parser);
-    maybePrint(`Succinct pass 2 in ${Date.now()-t} msec`);
+    maybePrint(`Succinct pass 2 in ${Date.now() - t} msec`);
     t = Date.now();
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
-    maybePrint(`CV indexes in ${Date.now()-t} msec`);
+    maybePrint(`CV indexes in ${Date.now() - t} msec`);
   }
 
   processLexicon(lexiconString) {
@@ -146,16 +150,16 @@ class Document {
       docSet.recordPreEnum('ids', seq.id);
       this.recordPreEnums(docSet, seq);
     }
-    maybePrint(`   recordPreEnums in ${Date.now()-t} msec`);
+    maybePrint(`   recordPreEnums in ${Date.now() - t} msec`);
     t = Date.now();
 
     if (docSet.enums.wordLike.length === 0) {
       docSet.sortPreEnums();
-      maybePrint(`   sortPreEnums in ${Date.now()-t} msec`);
+      maybePrint(`   sortPreEnums in ${Date.now() - t} msec`);
       t = Date.now();
     }
     docSet.buildEnums();
-    maybePrint(`   buildEnums in ${Date.now()-t} msec`);
+    maybePrint(`   buildEnums in ${Date.now() - t} msec`);
   }
 
   recordPreEnums(docSet, seq) {
@@ -247,6 +251,12 @@ class Document {
     let nextTokenN = 0;
 
     mainSequence.chapterVerses = {};
+    mainSequence.tokensPresent = new BitSet(
+      new Array(docSet.enums.wordLike.length)
+        .fill(0)
+        .map(b => b.toString())
+        .join(''),
+    );
 
     for (const [blockN, block] of mainSequence.blocks.entries()) {
       let pos = 0;
@@ -317,11 +327,13 @@ class Document {
               verseRecord.verses = verses;
             }
           }
-        } else if (itemType === itemEnum['token']) {
-
-          if (itemSubtype === tokenEnum['wordLike']) {
-            nextTokenN++;
-          }
+        } else if (itemType === itemEnum['token'] && itemSubtype === tokenEnum['wordLike']) {
+          mainSequence.tokensPresent
+            .set(
+              succinct.nByte(pos + 2),
+              1,
+            );
+          nextTokenN++;
         }
         pos += itemLength;
       }

@@ -184,6 +184,7 @@ class DocSet {
     if (!(category in this.preEnums)) {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
+
     if (!this.preEnums[category].has(value)) {
       this.preEnums[category].set(
         value,
@@ -245,6 +246,7 @@ class DocSet {
 
   buildEnum(category, preEnumOb) {
     const sortedPreEnums = new Map([...preEnumOb.entries()]);
+
     for (const enumText of sortedPreEnums.keys()) {
       this.enums[category].pushCountedString(enumText);
     }
@@ -371,9 +373,11 @@ class DocSet {
 
   itemsByIndex(mainSequence, index, includeContext) {
     let ret = [];
+
     if (!index) {
       return ret;
     }
+
     let currentBlock = index.startBlock;
     let nextToken = index.nextToken;
 
@@ -640,10 +644,10 @@ class DocSet {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
-        ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
-        ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
-        blockScope[2],
-      ],
+      ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
+      ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
+      blockScope[2],
+    ],
     );
   }
 
@@ -886,13 +890,13 @@ class DocSet {
 
       for (
         const item of blockGrafts.concat(
-        [
-          startBlockScope,
-          ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
-          endBlockScope,
-        ],
-      )
-        ) {
+          [
+            startBlockScope,
+            ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
+            endBlockScope,
+          ],
+        )
+      ) {
         if (item[0] === 'scope' && item[1] === 'start') {
           allBlockScopes.add(item[2]);
         }
@@ -950,13 +954,13 @@ class DocSet {
 
           for (
             const bs of [...allBlockScopes]
-            .filter(
-              s => {
-                const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-              },
-            )
-            ) {
+              .filter(
+                s => {
+                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+                },
+              )
+          ) {
             allBlockScopes.delete(bs);
           }
           allBlockScopes.add(blockScope);
