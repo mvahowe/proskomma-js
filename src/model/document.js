@@ -1,6 +1,6 @@
-const BitSet = require('bitset');
-
 import { scopeEnum } from 'proskomma-utils';
+
+const BitSet = require('bitset');
 
 const {
   addTag,
@@ -596,6 +596,10 @@ class Document {
 
       for (const [chvK, chvV] of Object.entries(seqOb.chapterVerses)) {
         ret.chapterVerses[chvK] = chvV.base64();
+      }
+
+      if ('tokensPresent' in seqOb) {
+        ret.tokensPresent = '0x' + seqOb.tokensPresent.toString(16);
       }
     }
     return ret;

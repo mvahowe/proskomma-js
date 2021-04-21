@@ -85,12 +85,12 @@ const regexSearchTermIndexes = (docSet, chars, allChars) => {
   return charsIndexesArray;
 };
 
-const sequenceMatchesSearchTerms = (doc, charsIndexesArray, allChars) => {
+const sequenceMatchesSearchTerms = (seq, charsIndexesArray, allChars) => {
   for (const charsIndexes of charsIndexesArray) {
     let found = false;
 
     for (const charsIndex of charsIndexes) {
-      const isPresent = charsIndex >= 0 && doc.tokensPresent.get(charsIndex) > 0;
+      const isPresent = charsIndex >= 0 && seq.tokensPresent.get(charsIndex) > 0;
 
       if (isPresent) {
         found = true;
@@ -107,14 +107,14 @@ const sequenceMatchesSearchTerms = (doc, charsIndexesArray, allChars) => {
   return true;
 };
 
-const sequenceHasChars = (docSet, doc, chars, allChars) => {
+const sequenceHasChars = (docSet, seq, chars, allChars) => {
   let charsIndexesArray = exactSearchTermIndexes(docSet, chars, allChars);
-  return sequenceMatchesSearchTerms(doc, charsIndexesArray, allChars);
+  return sequenceMatchesSearchTerms(seq, charsIndexesArray, allChars);
 };
 
-const sequenceHasMatchingChars = (docSet, doc, chars, allChars) => {
+const sequenceHasMatchingChars = (docSet, seq, chars, allChars) => {
   let charsIndexesArray = regexSearchTermIndexes(docSet, chars, allChars);
-  return sequenceMatchesSearchTerms(doc, charsIndexesArray, allChars);
+  return sequenceMatchesSearchTerms(seq, charsIndexesArray, allChars);
 };
 
 const sequenceType = new GraphQLObjectType({

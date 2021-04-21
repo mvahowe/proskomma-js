@@ -1,9 +1,9 @@
 import xre from 'xregexp';
-const { ByteArray, generateId } = require('proskomma-utils');
-
 const { Mutex } = require('async-mutex');
-
 const { graphql } = require('graphql');
+const BitSet = require('bitset');
+
+const { ByteArray, generateId } = require('proskomma-utils');
 
 const packageJson = require('../package.json');
 const { DocSet } = require('./model/doc_set');
@@ -321,6 +321,10 @@ class Proskomma {
       if (seq.type === 'main') {
         doc.sequences[seqId].chapters = {};
 
+        if (!('chapters' in seq)) {
+          throw new Error('chapters not found in main sequence');
+        }
+
         for (const [chK, chV] of Object.entries(seq.chapters)) {
           const bA = new ByteArray();
           bA.fromBase64(chV);
@@ -328,11 +332,21 @@ class Proskomma {
         }
         doc.sequences[seqId].chapterVerses = {};
 
+        if (!('chapterVerses' in seq)) {
+          throw new Error('chapterVerses not found in main sequence');
+        }
+
         for (const [chvK, chvV] of Object.entries(seq.chapterVerses)) {
           const bA = new ByteArray();
           bA.fromBase64(chvV);
           doc.sequences[seqId].chapterVerses[chvK] = bA;
         }
+
+        if (!('tokensPresent' in seq)) {
+          throw new Error('tokensPresent not found in main sequence');
+        }
+
+        doc.sequences[seqId].tokensPresent = new BitSet(seq.tokensPresent);
       }
 
       for (const succinctBlock of seq.blocks) {
