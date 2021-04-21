@@ -225,6 +225,13 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withChars) {
+          if (
+            root.type === 'main' &&
+            !sequenceHasChars(context.docSet, root, args.withChars, args.allChars)
+          ) {
+            return [];
+          }
+
           let charsIndexesArray = exactSearchTermIndexes(context.docSet, args.withChars, args.allChars);
 
           for (const charsIndexes of charsIndexesArray) {
@@ -233,6 +240,13 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withMatchingChars) {
+          if (
+            root.type === 'main' &&
+            !sequenceHasMatchingChars(context.docSet, root, args.withMatchingChars, args.allChars)
+          ) {
+            return [];
+          }
+
           let charsIndexesArray = regexSearchTermIndexes(context.docSet, args.withMatchingChars, args.allChars);
 
           for (const charsIndexes of charsIndexesArray) {
