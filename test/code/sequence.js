@@ -214,7 +214,7 @@ test(
   `hasChars (${testGroup})`,
   async function (t) {
     try {
-      t.plan(1);
+      t.plan(3);
       const query = '' +
         '{' +
         '  documents {' +
@@ -226,8 +226,37 @@ test(
         '}';
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
+      const sequence = result.data.documents[0].mainSequence;
+      t.ok(sequence.orLogic);
+      t.ok(!sequence.andLogic);
     } catch
-    (err) {
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `hasMatchingChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '' +
+        '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      orLogic: hasMatchingChars(chars:["Rut", "oaz", "banana"])' +
+        '      andLogic: hasMatchingChars(chars:["Rut", "oaz", "banana"] allChars:true)' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const sequence = result.data.documents[0].mainSequence;
+      t.ok(sequence.orLogic);
+      t.ok(!sequence.andLogic);
+    } catch
+      (err) {
       console.log(err);
     }
   },

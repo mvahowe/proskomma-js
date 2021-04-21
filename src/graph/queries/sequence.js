@@ -51,6 +51,72 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
   return false;
 };
 
+const exactSearchTermIndexes = (docSet, chars, allChars) => {
+  let charsIndexesArray = [
+    chars
+      .map(
+        c => [enumStringIndex(docSet.enums.wordLike, c)],
+      ),
+  ];
+
+  if (allChars) {
+    charsIndexesArray = charsIndexesArray[0];
+  } else {
+    charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+  }
+  return charsIndexesArray;
+};
+
+const regexSearchTermIndexes = (docSet, chars, allChars) => {
+  let charsIndexesArray = [
+    chars
+      .map(
+        c =>
+          enumRegexIndexTuples(docSet.enums.wordLike, c)
+            .map(tup => tup[0]),
+      ),
+  ];
+
+  if (allChars) {
+    charsIndexesArray = charsIndexesArray[0];
+  } else {
+    charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+  }
+  return charsIndexesArray;
+};
+
+const sequenceMatchesSearchTerms = (doc, charsIndexesArray, allChars) => {
+  for (const charsIndexes of charsIndexesArray) {
+    let found = false;
+
+    for (const charsIndex of charsIndexes) {
+      const isPresent = charsIndex >= 0 && doc.tokensPresent.get(charsIndex) > 0;
+
+      if (isPresent) {
+        found = true;
+        break;
+      }
+    }
+
+    if (allChars && !found) {
+      return false;
+    } else if (!allChars && found) {
+      return true;
+    }
+  }
+  return true;
+};
+
+const sequenceHasChars = (docSet, doc, chars, allChars) => {
+  let charsIndexesArray = exactSearchTermIndexes(docSet, chars, allChars);
+  return sequenceMatchesSearchTerms(doc, charsIndexesArray, allChars);
+};
+
+const sequenceHasMatchingChars = (docSet, doc, chars, allChars) => {
+  let charsIndexesArray = regexSearchTermIndexes(docSet, chars, allChars);
+  return sequenceMatchesSearchTerms(doc, charsIndexesArray, allChars);
+};
+
 const sequenceType = new GraphQLObjectType({
   name: 'Sequence',
   description: 'A contiguous flow of content',
@@ -159,18 +225,7 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withChars) {
-          let charsIndexesArray = [
-            args.withChars
-              .map(
-                c => [enumStringIndex(context.docSet.enums.wordLike, c)],
-              ),
-          ];
-
-          if (args.allChars) {
-            charsIndexesArray = charsIndexesArray[0];
-          } else {
-            charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
-          }
+          let charsIndexesArray = exactSearchTermIndexes(context.docSet, args.withChars, args.allChars);
 
           for (const charsIndexes of charsIndexesArray) {
             ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
@@ -178,20 +233,7 @@ const sequenceType = new GraphQLObjectType({
         }
 
         if (args.withMatchingChars) {
-          let charsIndexesArray = [
-            args.withMatchingChars
-              .map(
-                c =>
-                  enumRegexIndexTuples(context.docSet.enums.wordLike, c)
-                    .map(tup => tup[0]),
-              ),
-          ];
-
-          if (args.allChars) {
-            charsIndexesArray = charsIndexesArray[0];
-          } else {
-            charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
-          }
+          let charsIndexesArray = regexSearchTermIndexes(context.docSet, args.withMatchingChars, args.allChars);
 
           for (const charsIndexes of charsIndexesArray) {
             ret = ret.filter(b => context.docSet.blockHasChars(b, charsIndexes));
@@ -289,37 +331,28 @@ const sequenceType = new GraphQLObjectType({
           throw new Error(`Only available for the main sequence, not ${root.type}`);
         }
 
-        let charsIndexesArray = [
-          args.chars
-            .map(
-              c => [enumStringIndex(context.docSet.enums.wordLike, c)],
-            ),
-        ];
-
-        if (args.allChars) {
-          charsIndexesArray = charsIndexesArray[0];
-        } else {
-          charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
+        return sequenceHasChars(context.docSet, root, args.chars, args.allChars);
+      },
+    },
+    hasMatchingChars: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      description: `Returns true if a main sequence contains a match for specified regexes`,
+      args: {
+        chars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Regexes to be matched',
+        },
+        allChars: {
+          type: GraphQLBoolean,
+          description: 'If true all regexes must match',
+        },
+      },
+      resolve: (root, args, context) => {
+        if (root.type !== 'main') {
+          throw new Error(`Only available for the main sequence, not ${root.type}`);
         }
 
-        for (const charsIndexes of charsIndexesArray) {
-          let found = false;
-
-          for (const charsIndex of charsIndexes) {
-            const isPresent = charsIndex >= 0 && root.tokensPresent.get(charsIndex) > 0;
-
-            if (isPresent) {
-              found = true;
-            }
-          }
-
-          if (args.allChars && !found) {
-            return false;
-          } else if (!args.allChars && found) {
-            return true;
-          }
-        }
-        return true;
+        return sequenceHasMatchingChars(context.docSet, root, args.chars, args.allChars);
       },
     },
   }),
