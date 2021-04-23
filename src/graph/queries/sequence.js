@@ -1,5 +1,3 @@
-import { enumStringIndex, enumRegexIndexTuples } from 'proskomma-utils';
-
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -8,6 +6,13 @@ const {
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql');
+
+const {
+  sequenceHasChars,
+  sequenceHasMatchingChars,
+  regexSearchTermIndexes,
+  exactSearchTermIndexes,
+} = require('../lib/sequence_chars');
 
 const blockType = require('./block');
 const itemGroupType = require('./itemGroup');
@@ -49,72 +54,6 @@ const blockHasAtts = (docSet, block, attSpecsArray, attValuesArray, requireAll) 
     }
   }
   return false;
-};
-
-const exactSearchTermIndexes = (docSet, chars, allChars) => {
-  let charsIndexesArray = [
-    chars
-      .map(
-        c => [enumStringIndex(docSet.enums.wordLike, c)],
-      ),
-  ];
-
-  if (allChars) {
-    charsIndexesArray = charsIndexesArray[0];
-  } else {
-    charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
-  }
-  return charsIndexesArray;
-};
-
-const regexSearchTermIndexes = (docSet, chars, allChars) => {
-  let charsIndexesArray = [
-    chars
-      .map(
-        c =>
-          enumRegexIndexTuples(docSet.enums.wordLike, c)
-            .map(tup => tup[0]),
-      ),
-  ];
-
-  if (allChars) {
-    charsIndexesArray = charsIndexesArray[0];
-  } else {
-    charsIndexesArray = charsIndexesArray.map(ci => ci.reduce((a, b) => a.concat(b)));
-  }
-  return charsIndexesArray;
-};
-
-const sequenceMatchesSearchTerms = (seq, charsIndexesArray, allChars) => {
-  for (const charsIndexes of charsIndexesArray) {
-    let found = false;
-
-    for (const charsIndex of charsIndexes) {
-      const isPresent = charsIndex >= 0 && seq.tokensPresent.get(charsIndex) > 0;
-
-      if (isPresent) {
-        found = true;
-        break;
-      }
-    }
-
-    if (allChars && !found) {
-      return false;
-    } else if (!allChars && found) {
-      return true;
-    }
-  }
-  return true;
-};
-
-const sequenceHasChars = (docSet, seq, chars, allChars) => {
-  let charsIndexesArray = exactSearchTermIndexes(docSet, chars, allChars);
-  return sequenceMatchesSearchTerms(seq, charsIndexesArray, allChars);
-};
-
-const sequenceHasMatchingChars = (docSet, seq, chars, allChars) => {
-  let charsIndexesArray = regexSearchTermIndexes(docSet, chars, allChars);
-  return sequenceMatchesSearchTerms(seq, charsIndexesArray, allChars);
 };
 
 const sequenceType = new GraphQLObjectType({

@@ -13,11 +13,11 @@ const [pk, pkDoc] = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'ust',
 });
 const pk2 = pkWithDocs([
-  ['../test_data/usx/web_rut.usx', {
+  ['../test_data/usx/web_psa150.usx', {
     lang: 'eng',
     abbr: 'webbe',
   }],
-  ['../test_data/usx/web_psa150.usx', {
+  ['../test_data/usx/web_rut.usx', {
     lang: 'eng',
     abbr: 'webbe',
   }],
@@ -134,6 +134,56 @@ test(
       t.equal(result.data.docSets.length, 2);
       t.equal(result.data.docSets[0].document.header, 'PSA');
       t.equal(result.data.docSets[1].document.header, 'PSA');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter docSets by withChars (${testGroup})`,
+  async function (t) {
+    try {
+      const docSetDocuments = ds => ds
+        .map(ds => ds.documents)
+        .reduce((a, b) => a.concat(b));
+      t.plan(5);
+      let query = `{ docSets { documents(withChars: ["Boaz" "banana"]) { id header(id:"bookCode")} } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 1);
+      t.equal(documents[0].header, 'RUT');
+      query = `{ docSets { documents(withChars: ["Boaz" "banana"] allChars: true) { id header(id:"bookCode")} } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter docSets by withMatchingChars (${testGroup})`,
+  async function (t) {
+    try {
+      const docSetDocuments = ds => ds
+        .map(ds => ds.documents)
+        .reduce((a, b) => a.concat(b));
+      t.plan(5);
+      let query = `{ docSets { documents(withMatchingChars: ["boaz" "banana"]) { id header(id:"bookCode")} } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 1);
+      t.equal(documents[0].header, 'RUT');
+      query = `{ docSets { documents(withMatchingChars: ["boaz" "banana"] allChars: true) { id header(id:"bookCode")} } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 0);
     } catch (err) {
       console.log(err);
     }

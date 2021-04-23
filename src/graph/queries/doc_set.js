@@ -8,6 +8,12 @@ const {
   GraphQLBoolean,
   GraphQLInt,
 } = require('graphql');
+
+const {
+  sequenceHasChars,
+  sequenceHasMatchingChars,
+} = require('../lib/sequence_chars');
+
 const documentType = require('./document');
 const keyValueType = require('./key_value');
 const regexIndexType = require('./regex_index');
@@ -50,9 +56,38 @@ const docSetType = new GraphQLObjectType({
     documents: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
       description: 'The documents in the docSet',
+      args: {
+        withChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return documents whose main sequence contains a token whose payload is an exact match to one of the specified strings',
+        },
+        withMatchingChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return documents whose main sequence contains a token whose payload matches the specified regexes',
+        },
+        allChars: {
+          type: GraphQLBoolean,
+          description: 'If true, documents where all search terms match will be included',
+        },
+      },
       resolve: (root, args, context) => {
+
+        if (args.withChars && args.withMatchingChars) {
+          throw new Error('Cannot specify both withChars and withMatchingChars');
+        }
+
         context.docSet = root;
-        return root.documents();
+        let ret = root.documents();
+
+        if (args.withChars) {
+          ret = ret.filter(d => sequenceHasChars(root, d.sequences[d.mainId], args.withChars, args.allChars));
+        }
+
+        if (args.withMatchingChars) {
+          ret = ret.filter(d => sequenceHasMatchingChars(root, d.sequences[d.mainId], args.withMatchingChars, args.allChars));
+        }
+
+        return ret;
       },
     },
     nDocuments: {
