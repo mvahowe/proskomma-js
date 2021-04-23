@@ -35,7 +35,13 @@ const regexSearchTermIndexes = (docSet, chars, allChars) => {
 };
 
 const sequenceMatchesSearchTerms = (seq, charsIndexesArray, allChars) => {
-  if (!allChars && charsIndexesArray.length === 1 && charsIndexesArray[0].length === 0) {
+  if (allChars && charsIndexesArray.filter(i => i.length === 0).length > 0) {
+    return false;
+  }
+
+  charsIndexesArray = charsIndexesArray.filter(i => i.length > 0);
+
+  if (charsIndexesArray.length === 0) {
     return false;
   }
 
