@@ -1,19 +1,22 @@
+const { labelForScope } = require('proskomma-utils');
 const { Sequence } = require('./model/sequence');
-const { specs } = require('./parser_specs');
+const {
+  specs,
+  buildSpecLookup,
+} = require('./parser_specs');
 const {
   Token,
   Scope,
   Graft,
 } = require('./model/items');
-const { labelForScope } = require('proskomma-utils');
 
 const Parser = class {
-
   constructor(filterOptions, customTags, emptyBlocks) {
     this.filterOptions = filterOptions;
     this.customTags = customTags;
     this.emptyBlocks = emptyBlocks;
     this.specs = specs(this);
+    this.specLookup = buildSpecLookup(this.specs);
     this.headers = {};
     this.setSequenceTypes();
     this.setSequences();
@@ -47,6 +50,7 @@ const Parser = class {
 
   setSequences() {
     this.sequences = {};
+
     for (const [sType, sArity] of Object.entries({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes })) {
       switch (sArity) {
       case '1':
@@ -77,35 +81,46 @@ const Parser = class {
 
   parseItem(lexedItem) {
     let changeBaseSequence = false;
+
     if (['startTag'].includes(lexedItem.subclass)) {
       this.closeActiveScopes(`startTag/${lexedItem.fullTagName}`);
+
       if (!lexedItem.isNested) {
         this.closeActiveScopes(`implicitEnd`);
       }
     }
+
     if (['endTag'].includes(lexedItem.subclass)) {
       this.closeActiveScopes(`endTag/${lexedItem.fullTagName}`);
     }
+
     if (['startMilestoneTag'].includes(lexedItem.subclass) && lexedItem.sOrE === 'e') {
       this.closeActiveScopes(`endMilestone/${lexedItem.tagName}`);
     }
+
     if (['chapter', 'pubchapter', 'verses'].includes(lexedItem.subclass)) {
       this.closeActiveScopes(lexedItem.subclass, this.sequences.main);
     }
+
     const spec = this.specForItem(lexedItem);
+
     if (spec) {
       if ('before' in spec.parser) {
         spec.parser.before(this, lexedItem);
       }
       changeBaseSequence = false;
+
       if (spec.parser.baseSequenceType) {
         const returnSequenceType = spec.parser.baseSequenceType === 'mainLike' ? this.mainLike.type : spec.parser.baseSequenceType;
+
         changeBaseSequence = (returnSequenceType !== this.current.baseSequenceType) ||
           spec.parser.forceNewSequence;
       }
+
       if (changeBaseSequence) {
         this.closeActiveScopes('baseSequenceChange');
         this.changeBaseSequence(spec.parser);
+
         if ('newBlock' in spec.parser && spec.parser.newBlock) {
           this.closeActiveScopes('endBlock');
           this.current.sequence.newBlock(labelForScope('blockTag', [lexedItem.fullTagName]));
@@ -113,6 +128,7 @@ const Parser = class {
       } else if (spec.parser.inlineSequenceType) {
         this.current.inlineSequenceType = spec.parser.inlineSequenceType;
         this.current.parentSequence = this.current.sequence;
+
         if (this.current.parentSequence.type === 'header') { // Not lovely, needed for \cp before first content
           this.current.parentSequence = this.sequences.main;
         }
@@ -123,10 +139,12 @@ const Parser = class {
       } else if ('newBlock' in spec.parser && spec.parser.newBlock) {
         this.current.sequence.newBlock(labelForScope('blockTag', [lexedItem.fullTagName]));
       }
+
       if ('during' in spec.parser) {
         spec.parser.during(this, lexedItem);
       }
       this.openNewScopes(spec.parser, lexedItem);
+
       if ('after' in spec.parser) {
         spec.parser.after(this, lexedItem);
       }
@@ -137,7 +155,9 @@ const Parser = class {
     for (const introduction of this.sequences.introduction) {
       introduction.graftifyIntroductionHeadings(this);
     }
+
     const allSequences = this.allSequences();
+
     for (const seq of allSequences) {
       seq.trim();
       seq.reorderSpanWithAtts();
@@ -145,7 +165,9 @@ const Parser = class {
       seq.moveOrphanScopes();
       seq.removeEmptyBlocks(this.emptyBlocks);
     }
+
     const emptySequences = this.emptySequences(allSequences);
+
     for (const seq of allSequences) {
       if (emptySequences) {
         seq.removeGraftsToEmptySequences(emptySequences);
@@ -153,9 +175,11 @@ const Parser = class {
       seq.addTableScopes();
       seq.close(this);
       this.substitutePubNumberScopes(seq);
+
       if (seq.type === 'sidebar') {
         this.substituteEsbCatScopes(seq);
       }
+
       if (['footnote', 'xref'].includes(seq.type)) {
         seq.lastBlock().inlineToEnd();
       }
@@ -169,9 +193,11 @@ const Parser = class {
   substitutePubNumberScopes(seq) {
     const scopeToGraftContent = {};
     const sequenceById = this.sequenceById();
+
     for (const block of seq.blocks) {
       let spliceCount = 0;
       const itItems = [...block.items];
+
       for (const [n, item] of itItems.entries()) {
         if (item.itemType === 'graft' && ['pubNumber', 'altNumber'].includes(item.graftType)) {
           const graftContent = sequenceById[item.seqId].text().trim();
@@ -182,11 +208,13 @@ const Parser = class {
         }
       }
     }
+
     // Substitute scopeIds for graft content
     if (Object.keys(scopeToGraftContent).length > 0) {
       for (const block of seq.blocks) {
         for (const scope of block.items.filter(i => ['startScope', 'endScope'].includes(i.itemType))) {
           const scopeParts = scope.label.split('/');
+
           if (['altChapter', 'pubVerse', 'altVerse'].includes(scopeParts[0])) {
             scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
           }
@@ -198,9 +226,11 @@ const Parser = class {
   substituteEsbCatScopes(seq) {
     const scopeToGraftContent = {};
     const sequenceById = this.sequenceById();
+
     for (const block of seq.blocks) {
       let spliceCount = 0;
       const itItems = [...block.items];
+
       for (const [n, item] of itItems.entries()) {
         if (item.itemType === 'graft' && item.graftType === 'esbCat') {
           const catContent = sequenceById[item.seqId].text().trim();
@@ -211,11 +241,13 @@ const Parser = class {
         }
       }
     }
+
     // Substitute scopeIds for graft content
     if (Object.keys(scopeToGraftContent).length > 0) {
       for (const block of seq.blocks) {
         for (const scope of block.items.filter(i => ['startScope', 'endScope'].includes(i.itemType))) {
           const scopeParts = scope.label.split('/');
+
           if (scopeParts[0] === 'esbCat') {
             scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
           }
@@ -226,6 +258,7 @@ const Parser = class {
 
   allSequences() {
     const ret = [];
+
     for (const [seqName, seqArity] of Object.entries({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes })) {
       switch (seqArity) {
       case '1':
@@ -263,6 +296,7 @@ const Parser = class {
   filterGrafts(seqId, seqById, used, options) {
     used.push(seqId);
     const childSequences = seqById[seqId].filterGrafts(options);
+
     for (const si of childSequences) {
       if (seqById[si].type === 'main') {
         console.log('MAIN is child!');
@@ -297,35 +331,34 @@ const Parser = class {
   }
 
   specForItem(item) {
-    let ret = null;
-    for (const spec of this.specs) {
-      if (this.specMatchesItem(spec, item)) {
-        ret = spec;
-        break;
-      }
-    }
-    return ret;
-  }
+    const context = item.subclass;
 
-  specMatchesItem(spec, item) {
-    for (const [subclass, accessor, values] of spec.contexts) {
-      if (
-        (item.subclass === subclass) &&
-        (!accessor || values.includes(item[accessor]))
-      ) {
-        return true;
+    if (!(context in this.specLookup)) {
+      return null;
+    }
+
+    for (const accessor of ['tagName', 'sOrE']) {
+      if (accessor in item && accessor in this.specLookup[context] && item[accessor] in this.specLookup[context][accessor]) {
+        return { parser: this.specLookup[context][accessor][item[accessor]] };
       }
     }
-    return false;
+
+    if ('_noAccessor' in this.specLookup[context]) {
+      return { parser: this.specLookup[context]['_noAccessor'] };
+    }
+
+    return null;
   }
 
   closeActiveScopes(closeLabel, targetSequence) {
     if (targetSequence === undefined) {
       targetSequence = this.current.sequence;
     }
+
     const matchedScopes = targetSequence.activeScopes.filter(
       sc => sc.endedBy.includes(closeLabel),
     ).reverse();
+
     targetSequence.activeScopes = targetSequence.activeScopes.filter(
       sc => !sc.endedBy.includes(closeLabel),
     );
@@ -334,6 +367,7 @@ const Parser = class {
 
   closeActiveScope(sc, targetSequence) {
     this.addScope('end', sc.label, targetSequence);
+
     if (sc.onEnd) {
       sc.onEnd(this, sc.label);
     }
@@ -341,12 +375,14 @@ const Parser = class {
 
   changeBaseSequence(parserSpec) {
     const newType = parserSpec.baseSequenceType;
+
     if (newType === 'mainLike') {
       this.current.sequence = this.mainLike;
       return;
     }
     this.current.baseSequenceType = newType;
     const arity = this.baseSequenceTypes[newType];
+
     switch (arity) {
     case '1':
       this.current.sequence = this.sequences[newType];
@@ -359,6 +395,7 @@ const Parser = class {
       break;
     case '*':
       this.current.sequence = new Sequence(newType);
+
       if (!parserSpec.useTempSequence) {
         this.sequences[newType].push(this.current.sequence);
       }
@@ -366,6 +403,7 @@ const Parser = class {
     default:
       throw new Error(`Unexpected base sequence arity '${arity}' for '${newType}'`);
     }
+
     if (!parserSpec.useTempSequence && this.current.sequence.type !== 'main') {
       this.mainLike.addBlockGraft(new Graft(this.current.baseSequenceType, this.current.sequence.id));
     }
@@ -380,6 +418,7 @@ const Parser = class {
   openNewScopes(parserSpec, pt) {
     if (parserSpec.newScopes) {
       let targetSequence = this.current.sequence;
+
       if ('mainSequence' in parserSpec && parserSpec.mainSequence) {
         targetSequence = this.sequences.main;
       }
@@ -391,16 +430,20 @@ const Parser = class {
     if (addItem === undefined) {
       addItem = true;
     }
+
     if (targetSequence === undefined) {
       targetSequence = this.current.sequence;
     }
+
     if (addItem) {
       targetSequence.addItem(new Scope('start', sc.label(pt)));
     }
+
     const newScope = {
       label: sc.label(pt),
       endedBy: this.substituteEndedBys(sc.endedBy, pt),
     };
+
     if ('onEnd' in sc) {
       newScope.onEnd = sc.onEnd;
     }
@@ -413,6 +456,7 @@ const Parser = class {
         let ret = eb
           .replace('$fullTagName$', pt.fullTagName)
           .replace('$tagName$', pt.tagName);
+
         if (this.current.attributeContext) {
           ret = ret.replace(
             '$attributeContext$',
@@ -449,7 +493,6 @@ const Parser = class {
   clearAttributeContext() {
     this.current.attributeContext = null;
   }
-
 };
 
 module.exports = { Parser };

@@ -71,7 +71,6 @@ const docSetType = new GraphQLObjectType({
         },
       },
       resolve: (root, args, context) => {
-
         if (args.withChars && args.withMatchingChars) {
           throw new Error('Cannot specify both withChars and withMatchingChars');
         }
@@ -126,7 +125,7 @@ const docSetType = new GraphQLObjectType({
           description: 'The string to match',
         },
       },
-      resolve: (root, args, context) =>
+      resolve: (root, args) =>
         enumStringIndex(root.enums[args.enumType], args.searchString),
     },
     enumRegexIndexesForString: {
@@ -142,7 +141,7 @@ const docSetType = new GraphQLObjectType({
           description: 'The regex to match',
         },
       },
-      resolve: (root, args, context) =>
+      resolve: (root, args) =>
         enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
     },
   },
