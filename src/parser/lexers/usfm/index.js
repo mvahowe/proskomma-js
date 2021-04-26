@@ -7,17 +7,11 @@ const {
 const { preTokenClassForFragment } = require('../class_for_fragment');
 
 const parseUsfm = (str, parser) => {
-  let ptTime = 0;
-  let piTime = 0;
-  for (const match of xre.match(str, mainRegex, 'all')) {
-    let t = Date.now();
-    const preToken = preTokenClassForFragment(match, lexingRegexes);
-    ptTime += Date.now() - t;
-    t = Date.now();
-    parser.parseItem(preToken);
-    piTime += Date.now() - t;
+  const matches = xre.match(str, mainRegex, 'all');
+
+  for (let n = 0; n < matches.length; n++) {
+    parser.parseItem(preTokenClassForFragment(matches[n], lexingRegexes));
   }
-  // console.log(ptTime, piTime);
 };
 
 module.exports = { parseUsfm };

@@ -1,5 +1,5 @@
-const ptClasses = require('./preTokenClasses');
 import xre from 'xregexp';
+const ptClasses = require('./preTokenClasses');
 
 const classForFragment = {
   printable: ptClasses.PrintablePT,
@@ -14,9 +14,10 @@ const classForFragment = {
 };
 
 const preTokenClassForFragment = (fragment, lexingRegexes) => {
-  for (const lexingRegex of lexingRegexes) {
-    let [tClass, tSubclass, tRE] = lexingRegex;
+  for (let n = 0; n < lexingRegexes.length; n++) {
+    let [tClass, tSubclass, tRE] = lexingRegexes[n];
     let matchedBits = xre.exec(fragment, tRE, 0, 'sticky');
+
     if (matchedBits) {
       return new classForFragment[tClass](tSubclass, matchedBits);
     }
