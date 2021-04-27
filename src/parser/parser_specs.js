@@ -457,7 +457,7 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        pt.numbers.map(n => {
+        pt.numbers.forEach(n => {
           const verseScope = {
             label: () => labelForScope('verse', [n]),
             endedBy: ['verses', 'chapter', 'pubchapter'],
@@ -655,7 +655,7 @@ const specs = (pt) => [
     parser: {
       during: (parser, pt) => {
         if (parser.current.attributeContext) {
-          [...pt.values.entries()].map(na => {
+          [...pt.values.entries()].forEach(na => {
             const attScope = {
               label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
               endedBy: [`$attributeContext$`],
