@@ -1,13 +1,9 @@
-const PreToken = require('./pretoken');
-
-class BadPT extends PreToken {
+class BadPT {
 
   constructor(subclass, matchedBits) {
-    super(subclass);
+    this.subclass = subclass;
     this.printValue = matchedBits[0];
-
   }
-
 }
 
 module.exports = BadPT;
