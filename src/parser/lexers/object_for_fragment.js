@@ -107,4 +107,4 @@ const preTokenObjectForFragment = (fragment, lexingRegexes) => {
   throw new Error(`Could not match preToken fragment '${fragment}'`);
 };
 
-module.exports = { preTokenObjectForFragment };
+module.exports = { constructorForFragment, preTokenObjectForFragment };

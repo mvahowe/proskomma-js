@@ -1,12 +1,11 @@
 const sax = require('sax');
 import xre from 'xregexp';
 
-const ptClasses = require('../preTokenClasses');
 const {
   lexingRegexes,
   mainRegex,
 } = require('../lexingRegexes');
-const { preTokenObjectForFragment } = require('../object_for_fragment');
+const { preTokenObjectForFragment, constructorForFragment } = require('../object_for_fragment');
 
 class LexiconLexer {
 
@@ -123,23 +122,23 @@ class LexiconLexer {
       .forEach(t => lexer.parser.parseItem(t));
 
     const startMilestone = () => {
-      lexer.parser.parseItem(new ptClasses.MilestonePT('startMilestoneTag', [null, null, 'zlexentry', 's']));
-      lexer.parser.parseItem(new ptClasses.AttributePT('attribute', [null, null, 'x-strongs', lexer.state.strongs]));
-      lexer.parser.parseItem(new ptClasses.AttributePT('attribute', [null, null, 'x-lemma', lexer.state.lemma]));
-      lexer.parser.parseItem(new ptClasses.MilestonePT('endMilestoneMarker'));
+      lexer.parser.parseItem(constructorForFragment.milestone('startMilestoneTag', [null, null, 'zlexentry', 's']));
+      lexer.parser.parseItem(constructorForFragment.attribute('attribute', [null, null, 'x-strongs', lexer.state.strongs]));
+      lexer.parser.parseItem(constructorForFragment.attribute('attribute', [null, null, 'x-lemma', lexer.state.lemma]));
+      lexer.parser.parseItem(constructorForFragment.milestone('endMilestoneMarker'));
     };
 
     ['brief', 'full'].map(k => lexer.state[k] = lexer.state[k].replace(/[ \t\r\n]+/g, ' ').trim());
     for (const field of ['orth', 'brief', 'full']) {
-      lexer.parser.parseItem(new ptClasses.TagPT('startTag', [null, null, `zlex${field}`, '']));
+      lexer.parser.parseItem(constructorForFragment.tag('startTag', [null, null, `zlex${field}`, '']));
       if (field === 'orth') {
         startMilestone();
       }
       parseText(lexer.state[field]);
-      lexer.parser.parseItem(new ptClasses.TagPT('endTag', [null, null, `zlex${field}`, '']));
+      lexer.parser.parseItem(constructorForFragment.tag('endTag', [null, null, `zlex${field}`, '']));
     }
-    lexer.parser.parseItem(new ptClasses.MilestonePT('startMilestoneTag', [null, null, 'zlexentry', 'e']));
-    lexer.parser.parseItem(new ptClasses.MilestonePT('endMilestoneMarker'));
+    lexer.parser.parseItem(constructorForFragment.milestone('startMilestoneTag', [null, null, 'zlexentry', 'e']));
+    lexer.parser.parseItem(constructorForFragment.milestone('endMilestoneMarker'));
     lexer.resetState();
     lexer.stackPop();
   }

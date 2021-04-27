@@ -2,7 +2,7 @@ const {
   labelForScope,
   generateId,
 } = require('proskomma-utils');
-const PrintablePT = require('./lexers/preTokenClasses/printable_pt');
+const { constructorForFragment } = require('./lexers/object_for_fragment');
 
 const buildSpecLookup = specs => {
   const ret = {};
@@ -664,7 +664,7 @@ const specs = (pt) => [
           },
           );
         } else {
-          parser.addToken(new PrintablePT('unknown', [pt.printValue]));
+          parser.addToken(constructorForFragment.printable('unknown', [pt.printValue]));
         }
       },
     },
@@ -712,7 +712,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('lineSpace', ['\xa0']));
+        parser.addToken(constructorForFragment.printable('lineSpace', ['\xa0']));
       },
     },
   },
@@ -723,7 +723,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('softLineBreak', ['//']));
+        parser.addToken(constructorForFragment.printable('softLineBreak', ['//']));
       },
     },
   },
@@ -734,7 +734,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('bareSlash', ['\\']));
+        parser.addToken(constructorForFragment.printable('bareSlash', ['\\']));
       },
     },
   },
@@ -745,7 +745,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser, pt) => {
-        parser.addToken(new PrintablePT('unknown', [pt.printValue]));
+        parser.addToken(constructorForFragment.printable('unknown', [pt.printValue]));
       },
     },
   },
