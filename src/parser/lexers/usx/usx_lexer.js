@@ -7,7 +7,7 @@ const {
   lexingRegexes,
   mainRegex,
 } = require('../lexingRegexes');
-const { preTokenClassForFragment } = require('../class_for_fragment');
+const { preTokenObjectForFragment } = require('../object_for_fragment');
 
 class UsxLexer {
   constructor() {
@@ -66,7 +66,7 @@ class UsxLexer {
   handleSaxText(text) {
     this.currentText = this.replaceEntities(text);
     xre.match(this.currentText, mainRegex, 'all')
-      .map(f => preTokenClassForFragment(f, lexingRegexes))
+      .map(f => preTokenObjectForFragment(f, lexingRegexes))
       .forEach(t => this.parser.parseItem(t));
   }
 

@@ -6,7 +6,7 @@ const {
   lexingRegexes,
   mainRegex,
 } = require('../lexingRegexes');
-const { preTokenClassForFragment } = require('../class_for_fragment');
+const { preTokenObjectForFragment } = require('../object_for_fragment');
 
 class LexiconLexer {
 
@@ -119,7 +119,7 @@ class LexiconLexer {
   handleEntryClose(lexer) {
 
     const parseText = text => xre.match(lexer.replaceEntities(text), mainRegex, 'all')
-      .map(f => preTokenClassForFragment(f, lexingRegexes))
+      .map(f => preTokenObjectForFragment(f, lexingRegexes))
       .forEach(t => lexer.parser.parseItem(t));
 
     const startMilestone = () => {
