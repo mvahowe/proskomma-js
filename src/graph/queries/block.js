@@ -7,7 +7,11 @@ const {
   GraphQLNonNull,
   GraphQLBoolean,
 } = require('graphql');
-const { headerBytes } = require('proskomma-utils');
+const {
+  headerBytes,
+  items2aghast,
+  aghast2string,
+} = require('proskomma-utils');
 const { dumpBlock } = require('../lib/dump');
 const itemType = require('./item');
 
@@ -140,6 +144,21 @@ const blockType = new GraphQLObjectType({
             );
           }
         },
+    },
+    aghast: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The block items as an AGHAST string',
+      resolve: (root, args, context) => {
+        const itemArrays = context.docSet.unsuccinctifyItems(root.c, {}, null);
+        const items = itemArrays.map(ia => ({
+          type: ia[0],
+          subType: ia[1],
+          payload: ia[2],
+        }));
+        const aghast = items2aghast(items);
+        const aghString = aghast2string(aghast);
+        return aghString;
+      },
     },
     tokens: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
