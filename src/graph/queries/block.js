@@ -10,6 +10,7 @@ const {
 const {
   headerBytes,
   items2aghast,
+  itemArrays2Objects,
   aghast2string,
 } = require('proskomma-utils');
 const { dumpBlock } = require('../lib/dump');
@@ -150,11 +151,7 @@ const blockType = new GraphQLObjectType({
       description: 'The block items as an AGHAST string',
       resolve: (root, args, context) => {
         const itemArrays = context.docSet.unsuccinctifyItems(root.c, {}, null);
-        const items = itemArrays.map(ia => ({
-          type: ia[0],
-          subType: ia[1],
-          payload: ia[2],
-        }));
+        const items = itemArrays2Objects(itemArrays);
         const aghast = items2aghast(items);
         const aghString = aghast2string(aghast);
         return aghString;
