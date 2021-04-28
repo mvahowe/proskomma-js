@@ -6,6 +6,8 @@ const {
   GraphQLList,
 } = require('graphql');
 
+const {string2aghast, aghast2items} = require('proskomma-utils');
+
 const inputItemObject = require('../queries/inputItemObject');
 
 const updateMutations = {
@@ -30,8 +32,12 @@ const updateMutations = {
         description: 'The zero-indexed number of the block for which the items will be updated',
       },
       items: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObject))),
-        description: 'The new items for the block',
+        type: GraphQLList(GraphQLNonNull(inputItemObject)),
+        description: 'The new content for the block as item objects',
+      },
+      aghast: {
+        type: GraphQLString,
+        description: 'The new content for the block in AGHAST format',
       },
     },
     resolve: (root, args) => {
@@ -40,11 +46,19 @@ const updateMutations = {
       if (!docSet) {
         throw new Error(`DocSet '${args.docSetId}' not found`);
       }
+
+      if (!args.items && !args.aghast) {
+        throw new Error('Must provide items or AGHAST');
+      }
+
+      if (args.items && args.aghast) {
+        throw new Error('Must provide either items or AGHAST, not both');
+      }
       return docSet.updateItems(
         args.documentId,
         args.sequenceId,
         args.blockPosition,
-        args.items,
+        args.items || aghast2items(string2aghast(args.aghast)),
       );
     },
   },
