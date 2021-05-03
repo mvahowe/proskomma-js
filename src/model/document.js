@@ -360,7 +360,13 @@ class Document {
           const nVerseElements = verseElements.length;
 
           for (const [verseElementN, verseElement] of verseElements.entries()) {
-            const versesEnumIndex = docSet.enumForCategoryValue('scopeBits', verseElement.verses);
+            let versesEnumIndex;
+            try {
+              versesEnumIndex = docSet.enumForCategoryValue('scopeBits', verseElement.verses);
+            } catch (err) {
+              console.log(`verseEnumIndex: ${err}`);
+              continue;
+            }
             const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
             ba.pushByte(0);
 
