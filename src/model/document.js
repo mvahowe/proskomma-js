@@ -364,7 +364,7 @@ class Document {
             try {
               versesEnumIndex = docSet.enumForCategoryValue('scopeBits', verseElement.verses);
             } catch (err) {
-              console.log(`verseEnumIndex: ${err}`);
+              console.log(`verseElement ${verseElement}: ${err}`);
               continue;
             }
             const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
