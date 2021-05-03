@@ -1034,10 +1034,15 @@ class DocSet {
       throw new Error(`Document '${documentId}' not found`);
     }
 
-    const sequence = document.sequences[sequenceId];
+    let sequence;
+    if (sequenceId) {
+      sequence = document.sequences[sequenceId];
 
-    if (!sequence) {
-      throw new Error(`Sequence '${sequenceId}' not found`);
+      if (!sequence) {
+        throw new Error(`Sequence '${sequenceId}' not found`);
+      }
+    } else {
+      sequence = document.sequences[document.mainId];
     }
 
     if (sequence.blocks.length <= blockPosition) {
@@ -1112,7 +1117,7 @@ class DocSet {
     const openScopeLabels = new Set();
 
     for (const openScope of this.unsuccinctifyScopes(block.os)) {
-      openScopeLabels.add(openScope[1]);
+      openScopeLabels.add(openScope[2]);
     }
 
     for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
@@ -1136,7 +1141,7 @@ class DocSet {
     if (blockPosition < (sequence.blocks.length - 1)) {
       const nextOsBlock = sequence.blocks[blockPosition + 1];
       const nextOsBA = nextOsBlock.os;
-      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[1]));
+      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[2]));
 
       if (!labelsMatch(openScopeLabels, nextOSLabels)) {
         const osBA = new ByteArray(nextOSLabels.length);

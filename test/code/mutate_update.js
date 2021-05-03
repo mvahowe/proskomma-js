@@ -195,6 +195,52 @@ test(
 );
 
 test(
+  `updateItems, new open-and-closed scope (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
+      t.ok(!block.text.includes('banana'));
+
+      const newItems = items.concat([
+        {
+          type: 'scope',
+          subType: 'start',
+          payload: 'span/bd',
+        },
+        {
+          type: 'token',
+          subType: 'wordLike',
+          payload: 'banana',
+        },
+        {
+          type: 'scope',
+          subType: 'end',
+          payload: 'span/bd',
+        },
+      ]);
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` items: ${object2Query(newItems)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { text } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.ok(block.text.includes('banana'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `updateItems, scope type exception (${testGroup})`,
   async function (t) {
     try {
@@ -213,7 +259,6 @@ test(
       let query = `mutation { updateItems(` +
         `docSetId: "${docSet.id}"` +
         ` documentId: "${document.id}"` +
-        ` sequenceId: "${sequence.id}"` +
         ` blockPosition: 0` +
         ` items: ${object2Query(newItemObjects)}) }`;
       let result = await pk.gqlQuery(query);

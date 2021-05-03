@@ -24,8 +24,8 @@ const updateMutations = {
         description: 'The id of the document containing the sequence containing the block for which the items will be updated',
       },
       sequenceId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the sequence containing the block for which the items will be updated',
+        type: GraphQLString,
+        description: 'The id of the sequence containing the block for which the items will be updated (defaults to the main sequence)',
       },
       blockPosition: {
         type: GraphQLNonNull(GraphQLInt),
