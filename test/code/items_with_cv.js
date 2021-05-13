@@ -5,8 +5,13 @@ const { pkWithDoc } = require('../lib/load');
 const testGroup = 'Items with CV';
 
 const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
-  lang: 'fra',
-  abbr: 'hello',
+  lang: 'eng',
+  abbr: 'web',
+})[0];
+
+const pk2 = pkWithDoc('../test_data/usx/web_psa_40_60.usx', {
+  lang: 'eng',
+  abbr: 'web',
 })[0];
 
 test(
@@ -130,6 +135,28 @@ test(
 );
 
 test(
+  `Verse zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        `{ docSets { document(bookCode:"PSA") {
+                     mainSequence { blocks(withScriptureCV:"51:0") { items(withScriptureCV:"51:0") {type, subType, payload} } } } }
+                }`;
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      const firstBlockItems = blocks[0].items;
+      const lastBlockItems = blocks[blocks.length - 1].items;
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'For');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'Bathsheba');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Verse range (${testGroup})`,
   async function (t) {
     try {
@@ -152,6 +179,28 @@ test(
 );
 
 test(
+  `Verse range from zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        `{ docSets { document(bookCode:"PSA") {
+                     mainSequence { blocks(withScriptureCV:"51:0-1") { items(withScriptureCV:"51:0-1") {type, subType, payload} } } } }
+                }`;
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      const firstBlockItems = blocks[0].items;
+      const lastBlockItems = blocks[blocks.length - 1].items;
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'For');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'transgressions');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Chapter/verse range (${testGroup})`,
   async function (t) {
     try {
@@ -167,6 +216,50 @@ test(
       const lastBlockItems = blocks[blocks.length - 1].items;
       t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'So');
       t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'drinking');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Chapter/verse range to zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        `{ docSets { document(bookCode:"PSA") {
+                     mainSequence { blocks(withScriptureCV:"50:23-51:0") { items(withScriptureCV:"50:23-51:0") {type, subType, payload} } } } }
+                }`;
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      const firstBlockItems = blocks[0].items;
+      const lastBlockItems = blocks[blocks.length - 1].items;
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'Whoever');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'Bathsheba');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Chapter/verse range from zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        `{ docSets { document(bookCode:"PSA") {
+                     mainSequence { blocks(withScriptureCV:"51:0-52:1") { items(withScriptureCV:"51:0-52:1") {type, subType, payload} } } } }
+                }`;
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      const firstBlockItems = blocks[0].items;
+      const lastBlockItems = blocks[blocks.length - 1].items;
+      t.equal(firstBlockItems.filter(i => i.subType === 'wordLike')[0].payload, 'For');
+      t.equal(lastBlockItems.filter(i => i.subType === 'wordLike').reverse()[0].payload, 'continually');
     } catch (err) {
       console.log(err);
     }

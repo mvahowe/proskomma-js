@@ -685,10 +685,10 @@ class DocSet {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
     return new Set([
-        ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
-        ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
-        blockScope[2],
-      ],
+      ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
+      ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
+      blockScope[2],
+    ],
     );
   }
 
@@ -764,18 +764,25 @@ class DocSet {
           }
           return false;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+$'))) {
         return () => {
           const [fromC, fromV] = cv.split(':').map(v => parseInt(v));
 
-          for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
-            if (!openScopes.has(scope)) {
-              return false;
+          if (fromV === 0) {
+            return (
+              openScopes.has(`chapter/${fromC}`) &&
+              [...openScopes].filter(s => s.startsWith('verse')).length === 0
+            );
+          } else {
+            for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
+              if (!openScopes.has(scope)) {
+                return false;
+              }
             }
+            return true;
           }
-          return true;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*$'))) {
         return () => {
           const [fromC, vs] = cv.split(':');
           const [fromV, toV] = vs.split('-').map(v => parseInt(v));
@@ -796,9 +803,9 @@ class DocSet {
               return true;
             }
           }
-          return false;
+          return fromV === 0 && [...openScopes].filter(s => s.startsWith('verse')).length === 0;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*:[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*:[0-9]+$'))) {
         return () => {
           const [fromCV, toCV] = cv.split('-');
           const [fromC, fromV] = fromCV.split(':').map(c => parseInt(c));
@@ -820,9 +827,19 @@ class DocSet {
           if ((chapterNo < fromC) || (chapterNo > toC)) {
             return false;
           } else if (chapterNo === fromC) {
-            return scopeArray.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) >= fromV).length > 0;
+            return scopeArray.filter(
+              s =>
+                s.startsWith('verse/') &&
+                parseInt(s.split('/')[1]) >= fromV,
+            ).length > 0 ||
+              (fromV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
           } else if (chapterNo === toC) {
-            return scopeArray.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) <= toV).length > 0;
+            return scopeArray.filter(
+              s =>
+                s.startsWith('verse/') &&
+                parseInt(s.split('/')[1]) <= toV,
+            ).length > 0 ||
+              (toV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
           } else {
             return true;
           }
@@ -931,13 +948,13 @@ class DocSet {
 
       for (
         const item of blockGrafts.concat(
-        [
-          startBlockScope,
-          ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
-          endBlockScope,
-        ],
-      )
-        ) {
+          [
+            startBlockScope,
+            ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
+            endBlockScope,
+          ],
+        )
+      ) {
         if (item[0] === 'scope' && item[1] === 'start') {
           allBlockScopes.add(item[2]);
         }
@@ -995,13 +1012,13 @@ class DocSet {
 
           for (
             const bs of [...allBlockScopes]
-            .filter(
-              s => {
-                const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-              },
-            )
-            ) {
+              .filter(
+                s => {
+                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
+                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
+                },
+              )
+          ) {
             allBlockScopes.delete(bs);
           }
           allBlockScopes.add(blockScope);
