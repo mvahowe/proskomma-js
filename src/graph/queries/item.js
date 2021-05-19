@@ -2,6 +2,7 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
+  GraphQLBoolean,
   GraphQLList,
   GraphQLNonNull,
 } = require('graphql');
@@ -36,7 +37,8 @@ const itemType = new GraphQLObjectType({
     payload: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The content of the item (the text for tokens, the label for scopes and the sequence id for grafts)',
-      resolve: root => root[2],
+      args: { normalizeSpace: { type: GraphQLBoolean } },
+      resolve: (root, args) => args.normalizeSpace ? root[2].replace(/[ \t\n\r]+/g, ' ') : root[2],
     },
     position: {
       type: GraphQLInt,

@@ -145,7 +145,7 @@ test(
 );
 
 test(
-  `Normalize whitespace (${testGroup})`,
+  `Normalize text whitespace (${testGroup})`,
   async function (t) {
     try {
       t.plan(2);
@@ -154,6 +154,34 @@ test(
       t.equal(result.errors, undefined);
       const block = result.data.documents[0].mainSequence.blocks[0];
       t.equal(block.text, 'This is how the Good News of JC began...');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Normalize token whitespace (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(5);
+      const query = '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      blocks {' +
+        '        raw: tokens {payload(normalizeSpace:false)}' +
+        '        normalized: tokens {payload(normalizeSpace:true)}' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk6.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const block = result.data.documents[0].mainSequence.blocks[0];
+      t.equal(block.raw[1].payload, ' ');
+      t.equal(block.normalized[1].payload, ' ');
+      t.equal(block.raw[3].payload, '\n');
+      t.equal(block.normalized[3].payload, ' ');
     } catch (err) {
       console.log(err);
     }
