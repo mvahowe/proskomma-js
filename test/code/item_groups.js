@@ -79,9 +79,9 @@ test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(7);
+      t.plan(9);
       const query = '{ documents { mainSequence { itemGroups(byMilestones:["milestone/ts"]) {' +
-        'scopeLabels text ' +
+        'scopeLabels text normalized: text(normalizeSpace:true)' +
         '} } } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -92,6 +92,8 @@ test(
       t.ok(!itemGroups[1].scopeLabels.includes('verse/1'));
       t.ok(itemGroups[1].text.trim().startsWith('Praise'));
       t.ok(itemGroups[1].text.trim().endsWith('cymbals!'));
+      t.equal(itemGroups[0].text.split('\n').length, 5);
+      t.equal(itemGroups[0].normalized.split('\n').length, 1);
     } catch (err) {
       console.log(err);
     }

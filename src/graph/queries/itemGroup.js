@@ -1,5 +1,6 @@
 const {
   GraphQLObjectType,
+  GraphQLBoolean,
   GraphQLList,
   GraphQLString,
   GraphQLNonNull,
@@ -32,9 +33,17 @@ const itemGroupType = new GraphQLObjectType({
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
       description: 'The text of the itemGroup as a single string',
-      resolve: (root, args, context) =>
-        root[1].filter(i => i[0] === 'token').map(t => t[2]).join(''),
+      resolve: (root, args, context) => {
+        const tokensText = root[1].filter(i => i[0] === 'token').map(t => t[2]).join('');
+        return args.normalizeSpace? tokensText.replace(/[ \t\n\r]+/g, ' ') : tokensText;
+      }
     },
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
