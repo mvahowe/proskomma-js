@@ -1,5 +1,7 @@
 import { scopeEnum } from 'proskomma-utils';
 
+const BitSet = require('bitset');
+
 const {
   addTag,
   ByteArray,
@@ -26,6 +28,9 @@ const { Parser } = require('../parser');
 const emptyCVIndexType = 0;
 const shortCVIndexType = 2;
 const longCVIndexType = 3;
+
+// const maybePrint = str => console.log(str);
+const maybePrint = str => str;
 
 class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
@@ -89,23 +94,41 @@ class Document {
 
   processUsfm(usfmString) {
     const parser = this.makeParser();
+    const t = Date.now();
     parseUsfm(usfmString, parser);
+    const t2 = Date.now();
+    maybePrint(`\nParse USFM in ${t2 - t} msec`);
     this.postParseScripture(parser);
+    maybePrint(`Total USFM import time = ${Date.now() - t} msec (parse = ${((t2 - t) * 100) / (Date.now() - t)}%)`);
   }
 
   processUsx(usxString) {
     const parser = this.makeParser();
+    const t = Date.now();
     parseUsx(usxString, parser);
+    const t2 = Date.now();
+    maybePrint(`\nParse USX in ${t2 - t} msec`);
     this.postParseScripture(parser);
+    maybePrint(`Total USX import time = ${Date.now() - t} msec (parse = ${((t2 - t) * 100) / (Date.now() - t)}%)`);
   }
 
   postParseScripture(parser) {
+    let t = Date.now();
     parser.tidy();
+    maybePrint(`Tidy in ${Date.now() - t} msec`);
+    t = Date.now();
     parser.filter();
+    maybePrint(`Filter in ${Date.now() - t} msec`);
+    t = Date.now();
     this.headers = parser.headers;
     this.succinctPass1(parser);
+    maybePrint(`Succinct pass 1 in ${Date.now() - t} msec`);
+    t = Date.now();
     this.succinctPass2(parser);
+    maybePrint(`Succinct pass 2 in ${Date.now() - t} msec`);
+    t = Date.now();
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
+    maybePrint(`CV indexes in ${Date.now() - t} msec`);
   }
 
   processLexicon(lexiconString) {
@@ -119,15 +142,22 @@ class Document {
   succinctPass1(parser) {
     const docSet = this.processor.docSets[this.docSetId];
 
+    let t = Date.now();
+
     for (const seq of parser.allSequences()) {
       docSet.recordPreEnum('ids', seq.id);
       this.recordPreEnums(docSet, seq);
     }
+    maybePrint(`   recordPreEnums in ${Date.now() - t} msec`);
+    t = Date.now();
 
     if (docSet.enums.wordLike.length === 0) {
       docSet.sortPreEnums();
+      maybePrint(`   sortPreEnums in ${Date.now() - t} msec`);
+      t = Date.now();
     }
     docSet.buildEnums();
+    maybePrint(`   buildEnums in ${Date.now() - t} msec`);
   }
 
   recordPreEnums(docSet, seq) {
@@ -218,72 +248,94 @@ class Document {
     let verses = '1';
     let nextTokenN = 0;
 
+    mainSequence.chapterVerses = {};
+    mainSequence.tokensPresent = new BitSet(
+      new Array(docSet.enums.wordLike.length)
+        .fill(0)
+        .map(b => b.toString())
+        .join(''),
+    );
+
     for (const [blockN, block] of mainSequence.blocks.entries()) {
-      for (const [itemN, item] of docSet.unsuccinctifyItems(block.c, {}, nextTokenN).entries()) {
-        if (item[0] === 'scope') {
-          if (item[1] === 'start') {
-            if (item[2].startsWith('chapter/')) {
-              chapterN = item[2].split('/')[1];
-              chapterVerseIndexes[chapterN] = {};
-              chapterIndexes[chapterN] = {
-                startBlock: blockN,
-                startItem: itemN,
-                nextToken: nextTokenN,
-              };
-            } else if (item[2].startsWith('verse/')) {
-              verseN = item[2].split('/')[1];
+      let pos = 0;
+      let succinct = block.c;
+      let itemN = -1;
 
-              if (verseN === '1' && !('0' in chapterVerseIndexes[chapterN])) {
-                if (chapterIndexes[chapterN].nextToken < nextTokenN) {
-                  chapterVerseIndexes[chapterN]['0'] = [{
-                    startBlock: chapterIndexes[chapterN].startBlock,
-                    startItem: chapterIndexes[chapterN].startItem,
-                    endBlock: blockN,
-                    endItem: Math.max(itemN - 1, 0),
-                    nextToken: chapterIndexes[chapterN].nextToken,
-                    verses: '0',
-                  }];
-                }
-              }
+      while (pos < succinct.length) {
+        itemN++;
+        const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
 
-              if (!(verseN in chapterVerseIndexes[chapterN])) {
-                chapterVerseIndexes[chapterN][verseN] = [];
+        if (itemType === itemEnum['startScope']) {
+          let scopeLabel = docSet.succinctScopeLabel(succinct, itemSubtype, pos);
+
+          if (scopeLabel.startsWith('chapter/')) {
+            chapterN = scopeLabel.split('/')[1];
+            chapterVerseIndexes[chapterN] = {};
+            chapterIndexes[chapterN] = {
+              startBlock: blockN,
+              startItem: itemN,
+              nextToken: nextTokenN,
+            };
+          } else if (scopeLabel.startsWith('verse/')) {
+            verseN = scopeLabel.split('/')[1];
+
+            if (verseN === '1' && !('0' in chapterVerseIndexes[chapterN])) {
+              if (chapterIndexes[chapterN].nextToken < nextTokenN) {
+                chapterVerseIndexes[chapterN]['0'] = [{
+                  startBlock: chapterIndexes[chapterN].startBlock,
+                  startItem: chapterIndexes[chapterN].startItem,
+                  endBlock: blockN,
+                  endItem: Math.max(itemN - 1, 0),
+                  nextToken: chapterIndexes[chapterN].nextToken,
+                  verses: '0',
+                }];
               }
-              chapterVerseIndexes[chapterN][verseN].push({
-                startBlock: blockN,
-                startItem: itemN,
-                nextToken: nextTokenN,
-              });
-            } else if (item[2].startsWith('verses/')) {
-              verses = item[2].split('/')[1];
             }
-          } else if (item[1] === 'end') {
-            if (item[2].startsWith('chapter/')) {
-              chapterN = item[2].split('/')[1];
-              let chapterRecord = chapterIndexes[chapterN];
 
-              if (chapterRecord) { // Check start chapter has not been deleted
-                chapterRecord.endBlock = blockN;
-                chapterRecord.endItem = itemN;
-              }
-            } else if (item[2].startsWith('verse/')) {
-              verseN = item[2].split('/')[1];
-              let versesRecord = chapterVerseIndexes[chapterN][verseN];
+            if (!(verseN in chapterVerseIndexes[chapterN])) {
+              chapterVerseIndexes[chapterN][verseN] = [];
+            }
+            chapterVerseIndexes[chapterN][verseN].push({
+              startBlock: blockN,
+              startItem: itemN,
+              nextToken: nextTokenN,
+            });
+          } else if (scopeLabel.startsWith('verses/')) {
+            verses = scopeLabel.split('/')[1];
+          }
+        } else if (itemType === itemEnum['endScope']) {
+          let scopeLabel = docSet.succinctScopeLabel(succinct, itemSubtype, pos);
 
-              if (versesRecord) { // Check start verse has not been deleted
-                const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
-                verseRecord.endBlock = blockN;
-                verseRecord.endItem = itemN;
-                verseRecord.verses = verses;
-              }
+          if (scopeLabel.startsWith('chapter/')) {
+            chapterN = scopeLabel.split('/')[1];
+            let chapterRecord = chapterIndexes[chapterN];
+
+            if (chapterRecord) { // Check start chapter has not been deleted
+              chapterRecord.endBlock = blockN;
+              chapterRecord.endItem = itemN;
+            }
+          } else if (scopeLabel.startsWith('verse/')) {
+            verseN = scopeLabel.split('/')[1];
+            let versesRecord = chapterVerseIndexes[chapterN][verseN];
+
+            if (versesRecord) { // Check start verse has not been deleted
+              const verseRecord = chapterVerseIndexes[chapterN][verseN][chapterVerseIndexes[chapterN][verseN].length - 1];
+              verseRecord.endBlock = blockN;
+              verseRecord.endItem = itemN;
+              verseRecord.verses = verses;
             }
           }
-        } else if (item[0] === 'token' && item[1] === 'wordLike') {
+        } else if (itemType === itemEnum['token'] && itemSubtype === tokenEnum['wordLike']) {
+          mainSequence.tokensPresent
+            .set(
+              succinct.nByte(pos + 2),
+              1,
+            );
           nextTokenN++;
         }
+        pos += itemLength;
       }
     }
-    mainSequence.chapterVerses = {};
 
     for (const [chapterN, chapterVerses] of Object.entries(chapterVerseIndexes)) {
       const ba = new ByteArray();
@@ -528,11 +580,29 @@ class Document {
   }
 
   serializeSuccinctSequence(seqOb) {
-    return {
+    const ret = {
       type: seqOb.type,
       blocks: seqOb.blocks.map(b => this.serializeSuccinctBlock(b)),
       tags: Array.from(seqOb.tags),
     };
+
+    if (seqOb.type === 'main') {
+      ret.chapters = {};
+
+      for (const [chK, chV] of Object.entries(seqOb.chapters)) {
+        ret.chapters[chK] = chV.base64();
+      }
+      ret.chapterVerses = {};
+
+      for (const [chvK, chvV] of Object.entries(seqOb.chapterVerses)) {
+        ret.chapterVerses[chvK] = chvV.base64();
+      }
+
+      if ('tokensPresent' in seqOb) {
+        ret.tokensPresent = '0x' + seqOb.tokensPresent.toString(16);
+      }
+    }
+    return ret;
   }
 
   serializeSuccinctBlock(blockOb) {
@@ -542,7 +612,7 @@ class Document {
       c: blockOb.c.base64(),
       is: blockOb.is.base64(),
       os: blockOb.os.base64(),
-      nt: blockOb.os.base64(),
+      nt: blockOb.nt.base64(),
     };
   }
 

@@ -1,16 +1,20 @@
 const test = require('tape');
+const deepCopy = require('deep-copy-all');
+const { string2aghast, aghast2string } = require('proskomma-utils');
 const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Mutate Update Operations';
 
 const object2Query = obs => '[' + obs.map(ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`).join(', ') + ']';
 
+const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 const blockSetup = async t => {
-  const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
-    lang: 'eng',
-    abbr: 'ust',
-  }, {}, {}, [], [])[0];
-  let query = '{docSets { id documents { id nSequences mainSequence { id blocks(positions: [0]) { text items { type subType payload } } } } } }';
+  const pk = deepCopy(cleanPk);
+  let query = '{docSets { id documents { id nSequences mainSequence { id blocks(positions: [0]) { text items { type subType payload } aghast } } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
   t.equal(result.data.docSets.length, 1);
@@ -19,7 +23,8 @@ const blockSetup = async t => {
   const sequence = document.mainSequence;
   let block = sequence.blocks[0];
   const items = block.items;
-  return [pk, docSet, document, sequence, block, items];
+  const aghast = block.aghast;
+  return [pk, docSet, document, sequence, block, items, aghast];
 };
 
 const searchScopes = (items, searchStr) => items.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
@@ -109,7 +114,6 @@ test(
   },
 );
 
-
 test(
   `updateItems, new token enum (${testGroup})`,
   async function (t) {
@@ -191,6 +195,52 @@ test(
 );
 
 test(
+  `updateItems, new open-and-closed scope (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
+      t.ok(!block.text.includes('banana'));
+
+      const newItems = items.concat([
+        {
+          type: 'scope',
+          subType: 'start',
+          payload: 'span/bd',
+        },
+        {
+          type: 'token',
+          subType: 'wordLike',
+          payload: 'banana',
+        },
+        {
+          type: 'scope',
+          subType: 'end',
+          payload: 'span/bd',
+        },
+      ]);
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` items: ${object2Query(newItems)}) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { text } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.ok(block.text.includes('banana'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `updateItems, scope type exception (${testGroup})`,
   async function (t) {
     try {
@@ -209,7 +259,6 @@ test(
       let query = `mutation { updateItems(` +
         `docSetId: "${docSet.id}"` +
         ` documentId: "${document.id}"` +
-        ` sequenceId: "${sequence.id}"` +
         ` blockPosition: 0` +
         ` items: ${object2Query(newItemObjects)}) }`;
       let result = await pk.gqlQuery(query);
@@ -293,6 +342,41 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets[0].documents[0].nSequences, nSequences - 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems using AGHAST (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let [pk, docSet, document, sequence, block, items, aghast] = await blockSetup(t);
+      let aghastLines = string2aghast(aghast);
+      t.ok(aghastLines[2][2].includes('two'));
+      t.ok(!aghastLines[2][2].includes('2'));
+
+      aghastLines[2][2] = aghastLines[2][2].replace('two', 2);
+      const newAghastString = aghast2string(aghastLines);
+
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` aghast: """${newAghastString}""") }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { aghast } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      aghastLines = string2aghast(result.data.docSets[0].documents[0].mainSequence.blocks[0].aghast);
+      t.ok(!aghastLines[2][2].includes('two'));
+      t.ok(aghastLines[2][2].includes('2'));
     } catch (err) {
       console.log(err);
     }

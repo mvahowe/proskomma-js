@@ -7,7 +7,13 @@ const {
 const rehashMutations = {
   rehashDocSet: {
     type: GraphQLNonNull(GraphQLBoolean),
-    args: { docSetId: { type: GraphQLNonNull(GraphQLString) } },
+    description: 'Explicitly rebuild the text lookup tables for a docSet. (You probably don\'t need to do this)',
+    args: {
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet',
+      },
+    },
     resolve: (root, args) =>
       root.rehashDocSet(args.docSetId),
   },

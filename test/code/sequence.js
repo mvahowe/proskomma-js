@@ -117,22 +117,148 @@ test(
 );
 
 test(
-  `withChars (${testGroup})`,
+  `withChars 'or' (${testGroup})`,
   async function (t) {
     try {
-      t.plan(21);
-      let query = '{ documents { mainSequence { blocks(withChars:"Boaz") { text } } } }';
+      t.plan(27);
+      let query = '{ documents { mainSequence { blocks(withChars:["Boaz" "Naomi"]) { text } } } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('blocks' in result.data.documents[0].mainSequence);
       const blocks = result.data.documents[0].mainSequence.blocks;
-      t.equal(blocks.length, 18);
+      t.equal(blocks.length, 24);
 
       for (const block of blocks) {
-        t.ok(block.text.includes('Boaz'));
+        t.ok(block.text.includes('Boaz') || block.text.includes('Naomi'));
       }
     } catch (err) {
       console.log(err);
     }
   },
 );
+
+test(
+  `withChars 'and' (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      let query = '{ documents { mainSequence { blocks(withChars:["Boaz" "Naomi"] allChars: true) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      t.equal(blocks.length, 8);
+
+      for (const block of blocks) {
+        t.ok(block.text.includes('Boaz') && block.text.includes('Naomi'));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `withMatchingChars 'or' (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      let query = '{ documents { mainSequence { blocks(withMatchingChars:["judge", "amminadab"]) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      t.equal(blocks.length, 2);
+      // console.log(JSON.stringify(blocks, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `withMatchingChars 'and' (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      let query = '{ documents { mainSequence { blocks(withMatchingChars:["naomi", "ruth", "boaz", "field"] allChars:true) { text } } } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('blocks' in result.data.documents[0].mainSequence);
+      const blocks = result.data.documents[0].mainSequence.blocks;
+      t.equal(blocks.length, 3);
+      // console.log(JSON.stringify(blocks, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `wordLikes (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const query = '{ documents { mainSequence { wordLikes } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.documents[0].mainSequence.wordLikes.includes('Good'));
+    } catch
+    (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `hasChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '' +
+        '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      orLogic: hasChars(chars:["Ruth", "Boaz", "banana"])' +
+        '      andLogic: hasChars(chars:["Ruth", "Boaz", "banana"] allChars:true)' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const sequence = result.data.documents[0].mainSequence;
+      t.ok(sequence.orLogic);
+      t.ok(!sequence.andLogic);
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `hasMatchingChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '' +
+        '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      orLogic: hasMatchingChars(chars:["Rut", "oaz", "banana"])' +
+        '      andLogic: hasMatchingChars(chars:["Rut", "oaz", "banana"] allChars:true)' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const sequence = result.data.documents[0].mainSequence;
+      t.ok(sequence.orLogic);
+      t.ok(!sequence.andLogic);
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+

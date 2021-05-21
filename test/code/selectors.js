@@ -238,7 +238,7 @@ test(
         baa: 23,
       })[0];
       t.plan(17);
-      let query = '{ docSets { selectors { key value } selectorString } }';
+      let query = '{ docSets { id selectors { key value } } }';
       let result = await cpk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('selectors' in result.data.docSets[0]);
@@ -247,7 +247,7 @@ test(
       t.equal(selectors[0].value, 'banana');
       t.equal(selectors[1].key, 'baa');
       t.equal(selectors[1].value, '23');
-      t.equal(result.data.docSets[0].selectorString, 'banana_23');
+      t.equal(result.data.docSets[0].id, 'banana_23');
       cpk = customPkWithDocs(customProskomma, [
         ['../test_data/usx/web_rut.usx', {
           foo: 'banana',

@@ -21,13 +21,13 @@ test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(8);
+      t.plan(12);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"] includeContext:true) {' +
-        'scopeLabels text' +
+        'scopeLabels text dump' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups[0], null, 2))
+      // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups[1], null, 2))
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].scopeLabels.length, 3);
@@ -36,6 +36,11 @@ test(
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
       t.ok(itemGroups[1].text.startsWith('Instead'));
       t.ok(itemGroups[1].text.endsWith('Yahweh teaches.'));
+      const dumped = itemGroups[1].dump.split('\n').map(l => l.trim());
+      t.ok(dumped[0].startsWith('ItemGroup'));
+      t.ok(dumped[1].includes('verse/2'));
+      t.ok(dumped[2].startsWith('+verse/2+'));
+      t.ok(dumped[3].endsWith('-verse/2-'));
     } catch (err) {
       console.log(err);
     }
@@ -74,9 +79,9 @@ test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(7);
+      t.plan(9);
       const query = '{ documents { mainSequence { itemGroups(byMilestones:["milestone/ts"]) {' +
-        'scopeLabels text ' +
+        'scopeLabels text normalized: text(normalizeSpace:true)' +
         '} } } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -87,6 +92,8 @@ test(
       t.ok(!itemGroups[1].scopeLabels.includes('verse/1'));
       t.ok(itemGroups[1].text.trim().startsWith('Praise'));
       t.ok(itemGroups[1].text.trim().endsWith('cymbals!'));
+      t.equal(itemGroups[0].text.split('\n').length, 5);
+      t.equal(itemGroups[0].normalized.split('\n').length, 1);
     } catch (err) {
       console.log(err);
     }

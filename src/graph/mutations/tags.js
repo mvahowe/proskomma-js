@@ -11,9 +11,16 @@ const {
 const tagMutations = {
   addDocSetTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Add one or more tags to a docSet, if they are not already present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet to which the tags will be added',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be added',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -26,10 +33,20 @@ const tagMutations = {
   },
   addDocumentTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Add one or more tags to a document, if they are not already present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document to which the tags will be added',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document to which the tags will be added',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be added',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -43,11 +60,24 @@ const tagMutations = {
   },
   addSequenceTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Add one or more tags to a sequence, if they are not already present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      sequenceId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document containing the sequence to which the tags will be added',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document containing the sequence to which the tags will be added',
+      },
+      sequenceId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the sequence to which the tags will be added',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be added',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -62,9 +92,16 @@ const tagMutations = {
   },
   removeDocSetTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Remove one or more tags from a docSet, if they are present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet from which the tags will be removed',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be removed',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -77,10 +114,20 @@ const tagMutations = {
   },
   removeDocumentTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Remove one or more tags from a document, if they are present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document from which the tags will be removed',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document from which the tags will be removed',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be removed',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -94,11 +141,24 @@ const tagMutations = {
   },
   removeSequenceTags: {
     type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+    description: 'Remove one or more tags from a sequence, if they are present',
     args: {
-      docSetId: { type: GraphQLNonNull(GraphQLString) },
-      documentId: { type: GraphQLNonNull(GraphQLString) },
-      sequenceId: { type: GraphQLNonNull(GraphQLString) },
-      tags: { type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))) },
+      docSetId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the docSet containing the document containing the sequence from which the tags will be removed',
+      },
+      documentId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the document containing the sequence from which the tags will be removed',
+      },
+      sequenceId: {
+        type: GraphQLNonNull(GraphQLString),
+        description: 'The id of the sequence from which the tags will be removed',
+      },
+      tags: {
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+        description: 'A list of tags to be removed',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];

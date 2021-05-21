@@ -1,9 +1,9 @@
 import xre from 'xregexp';
-const { ByteArray, generateId } = require('proskomma-utils');
-
 const { Mutex } = require('async-mutex');
-
 const { graphql } = require('graphql');
+const BitSet = require('bitset');
+
+const { ByteArray, generateId } = require('proskomma-utils');
 
 const packageJson = require('../package.json');
 const { DocSet } = require('./model/doc_set');
@@ -264,6 +264,7 @@ class Proskomma {
   addDocument(doc, docSetId) {
     this.documents[doc.id] = doc;
     this.docSets[docSetId].docIds.push(doc.id);
+    this.docSets[docSetId].buildEnumIndexes();
   }
 
   loadSuccinctDocSet(succinctOb) {
@@ -291,7 +292,6 @@ class Proskomma {
 
     for (const docId of Object.keys(succinctOb.docs)) {
       let doc = this.newDocumentFromSuccinct(docId, succinctOb);
-      this.addDocument(doc, docSetId);
       docs.push(doc);
     }
     docSet.preEnums = {};
@@ -312,10 +312,42 @@ class Proskomma {
 
     for (const [seqId, seq] of Object.entries(succinctDocOb.sequences)) {
       doc.sequences[seqId] = {
+        id: seqId,
         type: seq.type,
         tags: new Set(seq.tags),
         blocks: [],
       };
+
+      if (seq.type === 'main') {
+        doc.sequences[seqId].chapters = {};
+
+        if (!('chapters' in seq)) {
+          throw new Error('chapters not found in main sequence');
+        }
+
+        for (const [chK, chV] of Object.entries(seq.chapters)) {
+          const bA = new ByteArray();
+          bA.fromBase64(chV);
+          doc.sequences[seqId].chapters[chK] = bA;
+        }
+        doc.sequences[seqId].chapterVerses = {};
+
+        if (!('chapterVerses' in seq)) {
+          throw new Error('chapterVerses not found in main sequence');
+        }
+
+        for (const [chvK, chvV] of Object.entries(seq.chapterVerses)) {
+          const bA = new ByteArray();
+          bA.fromBase64(chvV);
+          doc.sequences[seqId].chapterVerses[chvK] = bA;
+        }
+
+        if (!('tokensPresent' in seq)) {
+          throw new Error('tokensPresent not found in main sequence');
+        }
+
+        doc.sequences[seqId].tokensPresent = new BitSet(seq.tokensPresent);
+      }
 
       for (const succinctBlock of seq.blocks) {
         const block = {};

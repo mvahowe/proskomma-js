@@ -20,12 +20,11 @@ test(
       t.ok('documents' in result.data);
       t.ok('docSetId' in result.data.documents[0]);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `Headers (${testGroup})`,
@@ -41,12 +40,11 @@ test(
       t.equal(result.data.documents[0].headers.filter(h => h.key === 'toc')[0].value, 'The Book of Ruth');
       t.equal(result.data.documents[0].toc, 'The Book of Ruth');
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `mainSequence (${testGroup})`,
@@ -60,12 +58,11 @@ test(
       t.ok('mainSequence' in result.data.documents[0]);
       t.ok('id' in result.data.documents[0].mainSequence);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
-)
-;
+);
 
 test(
   `Sequences (${testGroup})`,
@@ -79,9 +76,8 @@ test(
       t.ok('sequences' in result.data.documents[0]);
       t.ok('id' in result.data.documents[0].sequences[0]);
     } catch
-      (err) {
+    (err) {
       console.log(err);
     }
   },
-)
-;
+);

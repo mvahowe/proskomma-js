@@ -2,7 +2,34 @@ const {
   labelForScope,
   generateId,
 } = require('proskomma-utils');
-const PrintablePT = require('./lexers/preTokenClasses/printable_pt');
+const { constructorForFragment } = require('./lexers/object_for_fragment');
+
+const buildSpecLookup = specs => {
+  const ret = {};
+
+  for (const spec of specs) {
+    for (const context of spec.contexts) {
+      if (!(context[0] in ret)) {
+        ret[context[0]] = {};
+      }
+
+      const accessor = context[1];
+
+      if (!accessor) {
+        ret[context[0]]._noAccessor = spec.parser;
+      } else {
+        if (!(accessor in ret[context[0]])) {
+          ret[context[0]][accessor] = {};
+        }
+
+        for (const accessorValue of context[2]) {
+          ret[context[0]][accessor][accessorValue] = spec.parser;
+        }
+      }
+    }
+  }
+  return ret;
+};
 
 const specs = (pt) => [
   {
@@ -430,13 +457,13 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        pt.numbers.map(n => {
-            const verseScope = {
-              label: () => labelForScope('verse', [n]),
-              endedBy: ['verses', 'chapter', 'pubchapter'],
-            };
-            parser.openNewScope(pt, verseScope, true, parser.sequences.main);
-          },
+        pt.numbers.forEach(n => {
+          const verseScope = {
+            label: () => labelForScope('verse', [n]),
+            endedBy: ['verses', 'chapter', 'pubchapter'],
+          };
+          parser.openNewScope(pt, verseScope, true, parser.sequences.main);
+        },
         );
       },
     },
@@ -628,16 +655,16 @@ const specs = (pt) => [
     parser: {
       during: (parser, pt) => {
         if (parser.current.attributeContext) {
-          [...pt.values.entries()].map(na => {
-              const attScope = {
-                label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
-                endedBy: [`$attributeContext$`],
-              };
-              parser.openNewScope(pt, attScope);
-            },
+          [...pt.values.entries()].forEach(na => {
+            const attScope = {
+              label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
+              endedBy: [`$attributeContext$`],
+            };
+            parser.openNewScope(pt, attScope);
+          },
           );
         } else {
-          parser.addToken(new PrintablePT('unknown', [pt.printValue]));
+          parser.addToken(constructorForFragment.printable('unknown', [pt.printValue]));
         }
       },
     },
@@ -651,7 +678,7 @@ const specs = (pt) => [
         [
           'w',
           'rb',
-          'xt',
+          // 'xt',
         ].concat(pt.customTags.word),
       ],
     ],
@@ -685,7 +712,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('lineSpace', ['\xa0']));
+        parser.addToken(constructorForFragment.printable('lineSpace', ['\xa0']));
       },
     },
   },
@@ -696,7 +723,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('softLineBreak', ['//']));
+        parser.addToken(constructorForFragment.printable('softLineBreak', ['//']));
       },
     },
   },
@@ -707,7 +734,7 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser) => {
-        parser.addToken(new PrintablePT('bareSlash', ['\\']));
+        parser.addToken(constructorForFragment.printable('bareSlash', ['\\']));
       },
     },
   },
@@ -718,10 +745,10 @@ const specs = (pt) => [
     ],
     parser: {
       during: (parser, pt) => {
-        parser.addToken(new PrintablePT('unknown', [pt.printValue]));
+        parser.addToken(constructorForFragment.printable('unknown', [pt.printValue]));
       },
     },
   },
 ];
 
-module.exports = { specs };
+module.exports = { specs, buildSpecLookup };

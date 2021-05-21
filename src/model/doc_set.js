@@ -162,15 +162,18 @@ class DocSet {
   }
 
   buildPreEnum(succinct) {
-    const ret = {};
+    const ret = new Map();
     let pos = 0;
     let enumCount = 0;
 
     while (pos < succinct.length) {
-      ret[succinct.countedString(pos)] = {
-        'enum': enumCount++,
-        'frequency': 0,
-      };
+      ret.set(
+        succinct.countedString(pos),
+        {
+          'enum': enumCount++,
+          'frequency': 0,
+        },
+      );
       pos += succinct.byte(pos) + 1;
     }
 
@@ -182,21 +185,26 @@ class DocSet {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
 
-    if (!(value in this.preEnums[category])) {
-      this.preEnums[category][value] = {
-        'enum': Object.keys(this.preEnums[category]).length,
-        'frequency': 1,
-      };
+    if (!this.preEnums[category].has(value)) {
+      this.preEnums[category].set(
+        value,
+        {
+          'enum': this.preEnums[category].size,
+          'frequency': 1,
+        },
+      );
     } else {
-      this.preEnums[category][value].frequency++;
+      this.preEnums[category].get(value).frequency++;
     }
   }
 
   sortPreEnums() {
-    for (const category of Object.values(this.preEnums)) {
+    for (const catKey of Object.keys(this.preEnums)) {
+      this.preEnums[catKey] = new Map([...this.preEnums[catKey].entries()].sort((a, b) => b[1].frequency - a[1].frequency));
+
       let count = 0;
 
-      for (const [k, v] of Object.entries(category).sort((a, b) => b[1].frequency - a[1].frequency)) {
+      for (const [k, v] of this.preEnums[catKey]) {
         v.enum = count++;
       }
     }
@@ -211,16 +219,19 @@ class DocSet {
       throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
     }
 
-    if (value in this.preEnums[category]) {
-      return this.preEnums[category][value].enum;
+    if (this.preEnums[category].has(value)) {
+      return this.preEnums[category].get(value).enum;
     } else if (addUnknown) {
-      this.preEnums[category][value] = {
-        'enum': Object.keys(this.preEnums[category]).length,
-        'frequency': 1,
-      };
+      this.preEnums[category].set(
+        value,
+        {
+          'enum': this.preEnums[category].size,
+          'frequency': 1,
+        },
+      );
       this.enums[category].pushCountedString(value);
       this.buildEnumIndex(category);
-      return this.preEnums[category][value].enum;
+      return this.preEnums[category].get(value).enum;
     } else {
       throw new Error(`Unknown value ${value} for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
     }
@@ -234,9 +245,9 @@ class DocSet {
   }
 
   buildEnum(category, preEnumOb) {
-    const sortedPreEnums = Object.entries(preEnumOb).sort((a, b) => a[1].enum - b[1].enum);
+    const sortedPreEnums = new Map([...preEnumOb.entries()]);
 
-    for (const enumText of sortedPreEnums.map(pe => pe[0])) {
+    for (const enumText of sortedPreEnums.keys()) {
       this.enums[category].pushCountedString(enumText);
     }
     this.enums[category].trim();
@@ -362,6 +373,11 @@ class DocSet {
 
   itemsByIndex(mainSequence, index, includeContext) {
     let ret = [];
+
+    if (!index) {
+      return ret;
+    }
+
     let currentBlock = index.startBlock;
     let nextToken = index.nextToken;
 
@@ -542,7 +558,7 @@ class DocSet {
       return hasFirstChapterScope &&
         this.blockHasMatchingItem(
           b,
-          (items, openScopes) => {
+          (item, openScopes) => {
             if (!openScopes.has(`chapter/${fromC}`)) {
               return false;
             }
@@ -551,6 +567,15 @@ class DocSet {
                 .filter(s => s.startsWith('verse/'))
                 .filter(s => parseInt(s.split('/')[1]) >= fromV).length
               > 0
+              ||
+              (
+                fromV === 0 &&
+                item[0] === 'token' &&
+                item[2] &&
+                Array.from(openScopes)
+                  .filter(s => s.startsWith('verse'))
+                  .length === 0
+              )
             );
           },
           {},
@@ -565,7 +590,7 @@ class DocSet {
       return hasLastChapterScope &&
         this.blockHasMatchingItem(
           b,
-          (items, openScopes) => {
+          (item, openScopes) => {
             if (!openScopes.has(`chapter/${toC}`)) {
               return false;
             }
@@ -574,6 +599,16 @@ class DocSet {
                 .filter(s => s.startsWith('verse/'))
                 .filter(s => parseInt(s.split('/')[1]) <= toV).length
               > 0
+              ||
+              (
+                toV === 0 &&
+                item[0] === 'token' &&
+                item[2] &&
+                Array.from(openScopes)
+                  .filter(s => s.startsWith('verse'))
+                  .length === 0
+              )
+
             );
           },
           {},
@@ -592,11 +627,23 @@ class DocSet {
 
       const scopes = [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`);
       return blocks.filter(b => this.anyScopeInBlock(b, scopes));
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*$'))) {
+    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+$'))) {
       const [fromC, fromV] = cv.split(':').map(v => parseInt(v));
-      const scopes = [`chapter/${fromC}`, `verse/${fromV}`];
-      return blocks.filter(b => this.allScopesInBlock(b, scopes));
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*$'))) {
+
+      if (fromV === 0) {
+        const scopes = [`chapter/${fromC}`];
+        return blocks
+          .filter(b => this.allScopesInBlock(b, scopes))
+          .filter(
+            b =>
+              [...this.allBlockScopes(b)]
+                .filter(s => s.startsWith('verse')).length === 0,
+          );
+      } else {
+        const scopes = [`chapter/${fromC}`, `verse/${fromV}`];
+        return blocks.filter(b => this.allScopesInBlock(b, scopes));
+      }
+    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*$'))) {
       const [fromC, vs] = cv.split(':');
       const [fromV, toV] = vs.split('-').map(v => parseInt(v));
 
@@ -606,8 +653,18 @@ class DocSet {
 
       const chapterScopes = [`chapter/${fromC}`];
       const verseScopes = [...Array((toV - fromV) + 1).keys()].map(n => `verse/${n + fromV}`);
-      return blocks.filter(b => this.allScopesInBlock(b, chapterScopes)).filter(b => this.anyScopeInBlock(b, verseScopes));
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*:[1-9][0-9]*$'))) {
+      return blocks
+        .filter(b => this.allScopesInBlock(b, chapterScopes))
+        .filter(
+          b =>
+            this.anyScopeInBlock(b, verseScopes) ||
+            (
+              fromV === 0 &&
+              [...this.allBlockScopes(b)]
+                .filter(s => s.startsWith('verse')).length === 0
+            ),
+        );
+    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*:[0-9]+$'))) {
       const [fromCV, toCV] = cv.split('-');
       const [fromC, fromV] = fromCV.split(':').map(c => parseInt(c));
       const [toC, toV] = toCV.split(':').map(v => parseInt(v));
@@ -707,18 +764,25 @@ class DocSet {
           }
           return false;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+$'))) {
         return () => {
           const [fromC, fromV] = cv.split(':').map(v => parseInt(v));
 
-          for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
-            if (!openScopes.has(scope)) {
-              return false;
+          if (fromV === 0) {
+            return (
+              openScopes.has(`chapter/${fromC}`) &&
+              [...openScopes].filter(s => s.startsWith('verse')).length === 0
+            );
+          } else {
+            for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
+              if (!openScopes.has(scope)) {
+                return false;
+              }
             }
+            return true;
           }
-          return true;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*$'))) {
         return () => {
           const [fromC, vs] = cv.split(':');
           const [fromV, toV] = vs.split('-').map(v => parseInt(v));
@@ -739,9 +803,9 @@ class DocSet {
               return true;
             }
           }
-          return false;
+          return fromV === 0 && [...openScopes].filter(s => s.startsWith('verse')).length === 0;
         };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[1-9][0-9]*-[1-9][0-9]*:[1-9][0-9]*$'))) {
+      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*:[0-9]+$'))) {
         return () => {
           const [fromCV, toCV] = cv.split('-');
           const [fromC, fromV] = fromCV.split(':').map(c => parseInt(c));
@@ -763,9 +827,19 @@ class DocSet {
           if ((chapterNo < fromC) || (chapterNo > toC)) {
             return false;
           } else if (chapterNo === fromC) {
-            return scopeArray.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) >= fromV).length > 0;
+            return scopeArray.filter(
+              s =>
+                s.startsWith('verse/') &&
+                parseInt(s.split('/')[1]) >= fromV,
+            ).length > 0 ||
+              (fromV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
           } else if (chapterNo === toC) {
-            return scopeArray.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) <= toV).length > 0;
+            return scopeArray.filter(
+              s =>
+                s.startsWith('verse/') &&
+                parseInt(s.split('/')[1]) <= toV,
+            ).length > 0 ||
+              (toV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
           } else {
             return true;
           }
@@ -962,7 +1036,7 @@ class DocSet {
     this.preEnums = {};
 
     for (const category of Object.keys(this.enums)) {
-      this.preEnums[category] = {};
+      this.preEnums[category] = new Map();
     }
     this.maybeBuildEnumIndexes();
 
@@ -995,8 +1069,8 @@ class DocSet {
         const stringLength = enumSuccinct.byte(pos);
         const enumString = enumSuccinct.countedString(pos);
 
-        if (enumString in this.preEnums[category]) {
-          ret[category].push(this.preEnums[category][enumString].enum);
+        if (this.preEnums[category].has(enumString)) {
+          ret[category].push(this.preEnums[category].get(enumString).enum);
         } else {
           ret[category].push(null);
         }
@@ -1018,10 +1092,16 @@ class DocSet {
       throw new Error(`Document '${documentId}' not found`);
     }
 
-    const sequence = document.sequences[sequenceId];
+    let sequence;
 
-    if (!sequence) {
-      throw new Error(`Sequence '${sequenceId}' not found`);
+    if (sequenceId) {
+      sequence = document.sequences[sequenceId];
+
+      if (!sequence) {
+        throw new Error(`Sequence '${sequenceId}' not found`);
+      }
+    } else {
+      sequence = document.sequences[document.mainId];
     }
 
     if (sequence.blocks.length <= blockPosition) {
@@ -1096,7 +1176,7 @@ class DocSet {
     const openScopeLabels = new Set();
 
     for (const openScope of this.unsuccinctifyScopes(block.os)) {
-      openScopeLabels.add(openScope[1]);
+      openScopeLabels.add(openScope[2]);
     }
 
     for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
@@ -1120,7 +1200,7 @@ class DocSet {
     if (blockPosition < (sequence.blocks.length - 1)) {
       const nextOsBlock = sequence.blocks[blockPosition + 1];
       const nextOsBA = nextOsBlock.os;
-      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[1]));
+      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[2]));
 
       if (!labelsMatch(openScopeLabels, nextOSLabels)) {
         const osBA = new ByteArray(nextOSLabels.length);

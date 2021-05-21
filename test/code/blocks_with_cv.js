@@ -9,6 +9,11 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'hello',
 })[0];
 
+const pk2 = pkWithDoc('../test_data/usx/web_psa_40_60.usx', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
+
 test(
   `Bad bookScope (${testGroup})`,
   async function (t) {
@@ -124,6 +129,26 @@ test(
 );
 
 test(
+  `Verse zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{ docSets { document(bookCode:"PSA") {' +
+        '      mainSequence { blocks(withScriptureCV:"51:0") { text } } } }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      t.ok(blocks[0].text.startsWith('For the Chief'));
+      t.ok(blocks[blocks.length - 1].text.endsWith('Bathsheba.'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Verse range (${testGroup})`,
   async function (t) {
     try {
@@ -144,6 +169,26 @@ test(
 );
 
 test(
+  `Verse range from zero (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{ docSets { document(bookCode:"PSA") {' +
+        '      mainSequence { blocks(withScriptureCV:"51:0-1") { text } } } }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      t.ok(blocks[0].text.startsWith('For the Chief'));
+      t.ok(blocks[blocks.length - 1].text.endsWith('transgressions.'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Chapter/verse range (${testGroup})`,
   async function (t) {
     try {
@@ -157,6 +202,46 @@ test(
       const blocks = result.data.docSets[0].document.mainSequence.blocks;
       t.ok(blocks[0].text.startsWith('She said to them,'));
       t.ok(blocks[blocks.length - 1].text.endsWith('Then he will tell you what to do.”'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Chapter/verse range to verse 0 (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{ docSets { document(bookCode:"PSA") {' +
+        '      mainSequence { blocks(withScriptureCV:"50:23-51:0") { text } } } }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      t.ok(blocks[0].text.startsWith('Whoever offers'));
+      t.ok(blocks[blocks.length - 1].text.endsWith('Bathsheba.'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Chapter/verse range from verse 0 (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query =
+        '{ docSets { document(bookCode:"PSA") {' +
+        '      mainSequence { blocks(withScriptureCV:"51:0-52:1") { text } } } }' +
+        '}';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const blocks = result.data.docSets[0].document.mainSequence.blocks;
+      t.ok(blocks[0].text.startsWith('For the Chief'));
+      t.ok(blocks[blocks.length - 1].text.endsWith('continually.'));
     } catch (err) {
       console.log(err);
     }
