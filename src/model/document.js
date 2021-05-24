@@ -121,6 +121,7 @@ class Document {
     maybePrint(`Filter in ${Date.now() - t} msec`);
     t = Date.now();
     this.headers = parser.headers;
+    Object.values(parser.allSequences()).forEach(s => s.blocks.forEach(b => this.convertBlock(b)));
     this.succinctPass1(parser);
     maybePrint(`Succinct pass 1 in ${Date.now() - t} msec`);
     t = Date.now();
@@ -135,8 +136,42 @@ class Document {
     const parser = this.makeParser();
     parseLexicon(lexiconString, parser);
     this.headers = parser.headers;
+    Object.values(parser.allSequences()).forEach(s => s.blocks.forEach(b => this.convertBlock(b)));
     this.succinctPass1(parser);
     this.succinctPass2(parser);
+  }
+
+  convertBlock(block) {
+    const convertItem = i => {
+      switch (i.itemType) {
+      case 'graft':
+        return {
+          type: 'graft',
+          subType: i.graftType,
+          payload: i.seqId,
+        };
+      case 'startScope':
+      case 'endScope':
+        return {
+          type: 'scope',
+          subType: i.itemType === 'startScope' ? 'start' : 'end',
+          payload: i.label,
+        };
+      default:
+        return {
+          type: 'token',
+          subType: i.itemType,
+          payload: i.chars,
+        };
+      }
+    };
+    block.items = block.items.map(i => convertItem(i));
+    block.bs = convertItem(block.blockScope);
+    delete block.blockScope;
+    block.os = block.openScopes.map(i => convertItem(i));
+    delete block.openScopes;
+    block.bg = block.blockGrafts.map(i => convertItem(i));
+    delete block.blockGrafts;
   }
 
   succinctPass1(parser) {
@@ -164,18 +199,18 @@ class Document {
     docSet.recordPreEnum('scopeBits', '0');
 
     for (const block of seq.blocks) {
-      for (const item of [...block.items, block.blockScope, ...block.blockGrafts]) {
-        if (item.itemType === 'wordLike') {
-          docSet.recordPreEnum('wordLike', item.chars);
-        } else if (['lineSpace', 'eol', 'punctuation', 'softLineBreak', 'bareSlash', 'unknown'].includes(item.itemType)) {
-          docSet.recordPreEnum('notWordLike', item.chars);
-        } else if (item.itemType === 'graft') {
-          docSet.recordPreEnum('graftTypes', item.graftType);
-        } else if (item.itemType === 'startScope') {
-          const labelBits = item.label.split('/');
+      for (const item of [...block.items, block.bs, ...block.bg]) {
+        if (item.subType === 'wordLike') {
+          docSet.recordPreEnum('wordLike', item.payload);
+        } else if (['lineSpace', 'eol', 'punctuation', 'softLineBreak', 'bareSlash', 'unknown'].includes(item.subType)) {
+          docSet.recordPreEnum('notWordLike', item.payload);
+        } else if (item.type === 'graft') {
+          docSet.recordPreEnum('graftTypes', item.subType);
+        } else if (item.subType === 'start') {
+          const labelBits = item.payload.split('/');
 
           if (labelBits.length !== nComponentsForScope(labelBits[0])) {
-            throw new Error(`Scope ${item.label} has unexpected number of components`);
+            throw new Error(`Scope ${item.payload} has unexpected number of components`);
           }
 
           for (const labelBit of labelBits.slice(1)) {
