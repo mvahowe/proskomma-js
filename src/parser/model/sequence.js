@@ -236,14 +236,14 @@ const Sequence = class {
     let openScopes = [];
 
     const updateOpenScopes = item => {
-      if (item.itemType === 'startScope') {
-        const existingScopes = openScopes.filter(s => s.label === item.label);
+      if (item.subType === 'start') {
+        const existingScopes = openScopes.filter(s => s.payload === item.payload);
 
         if (existingScopes.length === 0) {
           openScopes.push(item);
         }
       } else {
-        openScopes = openScopes.filter(s => s.label !== item.label);
+        openScopes = openScopes.filter(s => s.payload !== item.payload);
       }
     };
 
@@ -258,7 +258,7 @@ const Sequence = class {
 
       nextTokenBA.pushNByte(nextToken);
 
-      for (const bg of block.blockGrafts) {
+      for (const bg of block.bg) {
         this.pushSuccinctGraft(blockGraftsBA, docSet, bg);
       }
 
@@ -269,40 +269,32 @@ const Sequence = class {
       const includedScopes = [];
 
       for (const item of block.items) {
-        switch (item.itemType) {
-        case 'wordLike':
-        case 'punctuation':
-        case 'lineSpace':
-        case 'eol':
-        case 'softLineBreak':
-        case 'noBreakSpace':
-        case 'bareSlash':
-        case 'unknown':
+        switch (item.type) {
+        case 'token':
           this.pushSuccinctToken(contentBA, docSet, item);
 
-          if (item.itemType === 'wordLike') {
+          if (item.subType === 'wordLike') {
             nextToken++;
           }
           break;
         case 'graft':
           this.pushSuccinctGraft(contentBA, docSet, item);
           break;
-        case 'startScope':
-        case 'endScope':
+        case 'scope':
           this.pushSuccinctScope(contentBA, docSet, item);
           updateOpenScopes(item);
 
-          if (item.itemType === 'startScope') {
+          if (item.subType === 'start') {
             includedScopes.push(item);
           }
           break;
         default:
-          throw new Error(`Item type ${item.itemType} is not handled in succinctifyBlocks`);
+          throw new Error(`Item type ${item.type} is not handled in succinctifyBlocks`);
         }
       }
 
       const blockScopeBA = new ByteArray(10);
-      this.pushSuccinctScope(blockScopeBA, docSet, block.blockScope);
+      this.pushSuccinctScope(blockScopeBA, docSet, block.bs);
 
       for (const is of includedScopes) {
         this.pushSuccinctScope(includedScopesBA, docSet, is);
@@ -325,21 +317,21 @@ const Sequence = class {
   }
 
   pushSuccinctToken(bA, docSet, item) {
-    const charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.itemType], item.chars);
-    pushSuccinctTokenBytes(bA, tokenEnum[item.itemType], charsEnumIndex);
+    const charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.subType], item.payload);
+    pushSuccinctTokenBytes(bA, tokenEnum[item.subType], charsEnumIndex);
   }
 
   pushSuccinctGraft(bA, docSet, item) {
-    const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.graftType);
-    const seqEnumIndex = docSet.enumForCategoryValue('ids', item.seqId);
+    const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.subType);
+    const seqEnumIndex = docSet.enumForCategoryValue('ids', item.payload);
     pushSuccinctGraftBytes(bA, graftTypeEnumIndex, seqEnumIndex);
   }
 
   pushSuccinctScope(bA, docSet, item) {
-    const scopeBits = item.label.split('/');
+    const scopeBits = item.payload.split('/');
     const scopeTypeByte = scopeEnum[scopeBits[0]];
     const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b));
-    pushSuccinctScopeBytes(bA, itemEnum[item.itemType], scopeTypeByte, scopeBitBytes);
+    pushSuccinctScopeBytes(bA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
   }
 };
 

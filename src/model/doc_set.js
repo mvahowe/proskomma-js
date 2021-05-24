@@ -233,7 +233,7 @@ class DocSet {
       this.buildEnumIndex(category);
       return this.preEnums[category].get(value).enum;
     } else {
-      throw new Error(`Unknown value ${value} for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
+      throw new Error(`Unknown value '${value}' for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
     }
   }
 
