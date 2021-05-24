@@ -13,7 +13,11 @@
     "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.js",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
-    "serialize": "babel-tape-runner test/code/serialize.js"
+    "serialize": "babel-tape-runner test/code/serialize.js",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "trim": "0.0.3"
   },
   "repository": {
     "type": "git",
