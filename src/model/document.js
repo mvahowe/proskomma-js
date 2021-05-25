@@ -121,7 +121,6 @@ class Document {
     maybePrint(`Filter in ${Date.now() - t} msec`);
     t = Date.now();
     this.headers = parser.headers;
-    Object.values(parser.allSequences()).forEach(s => s.blocks.forEach(b => this.convertBlock(b)));
     this.succinctPass1(parser);
     maybePrint(`Succinct pass 1 in ${Date.now() - t} msec`);
     t = Date.now();
@@ -136,42 +135,8 @@ class Document {
     const parser = this.makeParser();
     parseLexicon(lexiconString, parser);
     this.headers = parser.headers;
-    Object.values(parser.allSequences()).forEach(s => s.blocks.forEach(b => this.convertBlock(b)));
     this.succinctPass1(parser);
     this.succinctPass2(parser);
-  }
-
-  convertBlock(block) {
-    const convertItem = i => {
-      switch (i.itemType) {
-      case 'graft':
-        return {
-          type: 'graft',
-          subType: i.graftType,
-          payload: i.seqId,
-        };
-      case 'startScope':
-      case 'endScope':
-        return {
-          type: 'scope',
-          subType: i.itemType === 'startScope' ? 'start' : 'end',
-          payload: i.label,
-        };
-      default:
-        return {
-          type: 'token',
-          subType: i.itemType,
-          payload: i.chars,
-        };
-      }
-    };
-    block.items = block.items.map(i => convertItem(i));
-    block.bs = convertItem(block.blockScope);
-    delete block.blockScope;
-    block.os = block.openScopes.map(i => convertItem(i));
-    delete block.openScopes;
-    block.bg = block.blockGrafts.map(i => convertItem(i));
-    delete block.blockGrafts;
   }
 
   succinctPass1(parser) {

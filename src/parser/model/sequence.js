@@ -12,10 +12,6 @@ const {
   tokenEnum,
 } = require('proskomma-utils');
 const { Block } = require('./block');
-const {
-  Graft,
-  Scope,
-} = require('./items');
 
 const Sequence = class {
   constructor(sType) {
@@ -40,7 +36,7 @@ const Sequence = class {
 
   addBlockGraft(g) {
     this.newBlock('hangingGraft');
-    this.lastBlock().blockGrafts.push(g);
+    this.lastBlock().bg.push(g);
   }
 
   lastBlock() {
@@ -51,8 +47,12 @@ const Sequence = class {
   }
 
   newBlock(label) {
-    if (this.blocks.length > 0 && ['orphanTokens', 'hangingGraft'].includes(this.blocks[this.blocks.length - 1].blockScope.label)) {
-      this.lastBlock().blockScope = new Scope('start', label);
+    if (this.blocks.length > 0 && ['orphanTokens', 'hangingGraft'].includes(this.blocks[this.blocks.length - 1].bs.payload)) {
+      this.lastBlock().bs = {
+        type: 'scope',
+        subType: 'start',
+        payload: label,
+      };
     } else {
       this.blocks.push(new Block(label));
     }
@@ -78,7 +78,11 @@ const Sequence = class {
   }
 
   closeActiveScope(parser, sc) {
-    this.addItem(new Scope('end', sc.label));
+    this.addItem({
+      type: 'scope',
+      subType: 'end',
+      payload: sc.label,
+    });
 
     if (sc.onEnd) {
       sc.onEnd(parser, sc.label);
@@ -101,17 +105,29 @@ const Sequence = class {
     let inTable = false;
 
     for (const [blockNo, block] of this.blocks.entries()) {
-      if (!inTable && block.blockScope.label === 'blockTag/tr') {
+      if (!inTable && block.bs.payload === 'blockTag/tr') {
         inTable = true;
-        this.blocks[blockNo].items.unshift(new Scope('start', labelForScope('table', [])));
-      } else if (inTable && block.blockScope.label !== 'blockTag/tr') {
+        this.blocks[blockNo].items.unshift({
+          type: 'scope',
+          subType: 'start',
+          payload: labelForScope('table', []),
+        });
+      } else if (inTable && block.bs.payload !== 'blockTag/tr') {
         inTable = false;
-        this.blocks[(blockNo - 1)].items.push(new Scope('end', labelForScope('table', [])));
+        this.blocks[(blockNo - 1)].items.push({
+          type: 'scope',
+          subType: 'end',
+          payload: labelForScope('table', []),
+        });
       }
     }
 
     if (inTable) {
-      this.lastBlock().items.push(new Scope('end', labelForScope('table', [])));
+      this.lastBlock().items.push({
+        type: 'scope',
+        subType: 'end',
+        payload: labelForScope('table', []),
+      });
     }
   }
 
@@ -121,18 +137,22 @@ const Sequence = class {
     const introHeadingTags = ['iot', 'is'].concat(parser.customTags.introHeading);
 
     for (const [n, block] of blockEntries) {
-      const blockTag = block.blockScope.label.split('/')[1].replace(/[0-9]/g, '');
+      const blockTag = block.bs.payload.split('/')[1].replace(/[0-9]/g, '');
 
       if (introHeadingTags.includes(blockTag)) {
         const headingSequence = new Sequence('heading');
         parser.sequences.heading.push(headingSequence);
         headingSequence.blocks.push(block);
-        const headingGraft = new Graft('heading', headingSequence.id);
+        const headingGraft = {
+          type: 'graft',
+          subType: 'heading',
+          payload: headingSequence.id,
+        };
 
         if (this.blocks.length < n + 2) {
           this.newBlock('blockTag/hangingGraft');
         }
-        this.blocks[n + 1].blockGrafts.unshift(headingGraft);
+        this.blocks[n + 1].bg.unshift(headingGraft);
         this.blocks.splice(n, 1);
       } else if (blockTag.startsWith('imt')) {
         const titleType = (blockTag.startsWith('imte') ? 'introEndTitle' : 'introTitle');
@@ -144,12 +164,16 @@ const Sequence = class {
           const graftType = (blockTag.startsWith('imte') ? 'endTitle' : 'title');
           titleSequence = new Sequence(graftType);
           parser.sequences[titleType] = titleSequence;
-          const titleGraft = new Graft(graftType, titleSequence.id);
+          const titleGraft = {
+            type: 'graft',
+            subType: graftType,
+            payload: titleSequence.id,
+          };
 
           if (this.blocks.length < n + 2) {
             this.newBlock('blockTag/hangingGraft');
           }
-          this.blocks[n + 1].blockGrafts.unshift(titleGraft);
+          this.blocks[n + 1].bg.unshift(titleGraft);
         }
         this.blocks.splice(n, 1);
         titleSequence.blocks.unshift(block);
@@ -171,7 +195,7 @@ const Sequence = class {
       }
 
       for (const item of [...block.items].reverse()) {
-        if (item.itemType !== 'startScope' || item.label.startsWith('altChapter')) {
+        if (item.subType !== 'start' || item.payload.startsWith('altChapter')) {
           break;
         }
         this.blocks[blockNo + 1].items.unshift(this.blocks[blockNo].items.pop());
@@ -186,7 +210,7 @@ const Sequence = class {
       }
 
       for (const item of [...block.items]) {
-        if (item.itemType !== 'endScope') {
+        if (item.subType !== 'end') {
           break;
         }
         this.blocks[blockNo - 1].items.push(this.blocks[blockNo].items.shift());
@@ -200,15 +224,15 @@ const Sequence = class {
     let changed = false;
 
     for (const blockRecord of this.blocks.entries()) {
-      if (blockRecord[1].tokens().length === 0 && !canBeEmpty.includes(blockRecord[1].blockScope.label)) {
+      if (blockRecord[1].tokens().length === 0 && !canBeEmpty.includes(blockRecord[1].bs.payload)) {
         emptyBlocks.push(blockRecord);
       }
     }
 
     for (const [n, block] of emptyBlocks.reverse()) {
       if (n < this.blocks.length - 1) {
-        for (const bg of [...block.blockGrafts].reverse()) {
-          this.blocks[n + 1].blockGrafts.unshift(bg);
+        for (const bg of [...block.bg].reverse()) {
+          this.blocks[n + 1].bg.unshift(bg);
         }
 
         for (const i of block.items.reverse()) {
@@ -216,7 +240,7 @@ const Sequence = class {
         }
         this.blocks.splice(n, 1);
         changed = true;
-      } else if (block.blockGrafts.length === 0 && block.items.length === 0) {
+      } else if (block.bg.length === 0 && block.items.length === 0) {
         this.blocks.splice(n, 1);
         changed = true;
       }
