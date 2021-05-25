@@ -1,17 +1,16 @@
 const { generateId } = require('proskomma-utils');
-const {
-  Token,
-  Scope,
-  Graft,
-} = require('./items');
 
 const Block = class {
   constructor(blockScope) {
     this.id = generateId();
     this.items = [];
-    this.blockGrafts = [];
-    this.blockScope = new Scope('start', blockScope);
-    this.openScopes = [];
+    this.bg = [];
+    this.bs = {
+      type: 'scope',
+      subType: 'start',
+      payload: blockScope,
+    };
+    this.os = [];
   }
 
   addItem(i) {
@@ -19,7 +18,7 @@ const Block = class {
   }
 
   plainText() {
-    return this.items.filter(i => i instanceof Token).map(i => i.chars).join('');
+    return this.items.filter(i => i.type === 'token').map(i => i.payload).join('');
   }
 
   trim() {
@@ -30,7 +29,7 @@ const Block = class {
     const swaStarts = [];
 
     for (const [pos, item] of this.items.entries()) {
-      if (item.itemType === 'startScope' && item.label.startsWith('spanWithAtts')) {
+      if (item.subType === 'start' && item.payload.startsWith('spanWithAtts')) {
         swaStarts.push(pos + 1);
       }
     }
@@ -47,9 +46,9 @@ const Block = class {
 
         const item = this.items[pos];
 
-        if (item instanceof Token) {
+        if (item.type === 'token') {
           tokens.push(item);
-        } else if (item.itemType === 'startScope' && item.label.startsWith('attribute/spanWithAtts')) {
+        } else if (item.subType === 'start' && item.payload.startsWith('attribute/spanWithAtts')) {
           scopes.push(item);
         } else {
           break;
@@ -77,7 +76,7 @@ const Block = class {
     let toAppend = null;
 
     for (const [pos, item] of this.items.entries()) {
-      if (item.itemType === 'endScope' && ['inline/f', 'inline/fe', 'inline/x'].includes(item.label)) {
+      if (item.subType === 'end' && ['inline/f', 'inline/fe', 'inline/x'].includes(item.payload)) {
         toAppend = item;
         this.items.splice(pos, 1);
         break;
@@ -94,21 +93,25 @@ const Block = class {
     const noteStarts = [];
 
     for (const [pos, item] of this.items.entries()) {
-      if (item.itemType === 'startScope' && item.label.startsWith('inline/f')) {
+      if (item.subType === 'start' && item.payload.startsWith('inline/f')) {
         noteStarts.push(pos);
       }
     }
 
     for (const noteStart of noteStarts) {
-      const noteLabel = this.items[noteStart].label;
+      const noteLabel = this.items[noteStart].payload;
       const callerToken = this.items[noteStart + 1];
 
-      if (callerToken instanceof Token && callerToken.chars.length === 1) {
+      if (callerToken.type === 'token' && callerToken.payload.length === 1) {
         const callerSequence = new Sequence('noteCaller');
         callerSequence.newBlock(noteLabel);
         callerSequence.addItem(callerToken);
         parser.sequences.noteCaller.push(callerSequence);
-        this.items[noteStart + 1] = new Graft('noteCaller', callerSequence.id);
+        this.items[noteStart + 1] = {
+          type: 'graft',
+          subType: 'noteCaller',
+          payload: callerSequence.id,
+        };
       }
     }
   }
@@ -120,11 +123,11 @@ const Block = class {
 
     const firstItem = items[0];
 
-    if (['lineSpace', 'eol'].includes(firstItem.itemType)) {
+    if (['lineSpace', 'eol'].includes(firstItem.subType)) {
       return this.trimStart(items.slice(1));
     }
 
-    if (firstItem instanceof Token) {
+    if (firstItem.type === 'token') {
       return items;
     }
     return [firstItem, ...this.trimStart(items.slice(1))];
@@ -137,11 +140,11 @@ const Block = class {
 
     const lastItem = items[items.length - 1];
 
-    if (['lineSpace', 'eol'].includes(lastItem.itemType)) {
+    if (['lineSpace', 'eol'].includes(lastItem.subType)) {
       return this.trimEnd(items.slice(0, items.length - 1));
     }
 
-    if (lastItem instanceof Token) {
+    if (lastItem.type === 'token') {
       return items;
     }
     return [...this.trimEnd(items.slice(0, items.length - 1)), lastItem];
@@ -154,7 +157,7 @@ const Block = class {
 
     for (const [pos, item] of this.grafts()) {
       if (this.graftPassesOptions(item, options)) {
-        ret.push(item.seqId);
+        ret.push(item.payload);
       } else {
         toRemove.push(pos);
       }
@@ -165,16 +168,16 @@ const Block = class {
     }
     toRemove = [];
 
-    for (const [pos, item] of this.blockGrafts.entries()) {
+    for (const [pos, item] of this.bg.entries()) {
       if (this.graftPassesOptions(item, options)) {
-        ret.push(item.seqId);
+        ret.push(item.payload);
       } else {
         toRemove.push(pos);
       }
     }
 
     for (const [count, pos] of Array.from(toRemove.entries())) {
-      this.blockGrafts.splice(pos - count, 1);
+      this.bg.splice(pos - count, 1);
     }
     return ret;
   }
@@ -195,15 +198,15 @@ const Block = class {
 
   graftPassesOptions(item, options) {
     return (
-      (!('includeGrafts' in options) || options.includeGrafts.includes(item.graftType)) &&
-      (!('excludeGrafts' in options) || !options.excludeGrafts.includes(item.graftType))
+      (!('includeGrafts' in options) || options.includeGrafts.includes(item.subType)) &&
+      (!('excludeGrafts' in options) || !options.excludeGrafts.includes(item.subType))
     );
   }
 
   scopePassesOptions(item, options) {
     return (
-      (!('includeScopes' in options) || this.scopeMatchesOptionArray(item.label, options.includeScopes)) &&
-      (!('excludeScopes' in options) || !this.scopeMatchesOptionArray(item.label, options.excludeScopes))
+      (!('includeScopes' in options) || this.scopeMatchesOptionArray(item.payload, options.includeScopes)) &&
+      (!('excludeScopes' in options) || !this.scopeMatchesOptionArray(item.payload, options.excludeScopes))
     );
   }
 
@@ -221,7 +224,7 @@ const Block = class {
     let toRemove = [];
 
     for (const [pos, item] of this.grafts()) {
-      if (emptySequences.includes(item.seqId)) {
+      if (emptySequences.includes(item.payload)) {
         toRemove.push(pos);
       }
     }
@@ -231,32 +234,32 @@ const Block = class {
     }
     toRemove = [];
 
-    for (const [pos, item] of this.blockGrafts.entries()) {
-      if (emptySequences.includes(item.seqId)) {
+    for (const [pos, item] of this.bg.entries()) {
+      if (emptySequences.includes(item.payload)) {
         toRemove.push(pos);
       }
     }
 
     for (const [count, pos] of Array.from(toRemove.entries())) {
-      this.blockGrafts.splice(pos - count, 1);
+      this.bg.splice(pos - count, 1);
     }
     return ret;
   }
 
   grafts() {
-    return Array.from(this.items.entries()).filter(ip => ip[1].itemType === 'graft');
+    return Array.from(this.items.entries()).filter(ip => ip[1].type === 'graft');
   }
 
   scopes() {
-    return Array.from(this.items.entries()).filter(ip => ip[1].itemType.endsWith('Scope'));
+    return Array.from(this.items.entries()).filter(ip => ip[1].type === 'scope');
   }
 
   tokens() {
-    return Array.from(this.items.entries()).filter(ip => !['startScope', 'endScope', 'graft'].includes(ip[1].itemType));
+    return Array.from(this.items.entries()).filter(ip => !['scope', 'graft'].includes(ip[1].type));
   }
 
   text() {
-    return this.tokens().map(t => t[1].chars).join('');
+    return this.tokens().map(t => t[1].payload).join('');
   }
 };
 

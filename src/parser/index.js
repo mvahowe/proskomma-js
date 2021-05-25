@@ -4,11 +4,6 @@ const {
   specs,
   buildSpecLookup,
 } = require('./parser_specs');
-const {
-  Token,
-  Scope,
-  Graft,
-} = require('./model/items');
 
 const Parser = class {
   constructor(filterOptions, customTags, emptyBlocks) {
@@ -135,7 +130,11 @@ const Parser = class {
         this.current.sequence = new Sequence(this.current.inlineSequenceType);
         this.current.sequence.newBlock(labelForScope('inline', spec.parser.inlineSequenceType));
         this.sequences[this.current.inlineSequenceType].push(this.current.sequence);
-        this.current.parentSequence.addItem(new Graft(this.current.inlineSequenceType, this.current.sequence.id));
+        this.current.parentSequence.addItem({
+          type: 'graft',
+          subType: this.current.inlineSequenceType,
+          payload: this.current.sequence.id,
+        });
       } else if ('newBlock' in spec.parser && spec.parser.newBlock) {
         this.current.sequence.newBlock(labelForScope('blockTag', [lexedItem.fullTagName]));
       }
@@ -199,9 +198,9 @@ const Parser = class {
       const itItems = [...block.items];
 
       for (const [n, item] of itItems.entries()) {
-        if (item.itemType === 'graft' && ['pubNumber', 'altNumber'].includes(item.graftType)) {
-          const graftContent = sequenceById[item.seqId].text().trim();
-          const scopeId = itItems[n + 1].label.split('/')[1];
+        if (item.type === 'graft' && ['pubNumber', 'altNumber'].includes(item.subType)) {
+          const graftContent = sequenceById[item.payload].text().trim();
+          const scopeId = itItems[n + 1].payload.split('/')[1];
           scopeToGraftContent[scopeId] = graftContent;
           block.items.splice(n - spliceCount, 1);
           spliceCount++;
@@ -212,11 +211,11 @@ const Parser = class {
     // Substitute scopeIds for graft content
     if (Object.keys(scopeToGraftContent).length > 0) {
       for (const block of seq.blocks) {
-        for (const scope of block.items.filter(i => ['startScope', 'endScope'].includes(i.itemType))) {
-          const scopeParts = scope.label.split('/');
+        for (const scope of block.items.filter(i => i.type === 'scope')) {
+          const scopeParts = scope.payload.split('/');
 
           if (['altChapter', 'pubVerse', 'altVerse'].includes(scopeParts[0])) {
-            scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
+            scope.payload = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
           }
         }
       }
@@ -232,9 +231,9 @@ const Parser = class {
       const itItems = [...block.items];
 
       for (const [n, item] of itItems.entries()) {
-        if (item.itemType === 'graft' && item.graftType === 'esbCat') {
-          const catContent = sequenceById[item.seqId].text().trim();
-          const scopeId = itItems[1].label.split('/')[1];
+        if (item.type === 'graft' && item.subType === 'esbCat') {
+          const catContent = sequenceById[item.payload].text().trim();
+          const scopeId = itItems[1].payload.split('/')[1];
           scopeToGraftContent[scopeId] = catContent;
           block.items.splice(n - spliceCount, 1);
           spliceCount++;
@@ -245,11 +244,11 @@ const Parser = class {
     // Substitute scopeIds for graft content
     if (Object.keys(scopeToGraftContent).length > 0) {
       for (const block of seq.blocks) {
-        for (const scope of block.items.filter(i => ['startScope', 'endScope'].includes(i.itemType))) {
-          const scopeParts = scope.label.split('/');
+        for (const scope of block.items.filter(i => i.type === 'scope')) {
+          const scopeParts = scope.payload.split('/');
 
           if (scopeParts[0] === 'esbCat') {
-            scope.label = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
+            scope.payload = `${scopeParts[0]}/${scopeToGraftContent[scopeParts[1]]}`;
           }
         }
       }
@@ -281,7 +280,10 @@ const Parser = class {
 
   sequenceById() {
     const ret = {};
-    this.allSequences().forEach(s => ret[s.id] = s);
+
+    this.allSequences().forEach(s => {
+      ret[s.id] = s;
+    });
     return ret;
   }
 
@@ -310,7 +312,9 @@ const Parser = class {
   removeUnusedSequences(usedSequences) {
     for (const seq of this.allSequences()) {
       if (!usedSequences.includes(seq.id)) {
-        switch ({ ...this.baseSequenceTypes, ...this.inlineSequenceTypes }[seq.type]) {
+        const seqArity = { ...this.baseSequenceTypes, ...this.inlineSequenceTypes }[seq.type];
+
+        switch (seqArity) {
         case '1':
           throw new Error('Attempting to remove sequence with arity of 1');
         case '?':
@@ -320,7 +324,7 @@ const Parser = class {
           this.sequences[seq.type] = this.sequences[seq.type].filter(s => s.id !== seq.id);
           break;
         default:
-          throw new Error(`Unexpected sequence arity '${seqArity}' for '${seqName}'`);
+          throw new Error(`Unexpected sequence arity '${seqArity}' for '${seq.type}'`);
         }
       }
     }
@@ -405,7 +409,11 @@ const Parser = class {
     }
 
     if (!parserSpec.useTempSequence && this.current.sequence.type !== 'main') {
-      this.mainLike.addBlockGraft(new Graft(this.current.baseSequenceType, this.current.sequence.id));
+      this.mainLike.addBlockGraft({
+        type: 'graft',
+        subType: this.current.baseSequenceType,
+        payload: this.current.sequence.id,
+      });
     }
   }
 
@@ -436,7 +444,11 @@ const Parser = class {
     }
 
     if (addItem) {
-      targetSequence.addItem(new Scope('start', sc.label(pt)));
+      targetSequence.addItem({
+        type: 'scope',
+        subType: 'start',
+        payload: sc.label(pt),
+      });
     }
 
     const newScope = {
@@ -471,19 +483,35 @@ const Parser = class {
   }
 
   addToken(pt) {
-    this.current.sequence.addItem(new Token(pt));
+    this.current.sequence.addItem({
+      type: 'token',
+      subType: pt.subclass,
+      payload: pt.printValue,
+    });
   }
 
   addScope(sOrE, label, targetSequence) {
     if (targetSequence === undefined) {
       targetSequence = this.current.sequence;
     }
-    targetSequence.addItem(new Scope(sOrE, label));
+    targetSequence.addItem({
+      type: 'scope',
+      subType: sOrE,
+      payload: label,
+    });
   }
 
   addEmptyMilestone(label) {
-    this.mainLike.addItem(new Scope('start', label));
-    this.mainLike.addItem(new Scope('end', label));
+    this.mainLike.addItem({
+      type: 'scope',
+      subType: 'start',
+      payload: label,
+    });
+    this.mainLike.addItem({
+      type: 'scope',
+      subType: 'end',
+      payload: label,
+    });
   }
 
   setAttributeContext(label) {
