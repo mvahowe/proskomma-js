@@ -40,10 +40,12 @@ test(
       t.equal(result.errors, undefined);
       const blocks = result.data.documents[0].mainSequence.blocks;
       t.equal(scopeRecords.length, blocks.length);
+
       for (const [n, scopeRecord] of scopeRecords.entries()) {
         for (const blockField of ['os', 'is']) {
           t.equal(blocks[n][blockField].length, scopeRecord[blockField].length);
           const blockScopes = blocks[n][blockField].map(f => f.payload);
+
           for (const scopeField of scopeRecord[blockField]) {
             t.ok(blockScopes.includes(scopeField));
           }
