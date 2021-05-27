@@ -1,6 +1,7 @@
 import { scopeEnum } from 'proskomma-utils';
 
 const BitSet = require('bitset');
+const deepCopy = require('deep-copy-all');
 
 const {
   addTag,
@@ -9,6 +10,7 @@ const {
   headerBytes,
   itemEnum,
   nComponentsForScope,
+  parserConstants,
   pushSuccinctGraftBytes,
   pushSuccinctScopeBytes,
   pushSuccinctTokenBytes,
@@ -36,18 +38,7 @@ class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
     this.docSetId = docSetId;
-    this.baseSequenceTypes = { // Copied from parser: revisit with generic parsing
-      main: '1',
-      introduction: '*',
-      introTitle: '?',
-      introEndTitle: '?',
-      title: '?',
-      endTitle: '?',
-      heading: '*',
-      header: '*',
-      remark: '*',
-      sidebar: '*',
-    };
+    this.baseSequenceTypes = parserConstants.usfm.baseSequenceTypes;
 
     if (contentType) {
       this.id = generateId();
@@ -137,6 +128,103 @@ class Document {
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);
+  }
+
+  modifySequence(
+    seqId,
+    sequenceRewriteFunc,
+    blockFilterFunc,
+    itemFilterFunc,
+    blockRewriteFunc,
+    itemRewriteFunc,
+  ) {
+    sequenceRewriteFunc = sequenceRewriteFunc || (s => s);
+    const oldSequence = this.sequences[seqId];
+    const newSequence = sequenceRewriteFunc({
+      id: seqId,
+      type: oldSequence.type,
+      tags: oldSequence.tags,
+      isBaseType: oldSequence.isBaseType,
+      verseMapping: oldSequence.verseMapping,
+    });
+
+    this.pushModifiedBlocks(
+      oldSequence,
+      newSequence,
+      blockFilterFunc,
+      itemFilterFunc,
+      blockRewriteFunc,
+      itemRewriteFunc,
+    );
+    this.sequences[seqId] = newSequence;
+
+    if (newSequence.type === 'main') {
+      this.buildChapterVerseIndex(newSequence);
+    }
+    return newSequence;
+  }
+
+  pushModifiedBlocks(
+    oldSequence,
+    newSequence,
+    blockFilterFunc,
+    itemFilterFunc,
+    blockRewriteFunc,
+    itemRewriteFunc,
+  ) {
+    blockFilterFunc = blockFilterFunc || ((oldSequence, blockN, block) => !!block);
+    itemFilterFunc = itemFilterFunc ||
+      ((oldSequence, oldBlockN, block, itemN, itemType, itemSubType, pos) => !!block || pos);
+    blockRewriteFunc = blockRewriteFunc || ((oldSequence, blockN, block) => block);
+    itemRewriteFunc = itemRewriteFunc ||
+      (
+        (oldSequence, oldBlockN, oldBlock, newBlock, itemN, itemLength, itemType, itemSubType, pos) =>
+          this.copyItem(oldBlock.c, newBlock.c, pos, itemLength)
+      );
+    newSequence.blocks = [];
+
+    for (const [blockN, block] of oldSequence.blocks.entries()) {
+      if (blockFilterFunc(oldSequence, blockN, block)) {
+        const newBlock = blockRewriteFunc(oldSequence, blockN, deepCopy(block));
+        newBlock.c.clear();
+        this.modifyBlockItems(
+          oldSequence,
+          blockN,
+          block,
+          newBlock,
+          itemFilterFunc,
+          itemRewriteFunc,
+        );
+        newSequence.blocks.push(newBlock);
+      }
+    }
+  }
+
+  modifyBlockItems(
+    oldSequence,
+    oldBlockN,
+    oldBlock,
+    newBlock,
+    itemFilterFunc,
+    itemRewriteFunc,
+  ) {
+    let pos = 0;
+    let itemN = -1;
+
+    while (pos < oldBlock.c.length) {
+      itemN++;
+      const [itemLength, itemType, itemSubtype] = headerBytes(oldBlock.c, pos);
+      if (itemFilterFunc(oldSequence, oldBlockN, oldBlock, itemN, itemType, itemSubtype, pos)) {
+        itemRewriteFunc(oldSequence, oldBlockN, oldBlock, newBlock, itemN, itemLength, itemType, itemSubtype, pos);
+      }
+      pos += itemLength;
+    }
+  }
+
+  copyItem(oldBA, newBA, oldOffset, itemLength) {
+    for (let n = 0; n<itemLength; n++) {
+      newBA.pushByte(oldBA.byte(oldOffset + n));
+    }
   }
 
   succinctPass1(parser) {

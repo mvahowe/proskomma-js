@@ -1,4 +1,7 @@
-const { labelForScope } = require('proskomma-utils');
+const {
+  labelForScope,
+  parserConstants,
+} = require('proskomma-utils');
 const { Sequence } = require('./model/sequence');
 const {
   specs,
@@ -13,34 +16,10 @@ const Parser = class {
     this.specs = specs(this);
     this.specLookup = buildSpecLookup(this.specs);
     this.headers = {};
-    this.setSequenceTypes();
+    this.baseSequenceTypes = parserConstants.usfm.baseSequenceTypes;
+    this.inlineSequenceTypes = parserConstants.usfm.inlineSequenceTypes;
     this.setSequences();
     this.setCurrent();
-  }
-
-  setSequenceTypes() {
-    this.baseSequenceTypes = {
-      main: '1',
-      introduction: '*',
-      introTitle: '?',
-      introEndTitle: '?',
-      title: '?',
-      endTitle: '?',
-      heading: '*',
-      header: '*',
-      remark: '*',
-      sidebar: '*',
-    };
-    this.inlineSequenceTypes = {
-      footnote: '*',
-      noteCaller: '*',
-      xref: '*',
-      pubNumber: '*',
-      altNumber: '*',
-      esbCat: '*',
-      fig: '*',
-      temp: '?',
-    };
   }
 
   setSequences() {
