@@ -453,7 +453,7 @@ class DocSet {
         this.succinctScopeLabel(succinct, itemSubtype, pos),
       ];
     } catch (err) {
-      throw new Error(`Error from unsuccinctifyToken: ${err}`);
+      throw new Error(`Error from unsuccinctifyScope: ${err}`);
     }
   }
 
@@ -1138,12 +1138,12 @@ class DocSet {
     }
     newItemsBA.trim();
     block.c = newItemsBA;
-    this.updateBlockIndexes(sequence, blockPosition);
+    this.updateBlockIndexesAfterEdit(sequence, blockPosition);
     document.buildChapterVerseIndex(document.sequences[document.mainId]);
     return true;
   }
 
-  updateBlockIndexes(sequence, blockPosition) {
+  updateBlockIndexesAfterEdit(sequence, blockPosition) {
     const labelsMatch = (firstA, secondA) => {
       for (const first of Array.from(firstA)) {
         if (!secondA.has(first)) {
@@ -1210,8 +1210,68 @@ class DocSet {
         }
         osBA.trim();
         nextOsBlock.os = osBA;
-        this.updateBlockIndexes(sequence, blockPosition + 1);
+        this.updateBlockIndexesAfterEdit(sequence, blockPosition + 1);
       }
+    }
+  }
+
+  updateBlockIndexesAfterFilter(sequence) {
+    const labelsMatch = (firstA, secondA) => {
+      for (const first of Array.from(firstA)) {
+        if (!secondA.has(first)) {
+          return false;
+        }
+      }
+
+      for (const second of Array.from(secondA)) {
+        if (!firstA.has(second)) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    const addSuccinctScope = (docSet, succinct, scopeLabel) => {
+      const scopeBits = scopeLabel.split('/');
+      const scopeTypeByte = scopeEnum[scopeBits[0]];
+
+      if (!scopeTypeByte) {
+        throw new Error(`"${scopeBits[0]}" is not a scope type`);
+      }
+
+      const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
+      pushSuccinctScopeBytes(succinct, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
+    };
+
+    const includedScopeLabels = new Set();
+    const openScopeLabels = new Set();
+
+    for (const block of sequence.blocks) {
+      for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
+        if (scope[1] === 'start') {
+          includedScopeLabels.add(scope[2]);
+          openScopeLabels.add(scope[2]);
+        } else {
+          openScopeLabels.delete(scope[2]);
+        }
+      }
+
+      const isArray = Array.from(includedScopeLabels);
+      const isBA = new ByteArray(isArray.length);
+
+      for (const scopeLabel of isArray) {
+        addSuccinctScope(this, isBA, scopeLabel);
+      }
+      isBA.trim();
+      block.is = isBA;
+      const osArray = Array.from(openScopeLabels);
+      const osBA = new ByteArray(osArray.length);
+
+      for (const scopeLabel of osArray) {
+        addSuccinctScope(this, osBA, scopeLabel);
+      }
+      osBA.trim();
+      block.os = osBA;
     }
   }
 
