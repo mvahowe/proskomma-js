@@ -1216,20 +1216,6 @@ class DocSet {
   }
 
   updateBlockIndexesAfterFilter(sequence) {
-    const labelsMatch = (firstA, secondA) => {
-      for (const first of Array.from(firstA)) {
-        if (!secondA.has(first)) {
-          return false;
-        }
-      }
-
-      for (const second of Array.from(secondA)) {
-        if (!firstA.has(second)) {
-          return false;
-        }
-      }
-      return true;
-    };
 
     const addSuccinctScope = (docSet, succinct, scopeLabel) => {
       const scopeBits = scopeLabel.split('/');
@@ -1243,10 +1229,18 @@ class DocSet {
       pushSuccinctScopeBytes(succinct, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
     };
 
-    const includedScopeLabels = new Set();
     const openScopeLabels = new Set();
 
     for (const block of sequence.blocks) {
+      const osArray = Array.from(openScopeLabels);
+      const osBA = new ByteArray(osArray.length);
+
+      for (const scopeLabel of osArray) {
+        addSuccinctScope(this, osBA, scopeLabel);
+      }
+      osBA.trim();
+      block.os = osBA;
+      const includedScopeLabels = new Set();
       for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
         if (scope[1] === 'start') {
           includedScopeLabels.add(scope[2]);
@@ -1264,14 +1258,6 @@ class DocSet {
       }
       isBA.trim();
       block.is = isBA;
-      const osArray = Array.from(openScopeLabels);
-      const osBA = new ByteArray(osArray.length);
-
-      for (const scopeLabel of osArray) {
-        addSuccinctScope(this, osBA, scopeLabel);
-      }
-      osBA.trim();
-      block.os = osBA;
     }
   }
 

@@ -108,10 +108,7 @@ class Document {
     parser.tidy();
     maybePrint(`Tidy in ${Date.now() - t} msec`);
     t = Date.now();
-    const fo = parser.filterOptions;
-    // parser.filter();
-    maybePrint(`Filter in ${Date.now() - t} msec`);
-    t = Date.now();
+    const fo = parser.filterOptions; // CHANGE THIS WHEN REFACTORING PARSER
     this.headers = parser.headers;
     this.succinctPass1(parser);
     maybePrint(`Succinct pass 1 in ${Date.now() - t} msec`);
@@ -120,6 +117,8 @@ class Document {
     maybePrint(`Succinct pass 2 in ${Date.now() - t} msec`);
     t = Date.now();
     this.succinctFilter(fo);
+    maybePrint(`Filter in ${Date.now() - t} msec`);
+    t = Date.now();
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
     maybePrint(`CV indexes in ${Date.now() - t} msec`);
   }
@@ -279,6 +278,36 @@ class Document {
       }
     };
 
+    const rewriteBlock = (oldSequence, blockN, block) => {
+      const newBA = new ByteArray(block.bg.length);
+      let pos = 0;
+
+      while (pos < block.bg.length) {
+        const [itemLength, itemType, itemSubtype] = headerBytes(block.bg, pos);
+        const graftOb = docSet.unsuccinctifyGraft(block.bg, itemSubtype, pos);
+
+        if (
+          (
+            !filterOptions.includeGrafts ||
+            filterOptions.includeGrafts.filter(op => graftOb[1].startsWith(op)).length > 0
+          )
+          &&
+          (
+            !filterOptions.excludeGrafts ||
+            filterOptions.excludeGrafts.filter(op => graftOb[1].startsWith(op)).length === 0
+          )
+        ) {
+          for (let n = 0; n < itemLength; n++) {
+            newBA.pushByte(block.bg.byte(pos + n));
+          }
+        }
+        pos += itemLength;
+      }
+      newBA.trim();
+      block.bg = newBA;
+      return block;
+    };
+
     Object.keys(this.sequences).forEach(
       seqId => {
         this.modifySequence(
@@ -286,7 +315,7 @@ class Document {
           null,
           null,
           filterItem,
-          null, //rewriteBlock,
+          rewriteBlock,
           null,
         );
       },

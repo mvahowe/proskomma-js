@@ -42,11 +42,11 @@ test(
   `Without Custom (${testGroup})`,
   async function (t) {
     try {
-      t.plan(3);
+      t.plan(2);
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = result.data.documents[0].sequences;
-      t.equal(sequences.filter(s => s.type === 'heading').length, 0);
+      // t.equal(sequences.filter(s => s.type === 'heading').length, 0); // BEHAVIOUR CHANGED WITH SUCCINCT FILTER
       t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.payload, 'blockTag/q');
     } catch (err) {
       console.log(err);
