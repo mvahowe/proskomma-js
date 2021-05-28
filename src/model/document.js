@@ -108,7 +108,8 @@ class Document {
     parser.tidy();
     maybePrint(`Tidy in ${Date.now() - t} msec`);
     t = Date.now();
-    parser.filter();
+    const fo = parser.filterOptions;
+    // parser.filter();
     maybePrint(`Filter in ${Date.now() - t} msec`);
     t = Date.now();
     this.headers = parser.headers;
@@ -118,6 +119,7 @@ class Document {
     this.succinctPass2(parser);
     maybePrint(`Succinct pass 2 in ${Date.now() - t} msec`);
     t = Date.now();
+    this.succinctFilter(fo);
     this.buildChapterVerseIndex(this.sequences[this.mainId]);
     maybePrint(`CV indexes in ${Date.now() - t} msec`);
   }
@@ -138,6 +140,8 @@ class Document {
     blockRewriteFunc,
     itemRewriteFunc,
   ) {
+    const docSet = this.processor.docSets[this.docSetId];
+    docSet.maybeBuildEnumIndexes();
     sequenceRewriteFunc = sequenceRewriteFunc || (s => s);
     const oldSequence = this.sequences[seqId];
     const newSequence = sequenceRewriteFunc({
@@ -214,6 +218,7 @@ class Document {
     while (pos < oldBlock.c.length) {
       itemN++;
       const [itemLength, itemType, itemSubtype] = headerBytes(oldBlock.c, pos);
+
       if (itemFilterFunc(oldSequence, oldBlockN, oldBlock, itemN, itemType, itemSubtype, pos)) {
         itemRewriteFunc(oldSequence, oldBlockN, oldBlock, newBlock, itemN, itemLength, itemType, itemSubtype, pos);
       }
@@ -222,9 +227,74 @@ class Document {
   }
 
   copyItem(oldBA, newBA, oldOffset, itemLength) {
-    for (let n = 0; n<itemLength; n++) {
+    for (let n = 0; n < itemLength; n++) {
       newBA.pushByte(oldBA.byte(oldOffset + n));
     }
+  }
+
+  succinctFilter(filterOptions) {
+    if (!filterOptions || Object.keys(filterOptions).length === 0) {
+      return;
+    }
+
+    const docSet = this.processor.docSets[this.docSetId];
+
+    const filterItem = (oldSequence, oldBlockN, block, itemN, itemType, itemSubType, pos) => {
+      if (itemType === itemEnum.token) {
+        return true;
+      } else if (itemType === itemEnum.startScope || itemType === itemEnum.endScope) {
+        if (!filterOptions.includeScopes && !filterOptions.excludeScopes) {
+          return true;
+        } else {
+          const scopeOb = docSet.unsuccinctifyScope(block.c, itemType, itemSubType, pos);
+          return (
+            (
+              !filterOptions.includeScopes ||
+              filterOptions.includeScopes.filter(op => scopeOb[2].startsWith(op)).length > 0
+            )
+            &&
+            (
+              !filterOptions.excludeScopes ||
+              filterOptions.excludeScopes.filter(op => scopeOb[2].startsWith(op)).length === 0
+            )
+          );
+        }
+      } else { // graft
+        if (!filterOptions.includeGrafts && !filterOptions.excludeGrafts) {
+          return true;
+        }
+
+        const graftOb = docSet.unsuccinctifyGraft(block.c, itemSubType, pos);
+        return (
+          (
+            !filterOptions.includeGrafts ||
+            filterOptions.includeGrafts.filter(op => graftOb[1].startsWith(op)).length > 0
+          )
+          &&
+          (
+            !filterOptions.excludeGrafts ||
+            filterOptions.excludeGrafts.filter(op => graftOb[1].startsWith(op)).length === 0
+          )
+        );
+      }
+    };
+
+    Object.keys(this.sequences).forEach(
+      seqId => {
+        this.modifySequence(
+          seqId,
+          null,
+          null,
+          filterItem,
+          null, //rewriteBlock,
+          null,
+        );
+      },
+    );
+    Object.values(this.sequences).forEach(
+      seq => docSet.updateBlockIndexesAfterFilter(seq),
+    );
+    this.gcSequences();
   }
 
   succinctPass1(parser) {
