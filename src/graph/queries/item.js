@@ -37,8 +37,28 @@ const itemType = new GraphQLObjectType({
     payload: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The content of the item (the text for tokens, the label for scopes and the sequence id for grafts)',
-      args: { normalizeSpace: { type: GraphQLBoolean } },
-      resolve: (root, args) => args.normalizeSpace ? root[2].replace(/[ \t\n\r]+/g, ' ') : root[2],
+      args: {
+        normalizeSpace: { type: GraphQLBoolean },
+        includeChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+        excludeChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+      },
+      resolve: (root, args) => {
+        let ret = root[2];
+
+        if (root[0] === 'token') {
+          if (args.normalizeSpace) {
+            ret = root[2].replace(/[ \t\n\r]+/g, ' ');
+          }
+
+          if (args.includeChars || args.excludeChars) {
+            let retArray = ret.split('');
+            retArray = retArray.filter(c => !args.includeChars || args.includeChars.includes(c));
+            retArray = retArray.filter(c => !args.excludeChars || !args.excludeChars.includes(c));
+            ret = retArray.join('');
+          }
+        }
+        return ret;
+      },
     },
     position: {
       type: GraphQLInt,

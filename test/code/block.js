@@ -189,6 +189,58 @@ test(
 );
 
 test(
+  `Token includeChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const query = '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      blocks {' +
+        '        tokens {payload(includeChars:["G", "N", "T"])}' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk6.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const block = result.data.documents[0].mainSequence.blocks[0];
+      const text = block.tokens.map(t => t.payload).join('');
+      t.equal(text, 'TGN');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Token excludeChars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      blocks {' +
+        '        tokens {payload(excludeChars:["a", "e", "i", "o", "u"])}' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk6.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tokens = result.data.documents[0].mainSequence.blocks[0].tokens;
+      console.log(tokens.map(t => t.payload))
+      t.equal(tokens[0].payload, 'Ths');
+      t.equal(tokens[2].payload, 's');
+      t.equal(tokens[8].payload, 'Gd');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Scopes (${testGroup})`,
   async function (t) {
     try {
