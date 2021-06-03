@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.4.35",
+  "version": "0.4.36",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
   "files": [
@@ -14,7 +14,7 @@
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
     "serialize": "babel-tape-runner test/code/serialize.js",
-    "preinstall": "npx npm-force-resolutions"
+    "x_preinstall": "npx npm-force-resolutions"
   },
   "resolutions": {
     "trim": "0.0.3"
