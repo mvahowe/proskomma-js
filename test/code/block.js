@@ -230,7 +230,6 @@ test(
       const result = await pk6.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tokens = result.data.documents[0].mainSequence.blocks[0].tokens;
-      console.log(tokens.map(t => t.payload))
       t.equal(tokens[0].payload, 'Ths');
       t.equal(tokens[2].payload, 's');
       t.equal(tokens[8].payload, 'Gd');

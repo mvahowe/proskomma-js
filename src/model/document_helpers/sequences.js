@@ -10,6 +10,7 @@ const {
 const gcSequences = document => {
   const usedSequences = new Set();
   const docSet = document.processor.docSets[document.docSetId];
+  docSet.maybeBuildEnumIndexes();
 
   const followGrafts = (document, sequence, used) => {
     used.add(sequence.id);
