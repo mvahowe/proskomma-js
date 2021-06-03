@@ -28,7 +28,6 @@ const customProskomma = class extends Proskomma {
     };
     this.emptyBlocks = ['blockTag/s5', 'blockTag/m'];
   }
-
 };
 
 const customPk = customPkWithDoc(customProskomma, '../test_data/usfm/en_ust_psa_1.usfm', {
@@ -46,7 +45,8 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = result.data.documents[0].sequences;
-      // t.equal(sequences.filter(s => s.type === 'heading').length, 0); // BEHAVIOUR CHANGED WITH SUCCINCT FILTER
+      // t.equal(sequences.filter(s => s.type === 'heading').length, 0);
+      // BEHAVIOUR CHANGED WITH SUCCINCT FILTER. s5 sequences are empty but not deleted
       t.equal(sequences.filter(s => s.type === 'main')[0].blocks[0].bs.payload, 'blockTag/q');
     } catch (err) {
       console.log(err);
