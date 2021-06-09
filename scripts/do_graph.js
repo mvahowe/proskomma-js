@@ -31,8 +31,8 @@ try {
 const pk = new Proskomma();
 //try {
 let selectors = {
-  lang: { name: 'eng' },
-  abbr: { name: 'eng' },
+  lang: 'lan',
+  abbr: 'myabbr',
 };
 
 pk.importDocument(

@@ -1,0 +1,26 @@
+{
+  docSets {
+    document(bookCode: "TIT") {
+      cvIndex(chapter:1) {
+        chapter
+        verseNumbers {
+          number
+          range
+        }
+        verseRanges {
+          range
+          numbers
+        }
+        verses {
+          verse {
+            items {
+              type
+              subType
+              payload
+            }
+          }
+        }
+      }
+    }
+  }
+}
