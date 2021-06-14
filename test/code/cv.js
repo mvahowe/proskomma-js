@@ -13,6 +13,9 @@ const chapterQuery = `cv (chapter:"3") { scopeLabels, items { type subType paylo
 const verseQuery = `cv (chapter:"3" verses:["6"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
+const chapterVersesNoDashQuery = `cv (chapterVerses:"3" ) { text }`;
+const chapterVersesNoFirstColonQuery = `cv (chapterVerses:"3-4:2" ) { text }`;
+const chapterVersesNoSecondColonQuery = `cv (chapterVerses:"3:1-4" ) { text }`;
 
 test(
   `Chapter (${testGroup})`,
@@ -110,7 +113,29 @@ test(
       t.equal([...wordTokens].reverse()[0].payload, 'down');
       t.ok(cv[0].text.startsWith('Then she said'));
       t.ok(cv[0].text.endsWith('and sat down. '));
-      // console.log(JSON.stringify(cv.text, null, 2));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Badly-Formed ChapterVerses (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      let query = `{ documents { ${chapterVersesNoDashQuery} } }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('must contain a dash'));
+      query = `{ documents { ${chapterVersesNoFirstColonQuery} } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('must contain a colon'));
+      query = `{ documents { ${chapterVersesNoSecondColonQuery} } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('must contain a colon'));
     } catch (err) {
       console.log(err);
     }
