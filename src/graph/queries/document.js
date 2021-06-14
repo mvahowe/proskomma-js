@@ -43,11 +43,11 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
   const mainSequence = root.sequences[root.mainId];
 
   if (!args.chapter && !args.chapterVerses) {
-    throw new Error('Must specify either chapter or chapterVerse for cv');
+    throw new Error('Must specify either chapter or chapterVerses for cv');
   }
 
   if (args.chapter && args.chapterVerses) {
-    throw new Error('Must not specify both chapter and chapterVerse for cv');
+    throw new Error('Must not specify both chapter and chapterVerses for cv');
   }
 
   if (args.chapterVerses && args.verses) {
@@ -70,7 +70,7 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
     } else {
       return [];
     }
-  } else if (args.verses) { // c:v, c:v-v, may be mapped
+  } else if (args.verses) { // c:v, c:v-v one day, may be mapped
     let docSet = context.docSet;
     let book = root.headers.bookCode;
     let chapterVerses = args.verses.map(v => [parseInt(args.chapter), parseInt(v)]);
@@ -108,6 +108,7 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
 
         if (mappedMainSequence.verseMapping && 'reversed' in mappedMainSequence.verseMapping) {
           const doubleMappings = [];
+
           for (const [origC, origV] of chapterVerses) {
             if (`${origC}` in mappedMainSequence.verseMapping.reversed) {
               doubleMappings.push(
@@ -174,12 +175,26 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
         }
       }
     }
-    // console.log(JSON.stringify(retItemGroups, null, 2));
     return retItemGroups;
   } else { // ChapterVerse, c:v-c:v
     const [fromCV, toCV] = args.chapterVerses.split('-');
+
+    if (!toCV) {
+      throw new Error(`chapterVerses must contain a dash ('${args.chapterVerses}')`);
+    }
+
     const [fromC, fromV] = fromCV.split(':');
+
+    if (!fromV) {
+      throw new Error(`from cv of chapterVerses must contain a colon ('${args.chapterVerses}')`);
+    }
+
     const [toC, toV] = toCV.split(':');
+
+    if (!toV) {
+      throw new Error(`to cv of chapterVerses must contain a colon ('${args.chapterVerses}')`);
+    }
+
     const fromCVI = root.chapterVerseIndex(fromC);
     const toCVI = root.chapterVerseIndex(toC);
 
