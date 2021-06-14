@@ -284,7 +284,7 @@ const sequenceType = new GraphQLObjectType({
           throw new Error(`Only available for the main sequence, not ${root.type}`);
         }
 
-        return sequenceHasChars(context.docSet, root, args.chars, args.allChars);
+        return sequenceHasChars(context.docSet, root, args.chars, args.allChars || false);
       },
     },
     hasMatchingChars: {
