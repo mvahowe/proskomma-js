@@ -9,10 +9,12 @@ const {
 
 const { do_cv } = require('../lib/do_cv');
 const sequenceType = require('./sequence');
+const blockType = require('./block');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
 const cIndexType = require('./cIndex');
 const itemGroupType = require('./itemGroup');
+const itemType = require('./item');
 const cvNavigationType = require('./cvNavigation');
 
 const headerById = (root, id) =>
@@ -53,7 +55,6 @@ const documentType = new GraphQLObjectType({
         context.docSet = root.processor.docSets[root.docSetId];
         return root.sequences[root.mainId];
       },
-
     },
     nSequences: {
       type: GraphQLNonNull(GraphQLInt),
@@ -69,6 +70,60 @@ const documentType = new GraphQLObjectType({
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return Object.values(root.sequences);
+      },
+    },
+    mainBlocks: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
+      description: 'The blocks of the main sequence',
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return root.sequences[root.mainId].blocks;
+      },
+    },
+    mainBlocksItems: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))))),
+      description: 'The items for each block of the main sequence',
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return root.sequences[root.mainId].blocks.map(
+          b => context.docSet.unsuccinctifyItems(b.c, {}, null),
+        );
+      },
+    },
+    mainBlocksTokens: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))))),
+      description: 'The tokens for each block of the main sequence',
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return root.sequences[root.mainId].blocks.map(
+          b => context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null),
+        );
+      },
+    },
+    mainBlocksText: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'The text for each block of the main sequence',
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return root.sequences[root.mainId].blocks.map(
+          b => {
+            const tokens = context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null);
+            return tokens.map(t => t[2]).join('').trim();
+          },
+        );
+      },
+    },
+    mainText: {
+      type: GraphQLNonNull((GraphQLString)),
+      description: 'The text for the main sequence',
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        return root.sequences[root.mainId].blocks.map(
+          b => {
+            const tokens = context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null);
+            return tokens.map(t => t[2]).join('').trim();
+          },
+        ).join('\n');
       },
     },
     tags: {

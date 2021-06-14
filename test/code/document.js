@@ -81,3 +81,96 @@ test(
     }
   },
 );
+
+test(
+  `mainBlocks (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainBlocks { text } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('mainBlocks' in result.data.documents[0]);
+      t.ok(result.data.documents[0].mainBlocks[0].text.startsWith('In the days when'));
+    } catch
+    (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `mainBlocksText (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainBlocksText } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('mainBlocksText' in result.data.documents[0]);
+      t.ok(result.data.documents[0].mainBlocksText[0].startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `mainBlocksItems (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      const query = '{ documents { mainBlocksItems { type subType payload } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('mainBlocksItems' in result.data.documents[0]);
+      t.equal(result.data.documents[0].mainBlocksItems[0][0].payload, 'chapter/1');
+      t.equal(result.data.documents[0].mainBlocksItems[0][1].payload, 'verse/1');
+      t.equal(result.data.documents[0].mainBlocksItems[0][2].payload, 'verses/1');
+      t.equal(result.data.documents[0].mainBlocksItems[0][3].payload, 'In');
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `mainBlocksTokens (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainBlocksTokens { type subType payload } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('mainBlocksTokens' in result.data.documents[0]);
+      t.equal(result.data.documents[0].mainBlocksTokens[0][0].payload, 'In');
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `mainText (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainText } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('mainText' in result.data.documents[0]);
+      t.ok(result.data.documents[0].mainText.startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
