@@ -7,7 +7,7 @@ const lexingRegexes = [
     'pubchapter',
     xre('([\\r\\n]*\\\\cp[ \\t]+([^\\r\\n]+)[ \\t\\r\\n]*)'),
   ],
-  ['verses', 'verses', xre('([\\r\\n]*\\\\v[ \\t]+([\\d\\-]+)[ \\t\\r\\n]*)')],
+  ['verses', 'verses', xre('(\\\\v[ \\t]+([\\d\\-]+)[ \\t\\r\\n]*)')],
   [
     'attribute',
     'attribute',

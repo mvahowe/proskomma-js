@@ -35,12 +35,12 @@ test(
       t.ok(itemGroups[1].scopeLabels.includes('verse/2'));
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
       t.ok(itemGroups[1].text.startsWith('Instead'));
-      t.ok(itemGroups[1].text.endsWith('Yahweh teaches.'));
+      t.ok(itemGroups[1].text.trim().endsWith('Yahweh teaches.')); // trim cos trailing newline before next \v
       const dumped = itemGroups[1].dump.split('\n').map(l => l.trim());
       t.ok(dumped[0].startsWith('ItemGroup'));
       t.ok(dumped[1].includes('verse/2'));
       t.ok(dumped[2].startsWith('+verse/2+'));
-      t.ok(dumped[3].endsWith('-verse/2-'));
+      t.ok(dumped[4].endsWith('-verse/2-'));
     } catch (err) {
       console.log(err);
     }
@@ -63,9 +63,9 @@ test(
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].scopeLabels.length, 3);
       t.equal(itemGroups[1].items.filter(i => i.type === 'token')[0].payload, 'Instead');
-      t.equal(itemGroups[1].items.filter(i => i.type === 'token').reverse()[0].payload, '.');
+      t.equal(itemGroups[1].items.filter(i => i.type === 'token').reverse()[1].payload, '.'); // Trailing newline before next \v
       t.equal(itemGroups[1].tokens[0].payload, 'Instead');
-      t.equal([...itemGroups[1].tokens].reverse()[0].payload, '.');
+      t.equal([...itemGroups[1].tokens].reverse()[1].payload, '.'); // Leading newline (before reversal)
       t.equal(itemGroups[0].items.filter(i => i.type === 'graft').length, 1);
       t.equal(itemGroups[1].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 0);
       t.equal(itemGroups[2].items.filter(i => i.subType === 'start' && i.payload === 'blockTag/q2').length, 1);
