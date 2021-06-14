@@ -214,13 +214,14 @@ test(
   `hasChars (${testGroup})`,
   async function (t) {
     try {
-      t.plan(3);
+      t.plan(4);
       const query = '' +
         '{' +
         '  documents {' +
         '    mainSequence {' +
         '      orLogic: hasChars(chars:["Ruth", "Boaz", "banana"])' +
         '      andLogic: hasChars(chars:["Ruth", "Boaz", "banana"] allChars:true)' +
+        '      allMiss: hasChars(chars: ["banana", "grapefruit"])' +
         '    }' +
         '  }' +
         '}';
@@ -229,6 +230,7 @@ test(
       const sequence = result.data.documents[0].mainSequence;
       t.ok(sequence.orLogic);
       t.ok(!sequence.andLogic);
+      t.ok(!sequence.allMiss);
     } catch
       (err) {
       console.log(err);
