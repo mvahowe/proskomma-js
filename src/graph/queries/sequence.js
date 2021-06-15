@@ -15,6 +15,7 @@ const {
 } = require('../lib/sequence_chars');
 
 const blockType = require('./block');
+const itemType = require('./item');
 const itemGroupType = require('./itemGroup');
 const inputAttSpecType = require('./input_att_spec');
 
@@ -194,6 +195,38 @@ const sequenceType = new GraphQLObjectType({
         }
         return ret;
       },
+    },
+    blocksItems: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))))),
+      description: 'The items for each block in the sequence',
+      resolve: (root, args, context) =>
+        root.blocks.map(b => context.docSet.unsuccinctifyItems(b.c, {}, null)),
+    },
+    blocksTokens: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))))),
+      description: 'The tokens for each block in the sequence',
+      resolve: (root, args, context) =>
+        root.blocks.map(b => context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null)),
+    },
+    blocksText: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'The text for each block in the sequence',
+      resolve: (root, args, context) =>
+        root.blocks.map(b => context.docSet
+          .unsuccinctifyItems(b.c, { tokens: true }, null)
+          .map(t => t[2])
+          .join(''),
+        ),
+    },
+    text: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'The text for the sequence',
+      resolve: (root, args, context) =>
+        root.blocks.map(b => context.docSet
+          .unsuccinctifyItems(b.c, { tokens: true }, null)
+          .map(t => t[2])
+          .join(''),
+        ).join('\n'),
     },
     itemGroups: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),

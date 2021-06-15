@@ -264,3 +264,78 @@ test(
   },
 );
 
+test(
+  `blocksItems (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      const query = '{ documents { mainSequence { blocksItems { type subType payload } } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('blocksItems' in result.data.documents[0].mainSequence);
+      const blocksItems = result.data.documents[0].mainSequence.blocksItems;
+      t.equal(blocksItems[0][0].payload, 'chapter/1');
+      t.equal(blocksItems[0][1].payload, 'verse/1');
+      t.equal(blocksItems[0][2].payload, 'verses/1');
+      t.equal(blocksItems[0][3].payload, 'In');
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `blocksTokens (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { blocksTokens { type subType payload } } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('blocksTokens' in result.data.documents[0].mainSequence);
+      t.equal(result.data.documents[0].mainSequence.blocksTokens[0][0].payload, 'In');
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `blocksText (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { blocksText } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('blocksText' in result.data.documents[0].mainSequence);
+      t.ok(result.data.documents[0].mainSequence.blocksText[0].startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `text (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { text } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('text' in result.data.documents[0].mainSequence);
+      t.ok(result.data.documents[0].mainSequence.text.startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
