@@ -10,7 +10,7 @@ const testGroup = 'Graph Basics';
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
-  abbr: 'ust',
+  abbr: 'web',
 });
 const pk2 = pkWithDocs([
   ['../test_data/usx/web_psa150.usx', {
@@ -64,7 +64,7 @@ test(
       t.equal(result.errors, undefined);
       t.ok('id' in result.data.docSets[0]);
       t.equal(result.data.docSets[0].lang, 'eng');
-      t.equal(result.data.docSets[0].abbr, 'ust');
+      t.equal(result.data.docSets[0].abbr, 'web');
     } catch (err) {
       console.log(err);
     }
@@ -97,7 +97,7 @@ test(
       t.equal(result.errors, undefined);
       t.ok('id' in result.data.docSet);
       t.equal(result.data.docSet.lang, 'eng');
-      t.equal(result.data.docSet.abbr, 'ust');
+      t.equal(result.data.docSet.abbr, 'web');
       t.ok('id' in result.data.docSet.documents[0]);
     } catch (err) {
       console.log(err);
@@ -115,7 +115,7 @@ test(
       t.equal(result.errors, undefined);
       t.ok('id' in result.data.docSets[0]);
       t.equal(result.data.docSets[0].lang, 'eng');
-      t.equal(result.data.docSets[0].abbr, 'ust');
+      t.equal(result.data.docSets[0].abbr, 'web');
       t.ok('id' in result.data.docSets[0].documents[0]);
     } catch (err) {
       console.log(err);
@@ -209,11 +209,23 @@ test(
   `Document (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
-      const query = `{ document(id: "${pkDoc.id}") { id } }`;
-      const result = await pk.gqlQuery(query);
+      t.plan(8);
+      let query = `{ document(id: "${pkDoc.id}") { id } }`;
+      let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('id' in result.data.document);
+      query = `{ document(withBook: "RUT" docSetId: "${pkDoc.docSetId}") { id } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('id' in result.data.document);
+      query = `{ document(withBook: "XYZ" docSetId: "${pkDoc.docSetId}") { id } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(!result.data.document);
+      query = `{ document(withBook: "RUT") { id } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('but not all three'));
     } catch (err) {
       console.log(err);
     }
