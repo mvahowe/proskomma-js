@@ -80,11 +80,20 @@ const cvVerseElementType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Return tokens whose payload is an exact match to one of the specified strings',
         },
+        withSubTypes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return tokens with one of the specified subTypes',
+        },
       },
       resolve: (root, args, context) =>
         context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root, args.includeContext)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ', null]].concat(b)))
-          .filter(i => i[0] === 'token' && (!args.withChars || args.withChars.includes(i[2]))),
+          .filter(
+            i =>
+              i[0] === 'token' &&
+              (!args.withChars || args.withChars.includes(i[2])) &&
+              (!args.withSubTypes || args.withSubTypes.includes(i[1])),
+          ),
     },
     text: {
       type: GraphQLNonNull(GraphQLString),

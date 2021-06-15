@@ -51,16 +51,19 @@ test(
   `Items & tokens by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(10);
+      t.plan(12);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
         'scopeLabels ' +
         `items {type subType payload position scopes } ` +
         'tokens { payload }' +
+        'wordLikes: tokens(withSubTypes:"wordLike") { payload }' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
+      t.equal(itemGroups[1].tokens.length, 56);
+      t.equal(itemGroups[1].wordLikes.length, 27);
       t.equal(itemGroups[1].scopeLabels.length, 3);
       t.equal(itemGroups[1].items.filter(i => i.type === 'token')[0].payload, 'Instead');
       t.equal(itemGroups[1].items.filter(i => i.type === 'token').reverse()[1].payload, '.'); // Trailing newline before next \v

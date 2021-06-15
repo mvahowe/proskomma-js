@@ -185,6 +185,10 @@ const blockType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Return tokens whose payload matches one of the specified regexes',
         },
+        withSubTypes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return tokens with one of the specified subTypes',
+        },
       },
       resolve:
         (root, args, context) => {
@@ -211,6 +215,10 @@ const blockType = new GraphQLObjectType({
                 anyScope: args.anyScope || false,
               },
             );
+          }
+
+          if (args.withSubTypes) {
+            ret = ret.filter(i => args.withSubTypes.includes(i[1]));
           }
 
           if (args.withChars) {
