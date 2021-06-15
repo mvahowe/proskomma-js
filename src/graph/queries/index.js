@@ -110,14 +110,30 @@ const schemaQueries = new GraphQLObjectType({
     },
     document: {
       type: documentType,
-      description: 'The document with the specified id',
+      description: 'The document with the specified id, or the specified docSet and withBook',
       args: {
         id: {
-          type: GraphQLNonNull(GraphQLString),
+          type: GraphQLString,
           description: 'The id of the document',
         },
+        docSetId: {
+          type: GraphQLString,
+          description: 'The docSet of the document (use with withBook)',
+        },
+        withBook: {
+          type: GraphQLString,
+          description: 'The book of the document (use with docSetId)',
+        },
       },
-      resolve: (root, args) => root.documentById(args.id),
+      resolve: (root, args) => {
+        if (args.id && !args.docSetId && !args.withBook) {
+          return root.documentById(args.id);
+        } else if (!args.id && args.docSetId && args.withBook) {
+          return root.documentsWithBook(args.withBook).filter(d => d.docSetId === args.docSetId)[0];
+        } else {
+          throw new Error('document requires either id or both docSetId and withBooks (but not all three)');
+        }
+      },
     },
     diff: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(diffRecordType))),
@@ -200,6 +216,7 @@ const schemaQueries = new GraphQLObjectType({
             let doc2Tokens = doc2Items.filter(i => i[0] === 'token');
             let doc1Text;
             let doc2Text;
+
             if (args.mode === 'words') {
               doc1Tokens = doc1Tokens.filter(t => t[1] === 'wordLike');
               doc2Tokens = doc2Tokens.filter(t => t[1] === 'wordLike');
@@ -209,6 +226,7 @@ const schemaQueries = new GraphQLObjectType({
               doc1Text = doc1Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
               doc2Text = doc2Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
             }
+
             if (doc1Text !== doc2Text) {
               diffRecords.push([chapterN, verseN, 'changedVerse', doc1Items, doc2Items]);
             }
