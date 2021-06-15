@@ -240,6 +240,32 @@ test(
 );
 
 test(
+  `Token withSubTypes (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{' +
+        '  documents {' +
+        '    mainSequence {' +
+        '      blocks {' +
+        '        tokens(withSubTypes:"wordLike") {payload}' +
+        '      }' +
+        '    }' +
+        '  }' +
+        '}';
+      const result = await pk6.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tokens = result.data.documents[0].mainSequence.blocks[0].tokens;
+      t.equal(tokens[0].payload, 'This');
+      t.equal(tokens[1].payload, 'is');
+      t.equal(tokens[4].payload, 'Good');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Scopes (${testGroup})`,
   async function (t) {
     try {
