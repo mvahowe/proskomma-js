@@ -91,6 +91,22 @@ const documentType = new GraphQLObjectType({
         return ret;
       },
     },
+    sequence: {
+      type: sequenceType,
+      description: 'The sequence with the specified id',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+          description: 'id of the sequence',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+        ret = ret.filter(s => args.id.includes(s.id));
+        return ret[0] || null;
+      },
+    },
     mainBlocks: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(blockType))),
       description: 'The blocks of the main sequence',

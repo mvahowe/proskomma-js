@@ -103,8 +103,38 @@ test(
       t.ok('sequences' in result.data.documents[0]);
       t.equal(result.data.documents[0].sequences.length, 1);
       const foundSequence = result.data.documents[0].sequences[0];
-      t.equal(mainSequence.id, mainId);
-      t.equal(mainSequence.type, 'main');
+      t.equal(foundSequence.id, mainId);
+      t.equal(foundSequence.type, 'main');
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let query = '{ documents { mainSequence { id } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const mainId = result.data.documents[0].mainSequence.id;
+      query = `{ documents { sequence(id:"${mainId}") { id type } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sequence' in result.data.documents[0]);
+      const foundSequence = result.data.documents[0].sequence;
+      t.equal(foundSequence.id, mainId);
+      t.equal(foundSequence.type, 'main');
+      query = `{ documents { sequence(id:"banana") { id type } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sequence' in result.data.documents[0]);
+      t.equal(result.data.documents[0].sequence, null);
     } catch
       (err) {
       console.log(err);
