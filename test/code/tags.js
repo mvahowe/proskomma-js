@@ -4,7 +4,7 @@ const { pkWithDoc } = require('../lib/load');
 
 const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
-  abbr: 'ust',
+  abbr: 'web',
 }, {}, {}, [], ['frob', 'frob2'])[0];
 pk.docSetList()[0].tags.add('foo');
 pk.docSetList()[0].tags.add('foo2');
@@ -73,6 +73,60 @@ test(
       t.ok(document.tags.includes('frob'));
       t.ok(document.hasFrob);
       t.false(document.hasBrof);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Root-level Document selectors (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ documents(withTags:"frob" withoutTags:"brof") { id } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 1);
+      query = '{ documents(withTags:["frob" "frob2"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 1);
+      query = '{ documents(withTags:["frob" "brof"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 0);
+      query = '{ documents(withoutTags:["frob" "brof"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Document in docSet selectors (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ docSet(id:"eng_web") { documents(withTags:"frob" withoutTags:"brof") { id } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSet.documents.length, 1);
+      query = '{ docSet(id:"eng_web") { documents(withTags:["frob" "frob2"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSet.documents.length, 1);
+      query = '{ docSet(id:"eng_web") { documents(withTags:["frob" "brof"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSet.documents.length, 0);
+      query = '{ docSet(id:"eng_web") { documents(withoutTags:["frob" "brof"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSet.documents.length, 0);
     } catch (err) {
       console.log(err);
     }

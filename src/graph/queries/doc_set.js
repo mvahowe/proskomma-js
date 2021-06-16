@@ -74,6 +74,14 @@ const docSetType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
           description: 'Only return documents with the specified header key/values',
         },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return docSets with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return docSets with none of the specified tags',
+        },
       },
       resolve: (root, args, context) => {
         const headerValuesMatch = (docHeaders, requiredHeaders) => {
@@ -103,6 +111,15 @@ const docSetType = new GraphQLObjectType({
         if (args.withHeaderValues) {
           ret = ret.filter(d => headerValuesMatch(d.headers, args.withHeaderValues));
         }
+
+        if (args.withTags) {
+          ret = ret.filter(d => args.withTags.filter(t => d.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
+        }
+
 
         return ret;
       },
