@@ -265,6 +265,37 @@ test(
 );
 
 test(
+  `Filter documents by withHeaderValues (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      let query = `{ documents(withHeaderValues:{key: "bookCode" value: "PSA" }) { id } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 2);
+      query = `{ documents(withHeaderValues:{key: "bookCode" value: "RUT" }) { id } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 1);
+      query = `{ documents(withHeaderValues:{key: "ide" value: "UTF-8" }) { id } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 3);
+      query = `{ documents(withHeaderValues:{key: "ide" value: "EDBIC" }) { id } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 0);
+      query = `{ documents(withHeaderValues:{key: "banana" value: "split" }) { id } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Enum index for string (${testGroup})`,
   async function (t) {
     try {
