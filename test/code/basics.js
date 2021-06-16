@@ -141,7 +141,7 @@ test(
 );
 
 test(
-  `Filter docSets by withChars (${testGroup})`,
+  `Filter docSets documents by withChars (${testGroup})`,
   async function (t) {
     try {
       const docSetDocuments = ds => ds
@@ -166,7 +166,7 @@ test(
 );
 
 test(
-  `Filter docSets by withMatchingChars (${testGroup})`,
+  `Filter docSets documents by withMatchingChars (${testGroup})`,
   async function (t) {
     try {
       const docSetDocuments = ds => ds
@@ -180,6 +180,40 @@ test(
       t.equal(documents.length, 1);
       t.equal(documents[0].header, 'RUT');
       query = `{ docSets { documents(withMatchingChars: ["boaz" "banana"] allChars: true) { id header(id:"bookCode")} } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter docSets documents by withHeaderValues (${testGroup})`,
+  async function (t) {
+    try {
+      const docSetDocuments = ds => ds
+        .map(ds => ds.documents)
+        .reduce((a, b) => a.concat(b));
+      t.plan(8);
+      let query = `{ docSets { documents(withHeaderValues: { key: "bookCode" value: "PSA" }) { id } } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 2);
+      query = `{ docSets { documents(withHeaderValues: { key: "ide" value: "UTF-8" }) { id } } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 3);
+      query = `{ docSets { documents(withHeaderValues: { key: "ide" value: "EDBIC" }) { id } } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 0);
+      query = `{ docSets { documents(withHeaderValues: { key: "banana" value: "split" }) { id } } }`;
       result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       documents = docSetDocuments(result.data.docSets);
