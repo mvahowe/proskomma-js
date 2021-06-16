@@ -54,6 +54,14 @@ const schemaQueries = new GraphQLObjectType({
           type: GraphQLString,
           description: 'Only return docSets containing a document with the specified bookCode',
         },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return docSets with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return docSets with none of the specified tags',
+        },
       },
       resolve: (root, args) => {
         const docSetMatchesSelectors = (ds, selectors) => {
@@ -65,14 +73,22 @@ const schemaQueries = new GraphQLObjectType({
           return true;
         };
 
-        const docSetValues = ('withBook' in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
+        let ret = ('withBook' in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
           .filter(ds => !args.ids || args.ids.includes(ds.id));
 
         if (args.withSelectors) {
-          return docSetValues.filter(ds => docSetMatchesSelectors(ds, args.withSelectors));
-        } else {
-          return docSetValues;
+          ret = ret.filter(ds => docSetMatchesSelectors(ds, args.withSelectors));
         }
+
+        if (args.withTags) {
+          ret = ret.filter(ds => args.withTags.filter(t => ds.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(ds => args.withoutTags.filter(t => ds.tags.has(t)).length === 0);
+        }
+
+        return ret;
       },
     },
     docSet: {
