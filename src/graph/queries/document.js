@@ -76,6 +76,14 @@ const documentType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'types of sequences to include, if found',
         },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with none of the specified tags',
+        },
       },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
@@ -88,6 +96,15 @@ const documentType = new GraphQLObjectType({
         if (args.types) {
           ret = ret.filter(s => args.types.includes(s.type));
         }
+
+        if (args.withTags) {
+          ret = ret.filter(s => args.withTags.filter(t => s.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(s => args.withoutTags.filter(t => s.tags.has(t)).length === 0);
+        }
+
         return ret;
       },
     },
