@@ -100,12 +100,30 @@ const schemaQueries = new GraphQLObjectType({
         },
         withBook: {
           type: GraphQLString,
-          description: 'Only return docSets containing a document with the specified bookCode',
+          description: 'Only return documents with the specified bookCode',
+        },
+        withHeaderValues: {
+          type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
+          description: 'Only return documents with the specified header key/values',
         },
       },
       resolve: (root, args) => {
-        const documentValues = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
-        return documentValues.filter(d => !args.ids || args.ids.includes(d.id));
+        const headerValuesMatch = (docHeaders, requiredHeaders) => {
+          for (const requiredHeader of requiredHeaders || []) {
+            if (!(requiredHeader.key in docHeaders) || docHeaders[requiredHeader.key] !== requiredHeader.value) {
+              return false;
+            }
+          }
+          return true;
+        };
+
+        let ret = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
+        ret = ret.filter(d => !args.ids || args.ids.includes(d.id));
+
+        if (args.withHeaderValues) {
+          ret = ret.filter(d => headerValuesMatch(d.headers, args.withHeaderValues));
+        }
+        return ret;
       },
     },
     document: {
