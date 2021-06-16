@@ -5,15 +5,17 @@ const { pkWithDoc } = require('../lib/load');
 const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
   abbr: 'ust',
-}, {}, {}, [], ['frob'])[0];
+}, {}, {}, [], ['frob', 'frob2'])[0];
 pk.docSetList()[0].tags.add('foo');
+pk.docSetList()[0].tags.add('foo2');
 const document = Object.values(pk.documents)[0];
 document.sequences[document.mainId].tags.add('banana');
+document.sequences[document.mainId].tags.add('split');
 
 const testGroup = 'Graph Tags';
 
 test(
-  `DocSet (${testGroup})`,
+  `DocSet accessors (${testGroup})`,
   async function (t) {
     try {
       t.plan(5);
@@ -21,7 +23,7 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const docSet = result.data.docSets[0];
-      t.equal(docSet.tags.length, 1);
+      t.equal(docSet.tags.length, 2);
       t.ok(docSet.tags.includes('foo'));
       t.ok(docSet.hasFoo);
       t.false(docSet.hasBaa);
@@ -32,7 +34,34 @@ test(
 );
 
 test(
-  `Document (${testGroup})`,
+  `DocSet selectors (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ docSets(withTags:"foo" withoutTags:"oof") { id } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      query = '{ docSets(withTags:["foo" "foo2"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      query = '{ docSets(withTags:["foo" "oof"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 0);
+      query = '{ docSets(withoutTags:["foo" "oof"]) { id } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Document accessors (${testGroup})`,
   async function (t) {
     try {
       t.plan(5);
@@ -40,7 +69,7 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const document = result.data.docSets[0].documents[0];
-      t.equal(document.tags.length, 1);
+      t.equal(document.tags.length, 2);
       t.ok(document.tags.includes('frob'));
       t.ok(document.hasFrob);
       t.false(document.hasBrof);
@@ -51,7 +80,7 @@ test(
 );
 
 test(
-  `Sequence (${testGroup})`,
+  `Sequence accessors (${testGroup})`,
   async function (t) {
     try {
       t.plan(5);
@@ -59,7 +88,7 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequence = result.data.docSets[0].documents[0].mainSequence;
-      t.equal(sequence.tags.length, 1);
+      t.equal(sequence.tags.length, 2);
       t.ok(sequence.tags.includes('banana'));
       t.ok(sequence.hasBanana);
       t.false(sequence.hasApple);
