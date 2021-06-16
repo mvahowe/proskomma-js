@@ -153,6 +153,33 @@ test(
 );
 
 test(
+  `Sequence selectors (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ documents { sequences(withTags:"banana" withoutTags:"melba") { id } } } ';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].sequences.length, 1);
+      query = '{ documents { sequences(withTags: ["banana" "split"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].sequences.length, 1);
+      query = '{ documents { sequences(withTags: ["banana" "melba"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].sequences.length, 0);
+      query = '{ documents { sequences(withTags:"banana" withoutTags: ["peach" "split"]) { id } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].sequences.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Throw on bad tag format (${testGroup})`,
   // Destructive so do last (ish)!
   async function (t) {

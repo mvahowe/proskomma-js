@@ -76,11 +76,11 @@ const docSetType = new GraphQLObjectType({
         },
         withTags: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return docSets with all the specified tags',
+          description: 'Only return documents with all the specified tags',
         },
         withoutTags: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return docSets with none of the specified tags',
+          description: 'Only return documents with none of the specified tags',
         },
       },
       resolve: (root, args, context) => {
@@ -119,7 +119,6 @@ const docSetType = new GraphQLObjectType({
         if (args.withoutTags) {
           ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
         }
-
 
         return ret;
       },
