@@ -76,7 +76,37 @@ test(
       t.ok('sequences' in result.data.documents[0]);
       t.ok('id' in result.data.documents[0].sequences[0]);
     } catch
-    (err) {
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sequences by type and ids (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      let query = '{ documents { sequences(types:"main") { id type } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sequences' in result.data.documents[0]);
+      t.equal(result.data.documents[0].sequences.length, 1);
+      const mainSequence = result.data.documents[0].sequences[0];
+      t.equal(mainSequence.type, 'main');
+      const mainId = mainSequence.id;
+      query = `{ documents { sequences(ids:"${mainId}") { id type } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sequences' in result.data.documents[0]);
+      t.equal(result.data.documents[0].sequences.length, 1);
+      const foundSequence = result.data.documents[0].sequences[0];
+      t.equal(mainSequence.id, mainId);
+      t.equal(mainSequence.type, 'main');
+    } catch
+      (err) {
       console.log(err);
     }
   },

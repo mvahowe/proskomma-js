@@ -67,9 +67,28 @@ const documentType = new GraphQLObjectType({
     sequences: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
       description: 'A list of sequences for this document',
+      args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'ids of sequences to include, if found',
+        },
+        types: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'types of sequences to include, if found',
+        },
+      },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
-        return Object.values(root.sequences);
+        let ret = Object.values(root.sequences);
+
+        if (args.ids) {
+          ret = ret.filter(s => args.ids.includes(s.id));
+        }
+
+        if (args.types) {
+          ret = ret.filter(s => args.types.includes(s.type));
+        }
+        return ret;
       },
     },
     mainBlocks: {
