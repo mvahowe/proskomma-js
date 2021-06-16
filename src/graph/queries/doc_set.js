@@ -17,6 +17,7 @@ const {
 const documentType = require('./document');
 const keyValueType = require('./key_value');
 const regexIndexType = require('./regex_index');
+const inputKeyValueType = require('./input_key_value');
 
 const docSetType = new GraphQLObjectType({
   name: 'DocSet',
@@ -69,8 +70,21 @@ const docSetType = new GraphQLObjectType({
           type: GraphQLBoolean,
           description: 'If true, documents where all search terms match will be included',
         },
+        withHeaderValues: {
+          type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
+          description: 'Only return documents with the specified header key/values',
+        },
       },
       resolve: (root, args, context) => {
+        const headerValuesMatch = (docHeaders, requiredHeaders) => {
+          for (const requiredHeader of requiredHeaders || []) {
+            if (!(requiredHeader.key in docHeaders) || docHeaders[requiredHeader.key] !== requiredHeader.value) {
+              return false;
+            }
+          }
+          return true;
+        };
+
         if (args.withChars && args.withMatchingChars) {
           throw new Error('Cannot specify both withChars and withMatchingChars');
         }
@@ -84,6 +98,10 @@ const docSetType = new GraphQLObjectType({
 
         if (args.withMatchingChars) {
           ret = ret.filter(d => sequenceHasMatchingChars(root, d.sequences[d.mainId], args.withMatchingChars, args.allChars));
+        }
+
+        if (args.withHeaderValues) {
+          ret = ret.filter(d => headerValuesMatch(d.headers, args.withHeaderValues));
         }
 
         return ret;
