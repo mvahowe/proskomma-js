@@ -13,11 +13,7 @@
     "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.js",
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
-    "serialize": "babel-tape-runner test/code/serialize.js",
-    "x_preinstall": "npx npm-force-resolutions"
-  },
-  "resolutions": {
-    "trim": "0.0.3"
+    "serialize": "babel-tape-runner test/code/serialize.js"
   },
   "repository": {
     "type": "git",
@@ -46,7 +42,7 @@
     "git-diff": "^2.0.6",
     "graphql": "^15.3.0",
     "jsonschema": "^1.4.0",
-    "proskomma-utils": "^0.4.17",
+    "proskomma-utils": "^0.4.19",
     "sax": "^1.2.4",
     "utf8-string-bytes": "^1.0.3",
     "uuid-base64": "^1.0.0",
