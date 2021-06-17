@@ -23,7 +23,7 @@ const rangeQuery = 'startBlock startItem endBlock endItem nextToken ' +
   'items { type subType payload } ' +
   'tokens { type subType payload } ' +
   'wordLikes: tokens(withSubTypes:"wordLike") { type subType payload } ' +
-  'text dumpItems';
+  'text normalized: text(normalizeSpace:true) dumpItems';
 const cvQuery = `{ chapter verseNumbers { number range } verseRanges { range numbers } verses { verse { ${rangeQuery} verseRange } } }`;
 const cQuery = `{ chapter ${rangeQuery} }`;
 const cvCharsQuery = `{ chapter verses { verse { tokens(includeContext:true withChars:["Ruth", "Boaz", "Naomi"]) { payload position} text } } }`;
