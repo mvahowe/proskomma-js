@@ -99,13 +99,25 @@ const cIndexType = new GraphQLObjectType({
     text: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The text of the chapter as a single string',
-      resolve: (root, args, context) =>
-        context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1])
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
+      resolve: (root, args, context) => {
+        let ret = context.docSet.itemsByIndex(context.doc.sequences[context.doc.mainId], root[1])
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b)), [])
           .filter(i => i[0] === 'token')
           .map(t => t[1] === 'lineSpace' ? ' ' : t[2])
           .join('')
-          .trim(),
+          .trim();
+
+        if (args.normalizeSpace) {
+          ret = ret.replace(/[ \t\n\r]+/g, ' ');
+        }
+        return ret;
+      },
     },
   }),
 });
