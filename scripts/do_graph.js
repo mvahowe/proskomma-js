@@ -1,6 +1,6 @@
 const fse = require('fs-extra');
 
-const { Proskomma } = require('../index.js');
+const { Proskomma } = require('../dist/index.js');
 
 if (process.argv.length !== 4) {
   console.log('USAGE: node do_graph.js <USFM/USX Path> <Query Path>');
