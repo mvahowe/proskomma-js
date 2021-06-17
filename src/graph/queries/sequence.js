@@ -280,23 +280,41 @@ const sequenceType = new GraphQLObjectType({
     wordLikes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'A list of wordLike token strings in a main sequence',
+      args: {
+        coerceCase: {
+          type: GraphQLString,
+          description: 'Whether to coerce the strings (toLower|toUpper|none)',
+        },
+      },
       resolve: (root, args, context) => {
         if (root.type !== 'main') {
           throw new Error(`Only available for the main sequence, not ${root.type}`);
         }
+
+        if (args.coerceCase && !['toLower', 'toUpper', 'none'].includes(args.coerceCase)) {
+          throw new Error(`coerceCase, when present, must be 'toLower', 'toUpper' or 'none', not '${args.coerceCase}'`);
+        }
         context.docSet.maybeBuildEnumIndexes();
-        let ret = [];
+        let tokens = new Set();
         let n = 0;
 
         for (const b of root.tokensPresent) {
           if (b) {
             const enumOffset = context.docSet.enumIndexes['wordLike'][n];
-            const tokenString = context.docSet.enums['wordLike'].countedString(enumOffset);
-            ret.push(tokenString);
+            let tokenString = context.docSet.enums['wordLike'].countedString(enumOffset);
+
+            if (args.coerceCase === 'toLower') {
+              tokenString = tokenString.toLowerCase();
+            }
+
+            if (args.coerceCase === 'toUpper') {
+              tokenString = tokenString.toUpperCase();
+            }
+            tokens.add(tokenString);
           }
           n++;
         }
-        return ret.sort();
+        return Array.from(tokens).sort();
       },
     },
     hasChars: {

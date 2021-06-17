@@ -1,4 +1,6 @@
-import { enumStringIndex, enumRegexIndexTuples } from 'proskomma-utils';
+import {
+  enumStringIndex, enumRegexIndexTuples, unpackEnum,
+} from 'proskomma-utils';
 
 const {
   GraphQLObjectType,
@@ -35,7 +37,12 @@ const docSetType = new GraphQLObjectType({
     selector: {
       type: GraphQLNonNull(GraphQLString),
       description: 'A selector for this docSet',
-      args: { id: { type: GraphQLNonNull(GraphQLString) } },
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the selector',
+        },
+      },
       resolve: (root, args) => root.selectors[args.id],
     },
     tags: {
@@ -178,9 +185,35 @@ const docSetType = new GraphQLObjectType({
       resolve: (root, args) =>
         enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
     },
-  },
+    wordLikes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of wordLike token strings in the docSet',
+      args: {
+        coerceCase: {
+          type: GraphQLString,
+          description: 'Whether to coerce the strings (toLower|toUpper|none)',
+        },
+      },
+      resolve: (root, args, context) => {
+        if (args.coerceCase && !['toLower', 'toUpper', 'none'].includes(args.coerceCase)) {
+          throw new Error(`coerceCase, when present, must be 'toLower', 'toUpper' or 'none', not '${args.coerceCase}'`);
+        }
 
-});
+        let tokens = unpackEnum(root.enums.wordLike);
+
+        if (args.coerceCase === 'toLower') {
+          tokens = tokens.map(t => t.toLowerCase());
+        }
+
+        if (args.coerceCase === 'toUpper') {
+          tokens = tokens.map(t => t.toUpperCase());
+        }
+        return Array.from(new Set(tokens));
+      },
+    },
+  },
+},
+);
 
 module.exports = docSetType;
 

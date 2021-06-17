@@ -198,11 +198,19 @@ test(
   `wordLikes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
-      const query = '{ documents { mainSequence { wordLikes } } }';
-      const result = await pk.gqlQuery(query);
+      t.plan(6);
+      let query = '{ documents { mainSequence { wordLikes } } }';
+      let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok(result.data.documents[0].mainSequence.wordLikes.includes('Good'));
+      query = '{ documents { mainSequence { wordLikes(coerceCase:"toLower") } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.documents[0].mainSequence.wordLikes.includes('good'));
+      query = '{ documents { mainSequence { wordLikes(coerceCase:"toUpper") } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.documents[0].mainSequence.wordLikes.includes('GOOD'));
     } catch
     (err) {
       console.log(err);
