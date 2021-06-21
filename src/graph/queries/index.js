@@ -133,7 +133,7 @@ const schemaQueries = new GraphQLObjectType({
         },
         sortedBy: {
           type: GraphQLString,
-          description: 'Sort returned documents by the designated method (currently \'paratext\')',
+          description: 'Sort returned documents by the designated method (currently ${Object.keys(bookCodeCompareFunctions).join(\', \')})',
         },
       },
       resolve: (root, args) => {
