@@ -164,13 +164,14 @@ test(
   `mainBlocksText (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
-      const query = '{ documents { mainBlocksText } }';
+      t.plan(5);
+      const query = '{ documents { mainBlocksText normalized: mainBlocksText(normalizeSpace:true) } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('documents' in result.data);
       t.ok('mainBlocksText' in result.data.documents[0]);
       t.ok(result.data.documents[0].mainBlocksText[0].startsWith('In the days when'));
+      t.ok(result.data.documents[0].normalized[0].startsWith('In the days when'));
     } catch
       (err) {
       console.log(err);
@@ -221,13 +222,14 @@ test(
   `mainText (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
-      const query = '{ documents { mainText } }';
+      t.plan(5);
+      const query = '{ documents { mainText normalized: mainText(normalizeSpace:true) } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('documents' in result.data);
       t.ok('mainText' in result.data.documents[0]);
       t.ok(result.data.documents[0].mainText.startsWith('In the days when'));
+      t.ok(result.data.documents[0].normalized.startsWith('In the days when'));
     } catch
       (err) {
       console.log(err);
