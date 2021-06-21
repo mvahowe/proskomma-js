@@ -2,6 +2,8 @@ import {
   enumStringIndex, enumRegexIndexTuples, unpackEnum,
 } from 'proskomma-utils';
 
+const { ptCompare } = require('../lib/sort');
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -89,6 +91,10 @@ const docSetType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Only return documents with none of the specified tags',
         },
+        sortedBy: {
+          type: GraphQLString,
+          description: 'Sort returned documents by the designated method (currently \'paratext\')',
+        },
       },
       resolve: (root, args, context) => {
         const headerValuesMatch = (docHeaders, requiredHeaders) => {
@@ -125,6 +131,13 @@ const docSetType = new GraphQLObjectType({
 
         if (args.withoutTags) {
           ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
+        }
+
+        if (args.sortedBy) {
+          if (!['paratext'].includes(args.sortedBy)) {
+            throw new Error(`sortedBy value must be one of 'paratext', not ${args.sortedBy}`);
+          }
+          ret.sort(ptCompare);
         }
 
         return ret;
