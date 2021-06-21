@@ -11,6 +11,7 @@ const documentType = require('./document');
 const inputKeyValueType = require('./input_key_value');
 const selectorSpecType = require('./selector_spec');
 const diffRecordType = require('./diff_record');
+const { ptCompare } = require('../lib/sort');
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -130,6 +131,10 @@ const schemaQueries = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Only return documents with none of the specified tags',
         },
+        sortedBy: {
+          type: GraphQLString,
+          description: 'Sort returned documents by the designated method (currently \'paratext\')',
+        },
       },
       resolve: (root, args) => {
         const headerValuesMatch = (docHeaders, requiredHeaders) => {
@@ -154,6 +159,13 @@ const schemaQueries = new GraphQLObjectType({
 
         if (args.withoutTags) {
           ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
+        }
+
+        if (args.sortedBy) {
+          if (!['paratext'].includes(args.sortedBy)) {
+            throw new Error(`sortedBy value must be one of 'paratext', not ${args.sortedBy}`);
+          }
+          ret.sort(ptCompare);
         }
 
         return ret;

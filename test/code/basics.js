@@ -240,6 +240,26 @@ test(
 );
 
 test(
+  `Sort Documents (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(5);
+      let query = '{ documents(sortedBy:"paratext") { bookCode: header(id:"bookCode") } }';
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].bookCode, 'PHM');
+      t.equal(result.data.documents[3].bookCode, 'RUT');
+      query = '{ documents(sortedBy:"banana") { bookCode: header(id:"bookCode") } }';
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('banana'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Document (${testGroup})`,
   async function (t) {
     try {
