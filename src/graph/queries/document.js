@@ -154,13 +154,24 @@ const documentType = new GraphQLObjectType({
     },
     mainBlocksText: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
       description: 'The text for each block of the main sequence',
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return root.sequences[root.mainId].blocks.map(
           b => {
             const tokens = context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null);
-            return tokens.map(t => t[2]).join('').trim();
+            let ret= tokens.map(t => t[2]).join('').trim();
+
+            if (args.normalizeSpace) {
+              ret = ret.replace(/[ \t\n\r]+/g, ' ');
+            }
+            return ret;
           },
         );
       },
@@ -168,12 +179,23 @@ const documentType = new GraphQLObjectType({
     mainText: {
       type: GraphQLNonNull((GraphQLString)),
       description: 'The text for the main sequence',
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
       resolve: (root, args, context) => {
         context.docSet = root.processor.docSets[root.docSetId];
         return root.sequences[root.mainId].blocks.map(
           b => {
             const tokens = context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null);
-            return tokens.map(t => t[2]).join('').trim();
+            let ret = tokens.map(t => t[2]).join('').trim();
+
+            if (args.normalizeSpace) {
+              ret = ret.replace(/[ \t\n\r]+/g, ' ');
+            }
+            return ret;
           },
         ).join('\n');
       },
