@@ -316,13 +316,14 @@ test(
   `blocksText (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
-      const query = '{ documents { mainSequence { blocksText } } }';
+      t.plan(5);
+      const query = '{ documents { mainSequence { blocksText normalized: blocksText(normalizeSpace:true) } } }';
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('documents' in result.data);
       t.ok('blocksText' in result.data.documents[0].mainSequence);
       t.ok(result.data.documents[0].mainSequence.blocksText[0].startsWith('In the days when'));
+      t.ok(result.data.documents[0].mainSequence.normalized[0].startsWith('In the days when'));
     } catch
       (err) {
       console.log(err);
@@ -336,6 +337,24 @@ test(
     try {
       t.plan(4);
       const query = '{ documents { mainSequence { text } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('text' in result.data.documents[0].mainSequence);
+      t.ok(result.data.documents[0].mainSequence.text.startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `text with normalized space (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { text(normalizeSpace:true) } } }';
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('documents' in result.data);
