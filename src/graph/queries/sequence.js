@@ -210,23 +210,49 @@ const sequenceType = new GraphQLObjectType({
     },
     blocksText: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
       description: 'The text for each block in the sequence',
       resolve: (root, args, context) =>
-        root.blocks.map(b => context.docSet
-          .unsuccinctifyItems(b.c, { tokens: true }, null)
-          .map(t => t[2])
-          .join(''),
+        root.blocks.map(
+          b => {
+            let ret = context.docSet
+              .unsuccinctifyItems(b.c, { tokens: true }, null)
+              .map(t => t[2])
+              .join('');
+
+            if (args.normalizeSpace) {
+              ret = ret.replace(/[ \t\n\r]+/g, ' ');
+            }
+            return ret;
+          },
         ),
     },
     text: {
       type: GraphQLNonNull(GraphQLString),
+      args: {
+        normalizeSpace: {
+          type: GraphQLBoolean,
+          description: 'If true, converts each whitespace character to a single space',
+        },
+      },
       description: 'The text for the sequence',
-      resolve: (root, args, context) =>
-        root.blocks.map(b => context.docSet
+      resolve: (root, args, context) => {
+        let ret = root.blocks.map(b => context.docSet
           .unsuccinctifyItems(b.c, { tokens: true }, null)
           .map(t => t[2])
           .join(''),
-        ).join('\n'),
+        ).join('\n');
+
+        if (args.normalizeSpace) {
+          ret = ret.replace(/[ \t\n\r]+/g, ' ');
+        }
+        return ret;
+      },
     },
     itemGroups: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
