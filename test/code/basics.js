@@ -31,6 +31,21 @@ const pk2 = pkWithDocs([
   }],
 ]);
 
+const pk3 = pkWithDocs([
+  ['../test_data/usx/web_rut.usx', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+  ['../test_data/usfm/web_ecc.usfm', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+  ['../test_data/usx/web_psa150.usx', {
+    lang: 'eng',
+    abbr: 'webbe',
+  }],
+]);
+
 test(
   `Scalar Root Fields (${testGroup})`,
   async function (t) {
@@ -65,6 +80,26 @@ test(
       t.ok('id' in result.data.docSets[0]);
       t.equal(result.data.docSets[0].lang, 'eng');
       t.equal(result.data.docSets[0].abbr, 'web');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sort DocSet Documents (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(5);
+      let query = '{ docSets { documents(sortedBy:"paratext") { bookCode: header(id:"bookCode") } } }';
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].documents[0].bookCode, 'ECC');
+      t.equal(result.data.docSets[0].documents[2].bookCode, 'RUT');
+      query = '{ docSets { documents(sortedBy:"banana") { bookCode: header(id:"bookCode") } } }';
+      result = await pk3.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('banana'));
     } catch (err) {
       console.log(err);
     }
