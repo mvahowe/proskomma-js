@@ -2,7 +2,7 @@ import {
   enumStringIndex, enumRegexIndexTuples, unpackEnum,
 } from 'proskomma-utils';
 
-const { ptCompare } = require('../lib/sort');
+const { bookCodeCompareFunctions } = require('../lib/sort');
 
 const {
   GraphQLObjectType,
@@ -134,10 +134,10 @@ const docSetType = new GraphQLObjectType({
         }
 
         if (args.sortedBy) {
-          if (!['paratext'].includes(args.sortedBy)) {
-            throw new Error(`sortedBy value must be one of 'paratext', not ${args.sortedBy}`);
+          if (!(args.sortedBy in bookCodeCompareFunctions)) {
+            throw new Error(`sortedBy value must be one of [${Object.keys(bookCodeCompareFunctions)}], not ${args.sortedBy}`);
           }
-          ret.sort(ptCompare);
+          ret.sort(bookCodeCompareFunctions[args.sortedBy]);
         }
 
         return ret;
