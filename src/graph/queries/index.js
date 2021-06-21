@@ -11,7 +11,7 @@ const documentType = require('./document');
 const inputKeyValueType = require('./input_key_value');
 const selectorSpecType = require('./selector_spec');
 const diffRecordType = require('./diff_record');
-const { ptCompare } = require('../lib/sort');
+const { bookCodeCompareFunctions } = require('../lib/sort');
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -162,10 +162,10 @@ const schemaQueries = new GraphQLObjectType({
         }
 
         if (args.sortedBy) {
-          if (!['paratext'].includes(args.sortedBy)) {
-            throw new Error(`sortedBy value must be one of 'paratext', not ${args.sortedBy}`);
+          if (!(args.sortedBy in bookCodeCompareFunctions)) {
+            throw new Error(`sortedBy value must be one of [${Object.keys(bookCodeCompareFunctions).join(', ')}], not ${args.sortedBy}`);
           }
-          ret.sort(ptCompare);
+          ret.sort(bookCodeCompareFunctions[args.sortedBy]);
         }
 
         return ret;

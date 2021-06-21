@@ -90,9 +90,14 @@ test(
   `Sort DocSet Documents (${testGroup})`,
   async function (t) {
     try {
-      t.plan(5);
+      t.plan(8);
       let query = '{ docSets { documents(sortedBy:"paratext") { bookCode: header(id:"bookCode") } } }';
       let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets[0].documents[0].bookCode, 'RUT');
+      t.equal(result.data.docSets[0].documents[2].bookCode, 'ECC');
+      query = '{ docSets { documents(sortedBy:"alpha") { bookCode: header(id:"bookCode") } } }';
+      result = await pk3.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets[0].documents[0].bookCode, 'ECC');
       t.equal(result.data.docSets[0].documents[2].bookCode, 'RUT');
@@ -282,8 +287,8 @@ test(
       let query = '{ documents(sortedBy:"paratext") { bookCode: header(id:"bookCode") } }';
       let result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
-      t.equal(result.data.documents[0].bookCode, 'PHM');
-      t.equal(result.data.documents[3].bookCode, 'RUT');
+      t.equal(result.data.documents[0].bookCode, 'RUT');
+      t.equal(result.data.documents[3].bookCode, 'PHM');
       query = '{ documents(sortedBy:"banana") { bookCode: header(id:"bookCode") } }';
       result = await pk2.gqlQuery(query);
       t.equal(result.errors.length, 1);
