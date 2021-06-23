@@ -20,6 +20,15 @@ import {
   tokenEnumLabels,
   validateTags,
 } from 'proskomma-utils';
+import { validateSelectors } from './doc_set_helpers/selectors';
+import { blocksWithScriptureCV } from './doc_set_helpers/scripture_cv';
+import {
+  unsuccinctifyBlock,
+  unsuccinctifyItems,
+  unsuccinctifyItem,
+  unsuccinctifyPrunedItems,
+  unsuccinctifyItemsWithScriptureCV,
+} from './doc_set_helpers/unsuccinctify';
 
 class DocSet {
   constructor(processor, selectors, tags, succinctJson) {
@@ -38,7 +47,7 @@ class DocSet {
 
   fromScratch(processor, selectors, tags) {
     const defaultedSelectors = selectors || processor.selectors;
-    this.selectors = this.validateSelectors(defaultedSelectors);
+    this.selectors = validateSelectors(this, defaultedSelectors);
     this.id = this.selectorString();
     this.tags = new Set(tags || []);
     this.enums = {
@@ -59,7 +68,7 @@ class DocSet {
     };
 
     this.id = succinctJson.id;
-    this.selectors = this.validateSelectors(succinctJson.metadata.selectors);
+    this.selectors = validateSelectors(this, succinctJson.metadata.selectors);
     this.tags = new Set(succinctJson.tags);
     validateTags(this.tags);
     this.preEnums = {};
@@ -80,60 +89,6 @@ class DocSet {
 
   removeTag(tag) {
     removeTag(this.tags, tag);
-  }
-
-  validateSelectors(selectors) {
-    if (typeof selectors !== 'object') {
-      throw new Error(`DocSet constructor expects selectors to be object, found ${typeof this.selectors}`);
-    }
-
-    const expectedSelectors = {};
-
-    for (const selector of this.processor.selectors) {
-      expectedSelectors[selector.name] = selector;
-    }
-
-    for (const [name, value] of Object.entries(selectors)) {
-      if (!(name in expectedSelectors)) {
-        throw new Error(`Unexpected selector '${name}' (expected one of [${Object.keys(expectedSelectors).join(', ')}])`);
-      }
-
-      if (
-        (typeof value === 'string' && expectedSelectors[name].type !== 'string') ||
-        (typeof value === 'number' && expectedSelectors[name].type !== 'integer')
-      ) {
-        throw new Error(`Selector '${name}' is of type ${typeof value} (expected ${expectedSelectors[name].type})`);
-      }
-
-      if (typeof value === 'number') {
-        if (!Number.isInteger(value)) {
-          throw new Error(`Value '${value}' of integer selector '${name}' is not an integer`);
-        }
-
-        if ('min' in expectedSelectors[name] && value < expectedSelectors[name].min) {
-          throw new Error(`Value '${value}' is less than ${expectedSelectors[name].min}`);
-        }
-
-        if ('max' in expectedSelectors[name] && value > expectedSelectors[name].max) {
-          throw new Error(`Value '${value}' is greater than ${expectedSelectors[name].max}`);
-        }
-      } else {
-        if ('regex' in expectedSelectors[name] && !xre.exec(value, xre(expectedSelectors[name].regex), 0)) {
-          throw new Error(`Value '${value}' does not match regex '${expectedSelectors[name].regex}'`);
-        }
-      }
-
-      if ('enum' in expectedSelectors[name] && !expectedSelectors[name].enum.includes(value)) {
-        throw new Error(`Value '${value}' of selector '${name}' is not in enum`);
-      }
-    }
-
-    for (const name of Object.keys(expectedSelectors)) {
-      if (!(name in selectors)) {
-        throw new Error(`Expected selector '${name}' not found`);
-      }
-    }
-    return selectors;
   }
 
   selectorString() {
@@ -268,23 +223,19 @@ class DocSet {
   }
 
   unsuccinctifyBlock(block, options) {
-    this.maybeBuildEnumIndexes();
-    const succinctBlockScope = block.bs;
-    const [itemLength, itemType, itemSubtype] = headerBytes(succinctBlockScope, 0);
-    const blockScope = this.unsuccinctifyScope(succinctBlockScope, itemType, itemSubtype, 0);
-    const blockGrafts = this.unsuccinctifyGrafts(block.bg);
-    const openScopes = this.unsuccinctifyScopes(block.os);
-    const includedScopes = this.unsuccinctifyScopes(block.is);
-    const nextToken = block.nt.nByte(0);
-    const blockItems = this.unsuccinctifyItems(block.c, options || {}, nextToken);
-    return {
-      bs: blockScope,
-      bg: blockGrafts,
-      c: blockItems,
-      os: openScopes,
-      is: includedScopes,
-      nt: nextToken,
-    };
+    return unsuccinctifyBlock(this, block, options);
+  }
+
+  unsuccinctifyItems(succinct, options, nextToken, openScopes) {
+    return unsuccinctifyItems(this, succinct, options, nextToken, openScopes);
+  }
+
+  unsuccinctifyItem(succinct, pos, options) {
+    return unsuccinctifyItem(this, succinct, pos, options);
+  }
+
+  unsuccinctifyPrunedItems(block, options) {
+    return unsuccinctifyPrunedItems(this, block, options);
   }
 
   countItems(succinct) {
@@ -319,53 +270,6 @@ class DocSet {
     while (pos < succinct.length) {
       const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
       ret.push(this.unsuccinctifyGraft(succinct, itemSubtype, pos));
-      pos += itemLength;
-    }
-    return ret;
-  }
-
-  unsuccinctifyItems(succinct, options, nextToken, openScopes) {
-    if (nextToken === undefined) {
-      throw new Error('nextToken (previously includeContext) must now be provided to unsuccinctifyItems');
-    }
-
-    if (nextToken !== null && typeof nextToken !== 'number') {
-      throw new Error(`nextToken (previously includeContext) must be null or an integer, not ${typeof nextToken} '${JSON.stringify(nextToken)}' in unsuccinctifyItems`);
-    }
-
-    const ret = [];
-    let pos = 0;
-    let tokenCount = nextToken || 0;
-    const scopes = new Set(openScopes || []);
-
-    while (pos < succinct.length) {
-      const [item, itemLength] = this.unsuccinctifyItem(succinct, pos, {});
-
-      if (item[0] === 'token') {
-        if ((Object.keys(options).length === 0) || options.tokens) {
-          if (nextToken !== null) {
-            item.push(item[0] === 'token' && item[1] === 'wordLike' ? tokenCount++ : null);
-            item.push([...scopes]);
-          }
-          ret.push(item);
-        }
-      } else if (item[0] === 'scope' && item[1] === 'start') {
-        scopes.add(item[2]);
-
-        if ((Object.keys(options).length === 0) || options.scopes) {
-          ret.push(item);
-        }
-      } else if (item[0] === 'scope' && item[1] === 'end') {
-        scopes.delete(item[2]);
-
-        if ((Object.keys(options).length === 0) || options.scopes) {
-          ret.push(item);
-        }
-      } else if (item[0] === 'graft') {
-        if ((Object.keys(options).length === 0) || options.grafts) {
-          ret.push(item);
-        }
-      }
       pos += itemLength;
     }
     return ret;
@@ -406,31 +310,6 @@ class DocSet {
       currentBlock++;
     }
     return ret;
-  }
-
-  unsuccinctifyItem(succinct, pos, options) {
-    let item = null;
-    const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
-
-    switch (itemType) {
-    case itemEnum.token:
-      if (Object.keys(options).length === 0 || options.tokens) {
-        item = this.unsuccinctifyToken(succinct, itemSubtype, pos);
-      }
-      break;
-    case itemEnum.startScope:
-    case itemEnum.endScope:
-      if (Object.keys(options).length === 0 || options.scopes) {
-        item = this.unsuccinctifyScope(succinct, itemType, itemSubtype, pos);
-      }
-      break;
-    case itemEnum.graft:
-      if (Object.keys(options).length === 0 || options.grafts) {
-        item = this.unsuccinctifyGraft(succinct, itemSubtype, pos);
-      }
-      break;
-    }
-    return [item, itemLength];
   }
 
   unsuccinctifyToken(succinct, itemSubtype, pos) {
@@ -479,52 +358,6 @@ class DocSet {
         .map(ri => ri[2]));
   }
 
-  unsuccinctifyPrunedItems(block, options) {
-    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
-    const requiredScopes = options.requiredScopes || [];
-    const anyScope = options.anyScope || false;
-
-    const allScopesInItem = () => {
-      for (const scope of requiredScopes) {
-        if (!openScopes.has(scope)) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    const anyScopeInItem = () => {
-      for (const scope of requiredScopes) {
-        if (openScopes.has(scope)) {
-          return true;
-        }
-      }
-      return (requiredScopes.length === 0);
-    };
-
-    const scopeTest = anyScope ? anyScopeInItem : allScopesInItem;
-    const charsTest = (item) =>
-      !options.withChars ||
-      options.withChars.length === 0 ||
-      (item[0] === 'token' && options.withChars.includes(item[2]));
-    const ret = [];
-
-    for (const item of this.unsuccinctifyItems(block.c, options, block.nt.nByte(0), openScopes)) {
-      if (item[0] === 'scope' && item[1] === 'start') {
-        openScopes.add(item[2]);
-      }
-
-      if (scopeTest() && charsTest(item)) {
-        ret.push(item);
-      }
-
-      if (item[0] === 'scope' && item[1] === 'end') {
-        openScopes.delete(item[2]);
-      }
-    }
-    return ret;
-  }
-
   succinctTokenChars(succinct, itemSubtype, pos) {
     return succinctTokenChars(this.enums, this.enumIndexes, succinct, itemSubtype, pos);
   }
@@ -540,145 +373,8 @@ class DocSet {
   succinctGraftSeqId(succinct, pos) {
     return succinctGraftSeqId(this.enums, this.enumIndexes, succinct, pos);
   }
-
   blocksWithScriptureCV(blocks, cv) {
-    const hasMiddleChapter = (b, fromC, toC) => {
-      const blockChapterScopes = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
-      ].filter(s => s.startsWith('chapter/'));
-      return blockChapterScopes.map(s => parseInt(s.split('/')[1])).filter(n => n > fromC && n < toC).length > 0;
-    };
-
-    const hasFirstChapter = (b, fromC, fromV) => {
-      const hasFirstChapterScope = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
-      ].includes(`chapter/${fromC}`);
-      return hasFirstChapterScope &&
-        this.blockHasMatchingItem(
-          b,
-          (item, openScopes) => {
-            if (!openScopes.has(`chapter/${fromC}`)) {
-              return false;
-            }
-            return (
-              Array.from(openScopes)
-                .filter(s => s.startsWith('verse/'))
-                .filter(s => parseInt(s.split('/')[1]) >= fromV).length
-              > 0
-              ||
-              (
-                fromV === 0 &&
-                item[0] === 'token' &&
-                item[2] &&
-                Array.from(openScopes)
-                  .filter(s => s.startsWith('verse'))
-                  .length === 0
-              )
-            );
-          },
-          {},
-        );
-    };
-
-    const hasLastChapter = (b, toC, toV) => {
-      const hasLastChapterScope = [
-        ...this.unsuccinctifyScopes(b.os).map(s => s[2]),
-        ...this.unsuccinctifyScopes(b.is).map(s => s[2]),
-      ].includes(`chapter/${toC}`);
-      return hasLastChapterScope &&
-        this.blockHasMatchingItem(
-          b,
-          (item, openScopes) => {
-            if (!openScopes.has(`chapter/${toC}`)) {
-              return false;
-            }
-            return (
-              Array.from(openScopes)
-                .filter(s => s.startsWith('verse/'))
-                .filter(s => parseInt(s.split('/')[1]) <= toV).length
-              > 0
-              ||
-              (
-                toV === 0 &&
-                item[0] === 'token' &&
-                item[2] &&
-                Array.from(openScopes)
-                  .filter(s => s.startsWith('verse'))
-                  .length === 0
-              )
-
-            );
-          },
-          {},
-        );
-    };
-
-    if (xre.exec(cv, xre('^[1-9][0-9]*$'))) {
-      const scopes = [`chapter/${cv}`];
-      return blocks.filter(b => this.allScopesInBlock(b, scopes));
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*-[1-9][0-9]*$'))) {
-      const [fromC, toC] = cv.split('-').map(v => parseInt(v));
-
-      if (fromC > toC) {
-        throw new Error(`Chapter range must be from min to max, not '${cv}'`);
-      }
-
-      const scopes = [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`);
-      return blocks.filter(b => this.anyScopeInBlock(b, scopes));
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+$'))) {
-      const [fromC, fromV] = cv.split(':').map(v => parseInt(v));
-
-      if (fromV === 0) {
-        const scopes = [`chapter/${fromC}`];
-        return blocks
-          .filter(b => this.allScopesInBlock(b, scopes))
-          .filter(
-            b =>
-              [...this.allBlockScopes(b)]
-                .filter(s => s.startsWith('verse')).length === 0,
-          );
-      } else {
-        const scopes = [`chapter/${fromC}`, `verse/${fromV}`];
-        return blocks.filter(b => this.allScopesInBlock(b, scopes));
-      }
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*$'))) {
-      const [fromC, vs] = cv.split(':');
-      const [fromV, toV] = vs.split('-').map(v => parseInt(v));
-
-      if (fromV > toV) {
-        throw new Error(`Verse range must be from min to max, not '${vs}'`);
-      }
-
-      const chapterScopes = [`chapter/${fromC}`];
-      const verseScopes = [...Array((toV - fromV) + 1).keys()].map(n => `verse/${n + fromV}`);
-      return blocks
-        .filter(b => this.allScopesInBlock(b, chapterScopes))
-        .filter(
-          b =>
-            this.anyScopeInBlock(b, verseScopes) ||
-            (
-              fromV === 0 &&
-              [...this.allBlockScopes(b)]
-                .filter(s => s.startsWith('verse')).length === 0
-            ),
-        );
-    } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*:[0-9]+$'))) {
-      const [fromCV, toCV] = cv.split('-');
-      const [fromC, fromV] = fromCV.split(':').map(c => parseInt(c));
-      const [toC, toV] = toCV.split(':').map(v => parseInt(v));
-
-      if (fromC > toC) {
-        throw new Error(`Chapter range must be from min to max, not '${fromC}-${toV}'`);
-      }
-
-      const chapterScopes = [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`);
-      const chapterBlocks = blocks.filter(b => this.anyScopeInBlock(b, chapterScopes));
-      return chapterBlocks.filter(b => hasMiddleChapter(b, fromC, toC) || hasFirstChapter(b, fromC, fromV) || hasLastChapter(b, toC, toV));
-    } else {
-      throw new Error(`Bad cv reference '${cv}'`);
-    }
+    return blocksWithScriptureCV(this, blocks, cv);
   }
 
   allBlockScopes(block) {
@@ -742,144 +438,8 @@ class DocSet {
     return ret;
   }
 
-  unsuccinctifyItemsWithScriptureCV(block, cv, options, includeContext) {
-    options = options || {};
-    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
-
-    const cvMatchFunction = () => {
-      if (xre.exec(cv, xre('^[1-9][0-9]*$'))) {
-        return () => openScopes.has(`chapter/${cv}`);
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*-[1-9][0-9]*$'))) {
-        return () => {
-          const [fromC, toC] = cv.split('-').map(v => parseInt(v));
-
-          if (fromC > toC) {
-            throw new Error(`Chapter range must be from min to max, not '${cv}'`);
-          }
-
-          for (const scope of [...Array((toC - fromC) + 1).keys()].map(n => `chapter/${n + fromC}`)) {
-            if (openScopes.has(scope)) {
-              return true;
-            }
-          }
-          return false;
-        };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+$'))) {
-        return () => {
-          const [fromC, fromV] = cv.split(':').map(v => parseInt(v));
-
-          if (fromV === 0) {
-            return (
-              openScopes.has(`chapter/${fromC}`) &&
-              [...openScopes].filter(s => s.startsWith('verse')).length === 0
-            );
-          } else {
-            for (const scope of [`chapter/${fromC}`, `verse/${fromV}`]) {
-              if (!openScopes.has(scope)) {
-                return false;
-              }
-            }
-            return true;
-          }
-        };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*$'))) {
-        return () => {
-          const [fromC, vs] = cv.split(':');
-          const [fromV, toV] = vs.split('-').map(v => parseInt(v));
-
-          if (fromV > toV) {
-            throw new Error(`Verse range must be from min to max, not '${vs}'`);
-          }
-
-          const chapterScope = `chapter/${fromC}`;
-          const verseScopes = [...Array((toV - fromV) + 1).keys()].map(n => `verse/${n + fromV}`);
-
-          if (!openScopes.has(chapterScope)) {
-            return false;
-          }
-
-          for (const scope of verseScopes) {
-            if (openScopes.has(scope)) {
-              return true;
-            }
-          }
-          return fromV === 0 && [...openScopes].filter(s => s.startsWith('verse')).length === 0;
-        };
-      } else if (xre.exec(cv, xre('^[1-9][0-9]*:[0-9]+-[1-9][0-9]*:[0-9]+$'))) {
-        return () => {
-          const [fromCV, toCV] = cv.split('-');
-          const [fromC, fromV] = fromCV.split(':').map(c => parseInt(c));
-          const [toC, toV] = toCV.split(':').map(v => parseInt(v));
-
-          if (fromC > toC) {
-            throw new Error(`Chapter range must be from min to max, not '${fromC}-${toV}'`);
-          }
-
-          const scopeArray = [...openScopes];
-          const chapterScopes = scopeArray.filter(s => s.startsWith('chapter/'));
-
-          if (chapterScopes.length > 1) {
-            throw new Error(`Expected zero or one chapter for item, found ${chapterScopes.length}`);
-          }
-
-          const chapterNo = parseInt(chapterScopes[0].split('/')[1]);
-
-          if ((chapterNo < fromC) || (chapterNo > toC)) {
-            return false;
-          } else if (chapterNo === fromC) {
-            return scopeArray.filter(
-              s =>
-                s.startsWith('verse/') &&
-                parseInt(s.split('/')[1]) >= fromV,
-            ).length > 0 ||
-              (fromV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
-          } else if (chapterNo === toC) {
-            return scopeArray.filter(
-              s =>
-                s.startsWith('verse/') &&
-                parseInt(s.split('/')[1]) <= toV,
-            ).length > 0 ||
-              (toV === 0 && scopeArray.filter(s => s.startsWith('verse')).length === 0);
-          } else {
-            return true;
-          }
-        };
-      } else {
-        throw new Error(`Bad cv reference '${cv}'`);
-      }
-    };
-
-    const itemMatchesCV = cvMatchFunction();
-
-    const itemInOptions = (item) => {
-      if (!options || Object.keys(options).length === 0) {
-        return true;
-      } else {
-        const itemType = item[0];
-        return (
-          (itemType === 'token' && 'tokens' in options) ||
-          (itemType === 'graft' && 'grafts' in options) ||
-          (itemType === 'scope' && 'scopes' in options)
-        );
-      }
-    };
-
-    const ret = [];
-
-    for (const item of this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0))) {
-      if (item[0] === 'scope' && item[1] === 'start') {
-        openScopes.add(item[2]);
-      }
-
-      if (itemMatchesCV() && itemInOptions(item)) {
-        ret.push(item);
-      }
-
-      if (item[0] === 'scope' && item[1] === 'end') {
-        openScopes.delete(item[2]);
-      }
-    }
-    return ret;
+  unsuccinctifyItemsWithScriptureCV(block, cv, options) {
+    return unsuccinctifyItemsWithScriptureCV(this, block, cv, options);
   }
 
   blockHasMatchingItem(block, testFunction, options) {
@@ -1216,7 +776,6 @@ class DocSet {
   }
 
   updateBlockIndexesAfterFilter(sequence) {
-
     const addSuccinctScope = (docSet, succinct, scopeLabel) => {
       const scopeBits = scopeLabel.split('/');
       const scopeTypeByte = scopeEnum[scopeBits[0]];
@@ -1241,6 +800,7 @@ class DocSet {
       osBA.trim();
       block.os = osBA;
       const includedScopeLabels = new Set();
+
       for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
         if (scope[1] === 'start') {
           includedScopeLabels.add(scope[2]);
