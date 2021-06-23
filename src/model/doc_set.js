@@ -1,4 +1,3 @@
-import xre, { test } from 'xregexp';
 import {
   addTag,
   ByteArray,
@@ -6,17 +5,11 @@ import {
   enumIndexes,
   headerBytes,
   itemEnum,
-  pushSuccinctGraftBytes,
-  pushSuccinctScopeBytes,
-  pushSuccinctTokenBytes,
   removeTag,
-  scopeEnum,
   succinctGraftName,
   succinctGraftSeqId,
   succinctScopeLabel,
   succinctTokenChars,
-  tokenCategory,
-  tokenEnum,
   tokenEnumLabels,
   validateTags,
 } from 'proskomma-utils';
@@ -43,7 +36,22 @@ import {
   buildEnum,
   enumForCategoryValue,
 } from './doc_set_helpers/enum';
-
+import {
+  countItems,
+  itemsByIndex,
+  sequenceItemsByScopes,
+  sequenceItemsByMilestones,
+} from './doc_set_helpers/item';
+import {
+  rehash,
+  makeRehashEnumMap,
+} from './doc_set_helpers/rehash';
+import {
+  updateItems,
+  updateBlockIndexesAfterEdit,
+  updateBlockIndexesAfterFilter,
+} from './doc_set_helpers/update';
+import { serializeSuccinct } from './doc_set_helpers/serialize';
 class DocSet {
   constructor(processor, selectors, tags, succinctJson) {
     this.processor = processor;
@@ -191,19 +199,6 @@ class DocSet {
     return unsuccinctifyPrunedItems(this, block, options);
   }
 
-  countItems(succinct) {
-    let count = 0;
-    let pos = 0;
-
-    while (pos < succinct.length) {
-      count++;
-      const headerByte = succinct.byte(pos);
-      const itemLength = headerByte & 0x0000003F;
-      pos += itemLength;
-    }
-    return count;
-  }
-
   unsuccinctifyScopes(succinct) {
     const ret = [];
     let pos = 0;
@@ -224,43 +219,6 @@ class DocSet {
       const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
       ret.push(this.unsuccinctifyGraft(succinct, itemSubtype, pos));
       pos += itemLength;
-    }
-    return ret;
-  }
-
-  itemsByIndex(mainSequence, index, includeContext) {
-    let ret = [];
-
-    if (!index) {
-      return ret;
-    }
-
-    let currentBlock = index.startBlock;
-    let nextToken = index.nextToken;
-
-    while (currentBlock <= index.endBlock) {
-      let blockItems = this.unsuccinctifyItems(mainSequence.blocks[currentBlock].c, {}, nextToken);
-      const blockScope = this.unsuccinctifyScopes(mainSequence.blocks[currentBlock].bs)[0];
-      const blockGrafts = this.unsuccinctifyGrafts(mainSequence.blocks[currentBlock].bg);
-
-      if (currentBlock === index.startBlock && currentBlock === index.endBlock) {
-        blockItems = blockItems.slice(index.startItem, index.endItem + 1);
-      } else if (currentBlock === index.startBlock) {
-        blockItems = blockItems.slice(index.startItem);
-      } else if (currentBlock === index.endBlock) {
-        blockItems = blockItems.slice(0, index.endItem + 1);
-      }
-
-      if (includeContext) {
-        let extendedBlockItems = [];
-
-        for (const bi of blockItems) {
-          extendedBlockItems.push(bi.concat([bi[0] === 'token' && bi[1] === 'wordLike' ? nextToken++ : null]));
-        }
-        blockItems = extendedBlockItems;
-      }
-      ret.push([...blockGrafts, ['scope', 'start', blockScope[2]], ...blockItems, ['scope', 'end', blockScope[2]]]);
-      currentBlock++;
     }
     return ret;
   }
@@ -311,6 +269,10 @@ class DocSet {
         .map(ri => ri[2]));
   }
 
+  unsuccinctifyItemsWithScriptureCV(block, cv, options) {
+    return unsuccinctifyItemsWithScriptureCV(this, block, cv, options);
+  }
+
   succinctTokenChars(succinct, itemSubtype, pos) {
     return succinctTokenChars(this.enums, this.enumIndexes, succinct, itemSubtype, pos);
   }
@@ -325,6 +287,14 @@ class DocSet {
 
   succinctGraftSeqId(succinct, pos) {
     return succinctGraftSeqId(this.enums, this.enumIndexes, succinct, pos);
+  }
+
+  countItems(succinct) {
+    return countItems(this, succinct);
+  }
+
+  itemsByIndex(mainSequence, index, includeContext) {
+    return itemsByIndex(this, mainSequence, index, includeContext);
   }
 
   blocksWithScriptureCV(blocks, cv) {
@@ -351,392 +321,40 @@ class DocSet {
     return blockHasChars(this, block, charsIndexes);
   }
 
-  unsuccinctifyItemsWithScriptureCV(block, cv, options) {
-    return unsuccinctifyItemsWithScriptureCV(this, block, cv, options);
-  }
-
   blockHasMatchingItem(block, testFunction, options) {
     return blockHasMatchingItem(this, block, testFunction, options);
   }
 
   sequenceItemsByScopes(blocks, byScopes) {
-    // Return array of [scopes, items]
-    // Scan block items, track scopes
-    // If all scopes found:
-    //   - turn found scopes into string
-    //   - if that scope string doesn't exist, add to lookup table and push array
-    //   - add item to array matching scope string
-    let allBlockScopes = [];
-
-    const allScopesPresent = () => {
-      for (const requiredScope of byScopes) {
-        if (!matchingScope(requiredScope)) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    const matchingScope = (scopeToMatch) => {
-      for (const blockScope of allBlockScopes) {
-        if (blockScope.startsWith(scopeToMatch)) {
-          return blockScope;
-        }
-      }
-      return null;
-    };
-
-    const scopesString = () => byScopes.map(s => matchingScope(s)).sort().join('_');
-
-    this.maybeBuildEnumIndexes();
-    const ret = [];
-    const scopes2array = {};
-
-    for (const block of blocks) {
-      const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
-      const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
-      const startBlockScope = ['scope', 'start', blockScope];
-      const endBlockScope = ['scope', 'end', blockScope];
-      const blockGrafts = this.unsuccinctifyGrafts(block.bg);
-
-      allBlockScopes = new Set(this.unsuccinctifyScopes(block.os)
-        .map(s => s[2])
-        .concat([blockScope]),
-      );
-
-      for (
-        const item of blockGrafts.concat(
-          [
-            startBlockScope,
-            ...this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
-            endBlockScope,
-          ],
-        )
-      ) {
-        if (item[0] === 'scope' && item[1] === 'start') {
-          allBlockScopes.add(item[2]);
-        }
-
-        if (allScopesPresent()) {
-          const scopeKey = scopesString();
-
-          if (!(scopeKey in scopes2array)) {
-            scopes2array[scopeKey] = ret.length;
-            ret.push([[...allBlockScopes], []]);
-          }
-          ret[ret.length - 1][1].push(item);
-        }
-
-        if (item[0] === 'scope' && item[1] === 'end') {
-          allBlockScopes.delete(item[2]);
-        }
-      }
-    }
-    return ret;
+    return sequenceItemsByScopes(this, blocks, byScopes);
   }
 
   sequenceItemsByMilestones(blocks, byMilestones) {
-    // Return array of [scopes, items]
-    // Scan block items
-    // If milestone found:
-    //   - add array
-    // push item to last array
-    let allBlockScopes = new Set([]);
-    const milestoneFound = (item) => item[0] === 'scope' && item[1] === 'start' && byMilestones.includes(item[2]);
-
-    this.maybeBuildEnumIndexes();
-    const ret = [[[], []]];
-
-    for (const block of blocks) {
-      const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
-      const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
-      const blockGrafts = this.unsuccinctifyGrafts(block.bg);
-      allBlockScopes.add(blockScope);
-      this.unsuccinctifyScopes(block.os).forEach(s => allBlockScopes.add(s[2]));
-      const items = blockGrafts.concat(
-        [blockScope].concat(
-          this.unsuccinctifyItems(block.c, {}, block.nt.nByte(0)),
-        ),
-      );
-
-      for (const item of items) {
-        if (item[0] === 'scope' && item[1] === 'start') {
-          allBlockScopes.add(item[2]);
-        }
-
-        if (milestoneFound(item)) {
-          ret[ret.length - 1][0] = [...allBlockScopes].sort();
-          ret.push([[], []]);
-
-          for (
-            const bs of [...allBlockScopes]
-              .filter(
-                s => {
-                  const excludes = ['blockTag', 'verse', 'verses', 'chapter'];
-                  return excludes.includes(s.split('/')[0]) || byMilestones.includes(s);
-                },
-              )
-          ) {
-            allBlockScopes.delete(bs);
-          }
-          allBlockScopes.add(blockScope);
-        }
-        ret[ret.length - 1][1].push(item);
-      }
-      ret[ret.length - 1][1].push(['scope', 'end', blockScope]);
-      ret[ret.length - 1][1].push(['token', 'punctuation', '\n']);
-    }
-    ret[ret.length - 1][0] = [...allBlockScopes].sort();
-    return ret;
+    return sequenceItemsByMilestones(this, blocks, byMilestones);
   }
 
   rehash() {
-    this.preEnums = {};
-
-    for (const category of Object.keys(this.enums)) {
-      this.preEnums[category] = new Map();
-    }
-    this.maybeBuildEnumIndexes();
-
-    for (const document of this.documents()) {
-      for (const sequence of Object.values(document.sequences)) {
-        document.rerecordPreEnums(this, sequence);
-      }
-    }
-    this.sortPreEnums();
-    const oldToNew = this.makeRehashEnumMap();
-
-    for (const document of this.documents()) {
-      for (const sequence of Object.values(document.sequences)) {
-        document.rewriteSequenceBlocks(sequence.id, oldToNew);
-      }
-    }
-    this.buildEnums();
-    this.buildEnumIndexes();
-    return true;
+    return rehash(this);
   }
 
   makeRehashEnumMap() {
-    const ret = {};
-
-    for (const [category, enumSuccinct] of Object.entries(this.enums)) {
-      ret[category] = [];
-      let pos = 0;
-
-      while (pos < enumSuccinct.length) {
-        const stringLength = enumSuccinct.byte(pos);
-        const enumString = enumSuccinct.countedString(pos);
-
-        if (this.preEnums[category].has(enumString)) {
-          ret[category].push(this.preEnums[category].get(enumString).enum);
-        } else {
-          ret[category].push(null);
-        }
-
-        pos += stringLength + 1;
-      }
-    }
-    return ret;
+    return makeRehashEnumMap(this);
   }
 
-  updateItems(
-    documentId,
-    sequenceId,
-    blockPosition,
-    itemObjects) {
-    const document = this.processor.documents[documentId];
-
-    if (!document) {
-      throw new Error(`Document '${documentId}' not found`);
-    }
-
-    let sequence;
-
-    if (sequenceId) {
-      sequence = document.sequences[sequenceId];
-
-      if (!sequence) {
-        throw new Error(`Sequence '${sequenceId}' not found`);
-      }
-    } else {
-      sequence = document.sequences[document.mainId];
-    }
-
-    if (sequence.blocks.length <= blockPosition) {
-      throw new Error(`Could not find block ${blockPosition} (length=${sequence.blocks.length})`);
-    }
-
-    const block = sequence.blocks[blockPosition];
-    const newItemsBA = new ByteArray(itemObjects.length);
-    this.maybeBuildPreEnums();
-
-    for (const item of itemObjects) {
-      switch (item.type) {
-      case 'token':
-        const charsEnumIndex = this.enumForCategoryValue(tokenCategory[item.subType], item.payload, true);
-        pushSuccinctTokenBytes(newItemsBA, tokenEnum[item.subType], charsEnumIndex);
-        break;
-      case 'graft':
-        const graftTypeEnumIndex = this.enumForCategoryValue('graftTypes', item.subType, true);
-        const seqEnumIndex = this.enumForCategoryValue('ids', item.payload, true);
-        pushSuccinctGraftBytes(newItemsBA, graftTypeEnumIndex, seqEnumIndex);
-        break;
-      case 'scope':
-        const scopeBits = item.payload.split('/');
-        const scopeTypeByte = scopeEnum[scopeBits[0]];
-
-        if (!scopeTypeByte) {
-          throw new Error(`"${scopeBits[0]}" is not a scope type`);
-        }
-
-        const scopeBitBytes = scopeBits.slice(1).map(b => this.enumForCategoryValue('scopeBits', b, true));
-        pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
-        break;
-      }
-    }
-    newItemsBA.trim();
-    block.c = newItemsBA;
-    this.updateBlockIndexesAfterEdit(sequence, blockPosition);
-    document.buildChapterVerseIndex();
-    return true;
+  updateItems(documentId, sequenceId, blockPosition, itemObjects) {
+    return updateItems(this, documentId, sequenceId, blockPosition, itemObjects);
   }
 
   updateBlockIndexesAfterEdit(sequence, blockPosition) {
-    const labelsMatch = (firstA, secondA) => {
-      for (const first of Array.from(firstA)) {
-        if (!secondA.has(first)) {
-          return false;
-        }
-      }
-
-      for (const second of Array.from(secondA)) {
-        if (!firstA.has(second)) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    const addSuccinctScope = (docSet, succinct, scopeLabel) => {
-      const scopeBits = scopeLabel.split('/');
-      const scopeTypeByte = scopeEnum[scopeBits[0]];
-
-      if (!scopeTypeByte) {
-        throw new Error(`"${scopeBits[0]}" is not a scope type`);
-      }
-
-      const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
-      pushSuccinctScopeBytes(succinct, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
-    };
-
-    const block = sequence.blocks[blockPosition];
-    const includedScopeLabels = new Set();
-    const openScopeLabels = new Set();
-
-    for (const openScope of this.unsuccinctifyScopes(block.os)) {
-      openScopeLabels.add(openScope[2]);
-    }
-
-    for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
-      if (scope[1] === 'start') {
-        includedScopeLabels.add(scope[2]);
-        openScopeLabels.add(scope[2]);
-      } else {
-        openScopeLabels.delete(scope[2]);
-      }
-    }
-
-    const isArray = Array.from(includedScopeLabels);
-    const isBA = new ByteArray(isArray.length);
-
-    for (const scopeLabel of isArray) {
-      addSuccinctScope(this, isBA, scopeLabel);
-    }
-    isBA.trim();
-    block.is = isBA;
-
-    if (blockPosition < (sequence.blocks.length - 1)) {
-      const nextOsBlock = sequence.blocks[blockPosition + 1];
-      const nextOsBA = nextOsBlock.os;
-      const nextOSLabels = new Set(this.unsuccinctifyScopes(nextOsBA).map(s => s[2]));
-
-      if (!labelsMatch(openScopeLabels, nextOSLabels)) {
-        const osBA = new ByteArray(nextOSLabels.length);
-
-        for (const scopeLabel of Array.from(openScopeLabels)) {
-          addSuccinctScope(this, osBA, scopeLabel);
-        }
-        osBA.trim();
-        nextOsBlock.os = osBA;
-        this.updateBlockIndexesAfterEdit(sequence, blockPosition + 1);
-      }
-    }
+    updateBlockIndexesAfterEdit(this, sequence, blockPosition);
   }
 
   updateBlockIndexesAfterFilter(sequence) {
-    const addSuccinctScope = (docSet, succinct, scopeLabel) => {
-      const scopeBits = scopeLabel.split('/');
-      const scopeTypeByte = scopeEnum[scopeBits[0]];
-
-      if (!scopeTypeByte) {
-        throw new Error(`"${scopeBits[0]}" is not a scope type`);
-      }
-
-      const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
-      pushSuccinctScopeBytes(succinct, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
-    };
-
-    const openScopeLabels = new Set();
-
-    for (const block of sequence.blocks) {
-      const osArray = Array.from(openScopeLabels);
-      const osBA = new ByteArray(osArray.length);
-
-      for (const scopeLabel of osArray) {
-        addSuccinctScope(this, osBA, scopeLabel);
-      }
-      osBA.trim();
-      block.os = osBA;
-      const includedScopeLabels = new Set();
-
-      for (const scope of this.unsuccinctifyItems(block.c, { scopes: true }, null)) {
-        if (scope[1] === 'start') {
-          includedScopeLabels.add(scope[2]);
-          openScopeLabels.add(scope[2]);
-        } else {
-          openScopeLabels.delete(scope[2]);
-        }
-      }
-
-      const isArray = Array.from(includedScopeLabels);
-      const isBA = new ByteArray(isArray.length);
-
-      for (const scopeLabel of isArray) {
-        addSuccinctScope(this, isBA, scopeLabel);
-      }
-      isBA.trim();
-      block.is = isBA;
-    }
+    updateBlockIndexesAfterFilter(this, sequence);
   }
 
   serializeSuccinct() {
-    const ret = {
-      id: this.id,
-      metadata: { selectors: this.selectors },
-      enums: {},
-      docs: {},
-      tags: Array.from(this.tags),
-    };
-
-    for (const [eK, eV] of Object.entries(this.enums)) {
-      ret.enums[eK] = eV.base64();
-    }
-    ret.docs = {};
-
-    for (const docId of this.docIds) {
-      ret.docs[docId] = this.processor.documents[docId].serializeSuccinct();
-    }
-    return ret;
+    return serializeSuccinct(this);
   }
 }
 
