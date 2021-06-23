@@ -1,4 +1,5 @@
 import xre from 'xregexp';
+import { headerBytes, itemEnum } from 'proskomma-utils';
 
 const blocksWithScriptureCV = (docSet, blocks, cv) => {
   const hasMiddleChapter = (b, fromC, toC) => {
@@ -140,4 +141,92 @@ const blocksWithScriptureCV = (docSet, blocks, cv) => {
   }
 };
 
-module.exports = { blocksWithScriptureCV };
+const allBlockScopes = (docSet, block) => {
+  const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+  const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
+  return new Set([
+    ...docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
+    ...docSet.unsuccinctifyScopes(block.is).map(s => s[2]),
+    blockScope[2],
+  ],
+  );
+};
+
+const allScopesInBlock = (docSet, block, scopes) => {
+  const allBlockScopes = docSet.allBlockScopes(block);
+
+  for (const scope of scopes) {
+    if (!allBlockScopes.has(scope)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const anyScopeInBlock = (docSet, block, scopes) => {
+  const allBlockScopes = docSet.allBlockScopes(block);
+
+  for (const scope of scopes) {
+    if (allBlockScopes.has(scope)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const blockHasBlockScope = (docSet, block, scope) => {
+  const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+  const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
+  return (blockScope[2] === scope);
+};
+
+const blockHasChars = (docSet, block, charsIndexes) => {
+  let ret = false;
+  let pos = 0;
+  const succinct = block.c;
+
+  if (charsIndexes.includes(-1)) {
+    return false;
+  }
+
+  while (!ret && (pos < succinct.length)) {
+    const [itemLength, itemType] = headerBytes(succinct, pos);
+
+    if (itemType === itemEnum['token']) {
+      if (charsIndexes.includes(succinct.nByte(pos + 2))) {
+        ret = true;
+      }
+    }
+    pos += itemLength;
+  }
+  return ret;
+};
+
+const blockHasMatchingItem = (docSet, block, testFunction, options) => {
+  const openScopes = new Set(docSet.unsuccinctifyScopes(block.os).map(ri => ri[2]));
+
+  for (const item of docSet.unsuccinctifyItems(block.c, options, 0)) {
+    if (item[0] === 'scope' && item[1] === 'start') {
+      openScopes.add(item[2]);
+    }
+
+    if (testFunction(item, openScopes)) {
+      return true;
+    }
+
+    if (item[0] === 'scope' && item[1] === 'end') {
+      openScopes.delete(item[2]);
+    }
+  }
+  return false;
+};
+
+module.exports = {
+  blocksWithScriptureCV,
+  allBlockScopes,
+  anyScopeInBlock,
+  allScopesInBlock,
+  blockHasBlockScope,
+  blockHasChars,
+  blockHasMatchingItem,
+};

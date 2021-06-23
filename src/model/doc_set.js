@@ -1,4 +1,4 @@
-import xre from 'xregexp';
+import xre, { test } from 'xregexp';
 import {
   addTag,
   ByteArray,
@@ -21,7 +21,15 @@ import {
   validateTags,
 } from 'proskomma-utils';
 import { validateSelectors } from './doc_set_helpers/selectors';
-import { blocksWithScriptureCV } from './doc_set_helpers/scripture_cv';
+import {
+  blocksWithScriptureCV,
+  allBlockScopes,
+  anyScopeInBlock,
+  allScopesInBlock,
+  blockHasBlockScope,
+  blockHasChars,
+  blockHasMatchingItem,
+} from './doc_set_helpers/block';
 import {
   unsuccinctifyBlock,
   unsuccinctifyItems,
@@ -29,6 +37,12 @@ import {
   unsuccinctifyPrunedItems,
   unsuccinctifyItemsWithScriptureCV,
 } from './doc_set_helpers/unsuccinctify';
+import {
+  buildPreEnum,
+  recordPreEnum,
+  buildEnum,
+  enumForCategoryValue,
+} from './doc_set_helpers/enum';
 
 class DocSet {
   constructor(processor, selectors, tags, succinctJson) {
@@ -112,45 +126,12 @@ class DocSet {
 
   buildPreEnums() {
     for (const [category, succinct] of Object.entries(this.enums)) {
-      this.preEnums[category] = this.buildPreEnum(succinct);
+      this.preEnums[category] = buildPreEnum(this, succinct);
     }
-  }
-
-  buildPreEnum(succinct) {
-    const ret = new Map();
-    let pos = 0;
-    let enumCount = 0;
-
-    while (pos < succinct.length) {
-      ret.set(
-        succinct.countedString(pos),
-        {
-          'enum': enumCount++,
-          'frequency': 0,
-        },
-      );
-      pos += succinct.byte(pos) + 1;
-    }
-
-    return ret;
   }
 
   recordPreEnum(category, value) {
-    if (!(category in this.preEnums)) {
-      throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
-    }
-
-    if (!this.preEnums[category].has(value)) {
-      this.preEnums[category].set(
-        value,
-        {
-          'enum': this.preEnums[category].size,
-          'frequency': 1,
-        },
-      );
-    } else {
-      this.preEnums[category].get(value).frequency++;
-    }
+    recordPreEnum(this, category, value);
   }
 
   sortPreEnums() {
@@ -166,30 +147,7 @@ class DocSet {
   }
 
   enumForCategoryValue(category, value, addUnknown) {
-    if (!addUnknown) {
-      addUnknown = false;
-    }
-
-    if (!(category in this.preEnums)) {
-      throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
-    }
-
-    if (this.preEnums[category].has(value)) {
-      return this.preEnums[category].get(value).enum;
-    } else if (addUnknown) {
-      this.preEnums[category].set(
-        value,
-        {
-          'enum': this.preEnums[category].size,
-          'frequency': 1,
-        },
-      );
-      this.enums[category].pushCountedString(value);
-      this.buildEnumIndex(category);
-      return this.preEnums[category].get(value).enum;
-    } else {
-      throw new Error(`Unknown value '${value}' for category ${category} in enumForCategoryValue. Maybe call buildPreEnums()?`);
-    }
+    return enumForCategoryValue(this, category, value, addUnknown);
   }
 
   buildEnums() {
@@ -200,12 +158,7 @@ class DocSet {
   }
 
   buildEnum(category, preEnumOb) {
-    const sortedPreEnums = new Map([...preEnumOb.entries()]);
-
-    for (const enumText of sortedPreEnums.keys()) {
-      this.enums[category].pushCountedString(enumText);
-    }
-    this.enums[category].trim();
+    buildEnum(this, category, preEnumOb);
   }
 
   maybeBuildEnumIndexes() {
@@ -373,69 +326,29 @@ class DocSet {
   succinctGraftSeqId(succinct, pos) {
     return succinctGraftSeqId(this.enums, this.enumIndexes, succinct, pos);
   }
+
   blocksWithScriptureCV(blocks, cv) {
     return blocksWithScriptureCV(this, blocks, cv);
   }
 
   allBlockScopes(block) {
-    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
-    const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
-    return new Set([
-      ...this.unsuccinctifyScopes(block.os).map(s => s[2]),
-      ...this.unsuccinctifyScopes(block.is).map(s => s[2]),
-      blockScope[2],
-    ],
-    );
+    return allBlockScopes(this, block);
   }
 
   allScopesInBlock(block, scopes) {
-    const allBlockScopes = this.allBlockScopes(block);
-
-    for (const scope of scopes) {
-      if (!allBlockScopes.has(scope)) {
-        return false;
-      }
-    }
-    return true;
+    return allScopesInBlock(this, block, scopes);
   }
 
   anyScopeInBlock(block, scopes) {
-    const allBlockScopes = this.allBlockScopes(block);
-
-    for (const scope of scopes) {
-      if (allBlockScopes.has(scope)) {
-        return true;
-      }
-    }
-    return false;
+    return anyScopeInBlock(this, block, scopes);
   }
 
   blockHasBlockScope(block, scope) {
-    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
-    const blockScope = this.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
-    return (blockScope[2] === scope);
+    return blockHasBlockScope(this, block, scope);
   }
 
   blockHasChars(block, charsIndexes) {
-    let ret = false;
-    let pos = 0;
-    const succinct = block.c;
-
-    if (charsIndexes.includes(-1)) {
-      return false;
-    }
-
-    while (!ret && (pos < succinct.length)) {
-      const [itemLength, itemType] = headerBytes(succinct, pos);
-
-      if (itemType === itemEnum['token']) {
-        if (charsIndexes.includes(succinct.nByte(pos + 2))) {
-          ret = true;
-        }
-      }
-      pos += itemLength;
-    }
-    return ret;
+    return blockHasChars(this, block, charsIndexes);
   }
 
   unsuccinctifyItemsWithScriptureCV(block, cv, options) {
@@ -443,22 +356,7 @@ class DocSet {
   }
 
   blockHasMatchingItem(block, testFunction, options) {
-    const openScopes = new Set(this.unsuccinctifyScopes(block.os).map(ri => ri[2]));
-
-    for (const item of this.unsuccinctifyItems(block.c, options, 0)) {
-      if (item[0] === 'scope' && item[1] === 'start') {
-        openScopes.add(item[2]);
-      }
-
-      if (testFunction(item, openScopes)) {
-        return true;
-      }
-
-      if (item[0] === 'scope' && item[1] === 'end') {
-        openScopes.delete(item[2]);
-      }
-    }
-    return false;
+    return blockHasMatchingItem(this, block, testFunction, options);
   }
 
   sequenceItemsByScopes(blocks, byScopes) {
