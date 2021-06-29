@@ -59,3 +59,18 @@ test(
     }
   },
 );
+
+test(
+  `No mt (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(1);
+      t.throws(() => pkWithDoc('../test_data/usfm/no_mt.usfm', {
+        lang: 'fra',
+        abbr: 'hello',
+      }), /wordLike content/);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

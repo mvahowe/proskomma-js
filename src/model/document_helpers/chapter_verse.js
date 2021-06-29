@@ -24,6 +24,10 @@ const buildChapterVerseIndex = document => {
   let nextTokenN = 0;
 
   mainSequence.chapterVerses = {};
+
+  if (docSet.enums.wordLike.length === 0) {
+    throw new Error('No wordLike content in docSet - probably a USFM issue, maybe missing \\mt?');
+  }
   mainSequence.tokensPresent = new BitSet(
     new Array(docSet.enums.wordLike.length)
       .fill(0)
@@ -266,9 +270,7 @@ const chapterIndex = (document, chapN) => {
   }
 };
 
-const makeVerseLengthByte = (recordType, isLast, length) =>  {
-  return length + (isLast ? 32 : 0) + (recordType * 64);
-};
+const makeVerseLengthByte = (recordType, isLast, length) => length + (isLast ? 32 : 0) + (recordType * 64);
 
 const verseLengthByte= (succinct, pos) => {
   const sByte = succinct.byte(pos);
