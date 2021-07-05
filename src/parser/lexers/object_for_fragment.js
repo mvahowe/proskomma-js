@@ -29,11 +29,21 @@ const makeVerses = (subclass, matchedBits) => {
 };
 
 const makeAttribute = (subclass, matchedBits) => {
-  const ret = {
-    subclass,
-    key: matchedBits[2],
-    valueString: matchedBits[3].trim().replace(/\//g,'÷'),
-  };
+  let ret;
+
+  if (subclass === 'defaultAttribute') {
+    ret = {
+      subclass,
+      key: 'default',
+      valueString: matchedBits[2].trim().replace(/\//g, '÷'),
+    };
+  } else {
+    ret = {
+      subclass,
+      key: matchedBits[2],
+      valueString: matchedBits[3].trim().replace(/\//g, '÷'),
+    };
+  }
   ret.values = ret.valueString.split(',').map(vb => vb.trim());
   ret.printValue = `| ${ret.key}="${ret.valueString}"`;
   return ret;
