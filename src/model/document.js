@@ -51,8 +51,9 @@ class Document {
       this.mainId = null;
       this.sequences = {};
 
-      switch (contentType) {
+      switch (contentType.toLowerCase()) {
       case 'usfm':
+      case 'sfm':
         this.processUsfm(contentString);
         break;
       case 'usx':
