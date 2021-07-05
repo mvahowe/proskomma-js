@@ -13,6 +13,11 @@ const lexingRegexes = [
     'attribute',
     xre('([ \\t]*\\|?[ \\t]*([A-Za-z0-9\\-]+)="([^"]*)"[ \\t]?)'),
   ],
+  [
+    'attribute',
+    'defaultAttribute',
+    xre('([ \\t]*\\|[ \\t]*([^\\|\\\\]*))'),
+  ],
   ['milestone', 'emptyMilestone', xre('(\\\\([a-z1-9]+)\\\\[*])')],
   ['milestone', 'startMilestoneTag', xre('(\\\\([a-z1-9]+)-([se]))')],
   ['milestone', 'endMilestoneMarker', xre('(\\\\([*]))')],

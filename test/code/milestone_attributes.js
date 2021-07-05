@@ -12,6 +12,10 @@ const pk2 = pkWithDoc('../test_data/usx/milestone_attributes.usx', {
   lang: 'fra',
   abbr: 'hello',
 })[0];
+const pk3 = pkWithDoc('../test_data/usfm/milestone_attributes_default.usfm', {
+  lang: 'fra',
+  abbr: 'hello',
+})[0];
 
 const topItems = items => {
   if (items.length === 0) {
@@ -33,9 +37,7 @@ const tailItems = items => {
   }
 };
 
-const topNTailItems = items => {
-  return tailItems(topItems(items));
-};
+const topNTailItems = items => tailItems(topItems(items));
 
 const zalnScopes = ['x-strong/0/H5662', 'x-lemma/0/עֹבַדְיָה', 'x-morph/0/He', 'x-morph/1/Np', 'x-occurrence/0/1', 'x-occurrences/0/1'];
 const wScopes = ['x-occurrence/0/1', 'x-occurrences/0/1'];
@@ -54,18 +56,21 @@ const checkResult = (t, result) => {
   t.equal(content.length, 23);
   t.equal(content[0].subType, 'start');
   t.equal(content[0].payload, 'milestone/zaln');
+
   for (const [n, s] of zalnScopes.entries()) {
     t.equal(content[n + 1].subType, 'start');
     t.equal(content[n + 1].payload, zalnAtt(s));
   }
   t.equal(content[8].subType, 'start');
   t.equal(content[8].payload, 'spanWithAtts/w');
+
   for (const [n, s] of wScopes.entries()) {
     t.equal(content[n + 9].subType, 'start');
     t.equal(content[n + 9].payload, wAtt(s));
   }
   t.equal(content[11].subType, 'wordLike');
   t.equal(content[11].payload, 'Obadiah');
+
   for (const [n, s] of wScopes.entries()) {
     t.equal(content[13 - n].subType, 'end');
     t.equal(content[13 - n].payload, wAtt(s));
@@ -73,6 +78,7 @@ const checkResult = (t, result) => {
   t.equal(content[14].subType, 'end');
   t.equal(content[14].payload, 'spanWithAtts/w');
   t.equal(content[22].subType, 'end');
+
   for (const [n, s] of zalnScopes.entries()) {
     t.equal(content[21 - n].subType, 'end');
     t.equal(content[21 - n].payload, zalnAtt(s));
@@ -88,6 +94,26 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       checkResult(t, result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `USFM with default attribute(${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(
+        result.data.documents[0].sequences
+          .filter(s => s.id === result.data.documents[0].mainSequence.id)[0]
+          .blocks[0].items.filter(
+            i => i.payload === 'attribute/spanWithAtts/w/lemma/0/O-bi-di-ah' && i.subType === 'start',
+          ).length,
+        1);
     } catch (err) {
       console.log(err);
     }
@@ -114,6 +140,7 @@ test(
     try {
       t.plan(1);
       let pk;
+
       t.doesNotThrow(() => pk = pkWithDoc('../test_data/usfm/slash_in_att.usfm', {
         lang: 'fra',
         abbr: 'hello',

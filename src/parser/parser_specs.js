@@ -651,10 +651,23 @@ const specs = (pt) => [
     // ATTRIBUTE - open scope based on attribute context
     contexts: [
       ['attribute'],
+      ['defaultAttribute'],
     ],
     parser: {
       during: (parser, pt) => {
+        const defaults = {
+          w: 'lemma',
+          rb: 'gloss',
+          xt: 'link-href',
+        };
+
         if (parser.current.attributeContext) {
+          const contextParts = parser.current.attributeContext.split('/');
+
+          if ((pt.key === 'default') && (contextParts.length === 2)) {
+            pt.key = defaults[contextParts[1]] || `unknownDefault_${contextParts[1]}`;
+            pt.printValue = pt.printValue.replace(/default/, pt.key);
+          }
           [...pt.values.entries()].forEach(na => {
             const attScope = {
               label: pt => labelForScope('attribute', [parser.current.attributeContext, pt.key, na[0], na[1]]),
