@@ -216,6 +216,51 @@ class Proskomma {
     return docs;
   }
 
+  importUsfmInt(selectors, contentString, filterOptions, customTags, emptyBlocks, tags) {
+    // Expect id on first line - extract bookCode, error if not INT.
+    // Read line by line.
+    // For each periph:
+    // - get periphDesc, periphId
+    // - start new document source
+    // - id = P0X (padded) plus bookCode plus periphId plus periphDesc
+    // For each periph:
+    // - importDocument
+    const lines = contentString.toString().split(/[\n\r]+/);
+    const bookCode = lines[0].substring(4, 7);
+
+    if (bookCode !== 'INT') {
+      throw new Error(`importUsfmInt() expected bookCode of INT, not '${bookCode}'`);
+    }
+
+    let periphs = [];
+
+    for (const line of lines) {
+      if (line.substring(0, 7) === '\\periph') {
+        let matchedBits = xre.exec(line, xre('^\\\\periph (.*)\\|\\s*id\\s*=\\s*"([^"]+)"\\s*$'));
+
+        if (!matchedBits) {
+          throw new Error(`Unable to parse periph line '${line}'`);
+        }
+
+        const periphDesc = matchedBits[1];
+        const periphId = matchedBits[2];
+        const periphBookCode = `\\id P${periphs.length >= 9 ? (periphs.length + 1) : '0' + (periphs.length + 1)}`;
+        periphs.push([`${periphBookCode} INT ${periphId} - ${periphDesc}`]);
+      } else if (periphs.length > 0 && line.substring(0, 3) !== '\\id') {
+        periphs[periphs.length - 1].push(line);
+      }
+    }
+    this.importDocuments(
+      selectors,
+      'usfm',
+      periphs.map(p => p.join('\n')),
+      filterOptions,
+      customTags,
+      emptyBlocks,
+      tags,
+    );
+  }
+
   deleteDocSet(docSetId) {
     if (!(docSetId in this.docSets)) {
       return false;
