@@ -35,6 +35,7 @@ module.exports = {
     'import/first': 'error',
     'import/default': 'off',
     'import/namespace': 'off',
+    'import/no-duplicates': 'error',
     'indent': ['error', 2],
     'no-undef': 'error',
     'no-unused-vars': 'error',

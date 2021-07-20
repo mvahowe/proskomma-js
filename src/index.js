@@ -217,14 +217,6 @@ class Proskomma {
   }
 
   importUsfmInt(selectors, contentString, filterOptions, customTags, emptyBlocks, tags) {
-    // Expect id on first line - extract bookCode, error if not INT.
-    // Read line by line.
-    // For each periph:
-    // - get periphDesc, periphId
-    // - start new document source
-    // - id = P0X (padded) plus bookCode plus periphId plus periphDesc
-    // For each periph:
-    // - importDocument
     const lines = contentString.toString().split(/[\n\r]+/);
     const bookCode = lines[0].substring(4, 7);
 
@@ -259,6 +251,35 @@ class Proskomma {
       emptyBlocks,
       tags,
     );
+  }
+
+  cleanUsfm(usfm, options) {
+    options = options || {};
+    const lines = usfm.toString().split(/[\n\r]+/);
+    const ret = [];
+    let inHeaders = true;
+    const headers = ['\\id', '\\ide', '\\usfm', '\\sts', '\\rem', '\\h', '\\toc'];
+
+    for (const line of lines) {
+      const firstWord = line.split(' ')[0]
+        .replace(/[0-9]+/g, '');
+
+      if ('remove' in options && options.remove.includes(firstWord)) {
+        continue;
+      }
+
+      const isHeaderLine = headers.includes(firstWord);
+
+      if (inHeaders && !isHeaderLine && firstWord!== '\\mt') {
+        ret.push('\\mt1 USFM');
+      }
+      ret.push(line);
+
+      if (!isHeaderLine) {
+        inHeaders = false;
+      }
+    }
+    return ret.join('\n');
   }
 
   deleteDocSet(docSetId) {
