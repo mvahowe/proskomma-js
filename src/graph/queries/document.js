@@ -1,3 +1,5 @@
+import xre from 'xregexp';
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -16,6 +18,7 @@ const cIndexType = require('./cIndex');
 const itemGroupType = require('./itemGroup');
 const itemType = require('./item');
 const cvNavigationType = require('./cvNavigation');
+const idPartsType = require('./idParts');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -27,6 +30,30 @@ const documentType = new GraphQLObjectType({
     id: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The id of the document',
+    },
+    idParts: {
+      type: GraphQLNonNull(idPartsType),
+      description: 'A parsed version of the id header',
+      resolve: root => {
+        const idHeader = headerById(root, 'id');
+
+        if (!idHeader) {
+          return [null, null];
+        }
+
+        const periphMatch = xre.exec(idHeader, /^(P\d\d)\s+([A-Z0-6]{3})\s+(\S+)\s+-\s+(.*)/);
+
+        if (periphMatch) {
+          return ['periph', periphMatch.slice(1)];
+        }
+
+        const bookMatch = xre.exec(idHeader, /^([A-Z0-6]{3})\s+(.*)/);
+
+        if (bookMatch) {
+          return ['book', bookMatch.slice(1)];
+        }
+        return [null, [idHeader]];
+      },
     },
     docSetId: {
       type: GraphQLNonNull(GraphQLString),
