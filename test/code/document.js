@@ -1,13 +1,25 @@
 const test = require('tape');
+const path = require('path');
+const fse = require('fs-extra');
+const { Proskomma } = require('../../src');
 
 const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Graph Document';
 
-const [pk, pkDoc] = pkWithDoc('../test_data/usx/web_rut.usx', {
+const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
   abbr: 'ust',
-});
+})[0];
+
+const pk2 = new Proskomma();
+const fp = '../test_data/usfm/int.usfm';
+const content = fse.readFileSync(path.resolve(__dirname, fp));
+pk2.importUsfmInt(
+  { lang: 'eng', abbr: 'abc' },
+  content,
+  {},
+);
 
 test(
   `DocSetId (${testGroup})`,
@@ -41,6 +53,37 @@ test(
       t.equal(result.data.documents[0].toc, 'The Book of Ruth');
     } catch
     (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `ID Parts (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(14);
+      const query = '{ documents { idParts { type parts part(index:0) nullPart: part(index:9) } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let idParts = result.data.documents[0].idParts;
+      t.equal(idParts.type, 'book');
+      t.equal(idParts.parts.length, 2);
+      t.equal(idParts.parts[0], 'RUT');
+      t.equal(idParts.part, 'RUT');
+      t.ok(!idParts.nullPart);
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      idParts = result.data.documents[0].idParts;
+      t.equal(idParts.type, 'periph');
+      t.equal(idParts.parts.length, 4);
+      t.equal(idParts.parts[0], 'P01');
+      t.equal(idParts.parts[1], 'INT');
+      t.equal(idParts.parts[2], 'intbible');
+      t.equal(idParts.part, 'P01');
+      t.ok(!idParts.nullPart);
+    } catch
+      (err) {
       console.log(err);
     }
   },
