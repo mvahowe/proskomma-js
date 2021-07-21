@@ -239,10 +239,10 @@ class Proskomma {
         const periphId = matchedBits[2];
         const periphBookCode = `\\id P${this.nextPeriph >= 9 ? this.nextPeriph : '0' + this.nextPeriph}`;
         periphs.push([`${periphBookCode} INT ${periphId} - ${periphDesc}`]);
+        this.nextPeriph++;
       } else if (periphs.length > 0 && line.substring(0, 3) !== '\\id') {
         periphs[periphs.length - 1].push(line);
       }
-      this.nextPeriph++;
     }
     this.importDocuments(
       selectors,
