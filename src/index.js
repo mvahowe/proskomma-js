@@ -38,6 +38,7 @@ class Proskomma {
       },
     ];
     this.mutex = new Mutex();
+    this.nextPeriph = 0;
   }
 
   validateSelectors() {
@@ -236,10 +237,11 @@ class Proskomma {
 
         const periphDesc = matchedBits[1];
         const periphId = matchedBits[2];
-        const periphBookCode = `\\id P${periphs.length >= 9 ? (periphs.length + 1) : '0' + (periphs.length + 1)}`;
+        const periphBookCode = `\\id P${this.nextPeriph >= 9 ? this.nextPeriph : '0' + this.nextPeriph}`;
         periphs.push([`${periphBookCode} INT ${periphId} - ${periphDesc}`]);
       } else if (periphs.length > 0 && line.substring(0, 3) !== '\\id') {
         periphs[periphs.length - 1].push(line);
+        this.nextPeriph++;
       }
     }
     this.importDocuments(
