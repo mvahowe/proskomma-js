@@ -77,10 +77,10 @@ test(
       idParts = result.data.documents[0].idParts;
       t.equal(idParts.type, 'periph');
       t.equal(idParts.parts.length, 4);
-      t.equal(idParts.parts[0], 'P01');
+      t.equal(idParts.parts[0], 'P00');
       t.equal(idParts.parts[1], 'INT');
       t.equal(idParts.parts[2], 'intbible');
-      t.equal(idParts.part, 'P01');
+      t.equal(idParts.part, 'P00');
       t.ok(!idParts.nullPart);
     } catch
       (err) {
