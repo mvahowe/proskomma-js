@@ -216,12 +216,12 @@ class Proskomma {
     return docs;
   }
 
-  importUsfmInt(selectors, contentString, filterOptions, customTags, emptyBlocks, tags) {
+  importUsfmPeriph(selectors, contentString, filterOptions, customTags, emptyBlocks, tags) {
     const lines = contentString.toString().split(/[\n\r]+/);
     const bookCode = lines[0].substring(4, 7);
 
-    if (bookCode !== 'INT') {
-      throw new Error(`importUsfmInt() expected bookCode of INT, not '${bookCode}'`);
+    if (!['FRT', 'BAK', 'INT'].includes(bookCode)) {
+      throw new Error(`importUsfmInt() expected bookCode of FRT, BAK or INT, not '${bookCode}'`);
     }
 
     let periphs = [];

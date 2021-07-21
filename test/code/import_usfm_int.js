@@ -15,7 +15,7 @@ test(
       let content = fse.readFileSync(path.resolve(__dirname, fp));
 
       t.throws(() =>
-        pk.importUsfmInt(
+        pk.importUsfmPeriph(
           { lang: 'eng', abbr: 'abc' },
           content,
           {},
@@ -25,7 +25,7 @@ test(
       content = fse.readFileSync(path.resolve(__dirname, fp));
 
       t.doesNotThrow(() =>
-        pk.importUsfmInt(
+        pk.importUsfmPeriph(
           { lang: 'eng', abbr: 'abc' },
           content,
           {},
