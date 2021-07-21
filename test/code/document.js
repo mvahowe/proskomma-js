@@ -15,7 +15,7 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
 const pk2 = new Proskomma();
 const fp = '../test_data/usfm/int.usfm';
 const content = fse.readFileSync(path.resolve(__dirname, fp));
-pk2.importUsfmInt(
+pk2.importUsfmPeriph(
   { lang: 'eng', abbr: 'abc' },
   content,
   {},
