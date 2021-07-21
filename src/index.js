@@ -241,8 +241,8 @@ class Proskomma {
         periphs.push([`${periphBookCode} INT ${periphId} - ${periphDesc}`]);
       } else if (periphs.length > 0 && line.substring(0, 3) !== '\\id') {
         periphs[periphs.length - 1].push(line);
-        this.nextPeriph++;
       }
+      this.nextPeriph++;
     }
     this.importDocuments(
       selectors,

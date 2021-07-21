@@ -38,7 +38,7 @@ test(
       const headerKeys = firstDoc.headers.map(h => h.key);
       t.ok(headerKeys.includes('id'));
       t.ok(headerKeys.includes('bookCode'));
-      t.equal(firstDoc.headers.filter(h => h.key === 'bookCode')[0].value, 'P00');
+      t.equal(firstDoc.headers.filter(h => h.key === 'bookCode')[0].value, 'P01');
       const introSequence = firstDoc.sequences.filter(s => s.type === 'introduction')[0];
       t.equal(introSequence.text, 'The Bible is a book of books.');
     } catch (err) {
