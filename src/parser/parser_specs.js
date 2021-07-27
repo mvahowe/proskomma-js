@@ -611,7 +611,14 @@ const specs = (pt) => [
       newScopes: [
         {
           label: pt => labelForScope('cell', [pt.fullTagName]),
-          endedBy: ['implicitEnd', 'endBlock', 'endTag/$fullTagName$'],
+          endedBy: [
+            'startTag/th',
+            'startTag/thr',
+            'startTag/tc',
+            'startTag/tcr',
+            'endBlock',
+            'endTag/$fullTagName$',
+          ],
         },
       ],
     },
