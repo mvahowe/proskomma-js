@@ -16,6 +16,19 @@ const {
 const { dumpBlock } = require('../lib/dump');
 const itemType = require('./item');
 
+const scopeMatchesStartsWith = (sw, s) => {
+  if (sw.length === 0) {
+    return true;
+  }
+
+  for (const swv of sw) {
+    if (s.startsWith(swv)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const blockType = new GraphQLObjectType({
   name: 'Block',
   description: 'Part of a sequence, roughly equivalent to a USFM paragraph',
@@ -277,9 +290,16 @@ const blockType = new GraphQLObjectType({
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'A list of the labels for the block\'s bs, os and is scopes',
+      args: {
+        startsWith: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only include scopes that begin with this value',
+        },
+      },
       resolve:
         (root, args, context) =>
-          [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)],
+          [...context.docSet.unsuccinctifyBlockScopeLabelsSet(root)]
+            .filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)),
     },
   }),
 });

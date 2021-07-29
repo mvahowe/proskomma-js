@@ -8,6 +8,19 @@ const {
 const { dumpItemGroup } = require('../lib/dump');
 const itemType = require('./item');
 
+const scopeMatchesStartsWith = (sw, s) => {
+  if (sw.length === 0) {
+    return true;
+  }
+
+  for (const swv of sw) {
+    if (s.startsWith(swv)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 // [scopeLabels, items]
 
 const itemGroupType = new GraphQLObjectType({
@@ -56,7 +69,14 @@ const itemGroupType = new GraphQLObjectType({
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'The labels of scopes that were open at the beginning of the itemGroup',
-      resolve: (root, args, context) => root[0],
+      args: {
+        startsWith: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only include scopes that begin with this value',
+        },
+      },
+      resolve: (root, args, context) =>
+        root[0].filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)),
     },
     dump: {
       type: GraphQLNonNull(GraphQLString),

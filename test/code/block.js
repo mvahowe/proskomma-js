@@ -275,8 +275,8 @@ test(
         'verses/1',
         'blockTag/p',
       ];
-      t.plan(2 + scopeLabels.length);
-      const query = '{ documents { mainSequence { blocks { scopeLabels bs { payload } } } } }';
+      t.plan(4 + scopeLabels.length);
+      const query = '{ documents { mainSequence { blocks { scopeLabels verseScope: scopeLabels(startsWith:"verse/") bs { payload } } } } }';
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const block = result.data.documents[0].mainSequence.blocks[0];
@@ -285,6 +285,8 @@ test(
       for (const scopeLabel of scopeLabels) {
         t.ok(block.scopeLabels.includes(scopeLabel));
       }
+      t.equal(block.verseScope.length, 1);
+      t.equal(block.verseScope[0], 'verse/1');
     } catch (err) {
       console.log(err);
     }
