@@ -46,6 +46,7 @@ const specs = (pt) => [
           'h',
           'toc',
           'toca',
+          'cl',
         ],
       ],
     ],
