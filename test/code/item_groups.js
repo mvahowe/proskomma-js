@@ -21,9 +21,9 @@ test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
-      t.plan(12);
+      t.plan(14);
       const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"] includeContext:true) {' +
-        'scopeLabels text dump' +
+        'scopeLabels chapterScope: scopeLabels(startsWith:"chapter/") text dump' +
         '} } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -34,6 +34,8 @@ test(
       t.ok(itemGroups[1].scopeLabels.includes('chapter/1'));
       t.ok(itemGroups[1].scopeLabels.includes('verse/2'));
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
+      t.equal(itemGroups[1].chapterScope.length, 1);
+      t.equal(itemGroups[1].chapterScope[0], 'chapter/1');
       t.ok(itemGroups[1].text.startsWith('Instead'));
       t.ok(itemGroups[1].text.trim().endsWith('Yahweh teaches.')); // trim cos trailing newline before next \v
       const dumped = itemGroups[1].dump.split('\n').map(l => l.trim());
