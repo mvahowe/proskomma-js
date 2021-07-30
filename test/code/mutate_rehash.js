@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const { pkWithDoc } = require('../lib/load');
 
-const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
+const pk = pkWithDoc('../test_data/usx/web_psa150.usx', {
   lang: 'eng',
   abbr: 'web',
 }, {}, {}, [], [])[0];
