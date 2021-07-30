@@ -82,6 +82,7 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
   docSet.maybeBuildEnumIndexes();
   const ret = [];
   const scopes2array = {};
+  let waitingScopes = new Set([]);
 
   for (const block of blocks) {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
@@ -105,7 +106,14 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
       )
     ) {
       if (item[0] === 'scope' && item[1] === 'start') {
-        allBlockScopes.add(item[2]);
+        waitingScopes.add(item[2]);
+      }
+
+      if (item[0] === 'token' && waitingScopes.size > 0) {
+        for (const waiting of Array.from(waitingScopes)) {
+          allBlockScopes.add(waiting);
+        }
+        waitingScopes.clear();
       }
 
       if (allScopesPresent()) {
@@ -120,6 +128,7 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
 
       if (item[0] === 'scope' && item[1] === 'end') {
         allBlockScopes.delete(item[2]);
+        waitingScopes.delete(item[2]);
       }
     }
   }
