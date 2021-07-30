@@ -12,10 +12,6 @@ const pk2 = pkWithDoc('../test_data/usfm/ust_psa_with_ts.usfm', {
   lang: 'eng',
   abbr: 'ust',
 })[0];
-const pk3 = pkWithDoc('../test_data/usx/web_psa.usx', {
-  lang: 'eng',
-  abbr: 'web',
-})[0];
 
 test(
   `Text by scopes (${testGroup})`,
@@ -30,9 +26,10 @@ test(
       // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups[1], null, 2))
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
-      t.equal(itemGroups[1].scopeLabels.length, 3);
+      t.equal(itemGroups[1].scopeLabels.length, 4);
       t.ok(itemGroups[1].scopeLabels.includes('chapter/1'));
       t.ok(itemGroups[1].scopeLabels.includes('verse/2'));
+      t.ok(itemGroups[1].scopeLabels.includes('verses/2'));
       t.ok(itemGroups[1].scopeLabels.includes('blockTag/q'));
       t.equal(itemGroups[1].chapterScope.length, 1);
       t.equal(itemGroups[1].chapterScope[0], 'chapter/1');
@@ -41,7 +38,6 @@ test(
       const dumped = itemGroups[1].dump.split('\n').map(l => l.trim());
       t.ok(dumped[0].startsWith('ItemGroup'));
       t.ok(dumped[1].includes('verse/2'));
-      t.ok(dumped[2].startsWith('+verse/2+'));
       t.ok(dumped[4].endsWith('-verse/2-'));
     } catch (err) {
       console.log(err);
@@ -66,7 +62,7 @@ test(
       t.equal(itemGroups.length, 3);
       t.equal(itemGroups[1].tokens.length, 56);
       t.equal(itemGroups[1].wordLikes.length, 27);
-      t.equal(itemGroups[1].scopeLabels.length, 3);
+      t.equal(itemGroups[1].scopeLabels.length, 4);
       t.equal(itemGroups[1].items.filter(i => i.type === 'token')[0].payload, 'Instead');
       t.equal(itemGroups[1].items.filter(i => i.type === 'token').reverse()[1].payload, '.'); // Trailing newline before next \v
       t.equal(itemGroups[1].tokens[0].payload, 'Instead');
