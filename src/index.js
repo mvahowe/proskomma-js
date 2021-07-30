@@ -210,6 +210,14 @@ class Proskomma {
 
     for (const contentString of contentStrings) {
       let doc = new Document(this, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags);
+      const bookCode = doc.headers.bookCode;
+      const existingBookCodes = Object.values(this.documents)
+        .filter(d => docSet.docIds.includes(d.id))
+        .map(d => d.headers.bookCode);
+
+      if (existingBookCodes.includes(bookCode)) {
+        throw new Error(`Attempt to import document with bookCode '${bookCode}' which already exists in docSet ${docSetId}`);
+      }
       this.addDocument(doc, docSetId);
       docs.push(doc);
     }

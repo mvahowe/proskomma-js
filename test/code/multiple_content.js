@@ -38,6 +38,7 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets.length, 2);
+
       for (const [n, docSet] of result.data.docSets.entries()) {
         t.equal(docSet.lang, expected[n].lang);
         t.equal(docSet.abbr, expected[n].abbr);
@@ -73,6 +74,30 @@ test(
       t.ok(documents[0].mainSequence.blocks[0].text.startsWith('This is how'));
       t.ok(documents[1].header.startsWith('ESG'));
       t.ok(documents[1].mainSequence.blocks[0].text.startsWith('Here is the text'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Duplicate Documents (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(1);
+      t.throws(() => pkWithDocSetDocs(
+        [
+          '../test_data/usfm/hello.usfm',
+          '../test_data/usfm/hello.usfm',
+        ],
+        {
+          lang: 'eng',
+          abbr: 'ust',
+        },
+        {},
+      ),
+      /MRK.+already exists/,
+      );
     } catch (err) {
       console.log(err);
     }
