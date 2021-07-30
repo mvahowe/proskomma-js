@@ -344,6 +344,12 @@ class Proskomma {
   }
 
   loadSuccinctDocSet(succinctOb) {
+    const succinctId = succinctOb.id;
+
+    if (succinctId in this.docSets) {
+      throw new Error(`Attempting to succinct load docSet ${succinctId} which is already loaded`);
+    }
+
     const docSet = new DocSet(this, null, null, succinctOb);
     const docSetId = docSet.id;
     this.docSets[docSetId] = docSet;

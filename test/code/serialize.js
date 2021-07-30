@@ -40,7 +40,7 @@ test(
   `Load WEB RUT (${testGroup})`,
   async function (t) {
     try {
-      t.plan(10);
+      t.plan(11);
       let query = '{ docSets { id } }';
       let result = await pk.gqlQuery(query);
       const docSetId = result.data.docSets[0].id;
@@ -62,6 +62,7 @@ test(
       t.ok(result.data.documents[0].cv2[0].text.startsWith("In the days"));
       const firstBlock = result.data.documents[0].mainSequence.blocks[0];
       t.ok(firstBlock.text.startsWith('In the days when the judges judged'));
+      t.throws(() => pk2.loadSuccinctDocSet(serialized), /already loaded/);
     } catch (err) {
       console.log(err);
     }
