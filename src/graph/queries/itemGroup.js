@@ -63,8 +63,8 @@ const itemGroupType = new GraphQLObjectType({
       description: 'The text of the itemGroup as a single string',
       resolve: (root, args, context) => {
         const tokensText = root[1].filter(i => i[0] === 'token').map(t => t[2]).join('');
-        return args.normalizeSpace? tokensText.replace(/[ \t\n\r]+/g, ' ') : tokensText;
-      }
+        return args.normalizeSpace ? tokensText.replace(/[ \t\n\r]+/g, ' ') : tokensText;
+      },
     },
     scopeLabels: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
@@ -83,14 +83,18 @@ const itemGroupType = new GraphQLObjectType({
       description: 'The itemGroup content as a string in a compact eyeballable format',
       resolve: root => dumpItemGroup(root),
     },
-    /*
     includedScopes: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'A list of scopes from the items of the itemGroup',
-      resolve: (root, args, context) =>
-        Array.from(new Set(root[1].filter(i => i[0] === 'scope' && i[1] === 'start').map(t => t[2]))),
+      resolve: root =>
+        Array.from(
+          new Set(
+            root[1]
+              .filter(i => i[0] === 'scope' && i[1] === 'start')
+              .map(t => t[2]),
+          ),
+        ),
     },
- */
   }),
 });
 
