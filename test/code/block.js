@@ -127,24 +127,6 @@ test(
 );
 
 test(
-  `Render as AGHAST (${testGroup})`,
-  async function (t) {
-    try {
-      t.plan(4);
-      const query = '{ documents { mainSequence { blocks { aghast } } } }';
-      const result = await pk3.gqlQuery(query);
-      t.equal(result.errors, undefined);
-      const aghastLines = result.data.documents[0].mainSequence.blocks[0].aghast.split('\n');
-      t.equal(aghastLines[0], '<c 1>');
-      t.equal(aghastLines[1], '<v 1>');
-      t.ok(aghastLines[2].startsWith('\'In the days when'));
-    } catch (err) {
-      console.log(err);
-    }
-  },
-);
-
-test(
   `Normalize text whitespace (${testGroup})`,
   async function (t) {
     try {
