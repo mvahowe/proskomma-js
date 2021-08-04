@@ -330,11 +330,28 @@ test(
   `Filter documents by id (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
-      const query = `{ documents(ids: ["${pkDoc.id}"]) { id } }`;
+      t.plan(3);
+      const query = `{ documents(ids: ["${pkDoc.id}"]) { id } noDocs: documents(ids: ["abc"]) { id }}`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.ok('id' in result.data.documents[0]);
+      t.equal(result.data.noDocs.length, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter docSet documents by id (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = `{ docSet(id: "${pkDoc.docSetId}") { documents(ids: ["${pkDoc.id}"]) { id } noDocs: documents(ids: ["abc"]) { id } } }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('id' in result.data.docSet.documents[0]);
+      t.equal(result.data.docSet.noDocs.length, 0);
     } catch (err) {
       console.log(err);
     }

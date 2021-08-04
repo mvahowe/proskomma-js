@@ -2,8 +2,6 @@ import {
   enumStringIndex, enumRegexIndexTuples, unpackEnum,
 } from 'proskomma-utils';
 
-const { bookCodeCompareFunctions } = require('../lib/sort');
-
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -12,6 +10,8 @@ const {
   GraphQLBoolean,
   GraphQLInt,
 } = require('graphql');
+const { bookCodeCompareFunctions } = require('../lib/sort');
+
 
 const {
   sequenceHasChars,
@@ -67,6 +67,10 @@ const docSetType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
       description: 'The documents in the docSet',
       args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'A whitelist of ids of documents to include',
+        },
         withChars: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Return documents whose main sequence contains a token whose payload is an exact match to one of the specified strings',
@@ -112,6 +116,10 @@ const docSetType = new GraphQLObjectType({
 
         context.docSet = root;
         let ret = root.documents();
+
+        if (args.ids) {
+          ret = ret.filter(d => args.ids.includes(d.id));
+        }
 
         if (args.withChars) {
           ret = ret.filter(d => sequenceHasChars(root, d.sequences[d.mainId], args.withChars, args.allChars));
