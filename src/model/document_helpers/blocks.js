@@ -11,6 +11,8 @@ const {
   tokenEnum,
 } = require('proskomma-utils');
 
+const { updateBlockGrafts } = require('../doc_set_helpers/update');
+
 const deleteBlock = (document, seqId, blockN) => {
   if (!(seqId in document.sequences)) {
     return false;
@@ -26,7 +28,7 @@ const deleteBlock = (document, seqId, blockN) => {
   return true;
 };
 
-const newBlock = (document, seqId, blockN, blockScope) => {
+const newBlock = (document, seqId, blockN, blockScope, blockGrafts) => {
   if (!(seqId in document.sequences)) {
     return false;
   }
@@ -57,6 +59,16 @@ const newBlock = (document, seqId, blockN, blockScope) => {
 
   const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
   pushSuccinctScopeBytes(newBlock.bs, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
+
+  if (blockGrafts) {
+    updateBlockGrafts(
+      docSet,
+      document.id,
+      seqId,
+      blockN,
+      blockGrafts,
+    );
+  }
   sequence.blocks.splice(blockN, 0, newBlock);
   document.buildChapterVerseIndex(this);
   return true;

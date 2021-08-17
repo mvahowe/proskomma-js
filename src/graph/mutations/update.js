@@ -33,6 +33,10 @@ const updateMutations = {
         type: GraphQLList(GraphQLNonNull(inputItemObject)),
         description: 'The new content for the block as item objects',
       },
+      blockGrafts: {
+        type: GraphQLList(GraphQLNonNull(inputItemObject)),
+        description: 'BlockGrafts for the block as item objects',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
