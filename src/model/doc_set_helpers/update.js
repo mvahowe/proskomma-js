@@ -1,17 +1,20 @@
 import {
-  ByteArray, itemEnum,
-  pushSuccinctGraftBytes, pushSuccinctScopeBytes,
+  ByteArray,
+  itemEnum,
+  pushSuccinctGraftBytes,
+  pushSuccinctScopeBytes,
   pushSuccinctTokenBytes,
   scopeEnum,
   tokenCategory,
   tokenEnum,
 } from 'proskomma-utils';
 
-const updateItems = (
+const updateItems1 = (
   docSet,
   documentId,
   sequenceId,
   blockPosition,
+  typedArrayName,
   itemObjects) => {
   const document = docSet.processor.documents[documentId];
 
@@ -64,11 +67,41 @@ const updateItems = (
     }
   }
   newItemsBA.trim();
-  block.c = newItemsBA;
+  block[typedArrayName] = newItemsBA;
   docSet.updateBlockIndexesAfterEdit(sequence, blockPosition);
   document.buildChapterVerseIndex();
   return true;
 };
+
+const updateItems = (
+  docSet,
+  documentId,
+  sequenceId,
+  blockPosition,
+  itemObjects) =>
+  updateItems1(
+    docSet,
+    documentId,
+    sequenceId,
+    blockPosition,
+    'c',
+    itemObjects,
+  );
+
+const updateBlockGrafts = (
+  docSet,
+  documentId,
+  sequenceId,
+  blockPosition,
+  itemObjects) =>
+  updateItems1(
+    docSet,
+    documentId,
+    sequenceId,
+    blockPosition,
+    'bg',
+    itemObjects,
+  );
 
 const updateBlockIndexesAfterEdit = (docSet, sequence, blockPosition) => {
   const labelsMatch = (firstA, secondA) => {
@@ -190,6 +223,7 @@ const updateBlockIndexesAfterFilter = (docSet, sequence) => {
 
 module.exports = {
   updateItems,
+  updateBlockGrafts,
   updateBlockIndexesAfterEdit,
   updateBlockIndexesAfterFilter,
 };

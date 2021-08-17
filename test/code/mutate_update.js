@@ -13,7 +13,7 @@ const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
 
 const blockSetup = async t => {
   const pk = deepCopy(cleanPk);
-  let query = '{docSets { id documents { id nSequences mainSequence { id blocks(positions: [0]) { text items { type subType payload } } } } } }';
+  let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { text items { type subType payload } } } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
   t.equal(result.data.docSets.length, 1);
@@ -146,6 +146,42 @@ test(
       block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
       t.ok(!block.text.includes('country'));
       t.ok(block.text.includes('nation'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems - add blockGraft (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(9);
+      let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
+      const titleId = document.sequences.filter(s => s.type === 'title')[0].id;
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` items: ${object2Query(items)}` +
+        ` blockGrafts: ${object2Query([{
+          type: 'graft',
+          subType: 'title',
+          payload: titleId,
+        }])}` +
+        `) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { bg { subType payload } text } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.equal(block.bg.length, 1);
+      t.equal(block.bg[0].subType, 'title');
+      t.equal(block.bg[0].payload, titleId);
     } catch (err) {
       console.log(err);
     }
