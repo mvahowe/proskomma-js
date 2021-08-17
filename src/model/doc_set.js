@@ -48,6 +48,8 @@ import {
 } from './doc_set_helpers/rehash';
 import {
   updateItems,
+  updateBlockGrafts,
+  updateBlockScope,
   updateBlockIndexesAfterEdit,
   updateBlockIndexesAfterFilter,
 } from './doc_set_helpers/update';
@@ -343,6 +345,14 @@ class DocSet {
 
   updateItems(documentId, sequenceId, blockPosition, itemObjects) {
     return updateItems(this, documentId, sequenceId, blockPosition, itemObjects);
+  }
+
+  updateBlockGrafts(documentId, sequenceId, blockPosition, itemObjects) {
+    return updateBlockGrafts(this, documentId, sequenceId, blockPosition, itemObjects);
+  }
+
+  updateBlockScope(documentId, sequenceId, blockPosition, bsObject) {
+    return updateBlockScope(this, documentId, sequenceId, blockPosition, bsObject);
   }
 
   updateBlockIndexesAfterEdit(sequence, blockPosition) {

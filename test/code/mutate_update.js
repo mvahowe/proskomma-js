@@ -5,6 +5,7 @@ const { pkWithDoc } = require('../lib/load');
 const testGroup = 'Mutate Update Operations';
 
 const object2Query = obs => '[' + obs.map(ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`).join(', ') + ']';
+const oneObject2Query = ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`;
 
 const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
@@ -13,7 +14,7 @@ const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
 
 const blockSetup = async t => {
   const pk = deepCopy(cleanPk);
-  let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { text items { type subType payload } } } } } }';
+  let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { bs { payload } text items { type subType payload } } } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
   t.equal(result.data.docSets.length, 1);
@@ -182,6 +183,40 @@ test(
       t.equal(block.bg.length, 1);
       t.equal(block.bg[0].subType, 'title');
       t.equal(block.bg[0].payload, titleId);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `updateItems - change BlockScope (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
+      const bs = block.bs;
+      let query = `mutation { updateItems(` +
+        `docSetId: "${docSet.id}"` +
+        ` documentId: "${document.id}"` +
+        ` sequenceId: "${sequence.id}"` +
+        ` blockPosition: 0` +
+        ` items: ${object2Query(items)}` +
+        ` blockScope: ${oneObject2Query({
+          type: 'scope',
+          subType: 'start',
+          payload: 'blockTag/q',
+        })}` +
+        `) }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateItems, true);
+      query = '{docSets { id documents { id mainSequence { id blocks(positions: [0]) { bs { payload } text } } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.docSets.length, 1);
+      block = result.data.docSets[0].documents[0].mainSequence.blocks[0];
+      t.equal(block.bs.payload, 'blockTag/q');
     } catch (err) {
       console.log(err);
     }

@@ -57,7 +57,7 @@ const updateItems1 = (
       const scopeBits = item.payload.split('/');
       const scopeTypeByte = scopeEnum[scopeBits[0]];
 
-      if (!scopeTypeByte) {
+      if (!scopeTypeByte && scopeTypeByte !== 0) {
         throw new Error(`"${scopeBits[0]}" is not a scope type`);
       }
 
@@ -103,6 +103,21 @@ const updateBlockGrafts = (
     itemObjects,
   );
 
+const updateBlockScope = (
+  docSet,
+  documentId,
+  sequenceId,
+  blockPosition,
+  bsObject) =>
+  updateItems1(
+    docSet,
+    documentId,
+    sequenceId,
+    blockPosition,
+    'bs',
+    [bsObject],
+  );
+
 const updateBlockIndexesAfterEdit = (docSet, sequence, blockPosition) => {
   const labelsMatch = (firstA, secondA) => {
     for (const first of Array.from(firstA)) {
@@ -123,7 +138,7 @@ const updateBlockIndexesAfterEdit = (docSet, sequence, blockPosition) => {
     const scopeBits = scopeLabel.split('/');
     const scopeTypeByte = scopeEnum[scopeBits[0]];
 
-    if (!scopeTypeByte) {
+    if (!scopeTypeByte && scopeTypeByte !== 0) {
       throw new Error(`"${scopeBits[0]}" is not a scope type`);
     }
 
@@ -180,7 +195,7 @@ const updateBlockIndexesAfterFilter = (docSet, sequence) => {
     const scopeBits = scopeLabel.split('/');
     const scopeTypeByte = scopeEnum[scopeBits[0]];
 
-    if (!scopeTypeByte) {
+    if (!scopeTypeByte && scopeTypeByte !== 0) {
       throw new Error(`"${scopeBits[0]}" is not a scope type`);
     }
 
@@ -224,6 +239,7 @@ const updateBlockIndexesAfterFilter = (docSet, sequence) => {
 module.exports = {
   updateItems,
   updateBlockGrafts,
+  updateBlockScope,
   updateBlockIndexesAfterEdit,
   updateBlockIndexesAfterFilter,
 };

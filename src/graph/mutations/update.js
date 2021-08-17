@@ -37,6 +37,10 @@ const updateMutations = {
         type: GraphQLList(GraphQLNonNull(inputItemObject)),
         description: 'BlockGrafts for the block as item objects',
       },
+      blockScope: {
+        type: inputItemObject,
+        description: 'Optional blockScope for the block as an item object',
+      },
     },
     resolve: (root, args) => {
       const docSet = root.docSets[args.docSetId];
@@ -49,12 +53,43 @@ const updateMutations = {
         throw new Error('Must provide items');
       }
 
-      return docSet.updateItems(
+      const itemsResult = docSet.updateItems(
         args.documentId,
         args.sequenceId,
         args.blockPosition,
         args.items,
       );
+
+      if (!itemsResult) {
+        return false;
+      }
+
+      if (args.blockGrafts) {
+        const bgResult = docSet.updateBlockGrafts(
+          args.documentId,
+          args.sequenceId,
+          args.blockPosition,
+          args.blockGrafts,
+        );
+
+        if (!bgResult) {
+          return false;
+        }
+      }
+
+      if (args.blockScope) {
+        const bsResult = docSet.updateBlockScope(
+          args.documentId,
+          args.sequenceId,
+          args.blockPosition,
+          args.blockScope,
+        );
+
+        if (!bsResult) {
+          return false;
+        }
+      }
+      return true;
     },
   },
   gcSequences: {
