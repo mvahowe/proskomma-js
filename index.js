@@ -1,4 +1,3 @@
-const { Proskomma } = require('./src');
-const { lexingRegexes } = require('./src/parser/lexers/lexingRegexes');
+const { Proskomma, lexingRegexes } = require('./src');
 
 module.exports = { Proskomma, lexingRegexes };
