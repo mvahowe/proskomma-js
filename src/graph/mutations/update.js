@@ -164,6 +164,7 @@ const updateMutations = {
           return false;
         }
       }
+      document.buildChapterVerseIndex();
       return true;
     },
   },
