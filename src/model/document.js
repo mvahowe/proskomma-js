@@ -258,12 +258,12 @@ class Document {
     return deleteSequence(this, seqId);
   }
 
-  deleteBlock(seqId, blockN) {
-    return deleteBlock(this, seqId, blockN);
+  deleteBlock(seqId, blockN, buildCV) {
+    return deleteBlock(this, seqId, blockN, buildCV);
   }
 
-  newBlock(seqId, blockN, blockScope) {
-    return newBlock(this, seqId, blockN, blockScope);
+  newBlock(seqId, blockN, blockScope, blockGrafts, buildCV) {
+    return newBlock(this, seqId, blockN, blockScope, blockGrafts, buildCV);
   }
 }
 
