@@ -42,11 +42,16 @@ const updateItems1 = (
   const newItemsBA = new ByteArray(itemObjects.length);
   docSet.maybeBuildPreEnums();
 
+  let nextToken = 0;
+  if (blockPosition < 0) {
+    nextToken = sequence.blocks[blockPosition - 1].nt.nByte(0);
+  }
   for (const item of itemObjects) {
     switch (item.type) {
     case 'token':
       const charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.subType], item.payload, true);
       pushSuccinctTokenBytes(newItemsBA, tokenEnum[item.subType], charsEnumIndex);
+      nextToken++;
       break;
     case 'graft':
       const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.subType, true);
@@ -68,6 +73,8 @@ const updateItems1 = (
   }
   newItemsBA.trim();
   block[typedArrayName] = newItemsBA;
+  block.nt.clear();
+  block.nt.pushNByte(nextToken);
   docSet.updateBlockIndexesAfterEdit(sequence, blockPosition);
   document.buildChapterVerseIndex();
   return true;

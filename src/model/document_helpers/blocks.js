@@ -59,6 +59,7 @@ const newBlock = (document, seqId, blockN, blockScope, blockGrafts, buildCV) => 
     c: new ByteArray(0),
     os: new ByteArray(0),
     is: new ByteArray(0),
+    nt: new ByteArray(0),
   };
   const scopeBits = blockScope.split('/');
   const scopeTypeByte = scopeEnum[scopeBits[0]];
@@ -83,7 +84,7 @@ const newBlock = (document, seqId, blockN, blockScope, blockGrafts, buildCV) => 
   sequence.blocks.splice(blockN, 0, newBlock);
 
   if (buildCV) {
-    document.buildChapterVerseIndex(this);
+    document.buildChapterVerseIndex();
   }
   return true;
 };
