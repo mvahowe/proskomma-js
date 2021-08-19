@@ -13,7 +13,11 @@ const {
 
 const { updateBlockGrafts } = require('../doc_set_helpers/update');
 
-const deleteBlock = (document, seqId, blockN) => {
+const deleteBlock = (document, seqId, blockN, buildCV) => {
+  if (buildCV !== false) {
+    buildCV = true;
+  }
+
   if (!(seqId in document.sequences)) {
     return false;
   }
@@ -24,11 +28,18 @@ const deleteBlock = (document, seqId, blockN) => {
     return false;
   }
   sequence.blocks.splice(blockN, 1);
-  document.buildChapterVerseIndex(this);
+
+  if (buildCV) {
+    document.buildChapterVerseIndex(this);
+  }
   return true;
 };
 
-const newBlock = (document, seqId, blockN, blockScope, blockGrafts) => {
+const newBlock = (document, seqId, blockN, blockScope, blockGrafts, buildCV) => {
+  if (buildCV !== false) {
+    buildCV = true;
+  }
+
   if (!(seqId in document.sequences)) {
     return false;
   }
@@ -70,7 +81,10 @@ const newBlock = (document, seqId, blockN, blockScope, blockGrafts) => {
     );
   }
   sequence.blocks.splice(blockN, 0, newBlock);
-  document.buildChapterVerseIndex(this);
+
+  if (buildCV) {
+    document.buildChapterVerseIndex(this);
+  }
   return true;
 };
 
