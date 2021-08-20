@@ -624,7 +624,7 @@ test(
   `updateBlocks (${testGroup})`,
   async function (t) {
     try {
-      t.plan(12);
+      t.plan(13);
       let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
       const blockQuery = blocksSpec2Query(blocksSpec);
       let query = `mutation { updateAllBlocks(` +
@@ -644,10 +644,11 @@ test(
       t.equal(mainSequence.blocks[0].bs.payload, 'blockTag/m');
       t.equal(mainSequence.blocks[0].bg.length, 1);
       t.equal(mainSequence.blocks[0].bg[0].subType, 'title');
-      query = '{documents { mainSequence { id blocks { tokens { type subType payload } } } } }';
+      query = '{documents { mainSequence { id blocks {  is {payload} tokens { type subType payload } } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      t.equal(result.data.documents[0].mainSequence.blocks[0].tokens[0].payload, "Start");
+      t.equal(result.data.documents[0].mainSequence.blocks[0].tokens[0].payload, 'Start');
+      t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('chapter/1'));
     } catch (err) {
       console.log(err);
     }
