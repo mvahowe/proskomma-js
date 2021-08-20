@@ -163,6 +163,7 @@ const updateMutations = {
         if (!bgResult) {
           return false;
         }
+        docSet.updateBlockIndexesAfterEdit(sequence, blockN);
       }
       document.buildChapterVerseIndex();
       return true;
