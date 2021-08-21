@@ -390,7 +390,7 @@ test(
   `updateBlocks (${testGroup})`,
   async function (t) {
     try {
-      t.plan(14);
+      t.plan(16);
       let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
       const blockQuery = blocksSpec2Query(blocksSpec);
       let query = `mutation { updateAllBlocks(` +
@@ -416,6 +416,8 @@ test(
       t.equal(result.data.documents[0].mainSequence.blocks[0].tokens[0].payload, 'Start');
       t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('chapter/1'));
       t.ok(result.data.documents[0].mainSequence.blocks[1].os.map(s => s.payload).includes('chapter/1'));
+      t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('verse/1'));
+      t.ok(result.data.documents[0].mainSequence.blocks[4].is.map(s => s.payload).includes('verses/3'));
     } catch (err) {
       console.log(err);
     }
