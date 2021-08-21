@@ -18,6 +18,14 @@ const inputBlockSpecType = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
       description: 'The block grafts as items',
     },
+    os: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      description: 'The open scopes as items',
+    },
+    is: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      description: 'The included scopes as items',
+    },
     items: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
       description: 'The items',

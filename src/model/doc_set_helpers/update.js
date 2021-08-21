@@ -65,7 +65,6 @@ const updateItems1 = (
       if (!scopeTypeByte && scopeTypeByte !== 0) {
         throw new Error(`"${scopeBits[0]}" is not a scope type`);
       }
-
       const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
       pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
       break;
@@ -73,10 +72,12 @@ const updateItems1 = (
   }
   newItemsBA.trim();
   block[typedArrayName] = newItemsBA;
-  block.nt.clear();
-  block.nt.pushNByte(nextToken);
-  docSet.updateBlockIndexesAfterEdit(sequence, blockPosition);
-  document.buildChapterVerseIndex();
+  if (typedArrayName === 'c') {
+    block.nt.clear();
+    block.nt.pushNByte(nextToken);
+    // docSet.updateBlockIndexesAfterEdit(sequence, blockPosition);
+    document.buildChapterVerseIndex();
+  }
   return true;
 };
 
@@ -123,6 +124,36 @@ const updateBlockScope = (
     blockPosition,
     'bs',
     [bsObject],
+  );
+
+const updateOpenScopes = (
+  docSet,
+  documentId,
+  sequenceId,
+  blockPosition,
+  osObjects) =>
+  updateItems1(
+    docSet,
+    documentId,
+    sequenceId,
+    blockPosition,
+    'os',
+    osObjects,
+  );
+
+const updateIncludedScopes = (
+  docSet,
+  documentId,
+  sequenceId,
+  blockPosition,
+  isObjects) =>
+  updateItems1(
+    docSet,
+    documentId,
+    sequenceId,
+    blockPosition,
+    'is',
+    isObjects,
   );
 
 const updateBlockIndexesAfterEdit = (docSet, sequence, blockPosition) => {
@@ -247,6 +278,8 @@ module.exports = {
   updateItems,
   updateBlockGrafts,
   updateBlockScope,
+  updateOpenScopes,
+  updateIncludedScopes,
   updateBlockIndexesAfterEdit,
   updateBlockIndexesAfterFilter,
 };

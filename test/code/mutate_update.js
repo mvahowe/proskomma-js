@@ -1,12 +1,15 @@
+const fse = require('fs-extra');
+const path = require('path');
 const test = require('tape');
 const deepCopy = require('deep-copy-all');
 const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Mutate Update Operations';
 
-const object2Query = obs => '[' + obs.map(ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`).join(', ') + ']';
-const oneObject2Query = ob => `{type: "${ob.type}" subType: "${ob.subType}" payload: "${ob.payload}"}`;
-const blocksSpec2Query = bSpec => '[' + bSpec.map(b => `{bs: ${oneObject2Query(b.bs)}, bg: ${object2Query(b.bg)}, items: ${object2Query(b.items)}}`) + ']';
+const escapePayload = str => str.replace('"', '\\"');
+const object2Query = obs => '[' + obs.map(ob => `\n    {\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"\n    }`).join(',') + ']';
+const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"}`;
+const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
 
 const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
@@ -30,244 +33,7 @@ const blockSetup = async t => {
 const searchScopes = (items, searchStr) => items.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
 const searchGrafts = (items, searchStr) => items.filter(i => i.type === 'graft' && i.subType.includes(searchStr));
 
-const blocksSpec = [
-  {
-    'bs': {
-      'type': 'scope',
-      'subType': 'start',
-      'payload': 'blockTag/m',
-    },
-    'bg': [
-      {
-        'type': 'graft',
-        'subType': 'title',
-        'payload': 'YzlkNTI1YmIt',
-      },
-    ],
-    'items': [
-      {
-        'type': 'scope',
-        'subType': 'start',
-        'payload': 'chapter/1',
-      },
-      {
-        'type': 'scope',
-        'subType': 'start',
-        'payload': 'verses/1',
-      },
-      {
-        'type': 'scope',
-        'subType': 'start',
-        'payload': 'verse/1',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'Start',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'of',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'the',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'Good',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'News',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'of',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'Jesus',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'Christ',
-      },
-      {
-        'type': 'token',
-        'subType': 'punctuation',
-        'payload': ',',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'Son',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'of',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'God',
-      },
-      {
-        'type': 'token',
-        'subType': 'punctuation',
-        'payload': '.',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'scope',
-        'subType': 'end',
-        'payload': 'verse/1',
-      },
-      {
-        'type': 'scope',
-        'subType': 'end',
-        'payload': 'verses/1',
-      },
-      {
-        'type': 'scope',
-        'subType': 'start',
-        'payload': 'verses/2',
-      },
-      {
-        'type': 'scope',
-        'subType': 'start',
-        'payload': 'verse/2',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'In',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'the',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'book',
-      },
-      {
-        'type': 'token',
-        'subType': 'lineSpace',
-        'payload': ' ',
-      },
-      {
-        'type': 'token',
-        'subType': 'wordLike',
-        'payload': 'of',
-      },
-      {
-        'type': 'token',
-        'subType': 'punctuation',
-        'payload': '.',
-      },
-      {
-        'type': 'token',
-        'subType': 'punctuation',
-        'payload': '.',
-      },
-      {
-        'type': 'token',
-        'subType': 'punctuation',
-        'payload': '.',
-      },
-      {
-        'type': 'scope',
-        'subType': 'end',
-        'payload': 'verse/2',
-      },
-      {
-        'type': 'scope',
-        'subType': 'end',
-        'payload': 'verses/2',
-      },
-      {
-        'type': 'scope',
-        'subType': 'end',
-        'payload': 'chapter/1',
-      },
-    ],
-  },
-];
+const blocksSpec = fse.readJSONSync(path.resolve(__dirname, '../test_data/inputBlockSpec/mk1.json'));
 
 test(
   `updateItems args exceptions (${testGroup})`,
@@ -624,7 +390,7 @@ test(
   `updateBlocks (${testGroup})`,
   async function (t) {
     try {
-      t.plan(13);
+      t.plan(14);
       let [pk, docSet, document, sequence, block, items] = await blockSetup(t);
       const blockQuery = blocksSpec2Query(blocksSpec);
       let query = `mutation { updateAllBlocks(` +
@@ -639,16 +405,17 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const mainSequence = result.data.documents[0].mainSequence;
-      t.equal(mainSequence.blocks.length, 1);
+      t.equal(mainSequence.blocks.length, 7);
       t.ok(mainSequence.blocks[0].text.startsWith('Start of'));
       t.equal(mainSequence.blocks[0].bs.payload, 'blockTag/m');
       t.equal(mainSequence.blocks[0].bg.length, 1);
       t.equal(mainSequence.blocks[0].bg[0].subType, 'title');
-      query = '{documents { mainSequence { id blocks {  is {payload} tokens { type subType payload } } } } }';
+      query = '{documents { mainSequence { id blocks { is {payload} os {payload} tokens { type subType payload } } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].mainSequence.blocks[0].tokens[0].payload, 'Start');
       t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('chapter/1'));
+      t.ok(result.data.documents[0].mainSequence.blocks[1].os.map(s => s.payload).includes('chapter/1'));
     } catch (err) {
       console.log(err);
     }

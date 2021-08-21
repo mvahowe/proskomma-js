@@ -148,7 +148,6 @@ const updateMutations = {
           blockN,
           block.items,
         );
-
         if (!itemsResult) {
           return false;
         }
@@ -163,7 +162,26 @@ const updateMutations = {
         if (!bgResult) {
           return false;
         }
-        docSet.updateBlockIndexesAfterEdit(sequence, blockN);
+        const osResult = docSet.updateOpenScopes(
+          args.documentId,
+          args.sequenceId,
+          blockN,
+          block.os,
+        );
+
+        if (!osResult) {
+          return false;
+        }
+        const isResult = docSet.updateIncludedScopes(
+          args.documentId,
+          args.sequenceId,
+          blockN,
+          block.is,
+        );
+
+        if (!isResult) {
+          return false;
+        }
       }
       document.buildChapterVerseIndex();
       return true;
