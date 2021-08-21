@@ -142,16 +142,6 @@ const updateMutations = {
       for (let blockN = 0; blockN < args.blocksSpec.length; blockN++) {
         const block = args.blocksSpec[blockN];
         document.newBlock(sequence.id, blockN, block.bs.payload, null, false);
-        const itemsResult = docSet.updateItems(
-          args.documentId,
-          args.sequenceId,
-          blockN,
-          block.items,
-        );
-        if (!itemsResult) {
-          return false;
-        }
-
         const bgResult = docSet.updateBlockGrafts(
           args.documentId,
           args.sequenceId,
@@ -180,6 +170,15 @@ const updateMutations = {
         );
 
         if (!isResult) {
+          return false;
+        }
+        const itemsResult = docSet.updateItems(
+          args.documentId,
+          args.sequenceId,
+          blockN,
+          block.items,
+        );
+        if (!itemsResult) {
           return false;
         }
       }

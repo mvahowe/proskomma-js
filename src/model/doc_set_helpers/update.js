@@ -75,8 +75,7 @@ const updateItems1 = (
   if (typedArrayName === 'c') {
     block.nt.clear();
     block.nt.pushNByte(nextToken);
-    // docSet.updateBlockIndexesAfterEdit(sequence, blockPosition);
-    document.buildChapterVerseIndex();
+    // document.buildChapterVerseIndex();
   }
   return true;
 };
