@@ -50,6 +50,8 @@ import {
   updateItems,
   updateBlockGrafts,
   updateBlockScope,
+  updateOpenScopes,
+  updateIncludedScopes,
   updateBlockIndexesAfterEdit,
   updateBlockIndexesAfterFilter,
 } from './doc_set_helpers/update';
@@ -353,6 +355,14 @@ class DocSet {
 
   updateBlockScope(documentId, sequenceId, blockPosition, bsObject) {
     return updateBlockScope(this, documentId, sequenceId, blockPosition, bsObject);
+  }
+
+  updateOpenScopes(documentId, sequenceId, blockPosition, osObjects) {
+    return updateOpenScopes(this, documentId, sequenceId, blockPosition, osObjects);
+  }
+
+  updateIncludedScopes(documentId, sequenceId, blockPosition, isObjects) {
+    return updateIncludedScopes(this, documentId, sequenceId, blockPosition, isObjects);
   }
 
   updateBlockIndexesAfterEdit(sequence, blockPosition) {

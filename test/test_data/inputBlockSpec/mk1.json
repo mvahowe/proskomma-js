@@ -1,0 +1,1019 @@
+[
+  {
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/nd"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      }
+    ],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/m"
+    },
+    "bg": [ {
+      "type": "graft",
+      "subType": "title",
+      "payload": "NzE0MDk1ZWIt"
+    }],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/1"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Start"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Good"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "News"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Jesus"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Christ"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Son"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/nd"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "God"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "span/nd"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verses/1"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verse/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "In"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "book"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "prophet"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Isaiah"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "it"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "is"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "written"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ":"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      }
+    ],
+    "is": [],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/q"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "See"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "I"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "send"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "my"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "messenger"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "before"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "you"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      }
+    ],
+    "is": [],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/q"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "to"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "open"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "way"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      }
+    ],
+    "is": [],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/q"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "It"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "'"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "s"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "voice"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "a"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "man"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "who"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "shouts"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "in"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "desert"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ":"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/2"
+      }
+    ],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/nd"
+      }
+    ],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/q2"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verses/2"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verse/2"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/3"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "\""
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Prepare"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "way"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/nd"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Lord"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "span/nd"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "!"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/3"
+      }
+    ],
+    "is": [],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/q2"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Make"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "straight"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "roads"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "for"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "him"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "!"
+      }
+    ]
+  },
+  {
+    "os": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "chapter/1"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/3"
+      }
+    ],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/4"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/4"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/add"
+      }
+    ],
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "blockTag/m"
+    },
+    "bg": [],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verses/3"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verse/3"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verse/4"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "verses/4"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "span/add"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "In"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "accordance"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "with"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "this"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "prophecy"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "span/add"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Jean"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "appeared"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verses/4"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "verse/4"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "chapter/1"
+      }
+    ]
+  }
+]

@@ -139,6 +139,11 @@ const buildChapterVerseIndex = document => {
         const nVerseElements = verseElements.length;
 
         for (const [verseElementN, verseElement] of verseElements.entries()) {
+          if (!verseElement.verses) {
+            console.log(`** VerseElement without verses for ${verseSlot} in buildChapterVerseIndex`);
+            continue;
+          }
+
           const versesEnumIndex = docSet.enumForCategoryValue('scopeBits', verseElement.verses);
           const recordType = verseElement.startBlock === verseElement.endBlock ? shortCVIndexType : longCVIndexType;
           ba.pushByte(0);
