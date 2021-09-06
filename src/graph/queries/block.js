@@ -9,7 +9,6 @@ const {
 } = require('graphql');
 const {
   headerBytes,
-  itemArrays2Objects,
 } = require('proskomma-utils');
 const { dumpBlock } = require('../lib/dump');
 const itemType = require('./item');
