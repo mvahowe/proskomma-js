@@ -294,11 +294,11 @@ const sequenceType = new GraphQLObjectType({
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),
-      description: 'Whether or not the document has the specified tag',
+      description: 'Whether or not the sequence has the specified tag',
       args: {
         tagName: {
           type: GraphQLNonNull(GraphQLString),
-          description: 'Whether or not the document has the specified tag',
+          description: 'The specified tag',
         },
       },
       resolve: (root, args) => root.tags.has(args.tagName),
