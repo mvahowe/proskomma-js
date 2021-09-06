@@ -9,6 +9,7 @@ const {
   parseUsfm,
   parseUsx,
   parseLexicon,
+  parseTable,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 const {
@@ -62,6 +63,9 @@ class Document {
       case 'lexicon':
         this.processLexicon(contentString);
         break;
+      case 'tsv':
+        this.processTSV(contentString);
+        break;
       default:
         throw new Error(`Unknown document contentType '${contentType}'`);
       }
@@ -102,6 +106,18 @@ class Document {
     maybePrint(`\nParse USX in ${t2 - t} msec`);
     this.postParseScripture(parser);
     maybePrint(`Total USX import time = ${Date.now() - t} msec (parse = ${((t2 - t) * 100) / (Date.now() - t)}%)`);
+  }
+
+  processTSV(tsvString) {
+    const parser = this.makeParser();
+    parseTable(tsvString, parser);
+    this.headers = parser.headers;
+    this.succinctPass1(parser);
+    this.succinctPass2(parser);
+
+    for (const [colN, colHead] of JSON.parse(tsvString).headings.entries()) {
+      this.addTag(`col${colN}:${colHead}`);
+    }
   }
 
   postParseScripture(parser) {
