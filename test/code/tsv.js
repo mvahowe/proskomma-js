@@ -9,7 +9,46 @@ const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
   abbr: 'ust',
 })[0];
 
+const importTSV = pk => {
+  pk.importDocument({
+    lang: 'deu',
+    abbr: 'xyz',
+  }, 'tsv',
+  JSON.stringify(
+    {
+      headings: ['firstCol', 'secondCol'],
+      rows: [
+        ['ab.c', 'c ba'],
+        ['de.f', 'f ed'],
+        ['gh.i', 'i hg'],
+      ],
+    },
+  ),
+  {},
+  );
+};
+
 const testGroup = 'TSV';
+
+test(
+  `Return error for tableSequence on non-table sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      let query = '{documents { id mainSequence { id } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const seqId = result.data.documents[0].mainSequence.id;
+      query = `{document(id:"${docId}") { tableSequence(id:"${seqId}") { id } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('type \'table\', not \'main\''));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
 
 test(
   `Import (${testGroup})`,
@@ -17,24 +56,7 @@ test(
     try {
       t.plan(7);
       const pk = new Proskomma();
-
-      pk.importDocument({
-        lang: 'deu',
-        abbr: 'xyz',
-      }, 'tsv',
-      JSON.stringify(
-        {
-          headings: ['firstCol', 'secondCol'],
-          rows: [
-            ['ab.c', 'c ba'],
-            ['de.f', 'f ed'],
-            ['gh.i', 'i hg'],
-          ],
-        },
-      ),
-      {},
-      );
-
+      importTSV(pk);
       let query = '{documents { tags mainSequence { id } sequences { id type blocks { bs { payload} bg { payload } is { payload } tokens { type subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -55,19 +77,22 @@ test(
 );
 
 test(
-  `Return error for tableSequence on non-table sequence (${testGroup})`,
+  `Query (${testGroup})`,
   async function (t) {
     try {
-      t.plan(3);
-      let query = '{documents { id mainSequence { id } } }';
+      t.plan(4);
+      const pk = new Proskomma();
+      importTSV(pk);
+      let query = '{docSets { document(bookCode:"T01") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      const docId = result.data.documents[0].id;
-      const seqId = result.data.documents[0].mainSequence.id;
-      query = `{document(id:"${docId}") { tableSequence(id:"${seqId}") { id } } }`;
+      const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{docSets { document(bookCode:"T01") { tableSequence(id:"${tableSequenceId}") { nCells nRows } } } }`;
       result = await pk.gqlQuery(query);
-      t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.includes('type \'table\', not \'main\''));
+      t.equal(result.errors, undefined);
+      const sequence = result.data.docSets[0].document.tableSequence;
+      t.equal(sequence.nCells, 6);
+      t.equal(sequence.nRows, 3);
     } catch (err) {
       console.log(err);
     }

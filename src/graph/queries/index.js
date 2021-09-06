@@ -194,7 +194,7 @@ const schemaQueries = new GraphQLObjectType({
         } else if (!args.id && args.docSetId && args.withBook) {
           return root.documentsWithBook(args.withBook).filter(d => d.docSetId === args.docSetId)[0];
         } else {
-          throw new Error('document requires either id or both docSetId and withBooks (but not all three)');
+          throw new Error('document requires either id or both docSetId and withBook (but not all three)');
         }
       },
     },

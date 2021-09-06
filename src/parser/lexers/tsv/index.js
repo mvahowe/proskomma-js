@@ -35,7 +35,9 @@ const parseTable = (str, parser) => {
   };
 
   const { rows } = JSON.parse(str);
-  parser.headers.id = 'T01';
+  const bookCode = 'T01';
+  parser.headers.id = bookCode;
+  parser.headers.bookCode = bookCode;
   const tableSequence = new Sequence('table');
 
   for (const [rowN, row] of rows.entries()) {
