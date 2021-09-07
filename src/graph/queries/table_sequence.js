@@ -8,12 +8,7 @@ const {
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
 
-const options = {
-  tokens: false,
-  scopes: true,
-  grafts: false,
-  requiredScopes: [],
-};
+const cellType = require('./cell_type');
 
 const tableSequenceType = new GraphQLObjectType({
   name: 'tableSequence',
@@ -40,6 +35,40 @@ const tableSequenceType = new GraphQLObjectType({
           rowNs.add(bsPayload.split('/')[1]);
         }
         return rowNs.size;
+      },
+    },
+    nColumns: {
+      type: GraphQLNonNull(GraphQLInt),
+      description: 'The number of columns in the table sequence',
+      resolve: (root, args, context) => {
+        const columnNs = new Set([]);
+
+        for (const block of root.blocks) {
+          for (const scope of context.docSet.unsuccinctifyScopes(block.is).map(s => s[2])) {
+            if (scope.startsWith('tTableCol')) {
+              columnNs.add(scope.split('/')[1]);
+            }
+          }
+        }
+        return columnNs.size;
+      },
+    },
+    cells: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cellType))),
+      description: 'The cells in the table sequence',
+      resolve: (root, args, context) => {
+        const ret = [];
+        for (const block of root.blocks) {
+          ret.push([
+            context.docSet.unsuccinctifyScopes(block.bs).map(s => parseInt(s[2].split('/')[1])),
+            Array.from(new Set(
+              context.docSet.unsuccinctifyScopes(block.is).map(s => parseInt(s[2].split('/')[1])),
+            )),
+            context.docSet.unsuccinctifyItems(block.c, {}, 0),
+          ]);
+        }
+        // console.log(JSON.stringify(ret, null, 2));
+        return ret;
       },
     },
     tags: {

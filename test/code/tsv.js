@@ -80,19 +80,33 @@ test(
   `Query (${testGroup})`,
   async function (t) {
     try {
-      t.plan(4);
+      t.plan(16);
       const pk = new Proskomma();
       importTSV(pk);
       let query = '{docSets { document(bookCode:"T01") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{docSets { document(bookCode:"T01") { tableSequence(id:"${tableSequenceId}") { nCells nRows } } } }`;
+      query = `{docSets { document(bookCode:"T01") { tableSequence(id:"${tableSequenceId}") { nCells nRows nColumns cells { rows columns items { payload } tokens { payload } text } } } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequence = result.data.docSets[0].document.tableSequence;
       t.equal(sequence.nCells, 6);
       t.equal(sequence.nRows, 3);
+      t.equal(sequence.nColumns, 2);
+      t.equal(sequence.cells.length, 6);
+      const firstCell = sequence.cells[0];
+      t.equal(firstCell.rows[0], 0);
+      t.equal(firstCell.columns[0], 0);
+      t.equal(firstCell.items[1].payload, 'ab');
+      t.equal(firstCell.tokens[0].payload, 'ab');
+      t.equal(firstCell.text, 'ab.c');
+      const lastCell = sequence.cells[5];
+      t.equal(lastCell.rows[0], 2);
+      t.equal(lastCell.columns[0], 1);
+      t.equal(lastCell.items[3].payload, 'hg');
+      t.equal(lastCell.tokens[2].payload, 'hg');
+      t.equal(lastCell.text, 'i hg');
     } catch (err) {
       console.log(err);
     }
