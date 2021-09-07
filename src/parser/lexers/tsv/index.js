@@ -11,7 +11,7 @@ for (const lr of lexingRegexes) {
   }
 }
 
-const parseTable = (str, parser) => {
+const parseTable = (str, parser, bookCode) => {
   const tokenizeString = str => {
     const ret = [];
 
@@ -35,7 +35,6 @@ const parseTable = (str, parser) => {
   };
 
   const { rows } = JSON.parse(str);
-  const bookCode = 'T01';
   parser.headers.id = bookCode;
   parser.headers.bookCode = bookCode;
   const tableSequence = new Sequence('table');

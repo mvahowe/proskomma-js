@@ -110,13 +110,17 @@ class Document {
 
   processTSV(tsvString) {
     const parser = this.makeParser();
-    parseTable(tsvString, parser);
+    const bookCode = `T${this.processor.nextTable > 9 ? this.processor.nextTable : '0' + this.processor.nextTable}`;
+    this.processor.nextTable++;
+    parseTable(tsvString, parser, bookCode);
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);
 
+    const tableSequence = Object.values(this.sequences).filter(s => s.type === 'table')[0];
+
     for (const [colN, colHead] of JSON.parse(tsvString).headings.entries()) {
-      this.addTag(`col${colN}:${colHead}`);
+      tableSequence.tags.add(`col${colN}:${colHead}`);
     }
   }
 

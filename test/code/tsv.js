@@ -57,16 +57,16 @@ test(
       t.plan(7);
       const pk = new Proskomma();
       importTSV(pk);
-      let query = '{documents { tags mainSequence { id } sequences { id type blocks { bs { payload} bg { payload } is { payload } tokens { type subType payload } } } } }';
+      let query = '{documents { mainSequence { id } sequences { id type tags blocks { bs { payload} bg { payload } is { payload } tokens { type subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const doc = result.data.documents[0];
-      t.equal(doc.tags.length, 2);
-      t.equal(doc.tags[0], 'col0:firstCol');
       const mainSequence = doc.sequences.filter(s => s.id === doc.mainSequence.id)[0];
       const tableGraft = mainSequence.blocks[0].bg[0].payload;
       const tableSequence = doc.sequences.filter(s => s.id === tableGraft)[0];
       t.equal(tableSequence.type, 'table');
+      t.equal(tableSequence.tags.length, 2);
+      t.equal(tableSequence.tags[0], 'col0:firstCol');
       t.equal(tableSequence.blocks.length, 6);
       t.equal(tableSequence.blocks.filter(b => b.bs.payload === 'tTableRow/1').length, 2);
       t.equal(tableSequence.blocks.filter(b => b.is.map(s => s.payload).includes('tTableCol/1')).length, 3);
@@ -83,11 +83,11 @@ test(
       t.plan(16);
       const pk = new Proskomma();
       importTSV(pk);
-      let query = '{docSets { document(bookCode:"T01") { sequences(types:"table") { id } } } }';
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{docSets { document(bookCode:"T01") { tableSequence(id:"${tableSequenceId}") { nCells nRows nColumns cells { rows columns items { payload } tokens { payload } text } } } } }`;
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { nCells nRows nColumns cells { rows columns items { payload } tokens { payload } text } } } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequence = result.data.docSets[0].document.tableSequence;
@@ -120,11 +120,11 @@ test(
       t.plan(9);
       const pk = new Proskomma();
       importTSV(pk);
-      let query = '{docSets { document(bookCode:"T01") { sequences(types:"table") { id } } } }';
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{docSets { document(bookCode:"T01") { tableSequence(id:"${tableSequenceId}") { rows { columns text } } } } }`;
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { rows { columns text } } } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequenceRows = result.data.docSets[0].document.tableSequence.rows;
@@ -135,6 +135,65 @@ test(
       t.equal(sequenceRows[2].length, 2);
       t.equal(sequenceRows[2][0].columns[0], 0);
       t.equal(sequenceRows[2][0].text, 'gh.i');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Headings (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const pk = new Proskomma();
+      importTSV(pk);
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { headings } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const headings = result.data.docSets[0].document.tableSequence.headings;
+      t.equal(headings.length, 2);
+      t.equal(headings[0], 'firstCol');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter Rows (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      const pk = new Proskomma();
+      importTSV(pk);
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { rows(positions:[0, 2]) { text } } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let sequenceRows = result.data.docSets[0].document.tableSequence.rows;
+      t.equal(sequenceRows.length, 2);
+      t.equal(sequenceRows[0][0].text, 'ab.c');
+      t.equal(sequenceRows[1][0].text, 'gh.i');
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { rows(matches:[{colN:0 matching:"ab|de"},{colN:1 matching:"ba|gh"}]) { text } } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      sequenceRows = result.data.docSets[0].document.tableSequence.rows;
+      t.equal(sequenceRows.length, 1);
+      t.equal(sequenceRows[0][0].text, 'ab.c');
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { rows(equals:[{colN:0 values:["de.f", "ab.c"]},{colN:1 values:["i hg", "f ed"]}]) { text } } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      sequenceRows = result.data.docSets[0].document.tableSequence.rows;
+      t.equal(sequenceRows.length, 1);
+      t.equal(sequenceRows[0][0].text, 'de.f');
     } catch (err) {
       console.log(err);
     }

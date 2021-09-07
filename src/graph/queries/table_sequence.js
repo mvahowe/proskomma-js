@@ -1,3 +1,4 @@
+import xre from 'xregexp';
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -9,6 +10,8 @@ const {
 const { headerBytes } = require('proskomma-utils');
 
 const cellType = require('./cell_type');
+const rowMatchSpecType = require('./row_match_spec');
+const rowEqualsSpecType = require('./row_equals_spec');
 
 const tableSequenceType = new GraphQLObjectType({
   name: 'tableSequence',
@@ -77,13 +80,69 @@ const tableSequenceType = new GraphQLObjectType({
     rows: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(cellType))))),
       description: 'The rows in the table sequence',
+      args: {
+        positions: {
+          type: GraphQLList(GraphQLNonNull(GraphQLInt)),
+          description: 'Only return rows whose zero-indexed position is in the list',
+        },
+        matches: {
+          type: GraphQLList(GraphQLNonNull(rowMatchSpecType)),
+          description: 'Only return rows whose cells match the specification',
+        },
+        equals: {
+          type: GraphQLList(GraphQLNonNull(rowEqualsSpecType)),
+          description: 'Only return rows whose cells contain one of the values in the specification',
+        },
+      },
       resolve: (root, args, context) => {
-        const ret = [];
+        const rowMatches1 = (row, matchSpec) => {
+          const matchCellText = row[matchSpec.colN][2]
+            .filter(i => i[0] === 'token')
+            .map(i => i[2])
+            .join('');
+          return xre.test(matchCellText, xre(matchSpec.matching));
+        };
+
+        const rowMatches = (row, matchSpecs) => {
+          if (matchSpecs.length === 0) {
+            return true;
+          }
+
+          if (rowMatches1(row, matchSpecs[0])) {
+            return rowMatches(row, matchSpecs.slice(1));
+          }
+          return false;
+        };
+
+        const rowEquals1 = (row, matchSpec) => {
+          const matchCellText = row[matchSpec.colN][2]
+            .filter(i => i[0] === 'token')
+            .map(i => i[2])
+            .join('');
+          return matchSpec.values.includes(matchCellText);
+        };
+
+        const rowEquals = (row, matchSpecs) => {
+          if (matchSpecs.length === 0) {
+            return true;
+          }
+
+          if (rowEquals1(row, matchSpecs[0])) {
+            return rowEquals(row, matchSpecs.slice(1));
+          }
+          return false;
+        };
+
+        let ret = [];
         let row = -1;
 
         for (const block of root.blocks) {
           const rows = context.docSet.unsuccinctifyScopes(block.bs)
             .map(s => parseInt(s[2].split('/')[1]));
+
+          if (args.positions && !args.positions.includes(rows[0])) {
+            continue;
+          }
 
           if (rows[0] !== row) {
             ret.push([]);
@@ -99,7 +158,14 @@ const tableSequenceType = new GraphQLObjectType({
             context.docSet.unsuccinctifyItems(block.c, {}, 0),
           ]);
         }
-        // console.log(JSON.stringify(ret, null, 2));
+
+        if (args.matches) {
+          ret = ret.filter(row => rowMatches(row, args.matches));
+        }
+
+        if (args.equals) {
+          ret = ret.filter(row => rowEquals(row, args.equals));
+        }
         return ret;
       },
     },
@@ -118,6 +184,14 @@ const tableSequenceType = new GraphQLObjectType({
         },
       },
       resolve: (root, args) => root.tags.has(args.tagName),
+    },
+    headings: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of column headings for this tableSequence, derived from the sequence tags',
+      resolve: root => Array.from(root.tags)
+        .filter(t => t.startsWith('col'))
+        .sort((a, b) => parseInt(a.split(':')[0].substring(3)) - parseInt(b.split(':')[0].substring(3)))
+        .map(t => t.split(':')[1]),
     },
   }),
 });
