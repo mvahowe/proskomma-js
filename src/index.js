@@ -41,6 +41,7 @@ class Proskomma {
     ];
     this.mutex = new Mutex();
     this.nextPeriph = 0;
+    this.nextTable = 0;
   }
 
   validateSelectors() {
