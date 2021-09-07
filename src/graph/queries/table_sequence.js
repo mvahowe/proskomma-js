@@ -58,11 +58,43 @@ const tableSequenceType = new GraphQLObjectType({
       description: 'The cells in the table sequence',
       resolve: (root, args, context) => {
         const ret = [];
+
         for (const block of root.blocks) {
           ret.push([
-            context.docSet.unsuccinctifyScopes(block.bs).map(s => parseInt(s[2].split('/')[1])),
+            context.docSet.unsuccinctifyScopes(block.bs)
+              .map(s => parseInt(s[2].split('/')[1])),
             Array.from(new Set(
-              context.docSet.unsuccinctifyScopes(block.is).map(s => parseInt(s[2].split('/')[1])),
+              context.docSet.unsuccinctifyScopes(block.is)
+                .filter(s => s[2].startsWith('tTableCol'))
+                .map(s => parseInt(s[2].split('/')[1])),
+            )),
+            context.docSet.unsuccinctifyItems(block.c, {}, 0),
+          ]);
+        }
+        return ret;
+      },
+    },
+    rows: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(cellType))))),
+      description: 'The rows in the table sequence',
+      resolve: (root, args, context) => {
+        const ret = [];
+        let row = -1;
+
+        for (const block of root.blocks) {
+          const rows = context.docSet.unsuccinctifyScopes(block.bs)
+            .map(s => parseInt(s[2].split('/')[1]));
+
+          if (rows[0] !== row) {
+            ret.push([]);
+            row = rows[0];
+          }
+          ret[ret.length - 1].push([
+            rows,
+            Array.from(new Set(
+              context.docSet.unsuccinctifyScopes(block.is)
+                .filter(s => s[2].startsWith('tTableCol'))
+                .map(s => parseInt(s[2].split('/')[1])),
             )),
             context.docSet.unsuccinctifyItems(block.c, {}, 0),
           ]);
