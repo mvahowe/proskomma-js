@@ -10,6 +10,7 @@ const {
   parseUsx,
   parseLexicon,
   parseTable,
+  parseNodes,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
 const {
@@ -65,6 +66,9 @@ class Document {
         break;
       case 'tsv':
         this.processTSV(contentString);
+        break;
+      case 'nodes':
+        this.processNodes(contentString);
         break;
       default:
         throw new Error(`Unknown document contentType '${contentType}'`);
@@ -122,6 +126,16 @@ class Document {
     for (const [colN, colHead] of JSON.parse(tsvString).headings.entries()) {
       tableSequence.tags.add(`col${colN}:${colHead}`);
     }
+  }
+
+  processNodes(nodesString) {
+    const parser = this.makeParser();
+    const bookCode = `N${this.processor.nextNodes > 9 ? this.processor.nextNodes : '0' + this.processor.nextNodes}`;
+    this.processor.nextNodes++;
+    parseNodes(nodesString, parser, bookCode);
+    this.headers = parser.headers;
+    this.succinctPass1(parser);
+    this.succinctPass2(parser);
   }
 
   postParseScripture(parser) {
