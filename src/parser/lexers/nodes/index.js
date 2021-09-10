@@ -5,6 +5,9 @@ const { tokenizeString } = require('../../../parser/lib/tokenize');
 let nextNodeId = 0;
 
 const numberNodes = (node, parentId) => {
+  if (typeof parentId !== 'number') {
+    nextNodeId = 0;
+  }
   const ret = {
     ...node,
     id: nextNodeId,

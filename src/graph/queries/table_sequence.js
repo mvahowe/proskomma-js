@@ -9,7 +9,7 @@ const {
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
 
-const cellType = require('./cell_type');
+const cellType = require('./cell');
 const rowMatchSpecType = require('./row_match_spec');
 const rowEqualsSpecType = require('./row_equals_spec');
 

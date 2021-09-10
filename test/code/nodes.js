@@ -138,18 +138,67 @@ test(
   `treeSequence (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
+      t.plan(24);
       const pk = new Proskomma();
       importNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{docSets { document(bookCode:"N00") { treeSequence(id:"${treeSequenceId}") { id } } } }`;
+
+      query = `{
+        docSets {
+          document(bookCode:"N00") {
+            treeSequence(id:"${treeSequenceId}") {
+             id
+             nNodes
+             nodes {
+               id
+               parentId
+               primaryItems { payload }
+               primaryTokens { payload }
+               primaryText
+               secondaryKeys
+               secondaryValuesItems { payload }
+               secondaryValuesTokens { payload }
+               secondaryValuesText
+               secondaryValueItems(key:"shoeSize") { payload }
+               noItems: secondaryValueItems(key:"collarSize") { payload }
+               secondaryValueTokens(key:"shoeSize") { payload }
+               noTokens: secondaryValueTokens(key:"collarSize") { payload }
+               secondaryValueText(key:"name")
+               noText: secondaryValueText(key:"middleName")
+               childIds
+              }
+            }
+          }
+        }
+      }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequence = result.data.docSets[0].document.treeSequence;
-      console.log(JSON.stringify(treeSequence, null, 2));
+      t.equal(treeSequence.nNodes, 7);
+      t.equal(treeSequence.nodes[0].parentId, null);
+      t.equal(treeSequence.nodes[1].parentId, treeSequence.nodes[0].id);
+      t.equal(treeSequence.nodes[0].primaryItems[0].payload, 'me');
+      t.equal(treeSequence.nodes[0].primaryTokens[0].payload, 'me');
+      t.equal(treeSequence.nodes[0].primaryText, 'me');
+      t.equal(treeSequence.nodes[0].secondaryKeys.length, 2);
+      t.ok(treeSequence.nodes[0].secondaryKeys.includes('shoeSize'));
+      t.equal(treeSequence.nodes[0].secondaryValuesItems.length, 2);
+      t.equal(treeSequence.nodes[0].secondaryValuesItems[0][0].payload, 'Fred');
+      t.equal(treeSequence.nodes[0].secondaryValuesTokens.length, 2);
+      t.equal(treeSequence.nodes[0].secondaryValuesTokens[0][0].payload, 'Fred');
+      t.equal(treeSequence.nodes[0].secondaryValuesText[0], 'Fred Smith');
+      t.equal(treeSequence.nodes[0].secondaryValueItems[0].payload, '78');
+      t.equal(treeSequence.nodes[0].secondaryValueTokens[0].payload, '78');
+      t.equal(treeSequence.nodes[0].secondaryValueText, 'Fred Smith');
+      t.equal(treeSequence.nodes[0].noItems, null);
+      t.equal(treeSequence.nodes[0].noTokens, null);
+      t.equal(treeSequence.nodes[0].noText, null);
+      t.equal(treeSequence.nodes[0].childIds.length, 2);
+      t.equal(treeSequence.nodes[0].childIds[0], '1');
+      t.equal(treeSequence.nodes[0].childIds[1], '4');
     } catch (err) {
       console.log(err);
     }

@@ -7,6 +7,8 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const nodeType = require('./node');
+
 const treeSequenceType = new GraphQLObjectType({
   name: 'treeSequence',
   description: 'The nodes of a tree',
@@ -19,6 +21,13 @@ const treeSequenceType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLInt),
       description: 'The number of nodes in the tree sequence',
       resolve: root => root.blocks.length,
+    },
+    nodes: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(nodeType))),
+      description: 'The nodes in the tree sequence',
+      resolve: (root, args, context) => {
+        return root.blocks;
+      },
     },
     tags: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),

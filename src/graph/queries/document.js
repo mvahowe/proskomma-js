@@ -188,7 +188,13 @@ const documentType = new GraphQLObjectType({
         if (ret[0] && ret[0].type !== 'tree') {
           throw new Error(`Expected sequence id ${ret[0].id} to be of type 'tree', not '${ret[0].type}'`);
         }
-        return ret[0] || null;
+        if (ret[0]) {
+          const treeContentSequenceId = context.docSet.unsuccinctifyGrafts(ret[0].blocks[0].bg)[0][2];
+          context.treeContentSequence = root.sequences[treeContentSequenceId];
+          return ret[0];
+        } else {
+          return null;
+        }
       },
     },
     mainBlocks: {
