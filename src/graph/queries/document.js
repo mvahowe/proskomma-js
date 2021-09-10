@@ -12,6 +12,7 @@ const {
 const { do_cv } = require('../lib/do_cv');
 const sequenceType = require('./sequence');
 const tableSequenceType = require('./table_sequence');
+const treeSequenceType = require('./tree_sequence');
 const blockType = require('./block');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
@@ -167,6 +168,25 @@ const documentType = new GraphQLObjectType({
         ret = ret.filter(s => args.id.includes(s.id));
         if (ret[0] && ret[0].type !== 'table') {
           throw new Error(`Expected sequence id ${ret[0].id} to be of type 'table', not '${ret[0].type}'`);
+        }
+        return ret[0] || null;
+      },
+    },
+    treeSequence: {
+      type: treeSequenceType,
+      description: 'The tree sequence with the specified id',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'id of the tree sequence',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+        ret = ret.filter(s => args.id.includes(s.id));
+        if (ret[0] && ret[0].type !== 'tree') {
+          throw new Error(`Expected sequence id ${ret[0].id} to be of type 'tree', not '${ret[0].type}'`);
         }
         return ret[0] || null;
       },

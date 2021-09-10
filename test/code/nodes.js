@@ -3,6 +3,11 @@ const test = require('tape');
 const { pkWithDoc } = require('../lib/load');
 const { Proskomma } = require('../../src');
 
+const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
+
 const importNodes = pk => {
   pk.importDocument({
     lang: 'deu',
@@ -72,6 +77,26 @@ const importNodes = pk => {
 const testGroup = 'Nodes';
 
 test(
+  `Return error for treeSequence on non-tree sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      let query = '{documents { id mainSequence { id } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const seqId = result.data.documents[0].mainSequence.id;
+      query = `{document(id:"${docId}") { treeSequence(id:"${seqId}") { id } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.includes('type \'tree\', not \'main\''));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Import (${testGroup})`,
   async function (t) {
     try {
@@ -103,6 +128,28 @@ test(
       const nameContent = treeContentSequence.blocks[parseInt(ssBlock)].tokens.slice(parseInt(ssStart), parseInt(ssStart) + parseInt(ssLength));
       t.equal(nameContent.length, 3);
       t.equal(nameContent.map(t => t.payload).join(''), 'Fred Smith');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `treeSequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{docSets { document(bookCode:"N00") { treeSequence(id:"${treeSequenceId}") { id } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequence = result.data.docSets[0].document.treeSequence;
+      console.log(JSON.stringify(treeSequence, null, 2));
     } catch (err) {
       console.log(err);
     }
