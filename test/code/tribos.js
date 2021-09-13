@@ -30,7 +30,7 @@ test(
       query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"#{2, 3}") } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      console.log(JSON.stringify(result.data, null, 2));
+      console.log(result.data.documents[0].treeSequence.tribos);
     } catch (err) {
       console.log(err);
     }
