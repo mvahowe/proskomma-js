@@ -1,3 +1,5 @@
+const path = require('path');
+const fse = require('fs-extra');
 const test = require('tape');
 
 const { pkWithDoc } = require('../lib/load');
@@ -13,63 +15,7 @@ const importNodes = pk => {
     lang: 'deu',
     abbr: 'xyz',
   }, 'nodes',
-  JSON.stringify(
-    {
-      content: {
-        label: 'me',
-        name: 'Fred Smith',
-        shoeSize: '78',
-      },
-      children: [
-        {
-          content: {
-            label: 'mom',
-            name: 'Sally Smith née Brown',
-            shoeSize: '3',
-          },
-          children: [
-            {
-              content: {
-                label: 'grandma',
-                name: 'Emma Smith née Jones',
-                shoeSize: '2',
-              },
-            },
-            {
-              content: {
-                label: 'grandpa',
-                name: 'Simon Smith',
-                shoeSize: '89',
-              },
-            },
-          ],
-        },
-        {
-          content: {
-            label: 'pop',
-            name: 'Bob Smith',
-            shoeSize: '91',
-          },
-          children: [
-            {
-              content: {
-                label: 'granny',
-                name: 'Deborah Smith née Black',
-                shoeSize: '5',
-              },
-            },
-            {
-              content: {
-                label: 'grandpops',
-                name: 'Michael Smith',
-                shoeSize: '79',
-              },
-            },
-          ],
-        },
-      ],
-    },
-  ),
+  fse.readFileSync(path.resolve(__dirname, '../test_data/tree/genealogy.json')),
   {},
   );
 };

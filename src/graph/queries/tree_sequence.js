@@ -7,6 +7,8 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const tribos = require('../lib/tribos');
+
 const nodeType = require('./node');
 
 const treeSequenceType = new GraphQLObjectType({
@@ -27,6 +29,19 @@ const treeSequenceType = new GraphQLObjectType({
       description: 'The nodes in the tree sequence',
       resolve: (root, args, context) => {
         return root.blocks;
+      },
+    },
+    tribos: {
+      type: GraphQLNonNull(GraphQLString),
+      args: {
+        query: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The Tribos query string',
+        },
+      },
+      description: 'The JSON result for a Tribos query, as a string',
+      resolve: (root, args, context) => {
+        return tribos(context.docSet, root.blocks, args.query);
       },
     },
     tags: {
