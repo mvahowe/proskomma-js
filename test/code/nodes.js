@@ -152,7 +152,6 @@ test(
                itemGroups {
                  scopeLabels(startsWith:"tTreeContent")
                  text
-                 tokens { payload scopes }
                }
              }
             }
