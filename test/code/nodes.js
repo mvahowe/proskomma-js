@@ -15,29 +15,29 @@ const importNodes = pk => {
   }, 'nodes',
   JSON.stringify(
     {
-      primary: 'me',
-      secondary: {
+      content: {
+        label: 'me',
         name: 'Fred Smith',
         shoeSize: '78',
       },
       children: [
         {
-          primary: 'mom',
-          secondary: {
+          content: {
+            label: 'mom',
             name: 'Sally Smith née Brown',
             shoeSize: '3',
           },
           children: [
             {
-              primary: 'grandma',
-              secondary: {
+              content: {
+                label: 'grandma',
                 name: 'Emma Smith née Jones',
                 shoeSize: '2',
               },
             },
             {
-              primary: 'grandpa',
-              secondary: {
+              content: {
+                label: 'grandpa',
                 name: 'Simon Smith',
                 shoeSize: '89',
               },
@@ -45,22 +45,22 @@ const importNodes = pk => {
           ],
         },
         {
-          primary: 'pop',
-          secondary: {
+          content: {
+            label: 'pop',
             name: 'Bob Smith',
             shoeSize: '91',
           },
           children: [
             {
-              primary: 'granny',
-              secondary: {
+              content: {
+                label: 'granny',
                 name: 'Deborah Smith née Black',
                 shoeSize: '5',
               },
             },
             {
-              primary: 'grandpops',
-              secondary: {
+              content: {
+                label: 'grandpops',
                 name: 'Michael Smith',
                 shoeSize: '79',
               },
@@ -100,18 +100,16 @@ test(
   `Import (${testGroup})`,
   async function (t) {
     try {
-      t.plan(12);
+      t.plan(8);
       const pk = new Proskomma();
       importNodes(pk);
-      let query = '{documents { mainSequence { id } sequences { id type tags blocks { bs { payload} bg { payload } is { payload } tokens { type subType payload } } } } }';
+      let query = '{documents { mainSequence { id } sequences { id type tags blocks { bs { payload} bg { payload } is { payload } items { type subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const doc = result.data.documents[0];
       const mainSequence = doc.sequences.filter(s => s.id === doc.mainSequence.id)[0];
       const treeGraft = mainSequence.blocks[0].bg[0].payload;
       const treeSequence = doc.sequences.filter(s => s.id === treeGraft)[0];
-      const treeContentGraft = treeSequence.blocks[0].bg[0].payload;
-      const treeContentSequence = doc.sequences.filter(s => s.id === treeContentGraft)[0];
       t.equal(treeSequence.type, 'tree');
       t.equal(treeSequence.blocks.length, 7);
       t.equal(treeSequence.blocks[0].bs.payload, 'tTreeNode/0');
@@ -122,12 +120,6 @@ test(
       t.equal(nodeParent[0], 'tTreeParent/none');
       const nodeName = treeSequence.blocks[0].is.filter(s => s.payload.startsWith('tTreeContent/name')).map(s => s.payload);
       t.equal(nodeName.length, 1);
-      const [ssT, ssName, ssBlock, ssStart, ssLength] = nodeName[0].split('/');
-      t.equal(treeContentSequence.type, 'treeContent');
-      t.equal(treeContentSequence.blocks.length, 7);
-      const nameContent = treeContentSequence.blocks[parseInt(ssBlock)].tokens.slice(parseInt(ssStart), parseInt(ssStart) + parseInt(ssLength));
-      t.equal(nameContent.length, 3);
-      t.equal(nameContent.map(t => t.payload).join(''), 'Fred Smith');
     } catch (err) {
       console.log(err);
     }
@@ -138,7 +130,7 @@ test(
   `treeSequence (${testGroup})`,
   async function (t) {
     try {
-      t.plan(24);
+      t.plan(12);
       const pk = new Proskomma();
       importNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
@@ -155,21 +147,14 @@ test(
              nodes {
                id
                parentId
-               primaryItems { payload }
-               primaryTokens { payload }
-               primaryText
-               secondaryKeys
-               secondaryValuesItems { payload }
-               secondaryValuesTokens { payload }
-               secondaryValuesText
-               secondaryValueItems(key:"shoeSize") { payload }
-               noItems: secondaryValueItems(key:"collarSize") { payload }
-               secondaryValueTokens(key:"shoeSize") { payload }
-               noTokens: secondaryValueTokens(key:"collarSize") { payload }
-               secondaryValueText(key:"name")
-               noText: secondaryValueText(key:"middleName")
                childIds
-              }
+               keys
+               itemGroups {
+                 scopeLabels(startsWith:"tTreeContent")
+                 text
+                 tokens { payload scopes }
+               }
+             }
             }
           }
         }
@@ -180,25 +165,13 @@ test(
       t.equal(treeSequence.nNodes, 7);
       t.equal(treeSequence.nodes[0].parentId, null);
       t.equal(treeSequence.nodes[1].parentId, treeSequence.nodes[0].id);
-      t.equal(treeSequence.nodes[0].primaryItems[0].payload, 'me');
-      t.equal(treeSequence.nodes[0].primaryTokens[0].payload, 'me');
-      t.equal(treeSequence.nodes[0].primaryText, 'me');
-      t.equal(treeSequence.nodes[0].secondaryKeys.length, 2);
-      t.ok(treeSequence.nodes[0].secondaryKeys.includes('shoeSize'));
-      t.equal(treeSequence.nodes[0].secondaryValuesItems.length, 2);
-      t.equal(treeSequence.nodes[0].secondaryValuesItems[0][0].payload, 'Fred');
-      t.equal(treeSequence.nodes[0].secondaryValuesTokens.length, 2);
-      t.equal(treeSequence.nodes[0].secondaryValuesTokens[0][0].payload, 'Fred');
-      t.equal(treeSequence.nodes[0].secondaryValuesText[0], 'Fred Smith');
-      t.equal(treeSequence.nodes[0].secondaryValueItems[0].payload, '78');
-      t.equal(treeSequence.nodes[0].secondaryValueTokens[0].payload, '78');
-      t.equal(treeSequence.nodes[0].secondaryValueText, 'Fred Smith');
-      t.equal(treeSequence.nodes[0].noItems, null);
-      t.equal(treeSequence.nodes[0].noTokens, null);
-      t.equal(treeSequence.nodes[0].noText, null);
       t.equal(treeSequence.nodes[0].childIds.length, 2);
       t.equal(treeSequence.nodes[0].childIds[0], '1');
       t.equal(treeSequence.nodes[0].childIds[1], '4');
+      t.equal(treeSequence.nodes[0].keys.length, 3);
+      t.equal(treeSequence.nodes[0].itemGroups.length, 3);
+      t.equal(treeSequence.nodes[0].itemGroups[0].text, 'me');
+      t.equal(treeSequence.nodes[0].itemGroups[0].scopeLabels[0].split('/')[1], 'label');
     } catch (err) {
       console.log(err);
     }

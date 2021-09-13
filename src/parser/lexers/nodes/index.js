@@ -8,6 +8,7 @@ const numberNodes = (node, parentId) => {
   if (typeof parentId !== 'number') {
     nextNodeId = 0;
   }
+
   const ret = {
     ...node,
     id: nextNodeId,
@@ -26,12 +27,8 @@ const flattenNodes = node => {
   ret[0].id = node.id;
   ret[0].parentId = node.parentId;
 
-  if (node.primary) {
-    ret[0].primary = node.primary;
-  }
-
-  if (node.secondary) {
-    ret[0].secondary = node.secondary;
+  if (node.content) {
+    ret[0].content = node.content;
   }
 
   if (node.children) {
@@ -49,35 +46,47 @@ const parseNodes = (str, parser, bookCode) => {
   parser.headers.id = bookCode;
   parser.headers.bookCode = bookCode;
   const treeSequence = new Sequence('tree');
-  const treeContentSequence = new Sequence('treeContent');
-
-  treeSequence.addBlockGraft({
-    type: 'graft',
-    subType: 'treeContent',
-    payload: treeContentSequence.id,
-  });
 
   for (const node of flattenNodes(numberNodes(JSON.parse(str)))) {
     treeSequence.newBlock(labelForScope('tTreeNode', [`${node.id}`]));
     const scopePayload = labelForScope('tTreeParent', [`${node.parentId}`]);
+
     treeSequence.lastBlock().items.push({
       type: 'scope',
       subType: 'start',
       payload: scopePayload,
     });
-    treeSequence.lastBlock().items.push({
-      type: 'scope',
-      subType: 'end',
-      payload: scopePayload,
-    });
 
-    if (node.primary || node.secondary) {
-      treeContentSequence.newBlock(labelForScope('tTreeNode', [`${node.id}`]));
+    if (node.content) {
+      for (const [name, content] of Object.entries(node.content)) {
+        const treeContentStart = treeSequence.lastBlock().items.length;
+        const tokenized = tokenizeString(content);
+        const scopePayload = labelForScope('tTreeContent', [name, node.id, `${treeContentStart}`, `${tokenized.length}`]);
 
-      if (node.primary) {
-        const treeContentStart = treeContentSequence.lastBlock().items.length;
-        const tokenized = tokenizeString(node.primary);
-        const scopePayload = labelForScope('tTreeContent', ['-', node.id, `${treeContentStart}`, `${tokenized.length}`]);
+        treeSequence.lastBlock().items.push({
+          type: 'scope',
+          subType: 'start',
+          payload: scopePayload,
+        });
+
+        for (const [payload, subType] of tokenized) {
+          treeSequence.lastBlock().items.push({
+            type: 'token',
+            subType,
+            payload,
+          });
+        }
+        treeSequence.lastBlock().items.push({
+          type: 'scope',
+          subType: 'end',
+          payload: scopePayload,
+        });
+      }
+    }
+
+    if (node.children) {
+      for (const [childN, childNodeN] of node.children.entries()) {
+        const scopePayload = labelForScope('tTreeChild', [childN, childNodeN]);
 
         treeSequence.lastBlock().items.push({
           type: 'scope',
@@ -89,61 +98,16 @@ const parseNodes = (str, parser, bookCode) => {
           subType: 'end',
           payload: scopePayload,
         });
-
-        for (const [payload, subType] of tokenized) {
-          treeContentSequence.lastBlock().items.push({
-            type: 'token',
-            subType,
-            payload,
-          });
-        }
-      }
-      if (node.secondary) {
-        for (const [name, content] of Object.entries(node.secondary)) {
-          const treeContentStart = treeContentSequence.lastBlock().items.length;
-          const tokenized = tokenizeString(content);
-          const scopePayload = labelForScope('tTreeContent', [name, node.id, `${treeContentStart}`, `${tokenized.length}`]);
-
-          treeSequence.lastBlock().items.push({
-            type: 'scope',
-            subType: 'start',
-            payload: scopePayload,
-          });
-          treeSequence.lastBlock().items.push({
-            type: 'scope',
-            subType: 'end',
-            payload: scopePayload,
-          });
-
-          for (const [payload, subType] of tokenized) {
-            treeContentSequence.lastBlock().items.push({
-              type: 'token',
-              subType,
-              payload,
-            });
-          }
-        }
-      }
-      if (node.children) {
-        for (const [childN, childNodeN] of node.children.entries()) {
-          const scopePayload = labelForScope('tTreeChild', [childN, childNodeN]);
-          treeSequence.lastBlock().items.push({
-            type: 'scope',
-            subType: 'start',
-            payload: scopePayload,
-          });
-          treeSequence.lastBlock().items.push({
-            type: 'scope',
-            subType: 'end',
-            payload: scopePayload,
-          });
-        }
       }
     }
+    treeSequence.lastBlock().items.push({
+      type: 'scope',
+      subType: 'end',
+      payload: scopePayload,
+    });
   }
 
   parser.sequences.tree.push(treeSequence);
-  parser.sequences.treeContent.push(treeContentSequence);
   parser.sequences.main.addBlockGraft({
     type: 'graft',
     subType: 'tree',

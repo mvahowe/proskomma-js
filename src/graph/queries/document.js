@@ -166,6 +166,7 @@ const documentType = new GraphQLObjectType({
         context.docSet = root.processor.docSets[root.docSetId];
         let ret = Object.values(root.sequences);
         ret = ret.filter(s => args.id.includes(s.id));
+
         if (ret[0] && ret[0].type !== 'table') {
           throw new Error(`Expected sequence id ${ret[0].id} to be of type 'table', not '${ret[0].type}'`);
         }
@@ -185,16 +186,11 @@ const documentType = new GraphQLObjectType({
         context.docSet = root.processor.docSets[root.docSetId];
         let ret = Object.values(root.sequences);
         ret = ret.filter(s => args.id.includes(s.id));
+
         if (ret[0] && ret[0].type !== 'tree') {
           throw new Error(`Expected sequence id ${ret[0].id} to be of type 'tree', not '${ret[0].type}'`);
         }
-        if (ret[0]) {
-          const treeContentSequenceId = context.docSet.unsuccinctifyGrafts(ret[0].blocks[0].bg)[0][2];
-          context.treeContentSequence = root.sequences[treeContentSequenceId];
-          return ret[0];
-        } else {
-          return null;
-        }
+        return ret[0] || null;
       },
     },
     mainBlocks: {
