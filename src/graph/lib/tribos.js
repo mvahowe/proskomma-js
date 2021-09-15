@@ -35,6 +35,12 @@ class Tribos {
         function: this.doDescendantsStep,
       },
       {
+        regex: xre('^leaves$'),
+        inputType: 'nodes',
+        outputType: 'nodes',
+        function: this.doLeavesStep,
+      },
+      {
         regex: xre('^parent$'),
         inputType: 'nodes',
         outputType: 'nodes',
@@ -157,6 +163,30 @@ class Tribos {
       descendantNo--;
     }
     return { data: nodes };
+  }
+
+  // The leaves of each node
+  doLeavesStep(docSet, allNodes, result) {
+    const leafIds = new Set([]);
+    let nodes = result.data;
+
+    while (nodes.length > 0) {
+      const childNodeIds = new Set([]);
+
+      for (const parentNode of nodes) {
+        const childIds = docSet.unsuccinctifyScopes(parentNode.is)
+          .filter(s => s[2].startsWith('tTreeChild'))
+          .map(s => s[2].split('/')[2]);
+
+        if (childIds.length > 0) {
+          childIds.forEach(c => childNodeIds.add(c));
+        } else {
+          leafIds.add(docSet.unsuccinctifyScopes(parentNode.bs)[0][2].split('/')[1]);
+        }
+      }
+      nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    }
+    return { data: allNodes.filter(n => leafIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
   }
 
   // The children of the parent of each node
