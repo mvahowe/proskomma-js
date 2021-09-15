@@ -29,7 +29,7 @@ class Tribos {
         function: this.doChildrenStep,
       },
       {
-        regex: xre('^descendants(\\((\\d+)\\))$'),
+        regex: xre('^descendants(\\((\\d+)(,\\s*(\\d+))?\\))$'),
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doDescendantsStep,
@@ -142,15 +142,20 @@ class Tribos {
 
   // The nth-generation descendants of each node (where 1 === child)
   doDescendantsStep(docSet, allNodes, result, queryStep, matches) {
-    let descendantNo = parseInt(matches[2]);
+    let descendantGen = parseInt(matches[2]);
 
-    if (descendantNo < 1) {
+    if (descendantGen < 1) {
       return { errors: `Expected a positive integer argument for descendant, found ${queryStep}` };
+    }
+
+    let descendantNo = -1;
+    if (matches[4]) {
+      descendantNo = parseInt(matches[4]);
     }
 
     let nodes = result.data;
 
-    while (descendantNo > 0) {
+    while (descendantGen > 0) {
       const childNodeIds = new Set([]);
 
       for (const parentNode of nodes) {
@@ -160,9 +165,9 @@ class Tribos {
         childIds.forEach(c => childNodeIds.add(c));
       }
       nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
-      descendantNo--;
+      descendantGen--;
     }
-    return { data: nodes };
+    return { data: [...nodes.entries()].filter(n => descendantNo < 0 || n[0] === descendantNo).map(n => n[1]) };
   }
 
   // The leaves of each node
