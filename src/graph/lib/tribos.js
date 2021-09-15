@@ -23,16 +23,28 @@ class Tribos {
         outputType: 'nodes',
       },
       {
-        regex: xre('^children$'),
+        regex: xre('^children(\\((\\d+)\\))?$'),
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doChildrenStep,
+      },
+      {
+        regex: xre('^descendants(\\((\\d+)\\))$'),
+        inputType: 'nodes',
+        outputType: 'nodes',
+        function: this.doDescendantsStep,
       },
       {
         regex: xre('^parent$'),
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doParentStep,
+      },
+      {
+        regex: xre('^ancestor(\\((\\d+)\\))$'),
+        inputType: 'nodes',
+        outputType: 'nodes',
+        function: this.doAncestorStep,
       },
       {
         regex: xre('^siblings$'),
@@ -66,13 +78,16 @@ class Tribos {
   }
 
   // Children of the nodes
-  doChildrenStep(docSet, allNodes, result) {
+  doChildrenStep(docSet, allNodes, result, queryStep, matches) {
+    const childNo = matches[2];
     const childNodeIds = new Set([]);
 
     for (const parentNode of result.data) {
       const children = docSet.unsuccinctifyScopes(parentNode.is)
-        .filter(s => s[2].startsWith('tTreeChild'))
-        .map(s => s[2].split('/')[2]);
+        .map(s => s[2].split('/'))
+        .filter(s => s[0] === 'tTreeChild')
+        .filter(s => !childNo || s[1] === childNo)
+        .map(s => s[2]);
 
       for (const child of children) {
         childNodeIds.add(child);
@@ -92,6 +107,56 @@ class Tribos {
       parentNodeIds.add(parentId);
     }
     return { data: allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  }
+
+  // The nth ancestor of each node (where 1 === parent)
+  doAncestorStep(docSet, allNodes, result, queryStep, matches) {
+    let ancestorNo = parseInt(matches[2]);
+
+    if (ancestorNo < 1) {
+      return { errors: `Expected a positive integer argument for ancestor, found ${queryStep}` };
+    }
+
+    let nodes = result.data;
+
+    while (ancestorNo > 0) {
+      const parentNodeIds = new Set([]);
+
+      for (const childNode of nodes) {
+        const parentId = docSet.unsuccinctifyScopes(childNode.is)
+          .filter(s => s[2].startsWith('tTreeParent'))
+          .map(s => s[2].split('/')[1])[0];
+        parentNodeIds.add(parentId);
+      }
+      nodes = allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+      ancestorNo--;
+    }
+    return { data: nodes };
+  }
+
+  // The nth-generation descendants of each node (where 1 === child)
+  doDescendantsStep(docSet, allNodes, result, queryStep, matches) {
+    let descendantNo = parseInt(matches[2]);
+
+    if (descendantNo < 1) {
+      return { errors: `Expected a positive integer argument for descendant, found ${queryStep}` };
+    }
+
+    let nodes = result.data;
+
+    while (descendantNo > 0) {
+      const childNodeIds = new Set([]);
+
+      for (const parentNode of nodes) {
+        const childIds = docSet.unsuccinctifyScopes(parentNode.is)
+          .filter(s => s[2].startsWith('tTreeChild'))
+          .map(s => s[2].split('/')[2]);
+        childIds.forEach(c => childNodeIds.add(c));
+      }
+      nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+      descendantNo--;
+    }
+    return { data: nodes };
   }
 
   // The children of the parent of each node
@@ -147,10 +212,10 @@ class Tribos {
       }
       ret.push(record);
     }
-    return ret;
+    return { data: ret };
   }
 
-  doStep(docSet, allNodes, result, queryStep, isAbsolute) {
+  doStep(docSet, allNodes, result, queryStep) {
     for (const stepAction of this.stepActions) {
       const matches = xre.exec(queryStep, stepAction.regex);
 
@@ -163,12 +228,12 @@ class Tribos {
     return { errors: `Unable to match step ${queryStep}` };
   }
 
-  parse1(docSet, allNodes, result, queryArray, isAbsolute) {
+  parse1(docSet, allNodes, result, queryArray) {
     if (queryArray.length > 0) {
-      const stepResult = this.doStep(docSet, allNodes, result, queryArray[0], isAbsolute);
+      const stepResult = this.doStep(docSet, allNodes, result, queryArray[0]);
 
-      if (result.errors || result.data.length === 0) {
-        return result;
+      if (stepResult.errors || stepResult.data.length === 0) {
+        return stepResult;
       } else {
         return this.parse1(docSet, allNodes, stepResult, queryArray.slice(1));
       }
@@ -192,11 +257,13 @@ class Tribos {
       nodes,
       { data: nodes },
       this.queryArray(queryString),
-      true,
     );
 
     if (result.data) {
-      result.data = result.data.map(n => docSet.unsuccinctifyBlock(n, {}));
+      switch (this.currentStepType) {
+      case 'nodes':
+        result.data = result.data.map(n => ({ id: docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1] }));
+      }
     }
     return (JSON.stringify(result, null, 2));
   }

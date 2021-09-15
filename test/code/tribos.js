@@ -27,7 +27,7 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"nodes/node") } } }`;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"root/descendants(1)") } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       console.log(result.data.documents[0].treeSequence.tribos);
