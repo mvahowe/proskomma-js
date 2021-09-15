@@ -59,7 +59,7 @@ class Tribos {
         function: this.doSiblingsStep,
       },
       {
-        regex: xre('^node$'),
+        regex: xre('^node(\\{([^}]+)\\})?$'),
         inputType: 'nodes',
         outputType: 'node',
         function: this.doNodeStep,
@@ -223,23 +223,34 @@ class Tribos {
   }
 
   // The node details
-  doNodeStep(docSet, allNodes, result) {
+  // optional fields are id, parentId, content, @<contentName>
+  doNodeStep(docSet, allNodes, result, queryStep, matches) {
     const ret = [];
+    let fields = new Set([]);
+    if (matches[2]) {
+      fields = new Set(matches[2].split(',').map(f => f.trim()));
+    }
 
     for (const node of result.data) {
       const record = {};
 
-      record.id = docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1];
+      if (fields.size === 0 || fields.has('id')) {
+        record.id = docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1];
+      }
 
-      record.parentId = docSet.unsuccinctifyScopes(node.is)
-        .filter(s => s[2].startsWith('tTreeParent'))
-        .map(s => s[2].split('/')[1])[0];
+      if (fields.size === 0 || fields.has('parentId')) {
+        record.parentId = docSet.unsuccinctifyScopes(node.is)
+          .filter(s => s[2].startsWith('tTreeParent'))
+          .map(s => s[2].split('/')[1])[0];
+      }
 
       const content = {};
 
       for (const [scopeLabels, items] of docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)) {
         const key = scopeLabels.filter(s => s.startsWith('tTreeContent'))[0].split('/')[1];
-        content[key] = items.filter(i => i[0] === 'token').map(t => t[2]).join('');
+        if (fields.size === 0 || fields.has('content') || fields.has(`@${key}`)) {
+          content[key] = items.filter(i => i[0] === 'token').map(t => t[2]).join('');
+        }
       }
 
       if (Object.keys(content).length > 0) {
