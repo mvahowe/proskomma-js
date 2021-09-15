@@ -261,10 +261,11 @@ class Tribos {
       }
 
       const children = [];
-      for (const childScope of docSet.unsuccinctifyScopes(node.is)
-        .filter(s => s[2].startsWith('tTreeChild'))
-        .map(s => s[2].split('/')[2])) {
-        if (fields.size === 0 || fields.has('children')) {
+
+      if (fields.has('children')) {
+        for (const childScope of docSet.unsuccinctifyScopes(node.is)
+          .filter(s => s[2].startsWith('tTreeChild'))
+          .map(s => s[2].split('/')[2])) {
           children.push(childScope);
         }
       }
