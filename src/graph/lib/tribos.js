@@ -149,6 +149,7 @@ class Tribos {
     }
 
     let descendantNo = -1;
+
     if (matches[4]) {
       descendantNo = parseInt(matches[4]);
     }
@@ -227,6 +228,7 @@ class Tribos {
   doNodeStep(docSet, allNodes, result, queryStep, matches) {
     const ret = [];
     let fields = new Set([]);
+
     if (matches[2]) {
       fields = new Set(matches[2].split(',').map(f => f.trim()));
     }
@@ -248,6 +250,7 @@ class Tribos {
 
       for (const [scopeLabels, items] of docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)) {
         const key = scopeLabels.filter(s => s.startsWith('tTreeContent'))[0].split('/')[1];
+
         if (fields.size === 0 || fields.has('content') || fields.has(`@${key}`)) {
           content[key] = items.filter(i => i[0] === 'token').map(t => t[2]).join('');
         }
@@ -256,6 +259,20 @@ class Tribos {
       if (Object.keys(content).length > 0) {
         record.content = content;
       }
+
+      const children = [];
+      for (const childScope of docSet.unsuccinctifyScopes(node.is)
+        .filter(s => s[2].startsWith('tTreeChild'))
+        .map(s => s[2].split('/')[2])) {
+        if (fields.size === 0 || fields.has('children')) {
+          children.push(childScope);
+        }
+      }
+
+      if (children.length > 0) {
+        record.children = children;
+      }
+
       ret.push(record);
     }
     return { data: ret };
