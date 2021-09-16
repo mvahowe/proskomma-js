@@ -3,66 +3,124 @@ import xre from 'xregexp';
 class Tribos {
   constructor() {
     this.currentStepType = null;
+    const predicateRegex = '(\\[(([^\\]\']|\'([^\']|\\\\\')*\')+)\\])*';
+
     this.stepActions = [
       {
-        regex: xre('^#\\{([^}]+)\\}$'),
+        regex: xre(`^#\\{([^}]+)\\}${predicateRegex}$`),
+        predicateCapture: 3,
         inputType: null,
         outputType: 'nodes',
         function: this.doAbsoluteIdStep,
       },
       {
-        regex: xre('^root$'),
+        regex: xre(`^root${predicateRegex}$`),
+        predicateCapture: 2,
         inputType: null,
         outputType: 'nodes',
         function: this.doAbsoluteRootStep,
       },
       {
-        regex: xre('^nodes$'),
+        regex: xre(`^nodes${predicateRegex}$`),
+        predicateCapture: 2,
         function: this.doAbsoluteNodesStep,
         inputType: null,
         outputType: 'nodes',
       },
       {
-        regex: xre('^children(\\((\\d+)\\))?$'),
+        regex: xre(`^children(\\((\\d+)\\))?${predicateRegex}$`),
+        predicateCapture: 5,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doChildrenStep,
       },
       {
-        regex: xre('^descendants(\\((\\d+)(,\\s*(\\d+))?\\))$'),
+        regex: xre(`^descendants(\\((\\d+)(,\\s*(\\d+))?\\))${predicateRegex}$`),
+        predicateCapture: 6,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doDescendantsStep,
       },
       {
-        regex: xre('^leaves$'),
+        regex: xre(`^leaves${predicateRegex}$`),
+        predicateCapture: 2,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doLeavesStep,
       },
       {
-        regex: xre('^parent$'),
+        regex: xre(`^parent${predicateRegex}$`),
+        predicateCapture: 2,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doParentStep,
       },
       {
-        regex: xre('^ancestor(\\((\\d+)\\))$'),
+        regex: xre(`^ancestor(\\((\\d+)\\))${predicateRegex}$`),
+        predicateCapture: 5,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doAncestorStep,
       },
       {
-        regex: xre('^siblings$'),
+        regex: xre(`^siblings${predicateRegex}$`),
+        predicateCapture: 2,
         inputType: 'nodes',
         outputType: 'nodes',
         function: this.doSiblingsStep,
       },
       {
-        regex: xre('^node(\\{([^}]+)\\})?$'),
+        regex: xre(`^node(\\{([^}]+)\\})?${predicateRegex}$`),
+        predicateCapture: 4,
         inputType: 'nodes',
         outputType: 'node',
         function: this.doNodeStep,
+      },
+    ];
+    this.aggregateFunctions = {
+      ids: () => console.log('ids'),
+      equals: (a, b) => a === b,
+    };
+    this.parseFunctions = {
+      csArgs: str => str.split(',').map(s => s.trim()),
+      quotedString: str => str.substring(1, str.length - 1),
+      idRef: () => console.log('idRef'),
+      parentIdRef: () => console.log('parentIdRef'),
+      contentRef: () => console.log('contentRef'),
+      true: () => true,
+      false: () => false,
+    };
+    this.expressions = [
+      {
+        id: 'booleanExpression',
+        oneOf: ['booleanPrimitive', 'equals'],
+      },
+      {
+        id: 'ids',
+        regex: xre('^#\\{([^}]+)\\}$'),
+        parseFunctions: [null, 'csArgs'],
+        argStructure: [['id', [1, null]]],
+      },
+      {
+        id: 'id',
+        regex: xre('^".*"$'),
+        parseFunctions: ['quotedString'],
+      },
+      {
+        id: 'equals',
+        regex: xre('^==\\(([^}]+)\\)$'),
+        parseFunctions: [null, 'csArgs'],
+        argStructure: [['stringPrimitive', [2, 2]]],
+      },
+      {
+        id: 'stringPrimitive',
+        regex: xre('^(id)|(parentId)|(\'([^\']|\\\\\')*\')|(@[a-zA-Z][a-zA-Z0-9_]*)$'),
+        parseFunctions: [null, 'idRef', 'parentIdRef', 'quotedString', null, 'contentRef'],
+      },
+      {
+        id: 'booleanPrimitive',
+        regex: xre('^(true)|(false)$'),
+        parseFunctions: [null, 'true', 'false'],
       },
     ];
   }
@@ -172,7 +230,7 @@ class Tribos {
   }
 
   // The leaves of each node
-  doLeavesStep(docSet, allNodes, result) {
+  doLeavesStep(docSet, allNodes, result, queryStep, matches) {
     const leafIds = new Set([]);
     let nodes = result.data;
 
@@ -279,12 +337,46 @@ class Tribos {
     return { data: ret };
   }
 
+  doPredicate(result, predicateString) {
+    for (const expression of this.expressions) {
+      if (!expression.regex) {
+        continue;
+      }
+
+      const matches = xre.exec(predicateString, expression.regex);
+
+      if (matches) {
+        let found = false;
+        for (const [n, parseFunction] of expression.parseFunctions.entries()) {
+          if (!parseFunction || !matches[n]) {
+            continue;
+          }
+          found = true;
+          const parsed = this.parseFunctions[parseFunction](matches[n]);
+          if (expression.argStructure) {
+            console.log('aggregator!');
+          } else {
+            console.log(parsed);
+          }
+        }
+        if (!found) {
+          console.log(`Could not parse predicate ${predicateString}`);
+        }
+      }
+    }
+    return result;
+  }
+
   doStep(docSet, allNodes, result, queryStep) {
     for (const stepAction of this.stepActions) {
       const matches = xre.exec(queryStep, stepAction.regex);
 
       if (matches && stepAction.inputType === this.currentStepType) {
-        const ret = stepAction.function(docSet, allNodes, result, queryStep, matches);
+        let ret = stepAction.function(docSet, allNodes, result, queryStep, matches);
+
+        if (matches[stepAction.predicateCapture]) {
+          ret = this.doPredicate(ret, matches[stepAction.predicateCapture]);
+        }
         this.currentStepType = stepAction.outputType;
         return ret;
       }
@@ -316,6 +408,7 @@ class Tribos {
   }
 
   parse(docSet, nodes, queryString) {
+    // console.log(`\n===> ${queryString}\n`);
     const result = this.parse1(
       docSet,
       nodes,
@@ -329,7 +422,10 @@ class Tribos {
         result.data = result.data.map(n => ({ id: docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1] }));
       }
     }
-    return (JSON.stringify(result, null, 2));
+
+    const ret = JSON.stringify(result, null, 2);
+    // console.log(`${ret}\n`);
+    return ret;
   }
 }
 
