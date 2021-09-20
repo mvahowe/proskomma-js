@@ -354,7 +354,7 @@ test(
 );
 
 test(
-  `predicate (${testGroup})`,
+  `Predicate (${testGroup})`,
   async function (t) {
     try {
       t.plan(3);
@@ -376,7 +376,7 @@ test(
 );
 
 test(
-  `quotes (${testGroup})`,
+  `Quotes (${testGroup})`,
   async function (t) {
     try {
       t.plan(4);
@@ -392,6 +392,54 @@ test(
       const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
       t.equal(tribos.data.length, 1);
       t.equal(tribos.data[0].id, '6');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `hasContent (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"nodes[and(hasContent('shoeSize'), not(hasContent('banana'))]/node") } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 7);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `string booleans (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[or(startsWith(content('name'), 'Sally'), endsWith(content('name'), 'Jones'), matches(content('name'), 'eborah'))]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 3);
     } catch (err) {
       console.log(err);
     }

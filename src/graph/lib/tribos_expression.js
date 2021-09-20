@@ -19,7 +19,18 @@ const aggregateFunctions = {
       labelIG[0][1].filter(i => i[0] === 'token').map(t => t[2]).join('') :
       null;
   },
+  hasContent: (docSet, node, label) => {
+    const labelIG = docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)
+      .filter(ig => {
+        const key = ig[0].filter(s => s.startsWith('tTreeContent'))[0].split('/')[1];
+        return key === label;
+      });
+    return labelIG.length > 0;
+  },
   concat: (docSet, node, ...args) => args.join(''),
+  startsWith: (docSet, node, a, b) => a.startsWith(b),
+  endsWith: (docSet, node, a, b) => a.endsWith(b),
+  matches: (docSet, node, a, b) => xre.test(a, xre(b)),
 };
 
 const parseFunctions = {
@@ -86,7 +97,7 @@ const splitArgs = str => {
 const expressions = [
   {
     id: 'booleanExpression',
-    oneOf: ['booleanPrimitive', 'equals', 'and', 'or', 'not', 'contains'],
+    oneOf: ['booleanPrimitive', 'equals', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches'],
   },
   {
     id: 'equals',
@@ -114,8 +125,28 @@ const expressions = [
     argStructure: [['stringPrimitive', [1, 1]]],
   },
   {
+    id: 'hasContent',
+    regex: xre('^hasContent\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [1, 1]]],
+  },
+  {
     id: 'contains',
     regex: xre('^contains\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [2, 2]]],
+  },
+  {
+    id: 'startsWith',
+    regex: xre('^startsWith\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [2, 2]]],
+  },
+  {
+    id: 'endsWith',
+    regex: xre('^endsWith\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [2, 2]]],
+  },
+  {
+    id: 'matches',
+    regex: xre('^matches\\((.+)\\)$'),
     argStructure: [['stringPrimitive', [2, 2]]],
   },
   {
