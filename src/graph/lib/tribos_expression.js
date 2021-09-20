@@ -8,6 +8,7 @@ const aggregateFunctions = {
   not: (docSet, node, a) => !a,
   idRef: (docSet, node) => docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1],
   parentIdRef: (docSet, node) => docSet.unsuccinctifyScopes(node.is).filter(s => s[2].startsWith('tTreeParent'))[0][2].split('/')[1],
+  nChildren: (docSet, node) => docSet.unsuccinctifyScopes(node.is).filter(s => s[2].startsWith('tTreeChild')).length,
   contentRef: (docSet, node, label) => {
     const labelIG = docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)
       .filter(ig => {
@@ -33,6 +34,15 @@ const aggregateFunctions = {
   matches: (docSet, node, a, b) => xre.test(a, xre(b)),
   int: (docSet, node, str) => parseInt(str),
   string: (docSet, node, int) => `${int}`,
+  left: (docSet, node, str, int) => str.substring(0, int),
+  right: (docSet, node, str, int) => str.substring(str.length - int),
+  length: (docSet, node, str) => str.length,
+  indexOf: (docSet, node, a, b) => a.indexOf(b),
+  add: (docSet, node, ...args) => args.reduce((x, y) => x + y),
+  mul: (docSet, node, ...args) => args.reduce((x, y) => x * y),
+  sub: (docSet, node, a, b) => a - b,
+  div: (docSet, node, a, b) => Math.floor(a / b),
+  mod: (docSet, node, a, b) => a % b,
 };
 
 const parseFunctions = {
@@ -99,33 +109,45 @@ const splitArgs = str => {
 
 const expressions = [
   {
+    id: 'expression',
+    oneOf: ['stringExpression', 'intExpression', 'booleanExpression'],
+  },
+  {
     id: 'booleanExpression',
     oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches'],
   },
   {
+    id: 'stringExpression',
+    oneOf: ['concat', 'left', 'right', 'string', 'idRef', 'parentIdRef', 'stringPrimitive'],
+  },
+  {
+    id: 'intExpression',
+    oneOf: ['length', 'indexOf', 'int', 'nChildren', 'intPrimitive'],
+  },
+  {
     id: 'equals',
     regex: xre('^==\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['expression', [2, 2]]],
   },
   {
     id: 'notEqual',
     regex: xre('^!=\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['expression', [2, 2]]],
   },
   {
     id: 'and',
     regex: xre('^and\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, null]]],
+    argStructure: [['booleanExpression', [2, null]]],
   },
   {
     id: 'or',
     regex: xre('^or\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, null]]],
+    argStructure: [['booleanExpression', [2, null]]],
   },
   {
     id: 'concat',
     regex: xre('^concat\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, null]]],
+    argStructure: [['stringExpression', [2, null]]],
   },
   {
     id: 'contentRef',
@@ -140,27 +162,47 @@ const expressions = [
   {
     id: 'contains',
     regex: xre('^contains\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['stringExpression', [2, 2]]],
   },
   {
     id: 'startsWith',
     regex: xre('^startsWith\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['stringExpression', [2, 2]]],
   },
   {
     id: 'endsWith',
     regex: xre('^endsWith\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['stringExpression', [2, 2]]],
   },
   {
     id: 'matches',
     regex: xre('^matches\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [2, 2]]],
+    argStructure: [['stringExpression', [2, 2]]],
+  },
+  {
+    id: 'left',
+    regex: xre('^left\\((.+)\\)$'),
+    argStructure: [['stringExpression', [1, 1]],['intExpression', [1, 1]]],
+  },
+  {
+    id: 'right',
+    regex: xre('^right\\((.+)\\)$'),
+    argStructure: [['stringExpression', [1, 1]],['intExpression', [1, 1]]],
+  },
+  {
+    id: 'length',
+    regex: xre('^length\\((.+)\\)$'),
+    argStructure: [['stringExpression', [1, 1]]],
+  },
+  {
+    id: 'indexOf',
+    regex: xre('^indexOf\\((.+)\\)$'),
+    argStructure: [['stringExpression', [2, 2]]],
   },
   {
     id: 'not',
     regex: xre('^not\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [1, 1]]],
+    argStructure: [['booleanExpression', [1, 1]]],
   },
   {
     id: 'int',
@@ -183,13 +225,43 @@ const expressions = [
     argStructure: [],
   },
   {
+    id: 'nChildren',
+    regex: xre('^nChildren$'),
+    argStructure: [],
+  },
+  {
+    id: 'add',
+    regex: xre('^add\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, null]]],
+  },
+  {
+    id: 'mul',
+    regex: xre('^mul\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, null]]],
+  },
+  {
+    id: 'sub',
+    regex: xre('^sub\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'div',
+    regex: xre('^div\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'mod',
+    regex: xre('^mod\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
     id: 'stringPrimitive',
     regex: xre('^(\'([^\']|\\\\\')*\')$'),
     parseFunctions: [null, 'quotedString'],
   },
   {
     id: 'intPrimitive',
-    regex: xre('^(-?[1-9][0-9]*)$'),
+    regex: xre('^(-?[0-9]+)$'),
     parseFunctions: [null, 'int'],
   },
   {

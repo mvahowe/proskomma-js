@@ -471,3 +471,81 @@ test(
     }
   },
 );
+
+test(
+  `string operators (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[or(==(right(content('label'), 2), 'ma'), ==(left(content('label'), 2), 'po'), ==(indexOf(content('name'), 'Smith n'), 6), ==(length(content('name')), 23))]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 4);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `nChildren (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[==(nChildren, 2)]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 3);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `arithmetic (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[==(add(int(content('shoeSize')), sub(7, mul(2, mod(6, 4)))), div(10, 2))]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
