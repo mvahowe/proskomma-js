@@ -1,18 +1,29 @@
 import xre from 'xregexp';
 
 const aggregateFunctions = {
-  ids: () => console.log('ids'),
-  equals: (a, b) => a === b,
-  and: (...args) => args.filter(a => !a).length === 0,
-  or: (...args) => args.filter(a => a).length > 0,
-  not: a => !a,
+  equals: (docSet, node, a, b) => a === b,
+  and: (docSet, node, ...args) => args.filter(a => !a).length === 0,
+  or: (docSet, node, ...args) => args.filter(a => a).length > 0,
+  not: (docSet, node, a) => !a,
+  idRef: (docSet, node) => docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1],
+  parentIdRef: (docSet, node) => docSet.unsuccinctifyScopes(node.is).filter(s => s[2].startsWith('tTreeParent'))[0][2].split('/')[1],
+  contentRef: () => console.log('contentRef'),
+  contains: (docSet, node, a, b) => a.includes(b),
+  content: (docSet, node, label) => {
+    const labelIG = docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)
+      .filter(ig => {
+        const key = ig[0].filter(s => s.startsWith('tTreeContent'))[0].split('/')[1];
+        return key === label;
+      });
+    return labelIG ?
+      labelIG[0][1].filter(i => i[0] === 'token').map(t => t[2]).join('') :
+      null;
+  },
+  concat: (docSet, node, ...args) => args.join(''),
 };
 
 const parseFunctions = {
   quotedString: str => str.substring(1, str.length - 1),
-  idRef: () => console.log('idRef'),
-  parentIdRef: () => console.log('parentIdRef'),
-  contentRef: () => console.log('contentRef'),
   true: () => true,
   false: () => false,
 };
@@ -21,20 +32,42 @@ const splitArgs = str => {
   const ret = [[]];
   let pos = 0;
   let nParen = 0;
+  let inQuote = false;
 
   while (pos < str.length) {
-    switch(str[pos]) {
-    case '(':
+    switch (str[pos]) {
+    case '\\':
       ret[ret.length - 1].push(str[pos]);
-      nParen++;
+
+      if (str[pos + 1] ==='\'') {
+        ret[ret.length - 1].push(str[pos + 1]);
+        pos++;
+      }
+      break;
+    case '\'':
+      ret[ret.length - 1].push(str[pos]);
+      inQuote = !inQuote;
+      break;
+    case '(':
+      if (inQuote) {
+        ret[ret.length - 1].push(str[pos]);
+      } else {
+        ret[ret.length - 1].push(str[pos]);
+        nParen++;
+      }
       break;
     case ')':
-      ret[ret.length - 1].push(str[pos]);
-      nParen--;
+      if (inQuote) {
+        ret[ret.length - 1].push(str[pos]);
+      } else {
+        ret[ret.length - 1].push(str[pos]);
+        nParen--;
+      }
       break;
     case ',':
-      if (nParen === 0) {
+      if (!inQuote && nParen === 0) {
         ret.push([]);
+
         while (str[pos + 1] === ' ') {
           pos++;
         }
@@ -53,17 +86,7 @@ const splitArgs = str => {
 const expressions = [
   {
     id: 'booleanExpression',
-    oneOf: ['booleanPrimitive', 'equals', 'and', 'or', 'not'],
-  },
-  {
-    id: 'ids',
-    regex: xre('^#\\{([^}]+)\\}$'),
-    argStructure: [['id', [1, null]]],
-  },
-  {
-    id: 'id',
-    regex: xre('^".*"$'),
-    parseFunctions: ['quotedString'],
+    oneOf: ['booleanPrimitive', 'equals', 'and', 'or', 'not', 'contains'],
   },
   {
     id: 'equals',
@@ -81,14 +104,39 @@ const expressions = [
     argStructure: [['stringPrimitive', [2, null]]],
   },
   {
+    id: 'concat',
+    regex: xre('^concat\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [2, null]]],
+  },
+  {
+    id: 'content',
+    regex: xre('^content\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [1, 1]]],
+  },
+  {
+    id: 'contains',
+    regex: xre('^contains\\((.+)\\)$'),
+    argStructure: [['stringPrimitive', [2, 2]]],
+  },
+  {
     id: 'not',
     regex: xre('^not\\((.+)\\)$'),
     argStructure: [['stringPrimitive', [1, 1]]],
   },
   {
+    id: 'idRef',
+    regex: xre('^id$'),
+    argStructure: [],
+  },
+  {
+    id: 'parentIdRef',
+    regex: xre('^parentId$'),
+    argStructure: [],
+  },
+  {
     id: 'stringPrimitive',
-    regex: xre('^(id)|(parentId)|(\'([^\']|\\\\\')*\')|(@[a-zA-Z][a-zA-Z0-9_]*)$'),
-    parseFunctions: [null, 'idRef', 'parentIdRef', 'quotedString', null, 'contentRef'],
+    regex: xre('^(\'([^\']|\\\\\')*\')$'),
+    parseFunctions: [null, 'quotedString'],
   },
   {
     id: 'booleanPrimitive',
@@ -97,7 +145,7 @@ const expressions = [
   },
 ];
 
-const parseRegexExpression = (result, predicateString, expressionId, matches) => {
+const parseRegexExpression = (docSet, node, predicateString, expressionId, matches) => {
   // console.log(`parseRegexExpression ${predicateString} ${expressionId} ${matches}`);
   const expressionRecord = expressions.filter(e => e.id === expressionId)[0];
 
@@ -120,18 +168,23 @@ const parseRegexExpression = (result, predicateString, expressionId, matches) =>
       return { errors: `Could not parse predicate ${predicateString}` };
     }
   } else {
-    const argRecords = splitArgs(matches[1]).map(a => parseExpressions(result, a));
+    let argRecords = [];
+
+    if (expressionRecord.argStructure.length > 0) {
+      argRecords = splitArgs(matches[1]).map(a => parseExpressions(docSet, node, a));
+    }
 
     if (argRecords.filter(ar => ar.errors).length === 0) {
-      const aggregated = aggregateFunctions[expressionId](...argRecords.map(ar => ar.data));
-      console.log('aggregated', expressionId, argRecords, aggregated);
+      // console.log(expressionId);
+      const aggregated = aggregateFunctions[expressionId](docSet, node, ...argRecords.map(ar => ar.data));
+      // console.log('aggregated', expressionId, argRecords, aggregated);
       return { data:  aggregated };
     }
     return { errors: `Could not parse arguments to ${expressionId}` };
   }
 };
 
-const parseExpressions = (result, predicateString) => {
+const parseExpressions = (docSet, node, predicateString) => {
   // console.log(`parseExpressions ${predicateString}`);
 
   for (const expressionRecord of expressions) {
@@ -142,13 +195,13 @@ const parseExpressions = (result, predicateString) => {
     const matches = xre.exec(predicateString, expressionRecord.regex);
 
     if (matches) {
-      return parseRegexExpression(result, predicateString, expressionRecord.id, matches);
+      return parseRegexExpression(docSet, node, predicateString, expressionRecord.id, matches);
     }
   }
   return { error: `No regex match for ${predicateString}` };
 };
 
-const parseExpression = (result, predicate, expressionId) => {
+const parseExpression = (docSet, node, predicate, expressionId) => {
   // console.log(`parseExpression ${predicate}, ${expressionId}`);
   const expressionRecord = expressions.filter(e => e.id === expressionId)[0];
 
@@ -160,7 +213,7 @@ const parseExpression = (result, predicate, expressionId) => {
     const errors = [];
 
     for (const option of expressionRecord.oneOf) {
-      const optionResult = parseExpression(result, predicate, option);
+      const optionResult = parseExpression(docSet, node, predicate, option);
 
       if (!optionResult.errors) {
         return optionResult;
@@ -173,7 +226,7 @@ const parseExpression = (result, predicate, expressionId) => {
     const matches = xre.exec(predicate, expressionRecord.regex);
 
     if (matches) {
-      const reResult = parseRegexExpression(result, predicate, expressionId, matches);
+      const reResult = parseRegexExpression(docSet, node, predicate, expressionId, matches);
       return reResult;
     } else {
       return { errors: `Could not match ${predicate} to ${expressionId}` };
@@ -181,9 +234,12 @@ const parseExpression = (result, predicate, expressionId) => {
   }
 };
 
-const doPredicate = (result, predicateString) => {
-  console.log('doPredicate', parseExpression(result, predicateString, 'booleanExpression'));
-  return result;
-};
+const doPredicate = (docSet, result, predicateString) => ({
+  data: result.data.filter(node => {
+    const nodeResult = parseExpression(docSet, node, predicateString, 'booleanExpression');
+    // console.log();
+    return !nodeResult.errors && nodeResult.data;
+  }),
+});
 
 module.exports = { doPredicate };

@@ -16,7 +16,7 @@ class Tribos {
         let ret = stepAction.function(docSet, allNodes, result, queryStep, matches);
 
         if (matches[stepAction.predicateCapture]) {
-          ret = doPredicate(ret, matches[stepAction.predicateCapture]);
+          ret = doPredicate(docSet, ret, matches[stepAction.predicateCapture]);
         }
         this.currentStepType = stepAction.outputType;
         return ret;
