@@ -111,193 +111,149 @@ const splitArgs = str => {
   return ret.map(e => e.join(''));
 };
 
-const expressions = [
-  {
-    id: 'expression',
-    oneOf: ['stringExpression', 'intExpression', 'booleanExpression'],
-  },
-  {
-    id: 'booleanExpression',
-    oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches', 'gt', 'lt', 'ge', 'le'],
-  },
-  {
-    id: 'stringExpression',
-    oneOf: ['concat', 'left', 'right', 'string', 'idRef', 'parentIdRef', 'stringPrimitive'],
-  },
-  {
-    id: 'intExpression',
-    oneOf: ['length', 'indexOf', 'int', 'nChildren', 'intPrimitive'],
-  },
-  {
-    id: 'equals',
+const expressions = {
+  expression: { oneOf: ['stringExpression', 'intExpression', 'booleanExpression'] },
+  booleanExpression: { oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches', 'gt', 'lt', 'ge', 'le'] },
+  stringExpression: { oneOf: ['concat', 'left', 'right', 'string', 'idRef', 'parentIdRef', 'stringPrimitive'] },
+  intExpression: { oneOf: ['length', 'indexOf', 'int', 'nChildren', 'intPrimitive'] },
+  equals: {
     regex: xre('^==\\((.+)\\)$'),
     argStructure: [['expression', [2, 2]]],
   },
-  {
-    id: 'notEqual',
+  notEqual: {
     regex: xre('^!=\\((.+)\\)$'),
     argStructure: [['expression', [2, 2]]],
   },
-  {
-    id: 'and',
+  and: {
     regex: xre('^and\\((.+)\\)$'),
     argStructure: [['booleanExpression', [2, null]]],
   },
-  {
-    id: 'or',
+  or: {
     regex: xre('^or\\((.+)\\)$'),
     argStructure: [['booleanExpression', [2, null]]],
   },
-  {
-    id: 'concat',
+  concat: {
     regex: xre('^concat\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, null]]],
   },
-  {
-    id: 'contentRef',
+  contentRef: {
     regex: xre('^content\\((.+)\\)$'),
     argStructure: [['stringPrimitive', [1, 1]]],
   },
-  {
-    id: 'hasContent',
+  hasContent: {
     regex: xre('^hasContent\\((.+)\\)$'),
     argStructure: [['stringPrimitive', [1, 1]]],
   },
-  {
-    id: 'contains',
+  contains: {
     regex: xre('^contains\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, 2]]],
   },
-  {
-    id: 'startsWith',
+  startsWith: {
     regex: xre('^startsWith\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, 2]]],
   },
-  {
-    id: 'endsWith',
+  endsWith: {
     regex: xre('^endsWith\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, 2]]],
   },
-  {
-    id: 'matches',
+  matches: {
     regex: xre('^matches\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, 2]]],
   },
-  {
-    id: 'left',
+  left: {
     regex: xre('^left\\((.+)\\)$'),
-    argStructure: [['stringExpression', [1, 1]],['intExpression', [1, 1]]],
+    argStructure: [['stringExpression', [1, 1]], ['intExpression', [1, 1]]],
   },
-  {
-    id: 'right',
+  right: {
     regex: xre('^right\\((.+)\\)$'),
-    argStructure: [['stringExpression', [1, 1]],['intExpression', [1, 1]]],
+    argStructure: [['stringExpression', [1, 1]], ['intExpression', [1, 1]]],
   },
-  {
-    id: 'length',
+  length: {
     regex: xre('^length\\((.+)\\)$'),
     argStructure: [['stringExpression', [1, 1]]],
   },
-  {
-    id: 'indexOf',
+  indexOf: {
     regex: xre('^indexOf\\((.+)\\)$'),
     argStructure: [['stringExpression', [2, 2]]],
   },
-  {
-    id: 'not',
+  not: {
     regex: xre('^not\\((.+)\\)$'),
     argStructure: [['booleanExpression', [1, 1]]],
   },
-  {
-    id: 'int',
+  int: {
     regex: xre('^int\\((.+)\\)$'),
     argStructure: [['stringExpression', [1, 1]]],
   },
-  {
-    id: 'string',
+  string: {
     regex: xre('^string\\((.+)\\)$'),
     argStructure: [['intExpression', [1, 1]]],
   },
-  {
-    id: 'idRef',
+  idRef: {
     regex: xre('^id$'),
     argStructure: [],
   },
-  {
-    id: 'parentIdRef',
-    regex: xre('^parentId$'),
+  parentIdRef: {
+    regex:
+    xre('^parentId$'),
     argStructure: [],
   },
-  {
-    id: 'nChildren',
-    regex: xre('^nChildren$'),
+  nChildren: {
+    regex:  xre('^nChildren$'),
     argStructure: [],
   },
-  {
-    id: 'add',
+  add: {
     regex: xre('^add\\((.+)\\)$'),
     argStructure: [['intExpression', [2, null]]],
   },
-  {
-    id: 'mul',
+  mul: {
     regex: xre('^mul\\((.+)\\)$'),
     argStructure: [['intExpression', [2, null]]],
   },
-  {
-    id: 'sub',
+  sub: {
     regex: xre('^sub\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'div',
+  div: {
     regex: xre('^div\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'mod',
+  mod: {
     regex: xre('^mod\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'gt',
+  gt: {
     regex: xre('^>\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'lt',
+  lt: {
     regex: xre('^<\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'ge',
+  ge: {
     regex: xre('^>=\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'le',
+  le: {
     regex: xre('^<=\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
-  {
-    id: 'stringPrimitive',
+  stringPrimitive: {
     regex: xre('^(\'([^\']|\\\\\')*\')$'),
     parseFunctions: [null, 'quotedString'],
   },
-  {
-    id: 'intPrimitive',
+  intPrimitive: {
     regex: xre('^(-?[0-9]+)$'),
     parseFunctions: [null, 'int'],
   },
-  {
-    id: 'booleanPrimitive',
+  booleanPrimitive: {
     regex: xre('^(true)|(false)$'),
     parseFunctions: [null, 'true', 'false'],
   },
-];
+};
 
 const parseRegexExpression = (docSet, node, predicateString, expressionId, matches) => {
   // console.log(`parseRegexExpression ${predicateString} ${expressionId} ${matches}`);
-  const expressionRecord = expressions.filter(e => e.id === expressionId)[0];
+  const expressionRecord = expressions[expressionId];
 
   if (!expressionRecord) {
     throw new Error(`Unknown expression ${expressionId} for predicate ${predicateString}`);
@@ -324,6 +280,7 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
     if (expressionRecord.argStructure.length > 0) {
       let argRecordN = 0;
       let expressionRecordN = 0;
+
       while (argRecordN < argRecords.length) {
         const argRecord = argRecords[argRecordN];
         argResults.push(parseExpressions(docSet, node, argRecord));
@@ -345,7 +302,7 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
 const parseExpressions = (docSet, node, predicateString) => {
   // console.log(`parseExpressions ${predicateString}`);
 
-  for (const expressionRecord of expressions) {
+  for (const [expressionId, expressionRecord] of Object.entries(expressions)) {
     if (!expressionRecord.regex) {
       continue;
     }
@@ -353,7 +310,7 @@ const parseExpressions = (docSet, node, predicateString) => {
     const matches = xre.exec(predicateString, expressionRecord.regex);
 
     if (matches) {
-      return parseRegexExpression(docSet, node, predicateString, expressionRecord.id, matches);
+      return parseRegexExpression(docSet, node, predicateString, expressionId, matches);
     }
   }
   return { errors: `No regex match for ${predicateString}` };
@@ -361,7 +318,7 @@ const parseExpressions = (docSet, node, predicateString) => {
 
 const parseExpression = (docSet, node, predicate, expressionId) => {
   // console.log(`parseExpression ${predicate}, ${expressionId}`);
-  const expressionRecord = expressions.filter(e => e.id === expressionId)[0];
+  const expressionRecord = expressions[expressionId];
 
   if (!expressionRecord) {
     throw new Error(`Unknown expression ${expressionId} for predicate ${predicate}`);
