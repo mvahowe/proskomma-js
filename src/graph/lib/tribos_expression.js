@@ -254,6 +254,10 @@ const expressions = {
 const parseRegexExpression = (docSet, node, predicateString, expressionId, matches) => {
   // console.log(`parseRegexExpression ${predicateString} ${expressionId} ${matches}`);
   const expressionRecord = expressions[expressionId];
+  const nExpectedArgs = structure => [
+    structure.map(a => a[1][0]).reduce((a, b) => a + b),
+    structure.filter(a => a[1][1] === null).length > 0,
+  ];
 
   if (!expressionRecord) {
     throw new Error(`Unknown expression ${expressionId} for predicate ${predicateString}`);
@@ -279,6 +283,16 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
     const argResults = [];
 
     if (argStructure.length > 0) {
+      const nExpected = nExpectedArgs(argStructure);
+
+      if (argRecords.length < nExpected[0]) {
+        return { errors: `Expected at least ${nExpected[0]} args for '${expressionId}', found ${argRecords.length}` };
+      }
+
+      if (!nExpected[1] && argRecords.length > nExpected[0]) {
+        return { errors: `Expected at most ${nExpected[0]} args for '${expressionId}', found ${argRecords.length}` };
+      }
+
       let argRecordN = 0;
       let argStructureN = 0;
       let nOccs = 0;
@@ -336,7 +350,7 @@ const parseExpression = (docSet, node, predicate, expressionId) => {
       const reResult = parseRegexExpression(docSet, node, predicate, expressionId, matches);
       return reResult;
     } else {
-      return { errors: `Could not match ${predicate} to ${expressionId}` };
+      return { errors: `Could not match ${predicate}` };
     }
   }
 };

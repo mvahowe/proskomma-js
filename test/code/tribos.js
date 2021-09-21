@@ -589,12 +589,62 @@ test(
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
-                   tribos(query:"nodes[or(and(>(int(content('shoeSize')), 1), <(zint(content('shoeSize')), 3)))]/node") }
+                   tribos(query:"nodes[and(>(int(content('shoeSize')), 1), <(zint(content('shoeSize')), 3))]/node") }
                  }
                }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.startsWith('Predicate - Could not parse arguments to or'));
+      t.ok(result.errors[0].message.startsWith('Predicate - Could not parse arguments to and'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Too few args (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[and(true)]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.startsWith('Predicate - Could not match and(true)'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Too many args (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[==(1, 2, 3)]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.startsWith('Predicate - Could not match ==(1, 2, 3)'));
     } catch (err) {
       console.log(err);
     }
