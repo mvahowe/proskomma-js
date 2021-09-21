@@ -275,15 +275,16 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
     }
   } else {
     const argRecords = splitArgs(matches[1]);
+    const argStructure = expressionRecord.argStructure;
     const argResults = [];
 
-    if (expressionRecord.argStructure.length > 0) {
+    if (argStructure.length > 0) {
       let argRecordN = 0;
-      let expressionRecordN = 0;
 
       while (argRecordN < argRecords.length) {
         const argRecord = argRecords[argRecordN];
-        argResults.push(parseExpressions(docSet, node, argRecord));
+        const argResult = parseExpressions(docSet, node, argRecord);
+        argResults.push(argResult);
         argRecordN++;
       }
     }
