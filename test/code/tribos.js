@@ -549,3 +549,29 @@ test(
     }
   },
 );
+
+test(
+  `int comparison (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[or(and(>(int(content('shoeSize')), 1), <(int(content('shoeSize')), 3)), and(>=(int(content('shoeSize')), 89), <=(int(content('shoeSize')), 89)))]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.data.length, 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

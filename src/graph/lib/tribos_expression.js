@@ -43,6 +43,10 @@ const aggregateFunctions = {
   sub: (docSet, node, a, b) => a - b,
   div: (docSet, node, a, b) => Math.floor(a / b),
   mod: (docSet, node, a, b) => a % b,
+  gt: (docSet, node, a, b) => a > b,
+  lt: (docSet, node, a, b) => a < b,
+  ge: (docSet, node, a, b) => a >= b,
+  le: (docSet, node, a, b) => a <= b,
 };
 
 const parseFunctions = {
@@ -114,7 +118,7 @@ const expressions = [
   },
   {
     id: 'booleanExpression',
-    oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches'],
+    oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches', 'gt', 'lt', 'ge', 'le'],
   },
   {
     id: 'stringExpression',
@@ -252,6 +256,26 @@ const expressions = [
   {
     id: 'mod',
     regex: xre('^mod\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'gt',
+    regex: xre('^>\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'lt',
+    regex: xre('^<\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'ge',
+    regex: xre('^>=\\((.+)\\)$'),
+    argStructure: [['intExpression', [2, 2]]],
+  },
+  {
+    id: 'le',
+    regex: xre('^<=\\((.+)\\)$'),
     argStructure: [['intExpression', [2, 2]]],
   },
   {
