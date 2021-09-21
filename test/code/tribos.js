@@ -594,7 +594,7 @@ test(
                }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.startsWith('Could not match or'));
+      t.ok(result.errors[0].message.startsWith('Predicate - Could not parse arguments to or'));
     } catch (err) {
       console.log(err);
     }

@@ -62,7 +62,7 @@ const splitArgs = str => {
   let nParen = 0;
   let inQuote = false;
 
-  while (pos < str.length) {
+  while (str && pos < str.length) {
     switch (str[pos]) {
     case '\\':
       ret[ret.length - 1].push(str[pos]);
@@ -318,15 +318,22 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
       return { errors: `Could not parse predicate ${predicateString}` };
     }
   } else {
-    let argRecords = [];
+    const argRecords = splitArgs(matches[1]);
+    const argResults = [];
 
     if (expressionRecord.argStructure.length > 0) {
-      argRecords = splitArgs(matches[1]).map(a => parseExpressions(docSet, node, a));
+      let argRecordN = 0;
+      let expressionRecordN = 0;
+      while (argRecordN < argRecords.length) {
+        const argRecord = argRecords[argRecordN];
+        argResults.push(parseExpressions(docSet, node, argRecord));
+        argRecordN++;
+      }
     }
 
-    if (argRecords.filter(ar => ar.errors).length === 0) {
+    if (argResults.filter(ar => ar.errors).length === 0) {
       // console.log(expressionId);
-      const args = argRecords.map(ar => ar.data);
+      const args = argResults.map(ar => ar.data);
       const aggregated = aggregateFunctions[expressionId](docSet, node, ...args);
       // console.log('aggregated', expressionId, argRecords, aggregated);
       return { data:  aggregated };
@@ -388,9 +395,10 @@ const parseExpression = (docSet, node, predicate, expressionId) => {
 const doPredicate = (docSet, result, predicateString) => ({
   data: result.data.filter(node => {
     const nodeResult = parseExpression(docSet, node, predicateString, 'booleanExpression');
+
     // console.log();
     if (nodeResult.errors) {
-      throw new Error(nodeResult.errors);
+      throw new Error(`Predicate - ${nodeResult.errors}`);
     }
     return nodeResult.data;
   }),
