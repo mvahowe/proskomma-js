@@ -113,9 +113,9 @@ const splitArgs = str => {
 
 const expressions = {
   expression: { oneOf: ['stringExpression', 'intExpression', 'booleanExpression'] },
-  booleanExpression: { oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches', 'gt', 'lt', 'ge', 'le'] },
-  stringExpression: { oneOf: ['concat', 'left', 'right', 'string', 'idRef', 'parentIdRef', 'stringPrimitive'] },
-  intExpression: { oneOf: ['length', 'indexOf', 'int', 'nChildren', 'intPrimitive'] },
+  booleanExpression: { oneOf: ['booleanPrimitive', 'equals', 'notEqual', 'and', 'or', 'not', 'contains', 'startsWith', 'endsWith', 'matches', 'gt', 'lt', 'ge', 'le', 'hasContent'] },
+  stringExpression: { oneOf: ['concat', 'left', 'right', 'string', 'idRef', 'parentIdRef', 'contentRef', 'stringPrimitive'] },
+  intExpression: { oneOf: ['length', 'indexOf', 'int', 'nChildren', 'intPrimitive', 'add', 'sub', 'mul', 'div', 'mod'] },
   equals: {
     regex: xre('^==\\((.+)\\)$'),
     argStructure: [['expression', [2, 2]]],
@@ -138,11 +138,11 @@ const expressions = {
   },
   contentRef: {
     regex: xre('^content\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [1, 1]]],
+    argStructure: [['stringExpression', [1, 1]]],
   },
   hasContent: {
     regex: xre('^hasContent\\((.+)\\)$'),
-    argStructure: [['stringPrimitive', [1, 1]]],
+    argStructure: [['stringExpression', [1, 1]]],
   },
   contains: {
     regex: xre('^contains\\((.+)\\)$'),
@@ -280,12 +280,20 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
 
     if (argStructure.length > 0) {
       let argRecordN = 0;
+      let argStructureN = 0;
+      let nOccs = 0;
 
       while (argRecordN < argRecords.length) {
         const argRecord = argRecords[argRecordN];
-        const argResult = parseExpressions(docSet, node, argRecord);
+        const argResult = parseExpression(docSet, node, argRecord, argStructure[argStructureN][0]);
         argResults.push(argResult);
         argRecordN++;
+        nOccs++;
+
+        if (argStructure[argStructureN][1][1] && nOccs >= argStructure[argStructureN][1][1]) {
+          argStructureN++;
+          nOccs = 0;
+        }
       }
     }
 
@@ -298,23 +306,6 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
     }
     return { errors: `Could not parse arguments to ${expressionId}: ${argRecords.filter(ar => ar.errors).map(ar => ar.errors).join('; ')}` };
   }
-};
-
-const parseExpressions = (docSet, node, predicateString) => {
-  // console.log(`parseExpressions ${predicateString}`);
-
-  for (const [expressionId, expressionRecord] of Object.entries(expressions)) {
-    if (!expressionRecord.regex) {
-      continue;
-    }
-
-    const matches = xre.exec(predicateString, expressionRecord.regex);
-
-    if (matches) {
-      return parseRegexExpression(docSet, node, predicateString, expressionId, matches);
-    }
-  }
-  return { errors: `No regex match for ${predicateString}` };
 };
 
 const parseExpression = (docSet, node, predicate, expressionId) => {
