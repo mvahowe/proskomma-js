@@ -326,11 +326,12 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
 
     if (argRecords.filter(ar => ar.errors).length === 0) {
       // console.log(expressionId);
-      const aggregated = aggregateFunctions[expressionId](docSet, node, ...argRecords.map(ar => ar.data));
+      const args = argRecords.map(ar => ar.data);
+      const aggregated = aggregateFunctions[expressionId](docSet, node, ...args);
       // console.log('aggregated', expressionId, argRecords, aggregated);
       return { data:  aggregated };
     }
-    return { errors: `Could not parse arguments to ${expressionId}` };
+    return { errors: `Could not parse arguments to ${expressionId}: ${argRecords.filter(ar => ar.errors).map(ar => ar.errors).join('; ')}` };
   }
 };
 
@@ -348,7 +349,7 @@ const parseExpressions = (docSet, node, predicateString) => {
       return parseRegexExpression(docSet, node, predicateString, expressionRecord.id, matches);
     }
   }
-  return { error: `No regex match for ${predicateString}` };
+  return { errors: `No regex match for ${predicateString}` };
 };
 
 const parseExpression = (docSet, node, predicate, expressionId) => {
@@ -360,18 +361,18 @@ const parseExpression = (docSet, node, predicate, expressionId) => {
   }
 
   if (expressionRecord.oneOf) {
-    const errors = [];
+    let errors = null;
 
     for (const option of expressionRecord.oneOf) {
       const optionResult = parseExpression(docSet, node, predicate, option);
 
       if (!optionResult.errors) {
         return optionResult;
-      } else {
-        errors.push(`Could not parse ${predicate} as ${option}`);
+      } else if (!errors || (optionResult.errors.length < errors.length)) {
+        errors = optionResult.errors;
       }
     }
-    return { errors: errors.join('; ') };
+    return { errors: errors };
   } else {
     const matches = xre.exec(predicate, expressionRecord.regex);
 
@@ -388,7 +389,10 @@ const doPredicate = (docSet, result, predicateString) => ({
   data: result.data.filter(node => {
     const nodeResult = parseExpression(docSet, node, predicateString, 'booleanExpression');
     // console.log();
-    return !nodeResult.errors && nodeResult.data;
+    if (nodeResult.errors) {
+      throw new Error(nodeResult.errors);
+    }
+    return nodeResult.data;
   }),
 });
 

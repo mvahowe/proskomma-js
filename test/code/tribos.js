@@ -409,7 +409,7 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
-      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"nodes[and(hasContent('shoeSize'), not(hasContent('banana'))]/node") } } }`;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"nodes[and(hasContent('shoeSize'), not(hasContent('banana')))]/node") } } }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
@@ -570,6 +570,31 @@ test(
       t.equal(result.errors, undefined);
       const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
       t.equal(tribos.data.length, 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `errors (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"nodes[or(and(>(int(content('shoeSize')), 1), <(zint(content('shoeSize')), 3)))]/node") }
+                 }
+               }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors.length, 1);
+      t.ok(result.errors[0].message.startsWith('Could not match or'));
     } catch (err) {
       console.log(err);
     }
