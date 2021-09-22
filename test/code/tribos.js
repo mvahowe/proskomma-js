@@ -677,11 +677,13 @@ test(
 
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
-                   tribos(query:"root/leaves/node{@text, @English}") }
+                   tribos(query:"root/leaves[or(contains(content('English'), 'Jesus'), contains(content('English'), 'Christ'))]/node{@text, @English}") }
                  }
                }`;
+
       const ts = Date.now();
       result = await pk.gqlQuery(query);
+      // console.log(result);
       // console.log(Date.now() - ts, 'msec')
       // console.log(JSON.stringify(JSON.parse(result.data.documents[0].treeSequence.tribos).data.map(n => [n.content.text, n.content.English])));
       t.equal(result.errors, undefined);

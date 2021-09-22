@@ -15,9 +15,9 @@ const aggregateFunctions = {
         const key = ig[0].filter(s => s.startsWith('tTreeContent'))[0].split('/')[1];
         return key === label;
       });
-    return labelIG ?
+    return labelIG[0] ?
       labelIG[0][1].filter(i => i[0] === 'token').map(t => t[2]).join('') :
-      null;
+      '';
   },
   hasContent: (docSet, node, label) => {
     const labelIG = docSet.sequenceItemsByScopes([node], ['tTreeContent/'], false)
