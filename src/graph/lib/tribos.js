@@ -1,6 +1,6 @@
 import xre from 'xregexp';
 
-const { doPredicate } = require('./tribos_expression');
+const { expressions, doPredicate } = require('./tribos_expression');
 const { stepActions } = require('./tribos_step');
 
 class Tribos {
@@ -56,6 +56,19 @@ class Tribos {
       ret.set(nodeId, n);
     }
     return ret;
+  }
+
+  doc() {
+    return '** Steps **\n\n' +
+    stepActions
+      .map(sa => sa.doc)
+      .map(d => `* ${d.title} *\n${d.syntax}\n${d.description}`)
+      .join('\n\n') +
+      '** Predicate Operators **\n\n' +
+      Object.values(expressions)
+        .filter(e => e.doc)
+        .map(e => `${e.doc.operator}(${e.doc.args.map(a => '<' + a + '>').join(', ')}) => ${e.doc.result}\n${e.doc.description}`)
+        .join('\n\n');
   }
 
   parse(docSet, nodes, queryString) {

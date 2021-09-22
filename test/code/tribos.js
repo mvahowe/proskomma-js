@@ -699,3 +699,29 @@ test(
     }
   },
 );
+
+test(
+  `Syntax Tree (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const pk = new Proskomma();
+      importJudeNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") { tribosDoc }
+                 }
+               }`;
+
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok(result.data.documents[0].treeSequence.tribosDoc.startsWith('** Steps **'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

@@ -225,6 +225,11 @@ const doNodeStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) =>
 const stepActions = [
   {
     regex: xre(`^#\\{([^}]+)\\}${predicateRegex}$`),
+    doc: {
+      title: 'Nodes by Id',
+      syntax: '#(id, id, ...)',
+      description: 'Returns nodes whose id is listed',
+    },
     predicateCapture: 3,
     inputType: null,
     outputType: 'nodes',
@@ -232,6 +237,11 @@ const stepActions = [
   },
   {
     regex: xre(`^root${predicateRegex}$`),
+    doc: {
+      title: 'Root Node',
+      syntax: 'root',
+      description: 'Returns the root node',
+    },
     predicateCapture: 2,
     inputType: null,
     outputType: 'nodes',
@@ -239,6 +249,11 @@ const stepActions = [
   },
   {
     regex: xre(`^nodes${predicateRegex}$`),
+    doc: {
+      title: 'Nodes',
+      syntax: 'nodes',
+      description: 'Returns all the nodes',
+    },
     predicateCapture: 2,
     function: doAbsoluteNodesStep,
     inputType: null,
@@ -246,6 +261,11 @@ const stepActions = [
   },
   {
     regex: xre(`^children(\\((\\d+)\\))?${predicateRegex}$`),
+    doc: {
+      title: 'Children',
+      syntax: 'children; children(pos)',
+      description: 'Returns the children of the current node(s), optionally filtered by position within the parent node',
+    },
     predicateCapture: 5,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -253,6 +273,11 @@ const stepActions = [
   },
   {
     regex: xre(`^descendants(\\((\\d+)(,\\s*(\\d+))?\\))${predicateRegex}$`),
+    doc: {
+      title: 'Descendants',
+      syntax: 'descendants(depth); descendants(depth, pos)',
+      description: 'Returns the descendants of the current node(s) at the specified level, optionally filtered by position',
+    },
     predicateCapture: 6,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -260,6 +285,11 @@ const stepActions = [
   },
   {
     regex: xre(`^leaves${predicateRegex}$`),
+    doc: {
+      title: 'Leaves',
+      syntax: 'leaves',
+      description: 'Returns the leaves (ie the nodes with no children) below the current node',
+    },
     predicateCapture: 2,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -267,6 +297,11 @@ const stepActions = [
   },
   {
     regex: xre(`^parent${predicateRegex}$`),
+    doc: {
+      title: 'Parent',
+      syntax: 'parent',
+      description: 'Returns the parent of the current node',
+    },
     predicateCapture: 2,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -274,6 +309,11 @@ const stepActions = [
   },
   {
     regex: xre(`^ancestor(\\((\\d+)\\))${predicateRegex}$`),
+    doc: {
+      title: 'Ancestor',
+      syntax: 'ancestor(depth)',
+      description: 'Returns the nth ancestor of the node',
+    },
     predicateCapture: 5,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -281,6 +321,11 @@ const stepActions = [
   },
   {
     regex: xre(`^siblings${predicateRegex}$`),
+    doc: {
+      title: 'Siblings',
+      syntax: 'siblings',
+      description: 'Returns the children of the parent of the current node',
+    },
     predicateCapture: 2,
     inputType: 'nodes',
     outputType: 'nodes',
@@ -288,6 +333,11 @@ const stepActions = [
   },
   {
     regex: xre(`^node(\\{([^}]+)\\})?${predicateRegex}$`),
+    doc: {
+      title: 'Node Details',
+      syntax: 'node; node{ id, parentId, content, children, @foo }',
+      description: 'Returns an object containing the specified content',
+    },
     predicateCapture: 4,
     inputType: 'nodes',
     outputType: 'node',
