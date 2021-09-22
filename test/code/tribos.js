@@ -4,15 +4,18 @@ const test = require('tape');
 const fse = require('fs-extra');
 const { Proskomma } = require('../../src');
 
-const importNodes = pk => {
+const importNodes1 = (pk, filePath) => {
   pk.importDocument({
     lang: 'deu',
     abbr: 'xyz',
   }, 'nodes',
-  fse.readFileSync(path.resolve(__dirname, '../test_data/tree/genealogy.json')),
+  fse.readFileSync(path.resolve(__dirname, filePath)),
   {},
   );
 };
+
+const importGenealogyNodes = pk => importNodes1(pk, '../test_data/tree/genealogy.json');
+const importJudeNodes = pk => importNodes1(pk, '../test_data/tree/jude.json');
 
 const testGroup = 'Tribos';
 
@@ -22,7 +25,7 @@ test(
     try {
       t.plan(6);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -47,7 +50,7 @@ test(
     try {
       t.plan(5);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -71,7 +74,7 @@ test(
     try {
       t.plan(4);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -94,7 +97,7 @@ test(
     try {
       t.plan(6);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -119,7 +122,7 @@ test(
     try {
       t.plan(5);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -143,7 +146,7 @@ test(
     try {
       t.plan(6);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -168,7 +171,7 @@ test(
     try {
       t.plan(5);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -192,7 +195,7 @@ test(
     try {
       t.plan(6);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -217,7 +220,7 @@ test(
     try {
       t.plan(5);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -241,7 +244,7 @@ test(
     try {
       t.plan(5);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -265,7 +268,7 @@ test(
     try {
       t.plan(6);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -290,7 +293,7 @@ test(
     try {
       t.plan(9);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -319,7 +322,7 @@ test(
     try {
       t.plan(16);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -359,7 +362,7 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -381,7 +384,7 @@ test(
     try {
       t.plan(4);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -404,7 +407,7 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -426,11 +429,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[or(startsWith(content('name'), 'Sally'), endsWith(content('name'), 'Jones'), matches(content('name'), 'eborah'))]/node") }
@@ -452,11 +456,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[and(!=(int(content('shoeSize')), 79), !=(content('shoeSize'), string(91)))]/node") }
@@ -478,11 +483,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[or(==(right(content('label'), 2), 'ma'), ==(left(content('label'), 2), 'po'), ==(indexOf(content('name'), 'Smith n'), 6), ==(length(content('name')), 23))]/node") }
@@ -504,11 +510,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[==(nChildren, 2)]/node") }
@@ -530,11 +537,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[==(add(int(content('shoeSize')), sub(7, mul(2, mod(6, 4)))), div(10, 2))]/node") }
@@ -556,11 +564,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[or(and(>(int(content('shoeSize')), 1), <(int(content('shoeSize')), 3)), and(>=(int(content('shoeSize')), 89), <=(int(content('shoeSize')), 89)))]/node") }
@@ -582,11 +591,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[and(>(int(content('shoeSize')), 1), <(zint(content('shoeSize')), 3))]/node") }
@@ -607,11 +617,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[and(true)]/node") }
@@ -632,11 +643,12 @@ test(
     try {
       t.plan(3);
       const pk = new Proskomma();
-      importNodes(pk);
+      importGenealogyNodes(pk);
       let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{documents {
                  treeSequence(id:"${treeSequenceId}") {
                    tribos(query:"nodes[==(1, 2, 3)]/node") }
@@ -645,6 +657,34 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors.length, 1);
       t.ok(result.errors[0].message.startsWith('Predicate - Could not match ==(1, 2, 3)'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Syntax Tree (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const pk = new Proskomma();
+      importJudeNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+
+      query = `{documents {
+                 treeSequence(id:"${treeSequenceId}") {
+                   tribos(query:"root/leaves/node{@text, @English}") }
+                 }
+               }`;
+      const ts = Date.now();
+      result = await pk.gqlQuery(query);
+      // console.log(Date.now() - ts, 'msec')
+      // console.log(JSON.stringify(JSON.parse(result.data.documents[0].treeSequence.tribos).data.map(n => [n.content.text, n.content.English])));
+      t.equal(result.errors, undefined);
     } catch (err) {
       console.log(err);
     }
