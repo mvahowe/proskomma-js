@@ -3,9 +3,10 @@ import xre from 'xregexp';
 const predicateRegex = '(\\[(([^\\]\']|\'([^\']|\\\\\')*\')+)\\])*';
 
 // Nodes with one of the listed ids
-const doAbsoluteIdStep = (docSet, allNodes, result, queryStep, matches) => {
+const doAbsoluteIdStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   const values = matches[1].split(',').map(v => v.trim());
-  return { data: allNodes.filter(n => values.includes(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  return { data: Array.from(values).map(nid => allNodes[nodeLookup.get(nid)]) };
+  // return { data: allNodes.filter(n => values.includes(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The root Node
@@ -19,7 +20,7 @@ const doAbsoluteNodesStep = (docSet, allNodes) => {
 };
 
 // Children of the nodes
-const doChildrenStep = (docSet, allNodes, result, queryStep, matches) => {
+const doChildrenStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   const childNo = matches[2];
   const childNodeIds = new Set([]);
 
@@ -34,11 +35,12 @@ const doChildrenStep = (docSet, allNodes, result, queryStep, matches) => {
       childNodeIds.add(child);
     }
   }
-  return { data: allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  return { data: Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]) };
+  // return { data: allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The parent of each node
-const doParentStep = (docSet, allNodes, result) => {
+const doParentStep = (docSet, allNodes, nodeLookup, result) => {
   const parentNodeIds = new Set([]);
 
   for (const childNode of result.data) {
@@ -47,11 +49,12 @@ const doParentStep = (docSet, allNodes, result) => {
       .map(s => s[2].split('/')[1])[0];
     parentNodeIds.add(parentId);
   }
-  return { data: allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  return { data: Array.from(parentNodeIds).map(nid => allNodes[nodeLookup.get(nid)]) };
+  // return { data: allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The nth ancestor of each node (where 1 === parent)
-const doAncestorStep = (docSet, allNodes, result, queryStep, matches) => {
+const doAncestorStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   let ancestorNo = parseInt(matches[2]);
 
   if (ancestorNo < 1) {
@@ -69,14 +72,15 @@ const doAncestorStep = (docSet, allNodes, result, queryStep, matches) => {
         .map(s => s[2].split('/')[1])[0];
       parentNodeIds.add(parentId);
     }
-    nodes = allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    // nodes = allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    nodes = Array.from(parentNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
     ancestorNo--;
   }
   return { data: nodes };
 };
 
 // The nth-generation descendants of each node (where 1 === child)
-const doDescendantsStep = (docSet, allNodes, result, queryStep, matches) => {
+const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   let descendantGen = parseInt(matches[2]);
 
   if (descendantGen < 1) {
@@ -100,14 +104,15 @@ const doDescendantsStep = (docSet, allNodes, result, queryStep, matches) => {
         .map(s => s[2].split('/')[2]);
       childIds.forEach(c => childNodeIds.add(c));
     }
-    nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    nodes = Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
+    // nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
     descendantGen--;
   }
   return { data: [...nodes.entries()].filter(n => descendantNo < 0 || n[0] === descendantNo).map(n => n[1]) };
 };
 
 // The leaves of each node
-const doLeavesStep = (docSet, allNodes, result, queryStep, matches) => {
+const doLeavesStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   const leafIds = new Set([]);
   let nodes = result.data;
 
@@ -125,15 +130,17 @@ const doLeavesStep = (docSet, allNodes, result, queryStep, matches) => {
         leafIds.add(docSet.unsuccinctifyScopes(parentNode.bs)[0][2].split('/')[1]);
       }
     }
-    nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    // nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
+    nodes = Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
   }
-  return { data: allNodes.filter(n => leafIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  // return { data: allNodes.filter(n => leafIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  return { data: Array.from(leafIds).map(nid => allNodes[nodeLookup.get(nid)]) };
 };
 
 // The children of the parent of each node
 // - get parent of starting node
 // - get children of parent node
-const doSiblingsStep = (docSet, allNodes, result) => {
+const doSiblingsStep = (docSet, allNodes, nodeLookup, result) => {
   const parentNodeIds = new Set([]);
 
   for (const childNode of result.data) {
@@ -155,12 +162,13 @@ const doSiblingsStep = (docSet, allNodes, result) => {
       childNodeIds.add(child);
     }
   }
-  return { data: allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  // return { data: allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
+  return { data: Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]) };
 };
 
 // The node details
 // optional fields are id, parentId, content, @<contentName>
-const doNodeStep = (docSet, allNodes, result, queryStep, matches) => {
+const doNodeStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   const ret = [];
   let fields = new Set([]);
 
