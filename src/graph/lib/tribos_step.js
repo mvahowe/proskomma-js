@@ -6,7 +6,6 @@ const predicateRegex = '(\\[(([^\\]\']|\'([^\']|\\\\\')*\')+)\\])*';
 const doAbsoluteIdStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
   const values = matches[1].split(',').map(v => v.trim());
   return { data: Array.from(values).map(nid => allNodes[nodeLookup.get(nid)]) };
-  // return { data: allNodes.filter(n => values.includes(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The root Node
@@ -32,7 +31,6 @@ const doChildrenStep = (docSet, allNodes, nodeLookup, result, queryStep, matches
     }
   }
   return { data: Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]) };
-  // return { data: allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The parent of each node
@@ -46,7 +44,6 @@ const doParentStep = (docSet, allNodes, nodeLookup, result) => {
     parentNodeIds.add(parentId);
   }
   return { data: Array.from(parentNodeIds).map(nid => allNodes[nodeLookup.get(nid)]) };
-  // return { data: allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
 };
 
 // The nth ancestor of each node (where 1 === parent)
@@ -68,7 +65,6 @@ const doAncestorStep = (docSet, allNodes, nodeLookup, result, queryStep, matches
         .map(s => s[2].split('/')[1])[0];
       parentNodeIds.add(parentId);
     }
-    // nodes = allNodes.filter(n => parentNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
     nodes = Array.from(parentNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
     ancestorNo--;
   }
@@ -77,43 +73,54 @@ const doAncestorStep = (docSet, allNodes, nodeLookup, result, queryStep, matches
 
 // The nth-generation descendants of each node (where 1 === child)
 const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
-  let descendantGen = parseInt(matches[2]);
+  const descendantIds = [];
 
-  if (descendantGen < 1) {
-    return { errors: `Expected a positive integer argument for descendant, found ${queryStep}` };
+  const getDescendants = (node, depth) => {
+    const childIds = docSet.unsuccinctifyScopes(node.is)
+      .filter(s => s[2].startsWith('tTreeChild'))
+      .map(s => s[2].split('/')[2]);
+
+    if (depth <= 1 || depth === null) {
+      childIds.forEach(n => descendantIds.push(n));
+    }
+
+    if (depth === null || depth > 1) {
+      childIds.map(nid => allNodes[nodeLookup.get(nid)]).forEach(n => getDescendants(n, depth - 1));
+    }
+  };
+
+  let descendantGen = null;
+
+  if (matches[3]) {
+    descendantGen = parseInt(matches[3]);
   }
 
   let descendantNo = -1;
 
-  if (matches[4]) {
-    descendantNo = parseInt(matches[4]);
+  if (matches[5]) {
+    descendantNo = parseInt(matches[5]);
   }
 
-  let nodes = result.data;
-
-  while (descendantGen > 0) {
-    const childNodeIds = new Set([]);
-
-    for (const parentNode of nodes) {
-      const childIds = docSet.unsuccinctifyScopes(parentNode.is)
-        .filter(s => s[2].startsWith('tTreeChild'))
-        .map(s => s[2].split('/')[2]);
-      childIds.forEach(c => childNodeIds.add(c));
-    }
-    nodes = Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
-    // nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
-    descendantGen--;
+  for (const node of result.data) {
+    getDescendants(node, descendantGen);
   }
-  return { data: [...nodes.entries()].filter(n => descendantNo < 0 || n[0] === descendantNo).map(n => n[1]) };
+  return {
+    data: [...descendantIds.entries()]
+      .filter(n => descendantNo < 0 || n[0] === descendantNo)
+      .map(n => n[1])
+      .map(nid => allNodes[nodeLookup.get(nid)]),
+  };
 };
 
 // The leaves of each node
-const doLeavesStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
+const doLeavesStep = (docSet, allNodes, nodeLookup, result) => {
   const leafIds = [];
+
   const getLeaves = node => {
     const childIds = docSet.unsuccinctifyScopes(node.is)
       .filter(s => s[2].startsWith('tTreeChild'))
       .map(s => s[2].split('/')[2]);
+
     if (childIds.length === 0) {
       leafIds.push(docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1]);
     } else {
@@ -262,13 +269,13 @@ const stepActions = [
     function: doChildrenStep,
   },
   {
-    regex: xre(`^descendants(\\((\\d+)(,\\s*(\\d+))?\\))${predicateRegex}$`),
+    regex: xre(`^descendants((\\((\\d+)(,\\s*(\\d+))?\\))?)${predicateRegex}$`),
     doc: {
       title: 'Descendants',
       syntax: 'descendants(depth); descendants(depth, pos)',
-      description: 'Returns the descendants of the current node(s) at the specified level, optionally filtered by position',
+      description: 'Returns the descendants of the current node(s), optionally at the specified level, optionally filtered by position',
     },
-    predicateCapture: 6,
+    predicateCapture: 7,
     inputType: 'nodes',
     outputType: 'nodes',
     function: doDescendantsStep,

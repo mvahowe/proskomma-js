@@ -145,6 +145,32 @@ test(
   `descendants (${testGroup})`,
   async function (t) {
     try {
+      t.plan(7);
+      const pk = new Proskomma();
+      importGenealogyNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"root/descendants") } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.errors, undefined);
+      t.equal(tribos.data.length, 6);
+      t.equal(tribos.data[0].id, '1');
+      t.equal(tribos.data[1].id, '4');
+      t.equal(tribos.data[5].id, '6');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `descendants by gen (${testGroup})`,
+  async function (t) {
+    try {
       t.plan(6);
       const pk = new Proskomma();
       importGenealogyNodes(pk);
@@ -167,7 +193,7 @@ test(
 );
 
 test(
-  `descendants by index (${testGroup})`,
+  `descendants by gen and index (${testGroup})`,
   async function (t) {
     try {
       t.plan(5);
