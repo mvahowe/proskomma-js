@@ -384,6 +384,36 @@ test(
 );
 
 test(
+  `branch (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      const pk = new Proskomma();
+      importGenealogyNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"#{4}/branch{id, parentId, content, children}") } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.errors, undefined);
+      t.equal(tribos.data.length, 1);
+      const node = tribos.data[0];
+      t.equal(node.id, '4');
+      t.equal(node.parentId, '0');
+      t.equal(Object.keys(node.content).length, 3);
+      t.equal(node.content.label, 'pop');
+      t.equal(node.children.length, 2);
+      t.equal(node.children[0].id, '5');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Predicate (${testGroup})`,
   async function (t) {
     try {
