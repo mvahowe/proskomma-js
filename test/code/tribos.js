@@ -16,6 +16,7 @@ const importNodes1 = (pk, filePath) => {
 
 const importGenealogyNodes = pk => importNodes1(pk, '../test_data/tree/genealogy.json');
 const importJudeNodes = pk => importNodes1(pk, '../test_data/tree/jude.json');
+// const importPsalmNodes = pk => importNodes1(pk, '../../../../Desktop/psa_merged.json');
 
 const testGroup = 'Tribos';
 

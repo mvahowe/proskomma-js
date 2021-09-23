@@ -10,14 +10,10 @@ const doAbsoluteIdStep = (docSet, allNodes, nodeLookup, result, queryStep, match
 };
 
 // The root Node
-const doAbsoluteRootStep = (docSet, allNodes) => {
-  return { data: [allNodes[0]] };
-};
+const doAbsoluteRootStep = (docSet, allNodes) => ({ data: [allNodes[0]] });
 
 // All the nodes
-const doAbsoluteNodesStep = (docSet, allNodes) => {
-  return { data: allNodes };
-};
+const doAbsoluteNodesStep = (docSet, allNodes) => ({ data: allNodes });
 
 // Children of the nodes
 const doChildrenStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
@@ -113,28 +109,22 @@ const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matc
 
 // The leaves of each node
 const doLeavesStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
-  const leafIds = new Set([]);
-  let nodes = result.data;
-
-  while (nodes.length > 0) {
-    const childNodeIds = new Set([]);
-
-    for (const parentNode of nodes) {
-      const childIds = docSet.unsuccinctifyScopes(parentNode.is)
-        .filter(s => s[2].startsWith('tTreeChild'))
-        .map(s => s[2].split('/')[2]);
-
-      if (childIds.length > 0) {
-        childIds.forEach(c => childNodeIds.add(c));
-      } else {
-        leafIds.add(docSet.unsuccinctifyScopes(parentNode.bs)[0][2].split('/')[1]);
-      }
+  const leafIds = [];
+  const getLeaves = node => {
+    const childIds = docSet.unsuccinctifyScopes(node.is)
+      .filter(s => s[2].startsWith('tTreeChild'))
+      .map(s => s[2].split('/')[2]);
+    if (childIds.length === 0) {
+      leafIds.push(docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1]);
+    } else {
+      childIds.map(nid => allNodes[nodeLookup.get(nid)]).forEach(n => getLeaves(n));
     }
-    // nodes = allNodes.filter(n => childNodeIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1]));
-    nodes = Array.from(childNodeIds).map(nid => allNodes[nodeLookup.get(nid)]);
+  };
+
+  for (const node of result.data) {
+    getLeaves(node);
   }
-  // return { data: allNodes.filter(n => leafIds.has(docSet.unsuccinctifyScopes(n.bs)[0][2].split('/')[1])) };
-  return { data: Array.from(leafIds).map(nid => allNodes[nodeLookup.get(nid)]) };
+  return { data: leafIds.map(nid => allNodes[nodeLookup.get(nid)]) };
 };
 
 // The children of the parent of each node
