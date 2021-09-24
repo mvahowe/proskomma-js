@@ -1,3 +1,5 @@
+const path = require('path');
+const fse = require('fs-extra');
 const test = require('tape');
 
 const { Proskomma } = require('../../src');
@@ -9,7 +11,7 @@ const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
   abbr: 'ust',
 })[0];
 
-const importTSV = pk => {
+const importTable = pk => {
   pk.importDocument({
     lang: 'deu',
     abbr: 'xyz',
@@ -25,6 +27,44 @@ const importTSV = pk => {
     },
   ),
   {},
+  );
+};
+
+const tsvToTable = (tsv, hasHeadings) => {
+  const ret = {
+    headings: [],
+    rows: [],
+  };
+  let rows = tsv.split(/[\n\r]+/);
+
+  if (hasHeadings) {
+    ret.headings = rows[0].split('\t');
+    rows = rows.slice(1);
+  }
+
+  for (const row of rows) {
+    ret.rows.push(row.split('\t'));
+  }
+  return ret;
+};
+
+const importTSV = (pk, tsvPath, hasHeadings) => {
+  pk.importDocument({
+    lang: 'deu',
+    abbr: 'xyz',
+  }, 'tsv',
+  JSON.stringify(
+    tsvToTable(
+      fse.readFileSync(
+        path.resolve(__dirname, tsvPath),
+      )
+        .toString(),
+      hasHeadings,
+    ),
+    {},
+  ),
+  null,
+  2,
   );
 };
 
@@ -51,12 +91,12 @@ test(
 );
 
 test(
-  `Import (${testGroup})`,
+  `Import nested arrays (${testGroup})`,
   async function (t) {
     try {
       t.plan(7);
       const pk = new Proskomma();
-      importTSV(pk);
+      importTable(pk);
       let query = '{documents { mainSequence { id } sequences { id type tags blocks { bs { payload} bg { payload } is { payload } tokens { type subType payload } } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -82,7 +122,7 @@ test(
     try {
       t.plan(16);
       const pk = new Proskomma();
-      importTSV(pk);
+      importTable(pk);
       let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -119,7 +159,7 @@ test(
     try {
       t.plan(9);
       const pk = new Proskomma();
-      importTSV(pk);
+      importTable(pk);
       let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -147,7 +187,7 @@ test(
     try {
       t.plan(4);
       const pk = new Proskomma();
-      importTSV(pk);
+      importTable(pk);
       let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -170,7 +210,7 @@ test(
     try {
       t.plan(11);
       const pk = new Proskomma();
-      importTSV(pk);
+      importTable(pk);
       let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -194,6 +234,73 @@ test(
       sequenceRows = result.data.docSets[0].document.tableSequence.rows;
       t.equal(sequenceRows.length, 1);
       t.equal(sequenceRows[0][0].text, 'de.f');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Filter Columns (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const pk = new Proskomma();
+      importTable(pk);
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{docSets { document(bookCode:"T00") { tableSequence(id:"${tableSequenceId}") { rows(columns:0) { text } } } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let sequenceRows = result.data.docSets[0].document.tableSequence.rows;
+      t.equal(sequenceRows.length, 3);
+      t.equal(sequenceRows[0].length, 1);
+      t.equal(sequenceRows[0][0].text, 'ab.c');
+      t.equal(sequenceRows[1][0].text, 'de.f');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Import and query TSV (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const pk = new Proskomma();
+
+      importTSV(
+        pk,
+        '../test_data/tsv/en_tn_66-JUD.tsv',
+        true,
+      );
+
+      let query = '{docSets { document(bookCode:"T00") { sequences(types:"table") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{
+      docSets {
+        document(bookCode:"T00") {
+          tableSequence(id:"${tableSequenceId}") {
+            headings
+            rows(equals:[{colN:1 values:"1"}, {colN:2 values:["23", "24"]}] columns:[0, 1, 2, 7, 8]) {
+              text
+            }
+          }
+        }
+      }}`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const sequenceRows = result.data.docSets[0].document.tableSequence.rows;
+      // console.log(JSON.stringify(result.data.docSets[0].document.tableSequence, null, 2));
+      t.equal(sequenceRows.length, 6);
+      t.equal(sequenceRows[0].length, 5);
+      t.equal(sequenceRows.filter(r => r[1].text === '1').length, 6);
+      t.equal(sequenceRows.filter(r => ['23', '24'].includes(r[2].text)).length, 6);
     } catch (err) {
       console.log(err);
     }

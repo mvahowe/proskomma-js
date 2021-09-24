@@ -85,6 +85,10 @@ const tableSequenceType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLInt)),
           description: 'Only return rows whose zero-indexed position is in the list',
         },
+        columns: {
+          type: GraphQLList(GraphQLNonNull(GraphQLInt)),
+          description: 'Only return columns whose zero-indexed position is in the list',
+        },
         matches: {
           type: GraphQLList(GraphQLNonNull(rowMatchSpecType)),
           description: 'Only return rows whose cells match the specification',
@@ -165,6 +169,14 @@ const tableSequenceType = new GraphQLObjectType({
 
         if (args.equals) {
           ret = ret.filter(row => rowEquals(row, args.equals));
+        }
+
+        if (args.columns) {
+          ret = ret.map(
+            row =>
+              [...row.entries()]
+                .filter(re => args.columns.includes(re[0]))
+                .map(re => re[1]));
         }
         return ret;
       },
