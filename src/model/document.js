@@ -9,7 +9,7 @@ const {
   parseUsfm,
   parseUsx,
   parseLexicon,
-  parseTable,
+  parseTableToDocument,
   parseNodes,
 } = require('../parser/lexers');
 const { Parser } = require('../parser');
@@ -116,7 +116,7 @@ class Document {
     const parser = this.makeParser();
     const bookCode = `T${this.processor.nextTable > 9 ? this.processor.nextTable : '0' + this.processor.nextTable}`;
     this.processor.nextTable++;
-    parseTable(tsvString, parser, bookCode);
+    parseTableToDocument(tsvString, parser, bookCode);
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);

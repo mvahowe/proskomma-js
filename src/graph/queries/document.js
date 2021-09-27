@@ -137,6 +137,120 @@ const documentType = new GraphQLObjectType({
         return ret;
       },
     },
+    tableSequences: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(tableSequenceType))),
+      description: 'A list of table sequences for this document',
+      args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'ids of sequences to include, if found',
+        },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with none of the specified tags',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+
+        ret = ret.filter(s => s.type === 'table');
+
+        if (args.ids) {
+          ret = ret.filter(s => args.ids.includes(s.id));
+        }
+
+        if (args.withTags) {
+          ret = ret.filter(s => args.withTags.filter(t => s.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(s => args.withoutTags.filter(t => s.tags.has(t)).length === 0);
+        }
+
+        return ret;
+      },
+    },
+    treeSequences: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(treeSequenceType))),
+      description: 'A list of tree sequences for this document',
+      args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'ids of sequences to include, if found',
+        },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with none of the specified tags',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+
+        ret = ret.filter(s => s.type === 'tree');
+
+        if (args.ids) {
+          ret = ret.filter(s => args.ids.includes(s.id));
+        }
+
+        if (args.withTags) {
+          ret = ret.filter(s => args.withTags.filter(t => s.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(s => args.withoutTags.filter(t => s.tags.has(t)).length === 0);
+        }
+
+        return ret;
+      },
+    },
+    textSequences: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
+      description: 'A list of text (ie non-table, non-tree) sequences for this document',
+      args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'ids of sequences to include, if found',
+        },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with none of the specified tags',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+
+        ret = ret.filter(s => s.type !== 'tree' && s.type !== 'table');
+
+        if (args.ids) {
+          ret = ret.filter(s => args.ids.includes(s.id));
+        }
+
+        if (args.withTags) {
+          ret = ret.filter(s => args.withTags.filter(t => s.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(s => args.withoutTags.filter(t => s.tags.has(t)).length === 0);
+        }
+
+        return ret;
+      },
+    },
     sequence: {
       type: sequenceType,
       description: 'The sequence with the specified id',

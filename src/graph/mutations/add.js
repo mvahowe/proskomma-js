@@ -5,7 +5,14 @@ const {
   GraphQLList,
   GraphQLInt,
 } = require('graphql');
+const {
+  scopeEnum,
+  pushSuccinctScopeBytes,
+  itemEnum,
+  pushSuccinctGraftBytes,
+} = require('proskomma-utils');
 const inputKeyValue = require('../queries/input_key_value');
+const inputBlockSpecType = require('../queries/inputBlockSpec');
 
 const addMutations = {
   addDocument: {
@@ -48,15 +55,33 @@ const addMutations = {
         type: GraphQLNonNull(GraphQLString),
         description: 'The type of the new sequence (main, heading...)',
       },
+      blocksSpec: {
+        type: GraphQLList(GraphQLNonNull(inputBlockSpecType)),
+        description: 'The JSON describing blocks, if any, for the new sequence',
+      },
+      graftToMain: {
+        type: GraphQLBoolean,
+        description: 'If true, graft to the first block of the main sequence',
+      },
     },
     resolve: (root, args) => {
       const document = root.documents[args.documentId];
+      const docSet = document.processor.docSets[document.docSetId];
 
       if (!document) {
         throw new Error(`Document '${args.documentId}' not found`);
       }
 
-      return document.newSequence(args.type);
+      const newSeqId = document.newSequence(args.type);
+
+      if (args.graftToMain) {
+        docSet.maybeBuildPreEnums();
+        const mainSequenceBG = document.sequences[document.mainId].blocks[0].bg;
+        const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', args.type, true);
+        const seqEnumIndex = docSet.enumForCategoryValue('ids', newSeqId, true);
+        pushSuccinctGraftBytes(mainSequenceBG, graftTypeEnumIndex, seqEnumIndex);
+      }
+      return newSeqId;
     },
   },
   newBlock: {
@@ -77,7 +102,7 @@ const addMutations = {
       },
       blockScope: {
         type: GraphQLNonNull(GraphQLString),
-        description: 'The scope to be applied to the block, eg blockScope/p'
+        description: 'The scope to be applied to the block, eg blockScope/p',
       },
     },
     resolve: (root, args) => {

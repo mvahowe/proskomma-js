@@ -68,6 +68,38 @@ test(
 );
 
 test(
+  `Sequence with graft (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      let query = '{ documents { id nSequences sequences { id type } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const nSequences = result.data.documents[0].nSequences;
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'table').length, 0);
+      query = `mutation { newSequence(` +
+        ` documentId: "${docId}"` +
+        ` type: "table"` +
+        ` graftToMain: true) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newSequenceId = result.data.newSequence;
+      query = '{ documents { id mainSequence { id blocks { bg { payload } } } nSequences sequences { id type } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].nSequences, nSequences + 1);
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'table').length, 1);
+      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.id === newSequenceId).length, 1);
+      const mainSequenceFirstBlockGrafts = result.data.documents[0].mainSequence.blocks[0].bg.map(g => g.payload);
+      t.ok(mainSequenceFirstBlockGrafts.includes(newSequenceId));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Block (${testGroup})`,
   async function (t) {
     try {

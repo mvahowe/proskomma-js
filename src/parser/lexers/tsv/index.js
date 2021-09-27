@@ -2,7 +2,7 @@ const { labelForScope } = require('proskomma-utils');
 const { Sequence } = require('../../model/sequence');
 const { tokenizeString } = require('../../../parser/lib/tokenize');
 
-const parseTable = (str, parser, bookCode) => {
+const parseTableToDocument = (str, parser, bookCode) => {
   const { rows } = JSON.parse(str);
   parser.headers.id = bookCode;
   parser.headers.bookCode = bookCode;
@@ -41,4 +41,4 @@ const parseTable = (str, parser, bookCode) => {
   });
 };
 
-module.exports = { parseTable };
+module.exports = { parseTableToDocument };
