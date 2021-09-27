@@ -10,6 +10,10 @@ const pk = new Proskomma();
 let content = fse.readFileSync(
   path.resolve(__dirname, '../test_data/usx/web_rut.usx'),
 ).toString();
+const escapePayload = str => str.replace('"', '\\"');
+const object2Query = obs => '[' + obs.map(ob => `\n    {\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"\n    }`).join(',') + ']';
+const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"}`;
+const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
 
 test(
   `Document (${testGroup})`,
@@ -48,7 +52,7 @@ test(
       t.equal(result.errors, undefined);
       const docId = result.data.documents[0].id;
       const nSequences = result.data.documents[0].nSequences;
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'banana').length, 0);
+      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'banana').length, 0);
       query = `mutation { newSequence(` +
         ` documentId: "${docId}"` +
         ` type: "banana") }`;
@@ -59,8 +63,8 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].nSequences, nSequences + 1);
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'banana').length, 1);
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.id === newSequenceId).length, 1);
+      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'banana').length, 1);
+      t.equal(result.data.documents[0].sequences.filter(s => s.id === newSequenceId).length, 1);
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +81,7 @@ test(
       t.equal(result.errors, undefined);
       const docId = result.data.documents[0].id;
       const nSequences = result.data.documents[0].nSequences;
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'table').length, 0);
+      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'table').length, 0);
       query = `mutation { newSequence(` +
         ` documentId: "${docId}"` +
         ` type: "table"` +
@@ -89,10 +93,45 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].nSequences, nSequences + 1);
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.type === 'table').length, 1);
-      t.equal(Object.values(result.data.documents[0].sequences).filter(s => s.id === newSequenceId).length, 1);
+      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'table').length, 1);
+      t.equal(result.data.documents[0].sequences.filter(s => s.id === newSequenceId).length, 1);
       const mainSequenceFirstBlockGrafts = result.data.documents[0].mainSequence.blocks[0].bg.map(g => g.payload);
       t.ok(mainSequenceFirstBlockGrafts.includes(newSequenceId));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Sequence with block content (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      const blocksSpec = fse.readJSONSync(path.resolve(__dirname, '../test_data/inputBlockSpec/mk1.json'));
+      const blockQuery = blocksSpec2Query(blocksSpec);
+      let query = '{ documents { id nSequences sequences { id type } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const docId = result.data.documents[0].id;
+      const nSequences = result.data.documents[0].nSequences;
+      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'table').length, 1);
+      query = `mutation { newSequence(` +
+        ` documentId: "${docId}"` +
+        ` type: "randomText"` +
+        ` blocksSpec: ${blockQuery}` +
+        ` graftToMain: true) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newSequenceId = result.data.newSequence;
+      query = '{ documents { id nSequences sequences { id type blocks { text } } } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].nSequences, nSequences + 1);
+      const newSequence = result.data.documents[0].sequences.filter(s => s.id === newSequenceId)[0];
+      t.equal(result.data.documents[0].sequences.filter(s => s.id === newSequenceId).length, 1);
+      t.equal(newSequence.type, 'randomText');
+      t.ok(newSequence.blocks[0].text.startsWith('Start of the Good News'));
     } catch (err) {
       console.log(err);
     }

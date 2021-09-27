@@ -11,6 +11,7 @@ const {
   itemEnum,
   pushSuccinctGraftBytes,
 } = require('proskomma-utils');
+const { remakeBlocks } = require('../lib/remake_blocks');
 const inputKeyValue = require('../queries/input_key_value');
 const inputBlockSpecType = require('../queries/inputBlockSpec');
 
@@ -73,6 +74,11 @@ const addMutations = {
       }
 
       const newSeqId = document.newSequence(args.type);
+
+      if (args.blocksSpec) {
+        remakeBlocks(docSet, document, document.sequences[newSeqId], args.blocksSpec);
+        document.buildChapterVerseIndex();
+      }
 
       if (args.graftToMain) {
         docSet.maybeBuildPreEnums();

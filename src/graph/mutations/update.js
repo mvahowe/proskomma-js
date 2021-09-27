@@ -6,6 +6,7 @@ const {
   GraphQLList,
 } = require('graphql');
 
+const { remakeBlocks } = require('../lib/remake_blocks');
 const inputItemObject = require('../queries/inputItemObject');
 const inputBlockSpecType = require('../queries/inputBlockSpec');
 
@@ -132,56 +133,7 @@ const updateMutations = {
       if (!sequence) {
         throw new Error(`Sequence '${args.sequenceId || document.mainId}' not found`);
       }
-
-      const nBlocks = sequence.blocks.length;
-
-      for (let blockN = 0; blockN < nBlocks; blockN++) {
-        document.deleteBlock(sequence.id, 0, false);
-      }
-
-      for (let blockN = 0; blockN < args.blocksSpec.length; blockN++) {
-        const block = args.blocksSpec[blockN];
-        document.newBlock(sequence.id, blockN, block.bs.payload, null, false);
-        const bgResult = docSet.updateBlockGrafts(
-          args.documentId,
-          args.sequenceId,
-          blockN,
-          block.bg,
-        );
-
-        if (!bgResult) {
-          return false;
-        }
-        const osResult = docSet.updateOpenScopes(
-          args.documentId,
-          args.sequenceId,
-          blockN,
-          block.os,
-        );
-
-        if (!osResult) {
-          return false;
-        }
-        const isResult = docSet.updateIncludedScopes(
-          args.documentId,
-          args.sequenceId,
-          blockN,
-          block.is,
-        );
-
-        if (!isResult) {
-          return false;
-        }
-        const itemsResult = docSet.updateItems(
-          args.documentId,
-          args.sequenceId,
-          blockN,
-          block.items,
-        );
-        if (!itemsResult) {
-          return false;
-        }
-      }
+      remakeBlocks(docSet, document, sequence, args.blocksSpec);
       document.buildChapterVerseIndex();
       return true;
     },
