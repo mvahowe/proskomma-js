@@ -100,6 +100,9 @@ const tableSequenceType = new GraphQLObjectType({
       },
       resolve: (root, args, context) => {
         const rowMatches1 = (row, matchSpec) => {
+          if (row[matchSpec.colN] === undefined) {
+            return false;
+          }
           const matchCellText = row[matchSpec.colN][2]
             .filter(i => i[0] === 'token')
             .map(i => i[2])
@@ -119,6 +122,9 @@ const tableSequenceType = new GraphQLObjectType({
         };
 
         const rowEquals1 = (row, matchSpec) => {
+          if (row[matchSpec.colN] === undefined) {
+            return false;
+          }
           const matchCellText = row[matchSpec.colN][2]
             .filter(i => i[0] === 'token')
             .map(i => i[2])
@@ -143,7 +149,6 @@ const tableSequenceType = new GraphQLObjectType({
         for (const block of root.blocks) {
           const rows = context.docSet.unsuccinctifyScopes(block.bs)
             .map(s => parseInt(s[2].split('/')[1]));
-
           if (args.positions && !args.positions.includes(rows[0])) {
             continue;
           }

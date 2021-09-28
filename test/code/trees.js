@@ -4,11 +4,15 @@ const test = require('tape');
 
 const { pkWithDoc } = require('../lib/load');
 const { Proskomma } = require('../../src');
+const {
+  blocksSpec2Query,
+  treeToInputBlock,
+} = require('../../src/util/blocksSpec');
 
-const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
+const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',
   abbr: 'ust',
-})[0];
+});
 
 const importNodes = pk => {
   pk.importDocument({
@@ -117,6 +121,63 @@ test(
       t.equal(treeSequence.nodes[0].itemGroups.length, 3);
       t.equal(treeSequence.nodes[0].itemGroups[0].text, 'me');
       t.equal(treeSequence.nodes[0].itemGroups[0].scopeLabels[0].split('/')[1], 'label');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Import and query tree JSON as sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+
+      const blockQuery = blocksSpec2Query(
+        treeToInputBlock(
+          fse.readJSONSync(path.resolve(__dirname, '../test_data/tree/jude.json')),
+        ),
+      );
+
+      // console.log(blockQuery);
+
+      let query = `mutation { newSequence(` +
+        ` documentId: "${pkDoc.id}"` +
+        ` type: "tree"` +
+        ` blocksSpec: ${blockQuery}` +
+        ` graftToMain: true) }`;
+
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+
+      query = `{
+      docSets {
+        documents {
+          treeSequences {
+             id
+             nNodes
+             nodes {
+               id
+               parentId
+               childIds
+               keys
+               itemGroups {
+                 scopeLabels(startsWith:"tTreeContent")
+                 text
+               }
+             }
+
+          }
+        }
+      }}`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const node = result.data.docSets[0].documents[0].treeSequences[0].nodes[13];
+      t.equal(node.id, '13');
+      t.equal(node.parentId, '12');
+      t.equal(node.childIds.length, 1);
+      t.equal(node.childIds[0], '14');
+      t.equal(node.itemGroups.filter(ig => ig.scopeLabels[0] === 'tTreeContent/English')[0].text, 'of Jesus');
     } catch (err) {
       console.log(err);
     }

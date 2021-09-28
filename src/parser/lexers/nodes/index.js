@@ -115,4 +115,6 @@ const parseNodes = (str, parser, bookCode) => {
   });
 };
 
-module.exports = { parseNodes };
+module.exports = {
+  flattenNodes, numberNodes, parseNodes,
+};
