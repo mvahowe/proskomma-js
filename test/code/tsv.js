@@ -5,11 +5,15 @@ const test = require('tape');
 const { Proskomma } = require('../../src');
 
 const { pkWithDoc } = require('../lib/load');
+const {
+  tsvToInputBlock,
+  blocksSpec2Query,
+} = require('../../src/util/blocksSpec');
 
-const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
+const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',
   abbr: 'ust',
-})[0];
+});
 
 const importTable = pk => {
   pk.importDocument({
@@ -266,7 +270,7 @@ test(
 );
 
 test(
-  `Import and query TSV (${testGroup})`,
+  `Import and query TSV as document (${testGroup})`,
   async function (t) {
     try {
       t.plan(6);
@@ -282,6 +286,7 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const tableSequenceId = result.data.docSets[0].document.sequences[0].id;
+
       query = `{
       docSets {
         document(bookCode:"T00") {
@@ -297,6 +302,52 @@ test(
       t.equal(result.errors, undefined);
       const sequenceRows = result.data.docSets[0].document.tableSequence.rows;
       // console.log(JSON.stringify(result.data.docSets[0].document.tableSequence, null, 2));
+      t.equal(sequenceRows.length, 6);
+      t.equal(sequenceRows[0].length, 5);
+      t.equal(sequenceRows.filter(r => r[1].text === '1').length, 6);
+      t.equal(sequenceRows.filter(r => ['23', '24'].includes(r[2].text)).length, 6);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Import and query TSV as sequence (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+
+      const blockQuery = blocksSpec2Query(
+        tsvToInputBlock(
+          fse.readFileSync(path.resolve(__dirname, '../test_data/tsv/en_tn_66-JUD.tsv')).toString(),
+        ),
+      );
+
+      // console.log(blockQuery);
+
+      let query = `mutation { newSequence(` +
+        ` documentId: "${pkDoc.id}"` +
+        ` type: "table"` +
+        ` blocksSpec: ${blockQuery}` +
+        ` graftToMain: true) }`;
+
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+
+      query = `{
+      docSets {
+        documents {
+          tableSequences {
+            rows(equals:[{colN:1 values:"1"}, {colN:2 values:["23", "24"]}] columns:[0, 1, 2, 7, 8]) {
+            text
+            }
+          }
+        }
+      }}`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const sequenceRows = result.data.docSets[0].documents[0].tableSequences[0].rows;
       t.equal(sequenceRows.length, 6);
       t.equal(sequenceRows[0].length, 5);
       t.equal(sequenceRows.filter(r => r[1].text === '1').length, 6);

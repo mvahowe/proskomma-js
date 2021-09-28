@@ -1,15 +1,13 @@
-const fse = require('fs-extra');
 const path = require('path');
+const fse = require('fs-extra');
 const test = require('tape');
 const deepCopy = require('deep-copy-all');
 const { pkWithDoc } = require('../lib/load');
+const {
+  blocksSpec2Query, object2Query, oneObject2Query,
+} = require('../../src/util/blocksSpec');
 
 const testGroup = 'Mutate Update Operations';
-
-const escapePayload = str => str.replace('"', '\\"');
-const object2Query = obs => '[' + obs.map(ob => `\n    {\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"\n    }`).join(',') + ']';
-const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"}`;
-const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
 
 const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',

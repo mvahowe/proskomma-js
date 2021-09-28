@@ -20,7 +20,7 @@ const importNodes = pk => {
   );
 };
 
-const testGroup = 'Nodes';
+const testGroup = 'Trees';
 
 test(
   `Return error for treeSequence on non-tree sequence (${testGroup})`,

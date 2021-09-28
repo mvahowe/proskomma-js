@@ -3,6 +3,7 @@ const test = require('tape');
 const fse = require('fs-extra');
 const { Proskomma } = require('../../src');
 const { pkWithDocs } = require('../lib/load');
+const { tsvToInputBlock, blocksSpec2Query } = require('../../src/util/blocksSpec');
 
 const testGroup = 'Mutate Add Operations';
 
@@ -10,10 +11,6 @@ const pk = new Proskomma();
 let content = fse.readFileSync(
   path.resolve(__dirname, '../test_data/usx/web_rut.usx'),
 ).toString();
-const escapePayload = str => str.replace('"', '\\"');
-const object2Query = obs => '[' + obs.map(ob => `\n    {\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"\n    }`).join(',') + ']';
-const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"}`;
-const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
 
 test(
   `Document (${testGroup})`,
