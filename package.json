@@ -42,7 +42,7 @@
     "git-diff": "^2.0.6",
     "graphql": "^15.3.0",
     "jsonschema": "^1.4.0",
-    "proskomma-utils": "^0.4.26",
+    "proskomma-utils": "^0.4.27",
     "sax": "^1.2.4",
     "utf8-string-bytes": "^1.0.3",
     "uuid-base64": "^1.0.0",

@@ -1,0 +1,326 @@
+[
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/a"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/dessert"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/green"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/dessert"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/green"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "apple"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "A"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "tasty"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "snack"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/color/green"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/service/dessert"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/b"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/dessert"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/yellow"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/dessert"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/yellow"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "banana"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "A"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "yellow"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "object"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/color/yellow"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/service/dessert"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/c"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/starter"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/green"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/service/starter"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/color/green"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "cucumber"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/name"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "A"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "watery"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "cylinder"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/definition"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/color/green"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/service/starter"
+      }
+    ]
+  }
+]

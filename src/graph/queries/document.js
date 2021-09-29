@@ -13,6 +13,7 @@ const { do_cv } = require('../lib/do_cv');
 const sequenceType = require('./sequence');
 const tableSequenceType = require('./table_sequence');
 const treeSequenceType = require('./tree_sequence');
+const kvSequenceType = require('./kv_sequence');
 const blockType = require('./block');
 const keyValueType = require('./key_value');
 const cvIndexType = require('./cvIndex');
@@ -213,9 +214,9 @@ const documentType = new GraphQLObjectType({
         return ret;
       },
     },
-    textSequences: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
-      description: 'A list of text (ie non-table, non-tree) sequences for this document',
+    kvSequences: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(kvSequenceType))),
+      description: 'A list of key-value sequences for this document',
       args: {
         ids: {
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
@@ -234,7 +235,45 @@ const documentType = new GraphQLObjectType({
         context.docSet = root.processor.docSets[root.docSetId];
         let ret = Object.values(root.sequences);
 
-        ret = ret.filter(s => s.type !== 'tree' && s.type !== 'table');
+        ret = ret.filter(s => s.type === 'kv');
+
+        if (args.ids) {
+          ret = ret.filter(s => args.ids.includes(s.id));
+        }
+
+        if (args.withTags) {
+          ret = ret.filter(s => args.withTags.filter(t => s.tags.has(t)).length === args.withTags.length);
+        }
+
+        if (args.withoutTags) {
+          ret = ret.filter(s => args.withoutTags.filter(t => s.tags.has(t)).length === 0);
+        }
+
+        return ret;
+      },
+    },
+    textSequences: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(sequenceType))),
+      description: 'A list of text (ie non-table, non-tree, non-kv) sequences for this document',
+      args: {
+        ids: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'ids of sequences to include, if found',
+        },
+        withTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with all the specified tags',
+        },
+        withoutTags: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return sequences with none of the specified tags',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+
+        ret = ret.filter(s => s.type !== 'tree' && s.type !== 'table' && s.type !== 'kv');
 
         if (args.ids) {
           ret = ret.filter(s => args.ids.includes(s.id));
@@ -303,6 +342,26 @@ const documentType = new GraphQLObjectType({
 
         if (ret[0] && ret[0].type !== 'tree') {
           throw new Error(`Expected sequence id ${ret[0].id} to be of type 'tree', not '${ret[0].type}'`);
+        }
+        return ret[0] || null;
+      },
+    },
+    kvSequence: {
+      type: kvSequenceType,
+      description: 'The key-value sequence with the specified id',
+      args: {
+        id: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'id of the tree sequence',
+        },
+      },
+      resolve: (root, args, context) => {
+        context.docSet = root.processor.docSets[root.docSetId];
+        let ret = Object.values(root.sequences);
+        ret = ret.filter(s => args.id.includes(s.id));
+
+        if (ret[0] && ret[0].type !== 'vk') {
+          throw new Error(`Expected sequence id ${ret[0].id} to be of type 'kv', not '${ret[0].type}'`);
         }
         return ret[0] || null;
       },
