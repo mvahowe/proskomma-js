@@ -73,7 +73,7 @@ const kvSequenceType = new GraphQLObjectType({
           ret = ret.filter(
             e => {
               const secondaryOb = {};
-              e[1].forEach(st => secondaryOb[st[0]] = st[1]);
+              e[1].forEach(st => (secondaryOb[st[0]] = st[1]));
 
               for (const mo of Object.entries(matchesOb)) {
                 const secondaryString = secondaryOb[mo[0]];

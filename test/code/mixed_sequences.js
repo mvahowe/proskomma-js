@@ -185,6 +185,7 @@ test(
       const tNotes = document.tnTable[0].rows.map(r => r.map(c => c.text));
       const tWords = document.twlTable[0].rows.map(r => r.map(c => c.text));
       const sTree = JSON.parse(document.sTree[0].tribos).data.map(n => n.content);
+      /*
       const cleanKV = entry => {
         const fields = {};
         entry.itemGroups.forEach(ig => fields[ig.scopeLabels[0].split('/')[1]] = ig.text);
@@ -200,14 +201,15 @@ test(
 
       console.log(
         JSON.stringify({
-          // scripture,
-          // sTree,
-          // tNotes,
-          // tWords,
+          scripture,
+          sTree,
+          tNotes,
+          tWords,
           kv,
         },
         null,
         2));
+       */
     } catch (err) {
       console.log(err);
     }
