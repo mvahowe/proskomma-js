@@ -169,7 +169,7 @@ test(
             cv (chapter:"${chapterN}" verses:["${verseN}"]) { tokens {subType payload scopes} }
             tnTable: tableSequences(withTags:"tnotes") { tags rows(equals:[{colN:1 values:"${chapterN}"}, {colN:2 values:"${verseN}"}] columns:[3, 4, 5, 6, 7, 8]) { text } }
             twlTable: tableSequences(withTags:"twords") { tags rows(equals:[{colN:0 values:"${chapterN}:${verseN}"}] columns:[1, 2, 3, 4, 5]) { text } }
-            kv: kvSequences(withTags:"kv") { nEntries, entries { key secondaryKeys { key value } itemGroups { scopeLabels(startsWith:"kvField") text } } }
+            kv: kvSequences(withTags:"kv") { nEntries, entries(secondaryEquals:[{key:"service", values:"dessert"}, {key:"color", values:"green"}]) { key secondaryKeys { key value } itemGroups { scopeLabels(startsWith:"kvField") text } } }
             sTree: treeSequences(withTags:"stree") {
               tribos(
                 query:"nodes[and(==(content('elementType'), 'Node'), startsWith(content('morphId'), '${bookN}${padInt(chapterN)}${padInt(verseN)}'))]/node{@Cat, @text, @English}"
