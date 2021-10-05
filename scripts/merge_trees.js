@@ -3,9 +3,6 @@ const path = require('path');
 const fse = require('fs-extra');
 const xre = require('xregexp');
 
-let nextNode = 0;
-
-
 if (process.argv.length !== 5) {
   console.log('USAGE: node merge_trees.js <srcDirPath> <srcFileRegex> <destPath>');
   process.exit(1);

@@ -229,3 +229,71 @@ test(
     }
   },
 );
+
+test(
+  `contentMatches (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+
+      const query = `{
+        docSets {
+          document(bookCode:"JUD") {
+            kvSequences(withTags:"kv") {
+              entries(contentMatches: [{key: "name", matches: "pl|na"}, {key: "definition", matches: "obj"}]) {
+                key
+                secondaryKeys { key value }
+                itemGroups {
+                  scopeLabels(startsWith:"kvField")
+                  text
+                }
+              }
+            }
+          }
+        }
+      }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const document = result.data.docSets[0].document;
+      const kv = document.kvSequences[0].entries.map(kv => cleanKV(kv));
+      t.equal(kv.length, 1);
+      t.equal(kv[0].key, 'b');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `contentEquals (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+
+      const query = `{
+        docSets {
+          document(bookCode:"JUD") {
+            kvSequences(withTags:"kv") {
+              entries(contentEquals: [{key: "name", values: "apple"}, {key: "definition", values: "A tasty snack"}]) {
+                key
+                secondaryKeys { key value }
+                itemGroups {
+                  scopeLabels(startsWith:"kvField")
+                  text
+                }
+              }
+            }
+          }
+        }
+      }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const document = result.data.docSets[0].document;
+      const kv = document.kvSequences[0].entries.map(kv => cleanKV(kv));
+      t.equal(kv.length, 1);
+      t.equal(kv[0].key, 'a');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

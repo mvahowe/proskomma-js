@@ -46,6 +46,14 @@ const kvSequenceType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(keyValuesType)),
           description: 'Only return entries whose secondary keys equal one of the values in the specification',
         },
+        contentMatches: {
+          type: GraphQLList(GraphQLNonNull(keyMatchesType)),
+          description: 'Only return entries whose content matches the specification',
+        },
+        contentEquals: {
+          type: GraphQLList(GraphQLNonNull(keyValuesType)),
+          description: 'Only return entries whose content equals one of the values in the specification',
+        },
       },
       resolve: (root, args, context) => {
         let ret = root.blocks.map(
@@ -69,7 +77,7 @@ const kvSequenceType = new GraphQLObjectType({
 
         if (args.secondaryMatches) {
           const matchesOb = {};
-          args.secondaryMatches.forEach(sm => matchesOb[sm.key] = sm.matches);
+          args.secondaryMatches.forEach(sm => (matchesOb[sm.key] = sm.matches));
           ret = ret.filter(
             e => {
               const secondaryOb = {};
@@ -88,11 +96,11 @@ const kvSequenceType = new GraphQLObjectType({
 
         if (args.secondaryEquals) {
           const equalsOb = {};
-          args.secondaryEquals.forEach(sm => equalsOb[sm.key] = sm.values);
+          args.secondaryEquals.forEach(sm => (equalsOb[sm.key] = sm.values));
           ret = ret.filter(
             e => {
               const secondaryOb = {};
-              e[1].forEach(st => secondaryOb[st[0]] = st[1]);
+              e[1].forEach(st => (secondaryOb[st[0]] = st[1]));
 
               for (const mo of Object.entries(equalsOb)) {
                 const secondaryString = secondaryOb[mo[0]];
@@ -104,6 +112,45 @@ const kvSequenceType = new GraphQLObjectType({
               return true;
             });
         }
+
+        if (args.contentMatches) {
+          const matchesOb = {};
+          args.contentMatches.forEach(sm => (matchesOb[sm.key] = sm.matches));
+          ret = ret.filter(
+            e => {
+              const contentOb = {};
+              e[2].forEach(st => (contentOb[st[0].filter(s => s.startsWith('kvField'))[0].split('/')[1]] = st[1].filter(i => i[0] === 'token').map(t => t[2]).join('')));
+
+              for (const mo of Object.entries(matchesOb)) {
+                const contentString = contentOb[mo[0]];
+
+                if (!contentString || !xre.test(contentString, xre(mo[1]))) {
+                  return false;
+                }
+              }
+              return true;
+            });
+        }
+
+        if (args.contentEquals) {
+          const equalsOb = {};
+          args.contentEquals.forEach(sm => (equalsOb[sm.key] = sm.values));
+          ret = ret.filter(
+            e => {
+              const contentOb = {};
+              e[2].forEach(st => (contentOb[st[0].filter(s => s.startsWith('kvField'))[0].split('/')[1]] = st[1].filter(i => i[0] === 'token').map(t => t[2]).join('')));
+
+              for (const mo of Object.entries(equalsOb)) {
+                const contentString = contentOb[mo[0]];
+
+                if (!contentString || !contentString.includes(mo[1])) {
+                  return false;
+                }
+              }
+              return true;
+            });
+        }
+
         return ret;
       },
     },
