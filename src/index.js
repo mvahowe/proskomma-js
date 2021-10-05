@@ -12,6 +12,9 @@ const { gqlSchema } = require('./graph');
 
 const { lexingRegexes } = require('./parser/lexers/lexingRegexes');
 const blocksSpecUtils = require('./util/blocksSpec');
+const { flattenNodes, numberNodes } = require('./parser/lexers/nodes');
+
+const tree2nodes = tree => flattenNodes(numberNodes(tree));
 
 class Proskomma {
   constructor() {
@@ -495,5 +498,5 @@ class Proskomma {
 }
 
 module.exports = {
-  Proskomma, lexingRegexes, blocksSpecUtils
+  Proskomma, lexingRegexes, blocksSpecUtils, tree2nodes,
 };
