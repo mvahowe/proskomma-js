@@ -289,7 +289,7 @@ const stepActions = [
       syntax: 'children; children(pos)',
       description: 'Returns the children of the current node(s), optionally filtered by position within the parent node',
     },
-    predicateCapture: 5,
+    predicateCapture: 4,
     inputType: 'nodes',
     outputType: 'nodes',
     function: doChildrenStep,
