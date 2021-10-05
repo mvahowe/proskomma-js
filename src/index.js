@@ -11,7 +11,7 @@ const { Document } = require('./model/document');
 const { gqlSchema } = require('./graph');
 
 const { lexingRegexes } = require('./parser/lexers/lexingRegexes');
-const blocksSpecUtils = require('./src/util/blocksSpec');
+const blocksSpecUtils = require('./util/blocksSpec');
 
 class Proskomma {
   constructor() {
@@ -494,4 +494,6 @@ class Proskomma {
   }
 }
 
-module.exports = { Proskomma, lexingRegexes, blockSpecUtils };
+module.exports = {
+  Proskomma, lexingRegexes, blocksSpecUtils
+};
