@@ -297,3 +297,81 @@ test(
     }
   },
 );
+
+test(
+  `Dodson lexicon mutation (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const dodsonQuery = blocksSpec2Query(
+        fse.readJSONSync(path.resolve(__dirname, '../test_data/inputBlockSpec/dodson.json')),
+      );
+
+      let query = `mutation { newSequence(` +
+        ` documentId: "${pkDoc.id}"` +
+        ` type: "kv"` +
+        ` blocksSpec: ${dodsonQuery}` +
+        ` graftToMain: true) }`;
+
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newSeqId = result.data.newSequence;
+      query = `mutation { addSequenceTags(docSetId: "eng_ust", documentId: "${pkDoc.id}", sequenceId: "${newSeqId}", tags: ["dodson"]) }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Dodson queries (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(13);
+
+      const query = `{
+        docSets {
+          document(bookCode:"JUD") {
+            kvSequences(withTags:"dodson") {
+              nEntries
+              allEntries: entries {
+                key
+                secondaryKeys { key value }
+                itemGroups {
+                  scopeLabels(startsWith:"kvField")
+                  text
+                }
+              }
+              byLemma: entries(keyEquals: ["ἀβαρής"]) { key }
+              byStrong: entries(secondaryEquals: [{key: "strong", values: "0007"}]) { key }
+              byContent: entries(contentMatches: [{key: "fullDef", matches: "son.+Amram"}]) { key itemGroups { text } }
+            }
+          }
+        }
+      }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const document = result.data.docSets[0].document;
+      const allEntries = document.kvSequences[0].allEntries.map(kv => cleanKV(kv));
+      t.equal(document.kvSequences[0].nEntries, 9);
+      t.equal(allEntries.length, 9);
+      t.equal(allEntries[0].key, 'ἄλφα');
+      t.equal(Object.keys(allEntries[0].secondaryKeys).length, 1);
+      t.equal(allEntries[0].secondaryKeys['strong'], '0001');
+      t.equal(Object.keys(allEntries[0].fields).length, 2);
+      t.ok(allEntries[0].fields['briefDef'].startsWith('the first letter'));
+      const lemmaEntries = document.kvSequences[0].byLemma;
+      t.equal(lemmaEntries.length, 1);
+      t.equal(lemmaEntries[0].key, 'ἀβαρής');
+      const strongEntries = document.kvSequences[0].byStrong;
+      t.equal(strongEntries.length, 1);
+      t.equal(strongEntries[0].key, 'Ἀβιά');
+      const sonEntries = document.kvSequences[0].byContent;
+      t.equal(sonEntries.length, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

@@ -1,0 +1,1654 @@
+[
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/ἄλφα"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0001"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0001"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "first"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "letter"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Greek"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "alphabet"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "alpha"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ";"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "first"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "letter"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Greek"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "alphabet"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0001"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀαρών"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0002"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0002"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Aaron"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Aaron"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "son"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Amram"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "and"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Jochebed"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "brother"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Moses"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0002"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀβαδδών"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0003"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0003"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abaddon"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abaddon"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Destroyer"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "("
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "i"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "e"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Destroying"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Angel"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ")"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "or"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "\""
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "place"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "destruction"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "\""
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "("
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "personified"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ")"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0003"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/ἀβαρής"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0004"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0004"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "not"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "burdensome"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "not"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "burdensome"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "bringing"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "no"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "weight"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "or"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "oppression"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "upon"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0004"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀββά"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0005"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0005"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Father"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abba"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Father"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0005"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἄβελ"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0006"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0006"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abel"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abel"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "second"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "son"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Adam"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "and"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Eve"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "brother"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Cain"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0006"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀβιά"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0007"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0007"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abijah"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abijah"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "("
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "a"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ")"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "a"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "king"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "son"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Rehoboam"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "("
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "b"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ")"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "founder"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "eighth"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "class"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "priests"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0007"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀβιαθάρ"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0008"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0008"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abiathar"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abiathar"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "a"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "priest"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "in"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "King"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "David"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "'"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "s"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "time"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0008"
+      }
+    ]
+  },
+  {
+    "bs": {
+      "type": "scope",
+      "subType": "start",
+      "payload": "kvPrimary/Ἀβιληνή"
+    },
+    "bg": [],
+    "os": [],
+    "is": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0009"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      }
+    ],
+    "items": [
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvSecondary/strong/0009"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abilene"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/briefDef"
+      },
+      {
+        "type": "scope",
+        "subType": "start",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abilenian"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "territory"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "territory"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Abila"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "("
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "in"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Syria"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ")"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": ","
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "a"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "small"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "principality"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "in"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "the"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "mountains"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "of"
+      },
+      {
+        "type": "token",
+        "subType": "lineSpace",
+        "payload": " "
+      },
+      {
+        "type": "token",
+        "subType": "wordLike",
+        "payload": "Damascus"
+      },
+      {
+        "type": "token",
+        "subType": "punctuation",
+        "payload": "."
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvField/fullDef"
+      },
+      {
+        "type": "scope",
+        "subType": "end",
+        "payload": "kvSecondary/strong/0009"
+      }
+    ]
+  }
+]

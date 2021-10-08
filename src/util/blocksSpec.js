@@ -155,5 +155,5 @@ const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${o
 const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
 
 module.exports = {
-  tsvToInputBlock, treeToInputBlock, blocksSpec2Query, object2Query, oneObject2Query,
+  tokenizeString, tsvToInputBlock, treeToInputBlock, blocksSpec2Query, object2Query, oneObject2Query,
 };
