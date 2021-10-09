@@ -7,13 +7,13 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
     for (const item of items) {
       if (item[0] === 'scope') {
         if (item[1] === 'start') {
-          const existingScopes = ret.filter(s => s[2] === item[2]);
+          const existingScopes = ret.filter(s => s === item[2]);
 
           if (existingScopes.length === 0) {
             ret.push(item[2]);
           }
         } else {
-          ret = openScopes.filter(s => s[2] !== item[2]);
+          ret = ret.filter(s => s !== item[2]);
         }
       }
     }
@@ -43,7 +43,9 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
       return [[
         updatedOpenScopes(
           context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-          context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, ci.startItem),
+          context.docSet.unsuccinctifyItems(block.c, {}, 0, [])
+            .slice(0, ci.startItem + 1)
+            .filter(i => i[0] === 'scope'),
         ),
         context.docSet.itemsByIndex(mainSequence, ci, args.includeContext || false)
           .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
@@ -149,7 +151,9 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
           retItemGroups.push([
             updatedOpenScopes(
               docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-              docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, firstStartItem),
+              docSet.unsuccinctifyItems(block.c, {}, 0, [])
+                .slice(0, firstStartItem + 1)
+                .filter(i => i[0] === 'scope'),
             ),
             retItems,
           ]);
@@ -199,7 +203,9 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
     return [[
       updatedOpenScopes(
         context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-        context.docSet.unsuccinctifyItems(block.c, { scopes: true }, 0, []).slice(0, index.startItem),
+        context.docSet.unsuccinctifyItems(block.c, {}, 0, [])
+          .slice(0, index.startItem + 1)
+          .filter(i => i[0] === 'scope'),
       ),
       context.docSet.itemsByIndex(mainSequence, index, args.includeContext || false)
         .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),

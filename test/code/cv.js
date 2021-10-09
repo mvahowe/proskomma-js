@@ -21,11 +21,12 @@ test(
   `Chapter (${testGroup})`,
   async function (t) {
     try {
-      t.plan(9);
+      t.plan(10);
       const query = `{ documents { ${chapterQuery} } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cv = result.data.documents[0].cv;
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
       t.equal(cv[0].items[0].payload, 'blockTag/p');
       t.equal(cv[0].items[1].payload, 'chapter/3');
       t.equal([...cv[0].items].reverse()[0].payload, 'blockTag/p');
@@ -44,11 +45,13 @@ test(
   `Verse (${testGroup})`,
   async function (t) {
     try {
-      t.plan(11);
+      t.plan(13);
       const query = `{ documents { ${verseQuery} } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cv = result.data.documents[0].cv;
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
+      t.ok(cv[0].scopeLabels.includes('verse/6'));
       t.equal(cv[0].items[0].payload, 'blockTag/p');
       t.equal(cv[0].items[1].payload, 'verse/6');
       t.equal(cv[0].items[2].payload, 'verses/6');
@@ -70,11 +73,14 @@ test(
   `Verses (${testGroup})`,
   async function (t) {
     try {
-      t.plan(11);
+      t.plan(14);
       const query = `{ documents { ${versesQuery} } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cv = result.data.documents[0].cv;
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
+      t.ok(cv[0].scopeLabels.includes('verse/6'));
+      t.ok(cv[1].scopeLabels.includes('verse/7'));
       t.equal(cv[0].items[0].payload, 'blockTag/p');
       t.equal(cv[0].items[1].payload, 'verse/6');
       t.equal(cv[0].items[2].payload, 'verses/6');
