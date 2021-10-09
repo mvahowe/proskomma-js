@@ -8,6 +8,11 @@ const {
   blocksSpec2Query,
   treeToInputBlock,
 } = require('../../src/util/blocksSpec');
+const { Validator } = require('jsonschema');
+const {
+  serializedSchema,
+  unpackEnum
+} = require('proskomma-utils');
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',
@@ -178,6 +183,26 @@ test(
       t.equal(node.childIds.length, 1);
       t.equal(node.childIds[0], '14');
       t.equal(node.itemGroups.filter(ig => ig.scopeLabels[0] === 'tTreeContent/English')[0].text, 'of Jesus');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Serialize (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const pk = new Proskomma();
+      importNodes(pk);
+      const query = '{ docSets { id } }';
+      const result = await pk.gqlQuery(query);
+      const docSetId = result.data.docSets[0].id;
+      const serialized = pk.serializeSuccinct(docSetId);
+      t.ok(serialized);
+      const validationReport = new Validator().validate(serialized, serializedSchema);
+      t.equal(validationReport.errors.length, 0);
     } catch (err) {
       console.log(err);
     }

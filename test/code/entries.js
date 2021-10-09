@@ -5,6 +5,9 @@ const test = require('tape');
 const { pkWithDoc } = require('../lib/load');
 
 const { blocksSpec2Query } = require('../../src/util/blocksSpec');
+const { Proskomma } = require('../../src');
+const { Validator } = require('jsonschema');
+const { serializedSchema } = require('proskomma-utils');
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',
@@ -370,6 +373,24 @@ test(
       t.equal(strongEntries[0].key, 'Ἀβιά');
       const sonEntries = document.kvSequences[0].byContent;
       t.equal(sonEntries.length, 1);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Serialize (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const query = '{ docSets { id } }';
+      const result = await pk.gqlQuery(query);
+      const docSetId = result.data.docSets[0].id;
+      const serialized = pk.serializeSuccinct(docSetId);
+      t.ok(serialized);
+      const validationReport = new Validator().validate(serialized, serializedSchema);
+      t.equal(validationReport.errors.length, 0);
     } catch (err) {
       console.log(err);
     }

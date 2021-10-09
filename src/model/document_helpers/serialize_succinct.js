@@ -20,12 +20,12 @@ const serializeSuccinctSequence = seqOb => {
   if (seqOb.type === 'main') {
     ret.chapters = {};
 
-    for (const [chK, chV] of Object.entries(seqOb.chapters)) {
+    for (const [chK, chV] of Object.entries(seqOb.chapters || {})) {
       ret.chapters[chK] = chV.base64();
     }
     ret.chapterVerses = {};
 
-    for (const [chvK, chvV] of Object.entries(seqOb.chapterVerses)) {
+    for (const [chvK, chvV] of Object.entries(seqOb.chapterVerses || {})) {
       ret.chapterVerses[chvK] = chvV.base64();
     }
 

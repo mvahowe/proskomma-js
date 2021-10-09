@@ -9,6 +9,8 @@ const {
   tsvToInputBlock,
   blocksSpec2Query,
 } = require('../../src/util/blocksSpec');
+const { Validator } = require('jsonschema');
+const { serializedSchema } = require('proskomma-utils');
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',
@@ -352,6 +354,26 @@ test(
       t.equal(sequenceRows[0].length, 5);
       t.equal(sequenceRows.filter(r => r[1].text === '1').length, 6);
       t.equal(sequenceRows.filter(r => ['23', '24'].includes(r[2].text)).length, 6);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Serialize (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const pk = new Proskomma();
+      importTable(pk);
+      const query = '{ docSets { id } }';
+      const result = await pk.gqlQuery(query);
+      const docSetId = result.data.docSets[0].id;
+      const serialized = pk.serializeSuccinct(docSetId);
+      t.ok(serialized);
+      const validationReport = new Validator().validate(serialized, serializedSchema);
+      t.equal(validationReport.errors.length, 0);
     } catch (err) {
       console.log(err);
     }
