@@ -33,7 +33,7 @@ class UsxLexer {
       periph: this.notHandledHandler,
       figure: this.handleFigureOpen,
       optbreak: this.handleOptBreakOpen,
-      ref: this.ignoreHandler,
+      ref: this.handleRefOpen,
     };
     this.closeTagHandlers = {
       usx: this.ignoreHandler,
@@ -51,7 +51,7 @@ class UsxLexer {
       periph: this.notHandledHandler,
       figure: this.handleFigureClose,
       optbreak: this.handleOptBreakClose,
-      ref: this.ignoreHandler,
+      ref: this.handleRefClose,
     };
   }
 
@@ -153,6 +153,14 @@ class UsxLexer {
     const sAtts = lexer.stackPop()[1];
     const [tagName, tagNo] = lexer.splitTagNumber(sAtts.style);
     lexer.parser.parseItem(constructorForFragment.tag('endTag', [null, null, `+${tagName}`, tagNo]));
+  }
+
+  handleRefOpen(lexer) {
+    lexer.parser.parseItem(constructorForFragment.tag('startTag', [null, null, 'xt', '']));
+  }
+
+  handleRefClose(lexer) {
+    lexer.parser.parseItem(constructorForFragment.tag('endTag', [null, null, 'xt', '']));
   }
 
   handleRowOpen(lexer, oOrC, name, atts) {
