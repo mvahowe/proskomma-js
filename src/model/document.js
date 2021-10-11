@@ -120,6 +120,7 @@ class Document {
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);
+    buildChapterVerseIndex(this);
 
     const tableSequence = Object.values(this.sequences).filter(s => s.type === 'table')[0];
 
@@ -136,6 +137,7 @@ class Document {
     this.headers = parser.headers;
     this.succinctPass1(parser);
     this.succinctPass2(parser);
+    buildChapterVerseIndex(this);
   }
 
   postParseScripture(parser) {
