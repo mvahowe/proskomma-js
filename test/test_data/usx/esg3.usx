@@ -22,6 +22,12 @@
             </char>
         </note>
         .
+        <note caller="-" style="x">
+            <char style="xo" closed="false">3:1</char>
+            <char style="xt" closed="false">
+                <ref loc="ESG 1:1">1.1</ref>
+            </char>
+        </note>
         <verse eid="ESG 3:1"/>
         <verse number="2" style="v" pubnumber="2" sid="ESG 3:2"/>
         Tous ceux qui étaient à la cour se prosternaient devant Haman, car le roi en avait donné l'ordre. Seul Mardochée

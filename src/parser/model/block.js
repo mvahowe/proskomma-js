@@ -93,7 +93,7 @@ const Block = class {
     const noteStarts = [];
 
     for (const [pos, item] of this.items.entries()) {
-      if (item.subType === 'start' && item.payload.startsWith('inline/f')) {
+      if (item.subType === 'start' && (item.payload.startsWith('inline/f') || item.payload.startsWith('inline/x'))) {
         noteStarts.push(pos);
       }
     }
