@@ -1,4 +1,5 @@
 const { mapVerse } = require('proskomma-utils');
+const xre = require('xregexp');
 
 const updatedOpenScopes = (openScopes, items) => {
   let ret = openScopes;
@@ -149,25 +150,9 @@ const do_chapter_verse_array = (root, context, mainSequence, chapterN, verses, i
   return retItemGroups;
 };
 
-const do_chapterVerses = (root, context, mainSequence, chapterVerses, includeContext) => {
-  const [fromCV, toCV] = chapterVerses.split('-');
-
-  if (!toCV) {
-    throw new Error(`chapterVerses must contain a dash ('${chapterVerses}')`);
-  }
-
+const do_chapterVerses = (root, context, mainSequence, fromCV, toCV, includeContext) => {
   const [fromC, fromV] = fromCV.split(':');
-
-  if (!fromV) {
-    throw new Error(`from cv of chapterVerses must contain a colon ('${chapterVerses}')`);
-  }
-
   const [toC, toV] = toCV.split(':');
-
-  if (!toV) {
-    throw new Error(`to cv of chapterVerses must contain a colon ('${chapterVerses}')`);
-  }
-
   const fromCVI = root.chapterVerseIndex(fromC);
   const toCVI = root.chapterVerseIndex(toC);
 
@@ -211,8 +196,19 @@ const do_cv_separate_args = (root, args, context, mainSequence, doMap, mappedDoc
 };
 
 const do_cv_string_arg = (root, args, context, mainSequence) => {
-  // ChapterVerse, c:v-c:v
-  return do_chapterVerses(root, context, mainSequence, args.chapterVerses, args.includeContext);
+  if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+:[0-9]+$'))) { // c:v-c:v
+    const [fromSpec, toSpec] = args.chapterVerses.split('-');
+    return do_chapterVerses(root, context, mainSequence, fromSpec, toSpec, args.includeContext);
+  } else if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+$'))) { // c:v-v
+    const [ch, vRange] = args.chapterVerses.split(':');
+    const [fromV, toV] = vRange.split('-');
+    return do_chapterVerses(root, context, mainSequence, `${ch}:${fromV}`, `${ch}:${toV}`, args.includeContext);
+  } else if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+$'))) { // c:v
+    const [ch, v] = args.chapterVerses.split(':');
+    return do_chapterVerses(root, context, mainSequence, `${ch}:${v}`, `${ch}:${v}`, args.includeContext);
+  } else {
+    throw new Error(`Could not parse chapterVerses string '${args.chapterVerses}'`);
+  }
 };
 
 const do_cv = (root, args, context, doMap, mappedDocSetId) => {

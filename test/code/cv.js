@@ -13,10 +13,9 @@ const chapterQuery = `cv (chapter:"3") { scopeLabels, items { type subType paylo
 const verseQuery = `cv (chapter:"3" verses:["6"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
-const singleChapterVersesQuery = `cv (chapterVerses:"3:16-3:18" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
-const chapterVersesNoDashQuery = `cv (chapterVerses:"3" ) { text }`;
-const chapterVersesNoFirstColonQuery = `cv (chapterVerses:"3-4:2" ) { text }`;
-const chapterVersesNoSecondColonQuery = `cv (chapterVerses:"3:1-4" ) { text }`;
+const repeatChapterVersesQuery = `cv (chapterVerses:"3:16-3:18" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
+const singleChapterVersesQuery = `cv (chapterVerses:"3:16-18" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
+const singleVerseChapterVersesQuery = `cv (chapterVerses:"3:16" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
 
 test(
   `Chapter (${testGroup})`,
@@ -127,7 +126,33 @@ test(
 );
 
 test(
-  `Single chapterVerses (${testGroup})`,
+  `Repeat-chapter chapterVerses (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      const query = `{ documents { ${repeatChapterVersesQuery} } }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const cv = result.data.documents[0].cv;
+      t.equal(cv[0].items[0].payload, 'blockTag/p');
+      t.equal(cv[0].items[1].payload, 'verse/16');
+      t.equal(cv[0].items[2].payload, 'verses/16');
+      t.equal([...cv[0].items].reverse()[0].payload, 'blockTag/p');
+      t.equal([...cv[0].items].reverse()[1].payload, 'verse/18');
+      t.equal([...cv[0].items].reverse()[2].payload, 'verses/18');
+      const wordTokens = cv[0].tokens.filter(t => t.subType === 'wordLike');
+      t.equal(wordTokens[0].payload, 'When');
+      t.equal([...wordTokens].reverse()[0].payload, 'today');
+      t.ok(cv[0].text.startsWith('When she came'));
+      t.ok(cv[0].text.endsWith('settled this today.”'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Single-chapter chapterVerses (${testGroup})`,
   async function (t) {
     try {
       t.plan(11);
@@ -153,22 +178,25 @@ test(
 );
 
 test(
-  `Badly-Formed ChapterVerses (${testGroup})`,
+  `Single-verse chapterVerses (${testGroup})`,
   async function (t) {
     try {
-      t.plan(6);
-      let query = `{ documents { ${chapterVersesNoDashQuery} } }`;
-      let result = await pk.gqlQuery(query);
-      t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.includes('must contain a dash'));
-      query = `{ documents { ${chapterVersesNoFirstColonQuery} } }`;
-      result = await pk.gqlQuery(query);
-      t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.includes('must contain a colon'));
-      query = `{ documents { ${chapterVersesNoSecondColonQuery} } }`;
-      result = await pk.gqlQuery(query);
-      t.equal(result.errors.length, 1);
-      t.ok(result.errors[0].message.includes('must contain a colon'));
+      t.plan(11);
+      const query = `{ documents { ${singleVerseChapterVersesQuery} } }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const cv = result.data.documents[0].cv;
+      t.equal(cv[0].items[0].payload, 'blockTag/p');
+      t.equal(cv[0].items[1].payload, 'verse/16');
+      t.equal(cv[0].items[2].payload, 'verses/16');
+      t.equal([...cv[0].items].reverse()[0].payload, 'blockTag/p');
+      t.equal([...cv[0].items].reverse()[1].payload, 'verse/16');
+      t.equal([...cv[0].items].reverse()[2].payload, 'verses/16');
+      const wordTokens = cv[0].tokens.filter(t => t.subType === 'wordLike');
+      t.equal(wordTokens[0].payload, 'When');
+      t.equal([...wordTokens].reverse()[0].payload, 'her');
+      t.ok(cv[0].text.startsWith('When she came'));
+      t.ok(cv[0].text.endsWith('done for her. '));
     } catch (err) {
       console.log(err);
     }
