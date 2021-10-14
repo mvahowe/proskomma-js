@@ -156,22 +156,23 @@ test(
   `Single-chapter chapterVerses (${testGroup})`,
   async function (t) {
     try {
-      t.plan(11);
+      t.plan(12);
       const query = `{ documents { ${singleChapterVersesQuery} } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cv = result.data.documents[0].cv;
-      t.equal(cv[0].items[0].payload, 'blockTag/p');
-      t.equal(cv[0].items[1].payload, 'verse/16');
-      t.equal(cv[0].items[2].payload, 'verses/16');
-      t.equal([...cv[0].items].reverse()[0].payload, 'blockTag/p');
-      t.equal([...cv[0].items].reverse()[1].payload, 'verse/18');
-      t.equal([...cv[0].items].reverse()[2].payload, 'verses/18');
-      const wordTokens = cv[0].tokens.filter(t => t.subType === 'wordLike');
-      t.equal(wordTokens[0].payload, 'When');
-      t.equal([...wordTokens].reverse()[0].payload, 'today');
+      t.equal(cv.length, 3);
+      const wordLikes = cv[0].tokens.filter(t => t.subType === 'wordLike');
+      t.equal(wordLikes[0].payload, 'When');
+      t.equal([...wordLikes].reverse()[0].payload, 'her');
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
+      t.ok(cv[0].scopeLabels.includes('verse/16'));
+      t.ok(cv[0].scopeLabels.includes('verses/16'));
+      t.ok(cv[2].scopeLabels.includes('chapter/3'));
+      t.ok(cv[2].scopeLabels.includes('verse/18'));
+      t.ok(cv[2].scopeLabels.includes('verses/18'));
       t.ok(cv[0].text.startsWith('When she came'));
-      t.ok(cv[0].text.endsWith('settled this today.”'));
+      t.ok(cv[2].text.endsWith('settled this today.”'));
     } catch (err) {
       console.log(err);
     }
@@ -182,20 +183,18 @@ test(
   `Single-verse chapterVerses (${testGroup})`,
   async function (t) {
     try {
-      t.plan(11);
+      t.plan(9);
       const query = `{ documents { ${singleVerseChapterVersesQuery} } }`;
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cv = result.data.documents[0].cv;
-      t.equal(cv[0].items[0].payload, 'blockTag/p');
-      t.equal(cv[0].items[1].payload, 'verse/16');
-      t.equal(cv[0].items[2].payload, 'verses/16');
-      t.equal([...cv[0].items].reverse()[0].payload, 'blockTag/p');
-      t.equal([...cv[0].items].reverse()[1].payload, 'verse/16');
-      t.equal([...cv[0].items].reverse()[2].payload, 'verses/16');
-      const wordTokens = cv[0].tokens.filter(t => t.subType === 'wordLike');
-      t.equal(wordTokens[0].payload, 'When');
-      t.equal([...wordTokens].reverse()[0].payload, 'her');
+      t.equal(cv.length, 1);
+      const wordLikes = cv[0].tokens.filter(t => t.subType === 'wordLike');
+      t.equal(wordLikes[0].payload, 'When');
+      t.equal([...wordLikes].reverse()[0].payload, 'her');
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
+      t.ok(cv[0].scopeLabels.includes('verse/16'));
+      t.ok(cv[0].scopeLabels.includes('verses/16'));
       t.ok(cv[0].text.startsWith('When she came'));
       t.ok(cv[0].text.endsWith('done for her. '));
     } catch (err) {

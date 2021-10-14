@@ -162,16 +162,19 @@ const scopesMatchAChapterSpec = (scopes, chapterSpecs) => {
   } else {
     return scopesMatchAChapterSpec(scopes, chapterSpecs.slice(1));
   }
-}
+};
 
-const do_chapterVersesNew = (root, context, mainSequence, fromCV, toCV, includeContext) => {
+const do_chapterVerses = (root, context, mainSequence, fromCV, toCV, includeContext) => {
   const [fromCInt, fromVInt] = fromCV.split(':').map(str => parseInt(str));
   const [toCInt, toVInt] = toCV.split(':').map(str => parseInt(str));
+
   if (toCInt < fromCInt) {
     throw new Error(`cv chapterVerses requires fromChapter <= toChapter, not ${fromCInt} to ${toCInt}`);
   }
+
   const chapterSpecs = []; // [chN, minVN?, maxVN?]
   let ch = fromCInt;
+
   while (ch <= toCInt) {
     chapterSpecs.push([
       ch,
@@ -182,41 +185,6 @@ const do_chapterVersesNew = (root, context, mainSequence, fromCV, toCV, includeC
   }
   return context.docSet.sequenceItemsByScopes(mainSequence.blocks, ['chapter/', 'verse/'], includeContext)
     .filter(ig => scopesMatchAChapterSpec(ig[0], chapterSpecs));
-};
-
-const do_chapterVerses = (root, context, mainSequence, fromCV, toCV, includeContext) => {
-  const [fromC, fromV] = fromCV.split(':');
-  const [toC, toV] = toCV.split(':');
-  const fromCVI = root.chapterVerseIndex(fromC);
-  const toCVI = root.chapterVerseIndex(toC);
-
-  if (!fromCVI || !toCVI || !fromCVI[parseInt(fromV)] || !toCVI[parseInt(toV)]) {
-    return [];
-  }
-
-  const index = {
-    startBlock: fromCVI[parseInt(fromV)][0].startBlock,
-    endBlock: toCVI[parseInt(toV)][0].endBlock,
-    startItem: fromCVI[parseInt(fromV)][0].startItem,
-    endItem: toCVI[parseInt(toV)][0].endItem,
-    nextToken: toCVI[parseInt(toV)][0].nextToken,
-  };
-
-  if (index.startBlock > index.endBlock || (index.startBlock === index.endBlock && index.startItem >= index.endItem)) {
-    return [];
-  }
-
-  const block = mainSequence.blocks[index.startBlock];
-  return [[
-    updatedOpenScopes(
-      context.docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
-      context.docSet.unsuccinctifyItems(block.c, {}, 0, [])
-        .slice(0, index.startItem + 1)
-        .filter(i => i[0] === 'scope'),
-    ),
-    context.docSet.itemsByIndex(mainSequence, index, includeContext || false)
-      .reduce((a, b) => a.concat([['token', 'lineSpace', ' ']].concat(b))),
-  ]];
 };
 
 const do_cv_separate_args = (root, args, context, mainSequence, doMap, mappedDocSetId) => {
@@ -232,7 +200,7 @@ const do_cv_separate_args = (root, args, context, mainSequence, doMap, mappedDoc
 const do_cv_string_arg = (root, args, context, mainSequence) => {
   if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+:[0-9]+$'))) { // c:v-c:v
     const [fromSpec, toSpec] = args.chapterVerses.split('-');
-    return do_chapterVersesNew(root, context, mainSequence, fromSpec, toSpec, args.includeContext);
+    return do_chapterVerses(root, context, mainSequence, fromSpec, toSpec, args.includeContext);
   } else if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+$'))) { // c:v-v
     const [ch, vRange] = args.chapterVerses.split(':');
     const [fromV, toV] = vRange.split('-');
