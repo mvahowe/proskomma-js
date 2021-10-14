@@ -150,6 +150,40 @@ const do_chapter_verse_array = (root, context, mainSequence, chapterN, verses, i
   return retItemGroups;
 };
 
+const scopesMatchAChapterSpec = (scopes, chapterSpecs) => {
+  if (chapterSpecs.length === 0) {
+    return false;
+  } else if (
+    scopes.includes(`chapter/${chapterSpecs[0][0]}`) &&
+    (!chapterSpecs[0][1] || scopes.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) >= chapterSpecs[0][1]).length > 0) &&
+    (!chapterSpecs[0][2] || scopes.filter(s => s.startsWith('verse/') && parseInt(s.split('/')[1]) <= chapterSpecs[0][2]).length > 0)
+  ) {
+    return true;
+  } else {
+    return scopesMatchAChapterSpec(scopes, chapterSpecs.slice(1));
+  }
+}
+
+const do_chapterVersesNew = (root, context, mainSequence, fromCV, toCV, includeContext) => {
+  const [fromCInt, fromVInt] = fromCV.split(':').map(str => parseInt(str));
+  const [toCInt, toVInt] = toCV.split(':').map(str => parseInt(str));
+  if (toCInt < fromCInt) {
+    throw new Error(`cv chapterVerses requires fromChapter <= toChapter, not ${fromCInt} to ${toCInt}`);
+  }
+  const chapterSpecs = []; // [chN, minVN?, maxVN?]
+  let ch = fromCInt;
+  while (ch <= toCInt) {
+    chapterSpecs.push([
+      ch,
+      ch === fromCInt ? fromVInt : null,
+      ch === toCInt ? toVInt : null,
+    ]);
+    ch++;
+  }
+  return context.docSet.sequenceItemsByScopes(mainSequence.blocks, ['chapter/', 'verse/'], includeContext)
+    .filter(ig => scopesMatchAChapterSpec(ig[0], chapterSpecs));
+};
+
 const do_chapterVerses = (root, context, mainSequence, fromCV, toCV, includeContext) => {
   const [fromC, fromV] = fromCV.split(':');
   const [toC, toV] = toCV.split(':');
@@ -198,7 +232,7 @@ const do_cv_separate_args = (root, args, context, mainSequence, doMap, mappedDoc
 const do_cv_string_arg = (root, args, context, mainSequence) => {
   if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+:[0-9]+$'))) { // c:v-c:v
     const [fromSpec, toSpec] = args.chapterVerses.split('-');
-    return do_chapterVerses(root, context, mainSequence, fromSpec, toSpec, args.includeContext);
+    return do_chapterVersesNew(root, context, mainSequence, fromSpec, toSpec, args.includeContext);
   } else if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+-[0-9]+$'))) { // c:v-v
     const [ch, vRange] = args.chapterVerses.split(':');
     const [fromV, toV] = vRange.split('-');
