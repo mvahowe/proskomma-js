@@ -144,6 +144,7 @@ const expressions = {
       result: 'boolean',
       description: 'Are all the arguments true?',
     },
+    breakOn: false,
     argStructure: [['booleanExpression', [2, null]]],
   },
   or: {
@@ -154,6 +155,7 @@ const expressions = {
       result: 'boolean',
       description: 'Are any arguments true?',
     },
+    breakOn: true,
     argStructure: [['booleanExpression', [2, null]]],
   },
   concat: {
@@ -433,18 +435,19 @@ const expressions = {
 const parseRegexExpression = (docSet, node, predicateString, expressionId, matches) => {
   // console.log(`parseRegexExpression ${predicateString} ${expressionId} ${matches}`);
   const expressionRecord = expressions[expressionId];
-  const nExpectedArgs = structure => [
-    structure.map(a => a[1][0]).reduce((a, b) => a + b),
-    structure.filter(a => a[1][1] === null).length > 0,
-  ];
 
   if (!expressionRecord) {
     throw new Error(`Unknown expression ${expressionId} for predicate ${predicateString}`);
   }
 
-  let found = false;
+  const nExpectedArgs = structure => [
+    structure.map(a => a[1][0]).reduce((a, b) => a + b),
+    structure.filter(a => a[1][1] === null).length > 0,
+  ];
 
   if (expressionRecord.parseFunctions) {
+    let found = false;
+
     for (const [n, parseFunction] of expressionRecord.parseFunctions.entries()) {
       if (!parseFunction || !matches[n]) {
         continue;
@@ -479,6 +482,10 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
       while (argRecordN < argRecords.length) {
         const argRecord = argRecords[argRecordN];
         const argResult = parseExpression(docSet, node, argRecord, argStructure[argStructureN][0]);
+
+        if ('breakOn' in expressionRecord && !argRecord.errors && argResult.data === expressionRecord.breakOn) {
+          return argResult;
+        }
         argResults.push(argResult);
         argRecordN++;
         nOccs++;
