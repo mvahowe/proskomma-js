@@ -225,3 +225,25 @@ test(
     }
   },
 );
+
+test(
+  `mappedCvs between docSets (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const pk = deepCopy(cleanPk2);
+      let docSetQuery =
+        '{ docSet(id: "eng_webbe") { documents { mappedCvs(chapter: "65", mappedDocSetId: "eng_drh") { scopeLabels text } } } }';
+      let result = await pk.gqlQuery(docSetQuery);
+      t.equal(result.errors, undefined);
+      const mappedCVs = result.data.docSet.documents[0].mappedCvs[0][0];
+      t.ok(mappedCVs.text.endsWith('began to go out.'));
+      t.ok(mappedCVs.scopeLabels.includes('fromChapter/65'));
+      t.ok(mappedCVs.scopeLabels.includes('fromVerse/0'));
+      t.ok(mappedCVs.scopeLabels.includes('chapter/64'));
+      t.ok(mappedCVs.scopeLabels.includes('verse/1'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

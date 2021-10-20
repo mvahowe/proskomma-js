@@ -509,6 +509,36 @@ const documentType = new GraphQLObjectType({
         return do_cv(root, args, context, true, args.mappedDocSetId);
       },
     },
+    mappedCvs: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))))),
+      description: 'Content for each verse of a chapter within this document, using the versification of the specified docSet',
+      args: {
+        chapter: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The chapter number (as a string)',
+        },
+        mappedDocSetId: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the mapped docSet',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
+      },
+      resolve: (root, args, context) => {
+        const cvIndex = root.chapterVerseIndex(args.chapter);
+        const verses = cvIndex.filter(ve => ve.length > 0).map(ve => ve[0].verses);
+        let ret = [];
+        for (const verse of verses) {
+          ret.push(
+            do_cv(root, { ...args, verses: [verse] }, context, true, args.mappedDocSetId)
+            .map(ig => [[`fromChapter/${args.chapter}`,`fromVerse/${verse}`, ...ig[0]], ig[1]]),
+          );
+        }
+        return ret;
+      },
+    },
     cvNavigation: {
       type: cvNavigationType,
       description: 'What\'s previous and next with respect to the specified verse',
