@@ -530,10 +530,11 @@ const documentType = new GraphQLObjectType({
         const cvIndex = root.chapterVerseIndex(args.chapter);
         const verses = cvIndex.filter(ve => ve.length > 0).map(ve => ve[0].verses);
         let ret = [];
+
         for (const verse of verses) {
           ret.push(
             do_cv(root, { ...args, verses: [verse] }, context, true, args.mappedDocSetId)
-            .map(ig => [[`fromChapter/${args.chapter}`,`fromVerse/${verse}`, ...ig[0]], ig[1]]),
+              .map(ig => [[`fromChapter/${args.chapter}`,`fromVerse/${verse}`, ...ig[0]], ig[1]]),
           );
         }
         return ret;
