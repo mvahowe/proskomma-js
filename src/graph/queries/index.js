@@ -200,10 +200,20 @@ const schemaQueries = new GraphQLObjectType({
     },
     diff: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(diffRecordType))),
+      description: 'Compare two documents',
       args: {
-        document1: { type: GraphQLNonNull(GraphQLString) },
-        document2: { type: GraphQLNonNull(GraphQLString) },
-        mode: { type: GraphQLNonNull(GraphQLString) },
+        document1: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the first document',
+        },
+        document2: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'The id of the second document',
+        },
+        mode: {
+          type: GraphQLNonNull(GraphQLString),
+          description: 'compare \'words\' or \'tokens\'',
+        },
       },
       resolve: (root, args) => {
         if (args.document1 === args.document2) {
