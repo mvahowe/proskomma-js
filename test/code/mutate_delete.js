@@ -1,8 +1,11 @@
+const path = require('path');
 const test = require('tape');
+const fse = require('fs-extra');
 const {
   pkWithDoc,
   pkWithDocs,
 } = require('../lib/load');
+const { Proskomma } = require('../../src');
 
 const testGroup = 'Mutate Delete Operations';
 
@@ -10,7 +13,7 @@ test(
   `DocSet (${testGroup})`,
   async function (t) {
     try {
-      t.plan(8);
+      t.plan(9);
       const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
         lang: 'eng',
         abbr: 'ust',
@@ -30,9 +33,43 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.deleteDocSet, true);
+      query = '{ nDocSets nDocuments }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.data.nDocSets, 0);
+      t.equal(result.data.nDocuments, 0);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Reload Deleted DocSet (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(2);
+      const selectors = {
+        lang: 'eng',
+        abbr: 'ust',
+      };
+      const pk = pkWithDoc('../test_data/usx/web_rut.usx', selectors, {}, {}, [], [])[0];
+      let query = '{ docSets { id } }';
+      let result = await pk.gqlQuery(query);
+      query = `mutation { deleteDocSet(docSetId: "${result.data.docSets[0].id}") }`;
+      result = await pk.gqlQuery(query);
       query = '{ docSets { id } }';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 0);
+      const content = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_rut.usx'));
+
+      t.doesNotThrow(
+        () => pk.importDocument(
+          selectors,
+          'usx',
+          content,
+          {},
+        ),
+      );
     } catch (err) {
       console.log(err);
     }

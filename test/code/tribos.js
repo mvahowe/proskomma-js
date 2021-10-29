@@ -770,7 +770,7 @@ test(
                  }
                }`;
       */
-      const ts = Date.now();
+      //const ts = Date.now();
       result = await pk.gqlQuery(query);
       // console.log(Date.now() - ts, 'msec')
       // console.log(result);

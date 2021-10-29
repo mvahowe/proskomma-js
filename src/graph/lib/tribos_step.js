@@ -73,7 +73,7 @@ const doAncestorStep = (docSet, allNodes, nodeLookup, result, queryStep, matches
 
 // The nth-generation descendants of each node (where 1 === child)
 const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
-  const descendantIds = [];
+  const descendantIds = new Set([]);
 
   const getDescendants = (node, depth) => {
     const childIds = docSet.unsuccinctifyScopes(node.is)
@@ -81,7 +81,7 @@ const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matc
       .map(s => s[2].split('/')[2]);
 
     if (depth <= 1 || depth === null) {
-      childIds.forEach(n => descendantIds.push(n));
+      childIds.forEach(n => descendantIds.add(n));
     }
 
     if (depth === null || depth > 1) {
@@ -105,7 +105,7 @@ const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matc
     getDescendants(node, descendantGen);
   }
   return {
-    data: [...descendantIds.entries()]
+    data: [...Array.from(descendantIds).entries()]
       .filter(n => descendantNo < 0 || n[0] === descendantNo)
       .map(n => n[1])
       .map(nid => allNodes[nodeLookup.get(nid)]),
@@ -114,7 +114,7 @@ const doDescendantsStep = (docSet, allNodes, nodeLookup, result, queryStep, matc
 
 // The leaves of each node
 const doLeavesStep = (docSet, allNodes, nodeLookup, result) => {
-  const leafIds = [];
+  const leafIds = new Set([]);
 
   const getLeaves = node => {
     const childIds = docSet.unsuccinctifyScopes(node.is)
@@ -122,7 +122,7 @@ const doLeavesStep = (docSet, allNodes, nodeLookup, result) => {
       .map(s => s[2].split('/')[2]);
 
     if (childIds.length === 0) {
-      leafIds.push(docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1]);
+      leafIds.add(docSet.unsuccinctifyScopes(node.bs)[0][2].split('/')[1]);
     } else {
       childIds.map(nid => allNodes[nodeLookup.get(nid)]).forEach(n => getLeaves(n));
     }
@@ -131,7 +131,7 @@ const doLeavesStep = (docSet, allNodes, nodeLookup, result) => {
   for (const node of result.data) {
     getLeaves(node);
   }
-  return { data: leafIds.map(nid => allNodes[nodeLookup.get(nid)]) };
+  return { data: Array.from(leafIds).map(nid => allNodes[nodeLookup.get(nid)]) };
 };
 
 // The children of the parent of each node

@@ -305,6 +305,10 @@ class Proskomma {
       return false;
     }
 
+    for (const docId of Object.entries(this.documents).filter(([id, doc]) => doc.docSetId === docSetId).map(tup => tup[0])) {
+      this.deleteDocument(docSetId, docId, false);
+    };
+
     let selected = this.docSetsBySelector;
     const parentSelectors = this.selectors.slice(0, this.selectors.length - 1);
 
@@ -313,12 +317,19 @@ class Proskomma {
     }
 
     const lastSelectorName = this.selectors[this.selectors.length - 1].name;
-    delete selected[lastSelectorName];
+    const lastSelectorValue = this.docSets[docSetId].selectors[lastSelectorName];
+
+    if (!selected[lastSelectorValue]) {
+      throw new Error(`Could not find docSetId '${docSetId}' in docSetsBySelector in deleteDocSet`);
+    };
+    delete selected[lastSelectorValue];
     delete this.docSets[docSetId];
     return true;
   }
 
-  deleteDocument(docSetId, documentId) {
+  deleteDocument(docSetId, documentId, maybeDeleteDocSet) {
+    maybeDeleteDocSet = maybeDeleteDocSet === undefined ? true : maybeDeleteDocSet;
+
     if (!(docSetId in this.docSets)) {
       return false;
     }
@@ -327,13 +338,15 @@ class Proskomma {
       return false;
     }
 
+    delete this.documents[documentId];
+
     if (this.docSets[docSetId].docIds.length > 1) {
       this.docSets[docSetId].docIds = this.docSets[docSetId].docIds.filter(i => i !== documentId);
-    } else {
-      delete this.docSets[docSetId];
+      this.rehashDocSet(docSetId);
+    } else if (maybeDeleteDocSet) {
+      this.deleteDocSet(docSetId);
     }
-    delete this.documents[documentId];
-    return this.rehashDocSet(docSetId);
+    return true;
   }
 
   rehashDocSet(docSetId) {
