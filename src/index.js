@@ -306,7 +306,7 @@ class Proskomma {
     }
 
     for (const docId of Object.entries(this.documents).filter(([id, doc]) => doc.docSetId === docSetId).map(tup => tup[0])) {
-      this.deleteDocument(docSetId, docId, false);
+      this.deleteDocument(docSetId, docId, false, false);
     };
 
     let selected = this.docSetsBySelector;
@@ -327,8 +327,9 @@ class Proskomma {
     return true;
   }
 
-  deleteDocument(docSetId, documentId, maybeDeleteDocSet) {
+  deleteDocument(docSetId, documentId, maybeDeleteDocSet, maybeRehashDocSet) {
     maybeDeleteDocSet = maybeDeleteDocSet === undefined ? true : maybeDeleteDocSet;
+    maybeRehashDocSet = maybeRehashDocSet === undefined ? true : maybeRehashDocSet;
 
     if (!(docSetId in this.docSets)) {
       return false;
@@ -342,7 +343,10 @@ class Proskomma {
 
     if (this.docSets[docSetId].docIds.length > 1) {
       this.docSets[docSetId].docIds = this.docSets[docSetId].docIds.filter(i => i !== documentId);
-      this.rehashDocSet(docSetId);
+
+      if (maybeRehashDocSet) {
+        this.rehashDocSet(docSetId);
+      }
     } else if (maybeDeleteDocSet) {
       this.deleteDocSet(docSetId);
     }
