@@ -61,9 +61,6 @@ class Document {
       case 'usx':
         this.processUsx(contentString);
         break;
-      case 'lexicon':
-        this.processLexicon(contentString);
-        break;
       case 'tsv':
         this.processTSV(contentString);
         break;
@@ -158,14 +155,6 @@ class Document {
     t = Date.now();
     buildChapterVerseIndex(this);
     maybePrint(`CV indexes in ${Date.now() - t} msec`);
-  }
-
-  processLexicon(lexiconString) {
-    const parser = this.makeParser();
-    parseLexicon(lexiconString, parser);
-    this.headers = parser.headers;
-    this.succinctPass1(parser);
-    this.succinctPass2(parser);
   }
 
   succinctFilter(filterOptions) {

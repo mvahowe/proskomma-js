@@ -11,10 +11,6 @@ const pkWithDoc = (fp, selectors, options, customTags, emptyBlocks, tags) => {
   const content = fse.readFileSync(path.resolve(__dirname, fp));
   let contentType = fp.split('.').pop();
 
-  if (contentType === 'xml') {
-    contentType = 'lexicon';
-  }
-
   const pk = new Proskomma();
   const pkDoc = pk.importDocument(
     selectors,
@@ -36,10 +32,6 @@ const customPkWithDoc = (pkClass, fp, selectors, options) => {
   const content = fse.readFileSync(path.resolve(__dirname, fp));
   let contentType = fp.split('.').pop();
 
-  if (contentType === 'xml') {
-    contentType = 'lexicon';
-  }
-
   const pk = new pkClass();
   const pkDoc = pk.importDocument(
     selectors,
@@ -57,9 +49,6 @@ const pkWithDocs = (contentSpecs) => {
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     let contentType = fp.split('.').pop();
 
-    if (contentType === 'xml') {
-      contentType = 'lexicon';
-    }
     pk.importDocument(
       selectors,
       contentType,
@@ -77,9 +66,6 @@ const customPkWithDocs = (pkClass, contentSpecs) => {
     const content = fse.readFileSync(path.resolve(__dirname, fp));
     let contentType = fp.split('.').pop();
 
-    if (contentType === 'xml') {
-      contentType = 'lexicon';
-    }
     pk.importDocument(
       selectors,
       contentType,
@@ -98,10 +84,6 @@ const pkWithDocSetDocs = (fps, selectors, options) => {
   const fpContent = [];
   fps.forEach(fp => fpContent.push(fse.readFileSync(path.resolve(__dirname, fp))));
   let contentType = fps[0].split('.').pop();
-
-  if (contentType === 'xml') {
-    contentType = 'lexicon';
-  }
 
   const pk = new Proskomma();
   const pkDocs = pk.importDocuments(
