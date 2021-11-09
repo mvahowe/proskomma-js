@@ -9,7 +9,7 @@ const testGroup = 'Graph Document';
 
 const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
-  abbr: 'ust',
+  abbr: 'web',
 })[0];
 
 const pk2 = new Proskomma();

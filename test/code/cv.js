@@ -9,6 +9,11 @@ const pk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'web',
 })[0];
 
+const pk2 = pkWithDoc('../test_data/usfm/web_psa51.usfm', {
+  lang: 'eng',
+  abbr: 'web',
+})[0];
+
 const chapterQuery = `cv (chapter:"3") { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const verseQuery = `cv (chapter:"3" verses:["6"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
@@ -16,6 +21,7 @@ const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) {
 const repeatChapterVersesQuery = `cv (chapterVerses:"3:16-3:18" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
 const singleChapterVersesQuery = `cv (chapterVerses:"3:16-18" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
 const singleVerseChapterVersesQuery = `cv (chapterVerses:"3:16" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
+const multiParaSingleVerseChapterVersesQuery = `cv (chapterVerses:"51:1") { text }`;
 
 test(
   `Chapter (${testGroup})`,
@@ -63,6 +69,24 @@ test(
       t.equal([...wordTokens].reverse()[0].payload, 'her');
       t.ok(cv[0].text.startsWith('She went down'));
       t.ok(cv[0].text.endsWith('told her. '));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Multi-Para Verse (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = `{ documents { ${multiParaSingleVerseChapterVersesQuery} } }`;
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const cv = result.data.documents[0].cv;
+      t.ok(cv[0].text.startsWith('Have mercy'));
+      t.ok(cv[0].text.endsWith('transgressions.'));
+      t.ok(cv[0].text.includes('kindness. According'));
     } catch (err) {
       console.log(err);
     }

@@ -60,7 +60,7 @@ test(
       t.equal(result.errors, undefined);
       const itemGroups = result.data.documents[0].mainSequence.itemGroups;
       t.equal(itemGroups.length, 3);
-      t.equal(itemGroups[1].tokens.length, 56);
+      t.equal(itemGroups[1].tokens.length, 57);
       t.equal(itemGroups[1].wordLikes.length, 27);
       t.equal(itemGroups[1].scopeLabels.length, 4);
       t.equal(itemGroups[1].items.filter(i => i.type === 'token')[0].payload, 'Instead');

@@ -13,7 +13,7 @@ const countItems = (docSet, succinct) => {
   return count;
 };
 
-const itemsByIndex= (docSet, mainSequence, index, includeContext) => {
+const itemsByIndex = (docSet, mainSequence, index, includeContext) => {
   let ret = [];
 
   if (!index) {
@@ -84,7 +84,7 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
   const scopes2array = {};
   let waitingScopes = new Set([]);
 
-  for (const block of blocks) {
+  for (const [blockN, block] of blocks.entries()) {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
     const startBlockScope = ['scope', 'start', blockScope];
@@ -103,6 +103,8 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
           ...docSet.unsuccinctifyItems(block.c, {}, block.nt.nByte(0), allBlockScopes),
           endBlockScope,
         ],
+      ).concat(
+        (blockN !== blocks.length - 1) ? [['token', 'lineSpace', ' ']] : [],
       )
     ) {
       if (item[0] === 'scope' && item[1] === 'start') {
