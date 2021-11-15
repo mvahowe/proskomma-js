@@ -71,6 +71,7 @@ const newBlock = (document, seqId, blockN, blockScope, blockGrafts, buildCV) => 
 
   const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
   pushSuccinctScopeBytes(newBlock.bs, itemEnum[`startScope`], scopeTypeByte, scopeBitBytes);
+  newBlock.bs.trim();
 
   if (blockGrafts) {
     updateBlockGrafts(
