@@ -32,7 +32,7 @@ const lexingRegexes = [
     'wordLike',
     xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})'),
   ],
-  ['printable', 'lineSpace', xre('([\\p{Separator}]{1,127})')],
+  ['printable', 'lineSpace', xre('([\\p{Separator}\t]{1,127})')],
   ['printable', 'punctuation', xre('([\\p{Punctuation}\\p{Math_Symbol}\\p{Currency_Symbol}\\p{Modifier_Symbol}\\p{Other_Symbol}])')],
   ['bad', 'unknown', xre('(.)')],
 ];
