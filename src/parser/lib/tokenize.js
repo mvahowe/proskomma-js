@@ -2,17 +2,18 @@ const xre = require('xregexp');
 const { mainRegex, lexingRegexes } = require('../lexers/lexingRegexes');
 
 const tokenTypes = {};
-
+const unionComponents = [];
 for (const lr of lexingRegexes) {
-  if (['eol', 'lineSpace', 'punctuation', 'wordLike'].includes(lr[1])) {
+  if (['wordLike', 'eol', 'lineSpace', 'punctuation', 'unknown'].includes(lr[1])) {
     tokenTypes[lr[1]] = xre(`^${lr[2].xregexp.source}$`);
+    unionComponents.push(lr[2]);
   }
 }
 
 const tokenizeString = str => {
+  const unionRegex = xre.union(unionComponents);
   const ret = [];
-
-  for (const token of xre.match(str, mainRegex, 'all')) {
+  for (const token of xre.match(str, unionRegex, 'all')) {
     let tokenType;
 
     if (xre.test(token, tokenTypes['wordLike'])) {
