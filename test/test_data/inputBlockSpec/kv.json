@@ -175,8 +175,8 @@
       },
       {
         "type": "token",
-        "subType": "lineSpace",
-        "payload": " "
+        "subType": "eol",
+        "payload": "\n"
       },
       {
         "type": "token",

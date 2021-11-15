@@ -5,7 +5,6 @@ const test = require('tape');
 const { pkWithDoc } = require('../lib/load');
 
 const { blocksSpec2Query } = require('../../src/util/blocksSpec');
-const { Proskomma } = require('../../src');
 const { Validator } = require('jsonschema');
 const { serializedSchema } = require('proskomma-utils');
 

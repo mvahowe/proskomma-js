@@ -149,7 +149,13 @@ const treeToInputBlock = treeJson => {
   return ret;
 };
 
-const escapePayload = str => str.replace('\\', '\\\\').replace('"', '\\"');
+const escapePayload =
+    str =>
+      str.replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r');
+
 const object2Query = obs =>
   '[' +
   obs.map(
@@ -157,7 +163,13 @@ const object2Query = obs =>
   ).join(',') +
   ']';
 const oneObject2Query = ob => `{\n      type: "${ob.type}" \n      subType: "${ob.subType}" \n      payload: "${escapePayload(ob.payload)}"}`;
-const blocksSpec2Query = bSpec => '[\n' + bSpec.map(b => `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) + ']';
+const blocksSpec2Query =
+    bSpec =>
+      '[\n' +
+      bSpec.map(
+        b =>
+          `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) +
+      ']';
 
 module.exports = {
   tokenizeString, tsvToInputBlock, treeToInputBlock, blocksSpec2Query, object2Query, oneObject2Query,
