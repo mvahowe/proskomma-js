@@ -5,7 +5,7 @@ const tokenTypes = {};
 
 for (const lr of lexingRegexes) {
   if (['eol', 'lineSpace', 'punctuation', 'wordLike'].includes(lr[1])) {
-    tokenTypes[lr[1]] = lr[2];
+    tokenTypes[lr[1]] = xre(`^${lr[2].xregexp.source}$`);
   }
 }
 
