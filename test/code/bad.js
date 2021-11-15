@@ -30,15 +30,17 @@ test(
 );
 
 test(
-  `Unknown (${testGroup})`,
+  `Handle exotic symbols (not really ${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
+      t.plan(3);
       const query = `{ documents { mainSequence { blocks { items { type subType payload } } } } }`;
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       const firstItem = result.data.documents[0].mainSequence.blocks[0].items[0];
-      t.equal(firstItem.subType, 'unknown');
+      t.equal(firstItem.subType, 'punctuation');
+      const secondItem = result.data.documents[0].mainSequence.blocks[0].items[1];
+      t.equal(secondItem.subType, 'punctuation');
     } catch (err) {
       console.log(err);
     }
