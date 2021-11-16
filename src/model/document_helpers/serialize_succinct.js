@@ -21,11 +21,13 @@ const serializeSuccinctSequence = seqOb => {
     ret.chapters = {};
 
     for (const [chK, chV] of Object.entries(seqOb.chapters || {})) {
+      chV.trim();
       ret.chapters[chK] = chV.base64();
     }
     ret.chapterVerses = {};
 
     for (const [chvK, chvV] of Object.entries(seqOb.chapterVerses || {})) {
+      chvV.trim();
       ret.chapterVerses[chvK] = chvV.base64();
     }
 
@@ -37,6 +39,9 @@ const serializeSuccinctSequence = seqOb => {
 };
 
 const serializeSuccinctBlock = blockOb => {
+  for (const succName of ['bs', 'bg', 'c', 'is', 'os', 'nt']) {
+    blockOb[succName].trim();
+  }
   return {
     bs: blockOb.bs.base64(),
     bg: blockOb.bg.base64(),

@@ -8,6 +8,7 @@ const serializeSuccinct = docSet => {
   };
 
   for (const [eK, eV] of Object.entries(docSet.enums)) {
+    eV.trim();
     ret.enums[eK] = eV.base64();
   }
   ret.docs = {};
