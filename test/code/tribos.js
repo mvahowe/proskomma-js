@@ -783,7 +783,7 @@ test(
 );
 
 test(
-  `Syntax Tree (${testGroup})`,
+  `Syntax Tree Doc (${testGroup})`,
   async function (t) {
     try {
       t.plan(3);

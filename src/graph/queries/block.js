@@ -1,4 +1,5 @@
 import xre from 'xregexp';
+import itemGroupType from './itemGroup';
 const {
   GraphQLObjectType,
   GraphQLInt,
@@ -266,6 +267,39 @@ const blockType = new GraphQLObjectType({
           }
           return ret;
         },
+    },
+    itemGroups: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+      description: 'Block items grouped by scopes or milestones',
+      args: {
+        byScopes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Produce one itemGroup for every different match of the list of scopes',
+        },
+        byMilestones: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Start a new itemGroup whenever a milestone in the list is encountered',
+        },
+        includeContext: {
+          type: GraphQLBoolean,
+          description: 'If true, adds scope and nextToken information to each token',
+        },
+      },
+      resolve: (root, args, context) => {
+        if (args.byScopes && args.byMilestones) {
+          throw new Error('Cannot specify both byScopes and byMilestones');
+        }
+
+        if (!args.byScopes && !args.byMilestones) {
+          throw new Error('Must specify either byScopes or byMilestones');
+        }
+
+        if (args.byScopes) {
+          return context.docSet.sequenceItemsByScopes([root], args.byScopes, args.includeContext || false);
+        } else {
+          return context.docSet.sequenceItemsByMilestones([root], args.byMilestones, args.includeContext || false);
+        }
+      },
     },
     dump: {
       type: GraphQLNonNull(GraphQLString),

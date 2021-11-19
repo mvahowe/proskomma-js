@@ -14,7 +14,7 @@ const pk2 = pkWithDoc('../test_data/usfm/headings.usfm', {
 })[0];
 const pk3 = pkWithDoc('../test_data/usx/web_rut.usx', {
   lang: 'eng',
-  abbr: 'ust',
+  abbr: 'web',
 })[0];
 const pk4 = pkWithDoc('../test_data/usfm/footnote.usfm', {
   lang: 'eng',
@@ -30,7 +30,7 @@ const pk6 = pkWithDoc('../test_data/usfm/whitespace.usfm', {
 })[0];
 const pk7 = pkWithDoc('../test_data/usx/web_psa.usx', {
   lang: 'eng',
-  abbr: 'ust',
+  abbr: 'web',
 })[0];
 
 const blocksText = blocks => blocks.map(
@@ -517,4 +517,30 @@ test(
   },
 );
 
-
+test(
+  `ItemGroups (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(5);
+      const query = `{documents {
+      mainSequence {
+        blocks(positions:0) {
+          itemGroups(byScopes:["chapter/", "verse/"]) {
+            scopeLabels(startsWith:["chapter/", "verse/"])
+            text
+          }
+        }
+      }
+    } }`;
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const groups = result.data.documents[0].mainSequence.blocks[0].itemGroups;
+      t.equal(groups.length, 9);
+      t.ok(groups[2].scopeLabels.includes('chapter/1'));
+      t.ok(groups[2].scopeLabels.includes('verse/3'));
+      t.ok(groups[2].text.startsWith('Elimelech'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
