@@ -1,5 +1,7 @@
 import {
-  enumStringIndex, enumRegexIndexTuples, unpackEnum,
+  enumRegexIndexTuples,
+  enumStringIndex,
+  unpackEnum,
 } from 'proskomma-utils';
 
 const {
@@ -83,6 +85,14 @@ const docSetType = new GraphQLObjectType({
           type: GraphQLBoolean,
           description: 'If true, documents where all search terms match will be included',
         },
+        withScopes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return documents where the list of scopes is used',
+        },
+        allScopes: {
+          type: GraphQLBoolean,
+          description: 'If true, documents where all scopes are found will be included',
+        },
         withHeaderValues: {
           type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
           description: 'Only return documents with the specified header key/values',
@@ -127,6 +137,23 @@ const docSetType = new GraphQLObjectType({
 
         if (args.withMatchingChars) {
           ret = ret.filter(d => sequenceHasMatchingChars(root, d.sequences[d.mainId], args.withMatchingChars, args.allChars));
+        }
+
+        if (args.withScopes) {
+          const allSequenceScopes = doc => new Set(
+            doc.sequences[doc.mainId].blocks
+              .map(b => context.docSet.unsuccinctifyBlockScopeLabelsSet(b))
+              .map(s => Array.from(s))
+              .reduce((a, b) => a.concat(b)),
+          );
+
+          ret = ret.filter(
+            d => {
+              const docScopes = allSequenceScopes(d);
+              const minHits = args.allScopes ? args.withScopes.length : 1;
+              return args.withScopes.filter(s => docScopes.has(s)).length >= minHits;
+            },
+          );
         }
 
         if (args.withHeaderValues) {
@@ -215,7 +242,7 @@ const docSetType = new GraphQLObjectType({
           description: 'Whether to coerce the strings (toLower|toUpper|none)',
         },
       },
-      resolve: (root, args, context) => {
+      resolve: (root, args) => {
         if (args.coerceCase && !['toLower', 'toUpper', 'none'].includes(args.coerceCase)) {
           throw new Error(`coerceCase, when present, must be 'toLower', 'toUpper' or 'none', not '${args.coerceCase}'`);
         }

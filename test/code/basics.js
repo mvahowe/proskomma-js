@@ -231,6 +231,30 @@ test(
 );
 
 test(
+  `Filter docSets documents by withScopes (${testGroup})`,
+  async function (t) {
+    try {
+      const docSetDocuments = ds => ds
+        .map(ds => ds.documents)
+        .reduce((a, b) => a.concat(b));
+      t.plan(4);
+      let query = `{ docSets { documents(withScopes: ["blockTag/p" "blockTag/q" "blockTag/q2"]) { id header(id:"bookCode")} } }`;
+      let result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      let documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 4);
+      query = `{ docSets { documents(withScopes: ["blockTag/q" "blockTag/q2"] allScopes:true) { id header(id:"bookCode")} } }`;
+      result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      documents = docSetDocuments(result.data.docSets);
+      t.equal(documents.length, 2);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Filter docSets documents by withHeaderValues (${testGroup})`,
   async function (t) {
     try {
