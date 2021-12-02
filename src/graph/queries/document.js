@@ -408,7 +408,7 @@ const documentType = new GraphQLObjectType({
         return root.sequences[root.mainId].blocks.map(
           b => {
             const tokens = context.docSet.unsuccinctifyItems(b.c, { tokens: true }, null);
-            let ret= tokens.map(t => t[2]).join('').trim();
+            let ret = tokens.map(t => t[2]).join('').trim();
 
             if (args.normalizeSpace) {
               ret = ret.replace(/[ \t\n\r]+/g, ' ');
@@ -533,8 +533,11 @@ const documentType = new GraphQLObjectType({
 
         for (const verse of verses) {
           ret.push(
-            do_cv(root, { ...args, verses: [verse] }, context, true, args.mappedDocSetId)
-              .map(ig => [[`fromChapter/${args.chapter}`,`fromVerse/${verse}`, ...ig[0]], ig[1]]),
+            do_cv(root, {
+              ...args,
+              verses: [verse],
+            }, context, true, args.mappedDocSetId)
+              .map(ig => [[`fromChapter/${args.chapter}`, `fromVerse/${verse}`, ...ig[0]], ig[1]]),
           );
         }
         return ret;
@@ -609,6 +612,89 @@ const documentType = new GraphQLObjectType({
         context.doc = root;
         const ci = root.chapterIndex(args.chapter);
         return [args.chapter, ci || {}];
+      },
+    },
+    cvMatching: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
+      description: 'Verses matching the arguments',
+      args: {
+        withChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return verses containing a token whose payload is an exact match to one of the specified strings',
+        },
+        withMatchingChars: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Return verses containing a token whose payload matches the specified regexes',
+        },
+        withScopes: {
+          type: GraphQLList(GraphQLNonNull(GraphQLString)),
+          description: 'Only return blocks where the list of scopes is open',
+        },
+        allChars: {
+          type: GraphQLBoolean,
+          description: 'If true, verses where all regexes match will be included',
+        },
+      },
+      resolve: (root, args, context) => {
+        if (!args.withChars && !args.withMatchingChars && !args.withScopes) {
+          throw new Error('Must specify at least one of withChars or withMatchingChars or withScopes');
+        }
+
+        if (args.withChars && args.withMatchingChars) {
+          throw new Error('Must not specify both withChars and withMatchingChars');
+        }
+
+        context.docSet = root.processor.docSets[root.docSetId];
+
+        let charsRegexes;
+
+        if (args.withChars && args.allChars) {
+          charsRegexes = args.withChars.map(s => xre(`^${s}$`));
+        } else if (args.withChars) {
+          charsRegexes = [xre.union(args.withChars.map(s => xre(`^${s}$`)))];
+        } else if (args.withMatchingChars && args.allChars) {
+          charsRegexes = args.withMatchingChars.map(s => xre(s));
+        } else if (args.withMatchingChars) {
+          charsRegexes = [xre.union(args.withMatchingChars.map(s => xre(s)))];
+        }
+
+        const allScopesInGroup = scopes => {
+          for (const expectedScope of args.withScopes || []) {
+            if (!scopes.includes(expectedScope)) {
+              return false;
+            }
+          }
+          return true;
+        };
+
+        const allRegexesInGroup = items => {
+          for (const regex of charsRegexes || []) {
+            let found = false;
+
+            for (const item of items) {
+              if (xre.test(item[2], regex)) {
+                found = true;
+                break;
+              }
+            }
+
+            if (!found) {
+              return false;
+            }
+          }
+          return true;
+        };
+
+        const itemGroups = context.docSet.sequenceItemsByScopes(
+          root.sequences[root.mainId].blocks,
+          ['chapter/', 'verses/'],
+        );
+        return itemGroups.filter(
+          ig =>
+            allScopesInGroup(
+              ig[1].filter(i => i[0] === 'scope' && i[1] === 'start').map(s => s[2])) &&
+            allRegexesInGroup(ig[1]),
+        );
       },
     },
   }),
