@@ -309,7 +309,6 @@ const specs = (pt) => [
       ],
     ],
     parser: {
-      baseSequenceTypez: 'mainLike',
       newBlock: true,
       newScopes: [],
     },
