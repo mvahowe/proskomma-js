@@ -655,11 +655,11 @@ const documentType = new GraphQLObjectType({
         if (args.withChars && args.allChars) {
           charsRegexes = args.withChars.map(s => xre(`^${s}$`));
         } else if (args.withChars) {
-          charsRegexes = [xre.union(args.withChars.map(s => xre(`^${s}$`)))];
+          charsRegexes = [xre.union(args.withChars.map(s => xre(`^${s}$`, 'i')))];
         } else if (args.withMatchingChars && args.allChars) {
-          charsRegexes = args.withMatchingChars.map(s => xre(s));
+          charsRegexes = args.withMatchingChars.map(s => xre(s, 'i'));
         } else if (args.withMatchingChars) {
-          charsRegexes = [xre.union(args.withMatchingChars.map(s => xre(s)))];
+          charsRegexes = [xre.union(args.withMatchingChars.map(s => xre(s, 'i')))];
         }
 
         const allScopesInGroup = scopes => {
