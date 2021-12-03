@@ -16,6 +16,15 @@ const pk3 = pkWithDoc('../test_data/usfm/table_at_end.usfm', {
   lang: 'fra',
   abbr: 'hello',
 })[0];
+const pk4 = pkWithDoc('../test_data/usfm/table_no_end_cells.usfm', {
+  lang: 'fra',
+  abbr: 'hello',
+})[0];
+
+const pk5 = pkWithDoc('../test_data/usfm/table_in_intro.usfm', {
+  lang: 'fra',
+  abbr: 'hello',
+})[0];
 
 const checkResult = (t, result) => {
   const blocks = result.data.documents[0].mainSequence.blocks;
@@ -31,7 +40,7 @@ const checkResult = (t, result) => {
   t.false(blocks[5].scopeLabels.includes('table'));
 };
 
-const query = `{ documents { mainSequence { blocks { scopeLabels bs { payload } items {type subType payload} } } } }`;
+const query = `{ documents { sequences { id nBlocks } mainSequence { blocks { scopeLabels bs { payload } bg { subType payload } text items { type subType payload } } } } }`;
 
 test(
   `USX (${testGroup})`,
@@ -53,6 +62,39 @@ test(
     try {
       t.plan(11);
       const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      checkResult(t, result);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `USFM in intro (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const result = await pk5.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const mainSequence = result.data.documents[0].mainSequence;
+      t.equal(mainSequence.blocks.length, 1);
+      const firstMainBlock = mainSequence.blocks[0];
+      t.equal(firstMainBlock.text, 'First verse!');
+      const introId = firstMainBlock.bg.filter(g => g.subType === 'introduction')[0].payload;
+      t.equal(result.data.documents[0].sequences.filter(s => s.id === introId)[0].nBlocks, 6);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `USFM no cell end tags (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(11);
+      const result = await pk4.gqlQuery(query);
       t.equal(result.errors, undefined);
       checkResult(t, result);
     } catch (err) {
