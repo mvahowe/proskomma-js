@@ -106,7 +106,7 @@ test(
 );
 
 test(
-  `scope (${testGroup})`,
+  `one scope (${testGroup})`,
   async function (t) {
     try {
       t.plan(3);
@@ -115,6 +115,39 @@ test(
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].cvMatching.length, 1);
       t.ok(result.data.documents[0].cvMatching[0].text.includes('Purify'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `either of 2 scopes (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { cvMatching(withScopes:["attribute/spanWithAtts/w/strong/0/H517", "attribute/spanWithAtts/w/strong/0/H2398"]) { scopeLabels text } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].cvMatching.length, 2);
+      t.ok(result.data.documents[0].cvMatching[0].text.includes('Purify'));
+      t.ok(result.data.documents[0].cvMatching[1].text.includes('Hide'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `both of 2 scopes (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(3);
+      const query = '{ documents { cvMatching(withScopes:["attribute/spanWithAtts/w/strong/0/H3526", "attribute/spanWithAtts/w/strong/0/H2398"] allScopes:true) { scopeLabels text } } }';
+      const result = await pk2.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].cvMatching.length, 1);
+      t.ok(result.data.documents[0].cvMatching[0].text.includes('Hide'));
     } catch (err) {
       console.log(err);
     }

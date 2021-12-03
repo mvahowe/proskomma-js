@@ -634,6 +634,10 @@ const documentType = new GraphQLObjectType({
           type: GraphQLBoolean,
           description: 'If true, verses where all regexes match will be included',
         },
+        allScopes: {
+          type: GraphQLBoolean,
+          description: 'If true, verses where all scopes match will be included',
+        },
       },
       resolve: (root, args, context) => {
         if (!args.withChars && !args.withMatchingChars && !args.withScopes) {
@@ -667,6 +671,17 @@ const documentType = new GraphQLObjectType({
           return true;
         };
 
+        const anyScopesInGroup = scopes => {
+          const expectedScopes = args.withScopes || [];
+
+          for (const expectedScope of expectedScopes) {
+            if (scopes.includes(expectedScope)) {
+              return true;
+            }
+          }
+          return expectedScopes.length === 0;
+        };
+
         const allRegexesInGroup = items => {
           for (const regex of charsRegexes || []) {
             let found = false;
@@ -691,7 +706,7 @@ const documentType = new GraphQLObjectType({
         );
         return itemGroups.filter(
           ig =>
-            allScopesInGroup(
+            (args.allScopes ? allScopesInGroup : anyScopesInGroup)(
               ig[1].filter(i => i[0] === 'scope' && i[1] === 'start').map(s => s[2])) &&
             allRegexesInGroup(ig[1]),
         );
