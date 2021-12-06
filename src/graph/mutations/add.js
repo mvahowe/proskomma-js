@@ -32,6 +32,10 @@ const addMutations = {
         type: GraphQLNonNull(GraphQLString),
         description: 'The document content as a string',
       },
+      tags: {
+        type: GraphQLList(GraphQLNonNull(GraphQLString)),
+        description: 'A list of tags to be added',
+      },
     },
     resolve: (root, args) => {
       const selectorsObject = {};
@@ -41,7 +45,7 @@ const addMutations = {
           selectorsObject[s.key] = s.value;
         },
       );
-      return !!root.importDocument(selectorsObject, args.contentType, args.content);
+      return !!root.importDocument(selectorsObject, args.contentType, args.content, null, null, null, args.tags || []);
     },
   },
   newSequence: {

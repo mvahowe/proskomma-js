@@ -16,7 +16,7 @@ test(
   `Document (${testGroup})`,
   async function (t) {
     try {
-      t.plan(7);
+      t.plan(10);
       let query = '{ docSets { id } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -24,15 +24,20 @@ test(
       query = `mutation { addDocument(` +
         `selectors: [{key: "lang", value: "eng"}, {key: "abbr", value: "ust"}], ` +
         `contentType: "usx", ` +
-        `content: """${content}""") }`;
+        `content: """${content}"""` +
+        `tags: ["foo", "baa"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.addDocument, true);
-      query = '{ docSets { id documents { id mainSequence { nBlocks } } } }';
+      query = '{ docSets { id documents { id tags mainSequence { nBlocks } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 1);
+      console.log(JSON.stringify(result.data.docSets, null, 2));
       t.equal(result.data.docSets[0].documents.length, 1);
       t.ok(result.data.docSets[0].documents[0].mainSequence.nBlocks > 0);
+      t.equal(result.data.docSets[0].documents[0].tags.length, 2);
+      t.ok(result.data.docSets[0].documents[0].tags.includes('foo'));
+      t.ok(result.data.docSets[0].documents[0].tags.includes('baa'));
     } catch (err) {
       console.log(err);
     }
