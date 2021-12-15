@@ -32,7 +32,6 @@ test(
       query = '{ docSets { id documents { id tags mainSequence { nBlocks } } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 1);
-      console.log(JSON.stringify(result.data.docSets, null, 2));
       t.equal(result.data.docSets[0].documents.length, 1);
       t.ok(result.data.docSets[0].documents[0].mainSequence.nBlocks > 0);
       t.equal(result.data.docSets[0].documents[0].tags.length, 2);

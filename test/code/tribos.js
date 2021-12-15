@@ -439,6 +439,34 @@ test(
 );
 
 test(
+  `values (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(8);
+      const pk = new Proskomma();
+      importGenealogyNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { tribos(query:"nodes/values{@label, @shoeSize}") } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const tribos = JSON.parse(result.data.documents[0].treeSequence.tribos);
+      t.equal(tribos.errors, undefined);
+      const values = tribos.data;
+      t.ok('label' in values);
+      t.ok('shoeSize' in values);
+      t.ok(!('name' in values));
+      t.ok(values.label.includes('grandma'));
+      t.ok(values.shoeSize.includes('78'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `Predicate (${testGroup})`,
   async function (t) {
     try {

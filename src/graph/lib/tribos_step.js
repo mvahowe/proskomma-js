@@ -220,13 +220,50 @@ const doBranchStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) 
   let fields = new Set([]);
 
   if (matches[2]) {
-    fields = new Set(matches[2].split(',').map(f => f.trim()));
+    fields = new Set(
+      matches[2]
+        .split(',')
+        .map(f => f.trim()),
+    );
   }
 
   for (const node of result.data) {
     ret.push(nodeDetails(docSet, node, allNodes, nodeLookup, fields, true));
   }
   return { data: ret };
+};
+
+// All values across nodes for the specified content fields
+const doValuesStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) => {
+  const nodeFields = [];
+  let fields = new Set([]);
+
+  if (matches[2]) {
+    fields = new Set(
+      matches[2]
+        .split(',')
+        .map(f => f.trim())
+        .filter(f => f.startsWith('@')),
+    );
+  }
+
+  for (const node of result.data) {
+    nodeFields.push(nodeDetails(docSet, node, allNodes, nodeLookup, fields, true));
+  }
+  const values = {};
+
+  for (const field of Array.from(fields).map(f => f.substring(1))) {
+    values[field] = Array.from(
+      new Set(
+        nodeFields
+          .map(nd => nd.content)
+          .filter(nd => field in nd)
+          .map(nd => nd[field])
+          .sort(),
+      ),
+    );
+  }
+  return { data: values };
 };
 
 // The node details
@@ -377,6 +414,18 @@ const stepActions = [
     inputType: 'nodes',
     outputType: 'node',
     function: doBranchStep,
+  },
+  {
+    regex: xre(`^values(\\{([^}]+)\\})?${predicateRegex}$`),
+    doc: {
+      title: 'Values',
+      syntax: 'values{ @foo ... }',
+      description: 'Returns all values across nodes for the specified fields',
+    },
+    predicateCapture: 4,
+    inputType: 'nodes',
+    outputType: 'values',
+    function: doValuesStep,
   },
 ];
 
