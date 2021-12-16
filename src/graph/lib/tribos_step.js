@@ -250,12 +250,14 @@ const doValuesStep = (docSet, allNodes, nodeLookup, result, queryStep, matches) 
   for (const node of result.data) {
     nodeFields.push(nodeDetails(docSet, node, allNodes, nodeLookup, fields, true));
   }
+
   const values = {};
 
   for (const field of Array.from(fields).map(f => f.substring(1))) {
     values[field] = Array.from(
       new Set(
         nodeFields
+          .filter(nd => nd.content)
           .map(nd => nd.content)
           .filter(nd => field in nd)
           .map(nd => nd[field])
