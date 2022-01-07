@@ -58,7 +58,7 @@ const tsvToInputBlock = (tsv, hasHeadings) => {
 
 const tsvHeadingTags = tsv => {
   const firstRow = tsv.split(/[\n\r]+/)[0];
-  return firstRow.split('\t').map((c, n) => `col${n}:${c.trim}`);
+  return firstRow.split('\t').map((c, n) => `col${n}:${c.trim()}`);
 };
 
 const treeToInputBlock = treeJson => {
