@@ -56,6 +56,11 @@ const tsvToInputBlock = (tsv, hasHeadings) => {
   return ret;
 };
 
+const tsvHeadingTags = tsv => {
+  const firstRow = tsv.split(/[\n\r]+/)[0];
+  return firstRow.split('\t').map((c, n) => `col${n}:${c.trim}`);
+};
+
 const treeToInputBlock = treeJson => {
   const ret = [];
 
@@ -173,5 +178,11 @@ const blocksSpec2Query =
       ']';
 
 module.exports = {
-  tokenizeString, tsvToInputBlock, treeToInputBlock, blocksSpec2Query, object2Query, oneObject2Query,
+  tokenizeString,
+  tsvToInputBlock,
+  tsvHeadingTags,
+  treeToInputBlock,
+  blocksSpec2Query,
+  object2Query,
+  oneObject2Query,
 };
