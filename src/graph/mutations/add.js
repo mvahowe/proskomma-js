@@ -6,9 +6,6 @@ const {
   GraphQLInt,
 } = require('graphql');
 const {
-  scopeEnum,
-  pushSuccinctScopeBytes,
-  itemEnum,
   pushSuccinctGraftBytes,
 } = require('proskomma-utils');
 const { remakeBlocks } = require('../lib/remake_blocks');
@@ -68,6 +65,10 @@ const addMutations = {
         type: GraphQLBoolean,
         description: 'If true, graft to the first block of the main sequence',
       },
+      tags: {
+        type: GraphQLList(GraphQLNonNull(GraphQLString)),
+        description: 'A list of tags to be added',
+      },
     },
     resolve: (root, args) => {
       const document = root.documents[args.documentId];
@@ -77,7 +78,7 @@ const addMutations = {
         throw new Error(`Document '${args.documentId}' not found`);
       }
 
-      const newSeqId = document.newSequence(args.type);
+      const newSeqId = document.newSequence(args.type, args.tags);
 
       if (args.blocksSpec) {
         remakeBlocks(docSet, document, document.sequences[newSeqId], args.blocksSpec);

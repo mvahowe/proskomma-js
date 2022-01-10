@@ -47,7 +47,7 @@ test(
   `Sequence (${testGroup})`,
   async function (t) {
     try {
-      t.plan(7);
+      t.plan(9);
       let query = '{ documents { id nSequences sequences { id type } } }';
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
@@ -56,16 +56,20 @@ test(
       t.equal(result.data.documents[0].sequences.filter(s => s.type === 'banana').length, 0);
       query = `mutation { newSequence(` +
         ` documentId: "${docId}"` +
-        ` type: "banana") }`;
+        ` type: "banana"` +
+        ` tags: ["yellow", "tasty"]) }`;
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const newSequenceId = result.data.newSequence;
-      query = '{ documents { id nSequences sequences { id type } } }';
+      query = '{ documents { id nSequences sequences { id type tags } } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.documents[0].nSequences, nSequences + 1);
-      t.equal(result.data.documents[0].sequences.filter(s => s.type === 'banana').length, 1);
+      const bananaSequence = result.data.documents[0].sequences.filter(s => s.type === 'banana');
+      t.equal(bananaSequence.length, 1);
       t.equal(result.data.documents[0].sequences.filter(s => s.id === newSequenceId).length, 1);
+      t.ok(bananaSequence[0].tags.includes('yellow'));
+      t.ok(bananaSequence[0].tags.includes('tasty'));
     } catch (err) {
       console.log(err);
     }

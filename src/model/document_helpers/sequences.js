@@ -43,13 +43,13 @@ const gcSequences = document => {
   return changed;
 };
 
-const newSequence = (document, seqType) => {
+const newSequence = (document, seqType, tags) => {
   const seqId = generateId();
 
   document.sequences[seqId] = {
     id: seqId,
     type: seqType,
-    tags: new Set(),
+    tags: new Set(tags || []),
     isBaseType: (seqType in document.baseSequenceTypes),
     blocks: [],
   };

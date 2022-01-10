@@ -275,8 +275,8 @@ class Document {
     return gcSequences(this);
   }
 
-  newSequence(seqType) {
-    return newSequence(this, seqType);
+  newSequence(seqType, tags) {
+    return newSequence(this, seqType, tags);
   }
 
   deleteSequence(seqId) {
