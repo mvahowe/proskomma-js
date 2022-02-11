@@ -44,6 +44,19 @@ const treeSequenceType = new GraphQLObjectType({
         return new Tribos().parse(context.docSet, root.blocks, args.query);
       },
     },
+    triboi: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      args: {
+        queries: {
+          type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+          description: 'The Tribos query strings',
+        },
+      },
+      description: 'The JSON results for the Tribos queries, as an array of strings',
+      resolve: (root, args, context) => {
+        return args.queries.map(q => new Tribos().parse(context.docSet, root.blocks, q));
+      },
+    },
     tribosDoc: {
       type: GraphQLNonNull(GraphQLString),
       description: 'Tribos documentation',

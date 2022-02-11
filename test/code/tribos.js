@@ -46,6 +46,35 @@ test(
 );
 
 test(
+  `Triboi nodes by id (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(10);
+      const pk = new Proskomma();
+      importGenealogyNodes(pk);
+      let query = '{docSets { document(bookCode:"N00") { sequences(types:"tree") { id } } } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const treeSequenceId = result.data.docSets[0].document.sequences[0].id;
+      query = `{documents { treeSequence(id:"${treeSequenceId}") { triboi(queries:["#{0, 4}", "#{1, 2, 3}"]) } } }`;
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const triboi = result.data.documents[0].treeSequence.triboi.map(t => JSON.parse(t));
+      t.equal(triboi[0].errors, undefined);
+      t.equal(triboi[1].errors, undefined);
+      t.equal(triboi[0].data.length, 2);
+      t.equal(triboi[0].data[0].id, '0');
+      t.equal(triboi[0].data[1].id, '4');
+      t.equal(triboi[1].data.length, 3);
+      t.equal(triboi[1].data[0].id, '1');
+      t.equal(triboi[1].data[2].id, '3');
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `root node (${testGroup})`,
   async function (t) {
     try {
