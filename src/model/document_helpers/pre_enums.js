@@ -3,8 +3,8 @@ const { nComponentsForScope } = require('proskomma-utils');
 const recordPreEnums = (docSet, seq) => {
   docSet.recordPreEnum('scopeBits', '0');
 
-  for (const block of seq.blocks) {
-    for (const item of [...block.items, block.bs, ...block.bg]) {
+  for (const [blockN, block] of seq.blocks.entries()) {
+    for (const [itemN, item] of [...block.items, block.bs, ...block.bg].entries()) {
       if (item.subType === 'wordLike') {
         docSet.recordPreEnum('wordLike', item.payload);
       } else if (['lineSpace', 'eol', 'punctuation', 'softLineBreak', 'bareSlash', 'unknown'].includes(item.subType)) {

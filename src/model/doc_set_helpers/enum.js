@@ -21,7 +21,9 @@ const recordPreEnum = (docSet, category, value) => {
   if (!(category in docSet.preEnums)) {
     throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
   }
-
+  if (value.length > 255) {
+    console.log('Value length of', value.length, 'in recordPreEnum');
+  }
   if (!docSet.preEnums[category].has(value)) {
     docSet.preEnums[category].set(
       value,
@@ -39,7 +41,10 @@ const buildEnum = (docSet, category, preEnumOb) => {
   const sortedPreEnums = new Map([...preEnumOb.entries()]);
 
   for (const enumText of sortedPreEnums.keys()) {
-    docSet.enums[category].pushCountedString(enumText);
+    if (enumText.length > 255) {
+      console.log('enum text for', category, 'has length', enumText.length, 'in buildEnum - truncating');
+    }
+    docSet.enums[category].pushCountedString(enumText.substring(0, 255));
   }
   docSet.enums[category].trim();
 };
