@@ -11,7 +11,7 @@ const docSetType = require('./doc_set');
 const documentType = require('./document');
 const inputKeyValueType = require('./input_key_value');
 const selectorSpecType = require('./selector_spec');
-const diffRecordType = require('./diff_record');
+// const diffRecordType = require('./diff_record');
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -198,6 +198,7 @@ const schemaQueries = new GraphQLObjectType({
         }
       },
     },
+    /*
     diff: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(diffRecordType))),
       description: 'Compare two documents',
@@ -320,6 +321,8 @@ const schemaQueries = new GraphQLObjectType({
         return diffRecords;
       },
     },
+
+ */
   },
 });
 
