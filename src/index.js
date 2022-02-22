@@ -1,9 +1,16 @@
 import xre from 'xregexp';
+
 const { Mutex } = require('async-mutex');
-const { graphql } = require('graphql');
+const {
+  graphql,
+  graphqlSync,
+} = require('graphql');
 const BitSet = require('bitset');
 
-const { ByteArray, generateId } = require('proskomma-utils');
+const {
+  ByteArray,
+  generateId,
+} = require('proskomma-utils');
 
 const packageJson = require('../package.json');
 const { DocSet } = require('./model/doc_set');
@@ -12,7 +19,10 @@ const { gqlSchema } = require('./graph');
 
 const { lexingRegexes } = require('./parser/lexers/lexingRegexes');
 const blocksSpecUtils = require('./util/blocksSpec');
-const { flattenNodes, numberNodes } = require('./parser/lexers/nodes');
+const {
+  flattenNodes,
+  numberNodes,
+} = require('./parser/lexers/nodes');
 
 const tree2nodes = tree => flattenNodes(numberNodes(tree));
 
@@ -288,7 +298,7 @@ class Proskomma {
 
       const isHeaderLine = headers.includes(firstWord);
 
-      if (inHeaders && !isHeaderLine && firstWord!== '\\mt') {
+      if (inHeaders && !isHeaderLine && firstWord !== '\\mt') {
         ret.push('\\mt1 USFM');
       }
       ret.push(line);
@@ -307,7 +317,7 @@ class Proskomma {
 
     for (const docId of Object.entries(this.documents).filter(([id, doc]) => doc.docSetId === docSetId).map(tup => tup[0])) {
       this.deleteDocument(docSetId, docId, false, false);
-    };
+    }
 
     let selected = this.docSetsBySelector;
     const parentSelectors = this.selectors.slice(0, this.selectors.length - 1);
@@ -321,7 +331,8 @@ class Proskomma {
 
     if (!selected[lastSelectorValue]) {
       throw new Error(`Could not find docSetId '${docSetId}' in docSetsBySelector in deleteDocSet`);
-    };
+    }
+    ;
     delete selected[lastSelectorValue];
     delete this.docSets[docSetId];
     return true;
@@ -509,11 +520,23 @@ class Proskomma {
     }
   }
 
+  gqlQuerySync(query, callback) {
+    const result = graphqlSync(gqlSchema, query, this, {});
+
+    if (callback) {
+      callback(result);
+    }
+    return result;
+  }
+
   serializeSuccinct(docSetId) {
     return this.docSets[docSetId].serializeSuccinct();
   }
 }
 
 module.exports = {
-  Proskomma, lexingRegexes, blocksSpecUtils, tree2nodes,
+  Proskomma,
+  lexingRegexes,
+  blocksSpecUtils,
+  tree2nodes,
 };

@@ -70,6 +70,22 @@ test(
 );
 
 test(
+  `Sync query (${testGroup})`,
+  function (t) {
+    try {
+      t.plan(2);
+      const query = '{ id }';
+      const pk = new Proskomma();
+      const result = pk.gqlQuerySync(query);
+      t.equal(result.errors, undefined);
+      t.ok('id' in result.data);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
   `DocSets (${testGroup})`,
   async function (t) {
     try {
