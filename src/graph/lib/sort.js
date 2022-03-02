@@ -3,7 +3,9 @@ const { ptBooks } = require('proskomma-utils');
 const ptCompare = (a, b) => {
   const bcA = a.headers.bookCode || 'GEN';
   const bcB = b.headers.bookCode || 'GEN';
-  return ptBooks[bcA].position - ptBooks[bcB].position;
+  const posA = ptBooks[bcA] ? ptBooks[bcA].position : 999;
+  const posB = ptBooks[bcB] ? ptBooks[bcB].position : 999;
+  return posA - posB;
 };
 
 const alphaCompare = (a, b) => {
