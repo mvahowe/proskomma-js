@@ -20,6 +20,10 @@ pk2.importUsfmPeriph(
   content,
   {},
 );
+const pk3 = pkWithDoc('../test_data/usfm/78-GALspavbl.usfm', {
+  lang: 'spa',
+  abbr: 'vbl',
+})[0];
 
 test(
   `DocSetId (${testGroup})`,
@@ -53,6 +57,26 @@ test(
       t.equal(result.data.documents[0].toc, 'The Book of Ruth');
     } catch
     (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Headers with accents (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const query = '{ documents { headers { key value }  toc: header(id:"toc") } }';
+      const result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('headers' in result.data.documents[0]);
+      t.equal(result.data.documents[0].headers.length, 5);
+      t.equal(result.data.documents[0].headers.filter(h => h.key === 'toc')[0].value, 'Gálatas');
+      t.equal(result.data.documents[0].toc, 'Gálatas');
+    } catch
+      (err) {
       console.log(err);
     }
   },
