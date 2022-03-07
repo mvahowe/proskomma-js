@@ -280,9 +280,9 @@ const blockType = new GraphQLObjectType({
           type: GraphQLList(GraphQLNonNull(GraphQLString)),
           description: 'Start a new itemGroup whenever a milestone in the list is encountered',
         },
-        includeContext: {
+        splitOccurrences: {
           type: GraphQLBoolean,
-          description: 'If true, adds scope and nextToken information to each token',
+          description: 'If true, make a new itemGroup for each new match, even if the matching scopes are unchanged',
         },
       },
       resolve: (root, args, context) => {
@@ -295,9 +295,9 @@ const blockType = new GraphQLObjectType({
         }
 
         if (args.byScopes) {
-          return context.docSet.sequenceItemsByScopes([root], args.byScopes, args.includeContext || false);
+          return context.docSet.sequenceItemsByScopes([root], args.byScopes, args.splitOccurrences || false);
         } else {
-          return context.docSet.sequenceItemsByMilestones([root], args.byMilestones, args.includeContext || false);
+          return context.docSet.sequenceItemsByMilestones([root], args.byMilestones);
         }
       },
     },

@@ -32,6 +32,10 @@ const pk7 = pkWithDoc('../test_data/usx/web_psa.usx', {
   lang: 'eng',
   abbr: 'web',
 })[0];
+const pk8 = pkWithDoc('../test_data/usfm/add_test.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
 
 const blocksText = blocks => blocks.map(
   b => b.items.map(
@@ -539,6 +543,32 @@ test(
       t.ok(groups[2].scopeLabels.includes('chapter/1'));
       t.ok(groups[2].scopeLabels.includes('verse/3'));
       t.ok(groups[2].text.startsWith('Elimelech'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `ItemGroups with splitOccurrences (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { blocks { itemGroups(byScopes:"span/add" splitOccurrences:true) {' +
+        'scopeLabels(startsWith:["chapter/", "verses/"]) text' +
+        '} } } } }';
+      let result = await pk8.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].mainSequence.blocks[0].itemGroups.length, 2);
+      t.equal(
+        result.data.documents[0].mainSequence.blocks[0].itemGroups[0].text,
+        'Actually, one was Yahweh, and the other two were angels',
+      );
+      t.equal(
+        result.data.documents[0].mainSequence.blocks[0].itemGroups[1].text,
+        'to one of them',
+      );
+      // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups, null, 2))
     } catch (err) {
       console.log(err);
     }

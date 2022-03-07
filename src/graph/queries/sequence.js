@@ -268,7 +268,7 @@ const sequenceType = new GraphQLObjectType({
         },
         splitOccurrences: {
           type: GraphQLBoolean,
-          description: 'If true, make a new itemGroup for each new match, even if the matching scopes are identical',
+          description: 'If true, make a new itemGroup for each new match, even if the matching scopes are unchanged',
         },
       },
       resolve: (root, args, context) => {

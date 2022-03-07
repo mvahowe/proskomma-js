@@ -62,11 +62,11 @@ test(
       t.equal(result.data.documents[0].mainSequence.itemGroups.length, 2);
       t.equal(
         result.data.documents[0].mainSequence.itemGroups[0].text,
-        'Actually, one was Yahweh, and the other two were angels'
+        'Actually, one was Yahweh, and the other two were angels',
       );
       t.equal(
         result.data.documents[0].mainSequence.itemGroups[1].text,
-        'to one of them'
+        'to one of them',
       );
       // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups, null, 2))
     } catch (err) {
