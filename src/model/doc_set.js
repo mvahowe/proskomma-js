@@ -329,8 +329,8 @@ class DocSet {
     return blockHasMatchingItem(this, block, testFunction, options);
   }
 
-  sequenceItemsByScopes(blocks, byScopes) {
-    return sequenceItemsByScopes(this, blocks, byScopes);
+  sequenceItemsByScopes(blocks, byScopes, splitOccurrences) {
+    return sequenceItemsByScopes(this, blocks, byScopes, splitOccurrences);
   }
 
   sequenceItemsByMilestones(blocks, byMilestones) {

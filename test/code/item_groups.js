@@ -12,13 +12,17 @@ const pk2 = pkWithDoc('../test_data/usfm/ust_psa_with_ts.usfm', {
   lang: 'eng',
   abbr: 'ust',
 })[0];
+const pk3 = pkWithDoc('../test_data/usfm/add_test.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+})[0];
 
 test(
   `Text by scopes (${testGroup})`,
   async function (t) {
     try {
       t.plan(14);
-      const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"] includeContext:true) {' +
+      const query = '{ documents { mainSequence { itemGroups(byScopes:["chapter/", "verse/"]) {' +
         'scopeLabels chapterScope: scopeLabels(startsWith:"chapter/") text dump' +
         '} } } }';
       let result = await pk.gqlQuery(query);
@@ -39,6 +43,32 @@ test(
       t.ok(dumped[0].startsWith('ItemGroup'));
       t.ok(dumped[1].includes('verse/2'));
       t.ok(dumped[4].endsWith('-verse/2-'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Text by scopes with splitOccurrences (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(4);
+      const query = '{ documents { mainSequence { itemGroups(byScopes:"span/add" splitOccurrences:true) {' +
+        'scopeLabels(startsWith:["chapter/", "verses/"]) text' +
+        '} } } }';
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.documents[0].mainSequence.itemGroups.length, 2);
+      t.equal(
+        result.data.documents[0].mainSequence.itemGroups[0].text,
+        'Actually, one was Yahweh, and the other two were angels'
+      );
+      t.equal(
+        result.data.documents[0].mainSequence.itemGroups[1].text,
+        'to one of them'
+      );
+      // console.log(JSON.stringify(result.data.documents[0].mainSequence.itemGroups, null, 2))
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +107,7 @@ test(
 );
 
 test(
-  `Text by scopes (${testGroup})`,
+  `Text by milestones (${testGroup})`,
   async function (t) {
     try {
       t.plan(9);
@@ -100,3 +130,4 @@ test(
     }
   },
 );
+
