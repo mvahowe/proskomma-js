@@ -50,7 +50,7 @@ const itemsByIndex = (docSet, mainSequence, index, includeContext) => {
   return ret;
 };
 
-const sequenceItemsByScopes = (docSet, blocks, byScopes, splitOccurrences) => {
+const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
   // Return array of [scopes, items]
   // Scan block items, track scopes
   // If all scopes found:
@@ -58,7 +58,6 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes, splitOccurrences) => {
   //   - if that scope string doesn't exist, add to lookup table and push array
   //   - add item to array matching scope string
   let allBlockScopes = [];
-  splitOccurrences = splitOccurrences || false;
 
   const allScopesPresent = () => {
     for (const requiredScope of byScopes) {
@@ -78,13 +77,11 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes, splitOccurrences) => {
     return null;
   };
 
-  const scopesString = () => byScopes.map(s => matchingScope(s)).sort().join('_');
-
   docSet.maybeBuildEnumIndexes();
   const ret = [];
-  const scopes2array = {};
   let waitingScopes = new Set([]);
   let scopeMatchEnded = true; // Always start new itemGroup the first time
+
   for (const [blockN, block] of blocks.entries()) {
     const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
     const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
@@ -120,10 +117,7 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes, splitOccurrences) => {
       }
 
       if (allScopesPresent()) {
-        const scopeKey = scopesString();
-
-        if (!(scopeKey in scopes2array) || (splitOccurrences && scopeMatchEnded)) {
-          scopes2array[scopeKey] = ret.length;
+        if (scopeMatchEnded) {
           ret.push([[...allBlockScopes], []]);
         }
         ret[ret.length - 1][1].push(item);

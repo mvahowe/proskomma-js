@@ -550,11 +550,11 @@ test(
 );
 
 test(
-  `ItemGroups with splitOccurrences (${testGroup})`,
+  `ItemGroups with multiple hits per block (${testGroup})`,
   async function (t) {
     try {
       t.plan(4);
-      const query = '{ documents { mainSequence { blocks { itemGroups(byScopes:"span/add" splitOccurrences:true) {' +
+      const query = '{ documents { mainSequence { blocks { itemGroups(byScopes:"span/add") {' +
         'scopeLabels(startsWith:["chapter/", "verses/"]) text' +
         '} } } } }';
       let result = await pk8.gqlQuery(query);
