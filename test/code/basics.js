@@ -490,3 +490,45 @@ test(
     }
   },
 );
+
+test(
+  `Unique Chars (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      const query = '{ docSets { uniqueChars } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      // console.log(JSON.stringify(result.data, null, 2));
+      t.ok(result.data.docSets[0].uniqueChars.length > 0);
+      t.ok(result.data.docSets[0].uniqueChars.includes(' '));
+      t.ok(result.data.docSets[0].uniqueChars.includes('!'));
+      t.ok(result.data.docSets[0].uniqueChars.includes('A'));
+      t.ok(result.data.docSets[0].uniqueChars.includes('1'));
+      t.ok(result.data.docSets[0].uniqueChars.includes('א'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Unique Chars String (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      const query = '{ docSets { uniqueCharsString } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      // console.log(JSON.stringify(result.data, null, 2));
+      t.ok(result.data.docSets[0].uniqueCharsString.length > 0);
+      t.ok(result.data.docSets[0].uniqueCharsString.includes(' '));
+      t.ok(result.data.docSets[0].uniqueCharsString.includes('!'));
+      t.ok(result.data.docSets[0].uniqueCharsString.includes('A'));
+      t.ok(result.data.docSets[0].uniqueCharsString.includes('1'));
+      t.ok(result.data.docSets[0].uniqueCharsString.includes('א'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);

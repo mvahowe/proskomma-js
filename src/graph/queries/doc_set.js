@@ -259,6 +259,34 @@ const docSetType = new GraphQLObjectType({
         return Array.from(new Set(tokens));
       },
     },
+    uniqueChars: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
+      description: 'A list of unique characters in the docSet',
+      resolve: root => {
+        const retSet = new Set([]);
+
+        for (const token of [...unpackEnum(root.enums.wordLike), ...unpackEnum(root.enums.notWordLike)]) {
+          for (const char of token.split('')) {
+            retSet.add(char);
+          }
+        }
+        return Array.from(retSet).sort();
+      },
+    },
+    uniqueCharsString: {
+      type: GraphQLNonNull(GraphQLString),
+      description: 'A string containing the unique characters in the docSet',
+      resolve: root => {
+        const retSet = new Set([]);
+
+        for (const token of [...unpackEnum(root.enums.wordLike), ...unpackEnum(root.enums.notWordLike)]) {
+          for (const char of token.split('')) {
+            retSet.add(char);
+          }
+        }
+        return Array.from(retSet).sort().join('');
+      },
+    },
   },
 },
 );
