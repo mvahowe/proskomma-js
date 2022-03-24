@@ -15,6 +15,7 @@ const pk2 = pkWithDoc('../test_data/usfm/web_psa51.usfm', {
 })[0];
 
 const chapterQuery = `cv (chapter:"3") { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
+const chapterVersesChapterQuery = `cv (chapterVerses:"3") { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const verseQuery = `cv (chapter:"3" verses:["6"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const versesQuery = `cv (chapter:"3" verses:["6", "7"]) { scopeLabels, items { type subType payload } tokens { subType payload } text }`;
 const chapterVersesQuery = `cv (chapterVerses:"3:18-4:1" includeContext:true ) { scopeLabels items { type subType payload position } tokens { subType payload position } text }`;
@@ -221,6 +222,26 @@ test(
       t.ok(cv[0].scopeLabels.includes('verses/16'));
       t.ok(cv[0].text.startsWith('When she came'));
       t.ok(cv[0].text.endsWith('done for her. '));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `ChapterVersesVerse (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      const query = `{ documents { ${chapterVersesChapterQuery} } }`;
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const cv = result.data.documents[0].cv;
+      t.equal(cv.length, 18);
+      t.ok(cv[0].scopeLabels.includes('chapter/3'));
+      t.ok(cv[0].scopeLabels.includes('verse/1'));
+      t.ok(cv[17].scopeLabels.includes('chapter/3'));
+      t.ok(cv[17].scopeLabels.includes('verse/18'));
     } catch (err) {
       console.log(err);
     }

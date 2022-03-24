@@ -208,6 +208,16 @@ const do_cv_string_arg = (root, args, context, mainSequence) => {
   } else if (xre.test(args.chapterVerses, xre('^[0-9]+:[0-9]+$'))) { // c:v
     const [ch, v] = args.chapterVerses.split(':');
     return do_chapterVerses(root, context, mainSequence, `${ch}:${v}`, `${ch}:${v}`, args.includeContext);
+  } else if (xre.test(args.chapterVerses, xre('^[0-9]+$'))) { // c
+    const ch = args.chapterVerses;
+    const cvi = root.chapterVerseIndex(ch);
+
+    if (!cvi) {
+      throw new Error(`No chapter ${ch} found`);
+    }
+
+    const verseNs = cvi.map((c, n) => [n, c]).filter(nc => nc[1].length > 0).map(nc => nc[0]);
+    return do_chapterVerses(root, context, mainSequence, `${ch}:${Math.min(verseNs)}`, `${ch}:${Math.max(verseNs)}`, args.includeContext);
   } else {
     throw new Error(`Could not parse chapterVerses string '${args.chapterVerses}'`);
   }
