@@ -1,4 +1,5 @@
 import xre from 'xregexp';
+import keyValueType from './key_value';
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -190,6 +191,17 @@ const tableSequenceType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'A list of the tags of this sequence',
       resolve: root => Array.from(root.tags),
+    },
+    tagsKv: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
+      description: 'A list of the tags of this sequence as key/value tuples',
+      resolve: root => Array.from(root.tags).map(t => {
+        if (t.includes(':')) {
+          return [t.substring(0, t.indexOf(':')), t.substring(t.indexOf(':') + 1)];
+        } else {
+          return [t, ''];
+        }
+      }),
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),

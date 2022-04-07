@@ -54,6 +54,17 @@ const docSetType = new GraphQLObjectType({
       description: 'A list of the tags of this docSet',
       resolve: root => Array.from(root.tags),
     },
+    tagsKv: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
+      description: 'A list of the tags of this docSet as key/value tuples',
+      resolve: root => Array.from(root.tags).map(t => {
+        if (t.includes(':')) {
+          return [t.substring(0, t.indexOf(':')), t.substring(t.indexOf(':') + 1)];
+        } else {
+          return [t, ''];
+        }
+      }),
+    },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),
       description: 'Whether or not the docSet has the specified tag',

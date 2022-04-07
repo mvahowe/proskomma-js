@@ -12,6 +12,7 @@ const xre = require('xregexp');
 const kvEntryType = require('./kv_entry');
 const keyMatchesType = require('./input_key_matches');
 const keyValuesType = require('./input_key_values');
+const keyValueType = require('./key_value');
 
 const kvSequenceType = new GraphQLObjectType({
   name: 'kvSequence',
@@ -158,6 +159,17 @@ const kvSequenceType = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'A list of the tags of this sequence',
       resolve: root => Array.from(root.tags),
+    },
+    tagsKv: {
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
+      description: 'A list of the tags of this sequence as key/value tuples',
+      resolve: root => Array.from(root.tags).map(t => {
+        if (t.includes(':')) {
+          return [t.substring(0, t.indexOf(':')), t.substring(t.indexOf(':') + 1)];
+        } else {
+          return [t, ''];
+        }
+      }),
     },
     hasTag: {
       type: GraphQLNonNull(GraphQLBoolean),

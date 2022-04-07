@@ -181,7 +181,7 @@ test(
 
 test(
   `Throw on bad tag format (${testGroup})`,
-  // Destructive so do last (ish)!
+  // Destructive!
   async function (t) {
     try {
       t.plan(2);
@@ -204,7 +204,7 @@ test(
 
 test(
   `Support colon tag format (${testGroup})`,
-  // Destructive so do last!
+  // Destructive!
   async function (t) {
     try {
       t.plan(2);
@@ -226,3 +226,22 @@ test(
   },
 );
 
+test(
+  `tagsKv on docSet (${testGroup})`,
+  // Relies on destructive tests above
+  async function (t) {
+    try {
+      t.plan(5);
+      pk.docSetList()[0].tags.add('baa');
+      const result = pk.gqlQuerySync('{ docSets { tagsKv { key value } } }');
+      t.equal(result.errors, undefined);
+      const tagsKv = result.data.docSets[0].tagsKv;
+      t.equal(tagsKv.filter(kv => kv.key === 'baa').length, 1);
+      t.equal(tagsKv.filter(kv => kv.key === 'frob').length, 1);
+      t.equal(tagsKv.filter(kv => kv.key === 'baa')[0].value, '');
+      t.ok(tagsKv.filter(kv => kv.key === 'frob')[0].value.startsWith('Fooie'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
