@@ -6,12 +6,70 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { bookCodeCompareFunctions } = require('../lib/sort');
 const { docSetType } = require('./doc_set');
 const { documentType } = require('./document');
 const { inputKeyValueType } = require('./input_key_value');
 const { selectorSpecType } = require('./selector_spec');
-// const diffRecordType = require('./diff_record');
+
+const {
+  keyValueSchemaString,
+  keyValueResolvers,
+} = require('./key_value');
+const {
+  cvSchemaString,
+  cvResolvers,
+} = require('./cv');
+const {
+  idPartsSchemaString,
+  idPartsResolvers,
+} = require('./idParts');
+const { inputAttSpecSchemaString } = require('./input_att_spec');
+const { keyMatchesSchemaString } = require('./input_key_matches');
+const { inputKeyValueSchemaString } = require('./input_key_value');
+const { keyValuesSchemaString } = require('./input_key_values');
+const { inputItemObjectSchemaString } = require('./inputItemObject');
+const {
+  itemSchemaString,
+  itemResolvers,
+} = require('./item');
+
+const combinedSchema = `
+      type StubQuery {
+        KeyValue: KeyValue!
+        cv: cv!
+        idParts: idParts!
+        AttSpec: AttSpec!
+        KeyMatches: KeyMatches!
+        InputKeyValue: InputKeyValue!
+        KeyValues: KeyValues!
+        InputItemObject: InputItemObject!
+        Item: Item!
+      }
+      ${keyValueSchemaString}
+      ${cvSchemaString}
+      ${idPartsSchemaString}
+      ${inputAttSpecSchemaString}
+      ${keyMatchesSchemaString}
+      ${inputKeyValueSchemaString}
+      ${keyValuesSchemaString}
+      ${inputItemObjectSchemaString}
+      ${itemSchemaString}
+  `;
+// console.log(combinedSchema);
+const executableSchema =
+  makeExecutableSchema({
+    typeDefs: combinedSchema,
+    resolvers: {
+      StubQuery: {
+        KeyValue: keyValueResolvers,
+        cv: cvResolvers,
+        idParts: idPartsResolvers,
+        Item: itemResolvers,
+      },
+    },
+  });
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -326,4 +384,7 @@ const schemaQueries = new GraphQLObjectType({
   },
 });
 
-module.exports = { schemaQueries };
+module.exports = {
+  schemaQueries,
+  executableSchema,
+};

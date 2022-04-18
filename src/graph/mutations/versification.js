@@ -8,7 +8,6 @@ const {
   vrs2json,
   reverseVersification,
   succinctifyVerseMappings,
-  mapVerse,
 } = require('proskomma-utils');
 
 const versificationMutations = {

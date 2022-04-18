@@ -5,6 +5,16 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const keyValuesSchemaString = `
+"""Key/Values Object"""
+type KeyValues {
+    """The key"""
+    key: String!
+    """The values"""
+    value: [String!]!
+}
+`;
+
 const keyValuesType = new GraphQLInputObjectType({
   name: 'KeyValues',
   description: 'Key/Values tuple',
@@ -20,4 +30,4 @@ const keyValuesType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { keyValuesType };
+module.exports = { keyValuesSchemaString, keyValuesType };

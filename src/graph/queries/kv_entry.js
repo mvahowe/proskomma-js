@@ -15,9 +15,7 @@ const kvEntryType = new GraphQLObjectType({
     key: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The key',
-      resolve: root => {
-        return root[0];
-      },
+      resolve: root => root[0],
     },
     secondaryKeys: {
       type: GraphQLList(GraphQLNonNull(keyValueType)),

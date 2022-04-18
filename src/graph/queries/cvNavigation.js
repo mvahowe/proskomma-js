@@ -5,7 +5,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const {cvType} = require('./cv');
+const { cvType } = require('./cv');
 
 const nv = (root, newVerseRange) => {
   const chapterN = parseInt(root[0]);

@@ -4,6 +4,16 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const keyMatchesSchemaString = `
+"""Key/Regex tuple"""
+type KeyMatches {
+  """The key"""
+  key: String!
+  """The regex to match"""
+  matches: String!
+}
+`;
+
 const keyMatchesType = new GraphQLInputObjectType({
   name: 'KeyMatches',
   description: 'Key/Regex tuple',
@@ -19,4 +29,4 @@ const keyMatchesType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { keyMatchesType };
+module.exports = { keyMatchesSchemaString, keyMatchesType };

@@ -6,6 +6,29 @@ const {
   GraphQLInt,
 } = require('graphql');
 
+const idPartsSchemaString = `
+"""Type-dependent parts of the ID header"""
+type idParts {
+  """The type of the ID"""
+  type: String
+  """An array of parts of the ID"""
+  parts: [String]
+  """A part of the ID, by index"""
+  part: String
+}
+`;
+
+const idPartsResolvers = {
+  type: root => root[0],
+  parts: root => root[1],
+  part: (root, args) => {
+    if (!root[1] || args.index < 0 || args.index >= root[1].length) {
+      return null;
+    }
+    return root[1][args.index];
+  },
+};
+
 const idPartsType = new GraphQLObjectType({
   name: 'idParts',
   description: 'Type-dependent parts of the ID header',
@@ -23,15 +46,19 @@ const idPartsType = new GraphQLObjectType({
     part: {
       type: GraphQLString,
       description: 'A part of the ID, by index',
-      args: { index: { type: GraphQLNonNull(GraphQLInt) } },
-      resolve: (root, args) => {
-        if (!root[1] || args.index < 0 || args.index >= root[1].length) {
-          return null;
-        }
-        return root[1][args.index];
+      args: {
+        index: {
+          type: GraphQLNonNull(GraphQLInt),
+          description: 'The numeric index of the part',
+        },
       },
+      resolve: idPartsResolvers.part,
     },
   }),
 });
 
-module.exports = { idPartsType };
+module.exports = {
+  idPartsSchemaString,
+  idPartsResolvers,
+  idPartsType,
+};

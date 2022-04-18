@@ -4,12 +4,23 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const inputItemObjectSchemaString = `
+"""Item for arguments"""
+type InputItemObject {
+    """The basic item type (token, scope or graft)'"""
+    type: String!
+    """The type-dependent subtype of the item"""
+    subType: String!
+    """The content of the item (the text for tokens, the label for scopes and the sequence id for grafts)"""
+    payload: String!
+}`;
+
 const inputItemObjectType = new GraphQLInputObjectType({
   name: 'InputItemObject',
   description: 'Item for arguments',
   fields: () => ({
     type: {
-      'type': GraphQLNonNull(GraphQLString),
+      type: GraphQLNonNull(GraphQLString),
       description: 'The basic item type (token, scope or graft)',
     },
     subType: {
@@ -23,4 +34,4 @@ const inputItemObjectType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { inputItemObjectType };
+module.exports = { inputItemObjectSchemaString, inputItemObjectType };

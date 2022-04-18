@@ -5,8 +5,11 @@ const {
 } = require('graphql');
 
 const keyValueSchemaString = `
-type keyValue {
+"""Key/Value tuple"""
+type KeyValue {
+    """The key"""
     key: String!
+    """The value"""
     value: String!
 }`;
 
