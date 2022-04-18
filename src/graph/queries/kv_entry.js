@@ -8,6 +8,23 @@ const {
 const { keyValueType } = require('./key_value');
 const { itemGroupType } = require('./itemGroup');
 
+const kvEntrySchemaString = `
+"""Key/Items tuple"""
+type kvEntry {
+    """The key"""
+    key: String!
+    """The secondary keys"""
+    secondaryKeys: [String!]
+    """The fields as itemGroups"""
+    itemGroups: [ItemGroup]!
+}`;
+
+const kvEntryResolvers = {
+  key: root => root[0],
+  secondaryKeys: root => root[1],
+  itemGroups: root => root[2],
+};
+
 const kvEntryType = new GraphQLObjectType({
   name: 'kvEntry',
   description: 'Key/Items tuple',
@@ -30,4 +47,8 @@ const kvEntryType = new GraphQLObjectType({
   }),
 });
 
-module.exports = { kvEntryType };
+module.exports = {
+  kvEntrySchemaString,
+  kvEntryResolvers,
+  kvEntryType,
+};

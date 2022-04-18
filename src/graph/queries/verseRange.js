@@ -6,6 +6,16 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const verseRangeSchemaString = `
+"""Information about a verse range (which may only cover one verse)"""
+type verseRange {
+  """The range, as it would be printed in a Bible"""
+  range: String!
+  """A list of verse numbers for this range"""
+  numbers: [Int!]!
+}
+`;
+
 const verseRangeType = new GraphQLObjectType({
   name: 'verseRange',
   description: 'Information about a verse range (which may only cover one verse)',
@@ -23,4 +33,4 @@ const verseRangeType = new GraphQLObjectType({
   }),
 });
 
-module.exports = { verseRangeType };
+module.exports = { verseRangeSchemaString, verseRangeType };

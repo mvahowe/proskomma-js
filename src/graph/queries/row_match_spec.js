@@ -5,6 +5,17 @@ const {
   GraphQLInt,
 } = require('graphql');
 
+const rowMatchSpecSchemaString = `
+"""Row Match Specification"""
+type rowMatchSpec {
+  """The position of the column in which to search a match"""
+  colN: Int!
+  """The regex to match"""
+  values: String!
+}
+`;
+
+
 const rowMatchSpecType = new GraphQLInputObjectType({
   name: 'rowMatchSpec',
   description: 'Row Match Specification',
@@ -20,4 +31,4 @@ const rowMatchSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { rowMatchSpecType };
+module.exports = { rowMatchSpecSchemaString, rowMatchSpecType };

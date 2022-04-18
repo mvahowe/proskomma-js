@@ -2,30 +2,46 @@ const {
   GraphQLObjectType,
   GraphQLInt,
   GraphQLString,
-  GraphQLList,
   GraphQLNonNull,
 } = require('graphql');
 
 const { mapVerse } = require('proskomma-utils');
-const {cvType} = require('./cv');
+const { orig } = require('./orig');
 
-const orig = new GraphQLObjectType({
-  name: 'orig',
-  description: 'Mapped verse information',
-  fields: () => ({
-    book: {
-      type: GraphQLString,
-      description: 'The book code',
-      resolve: root => root.book,
-    },
-    cvs: {
-      type: GraphQLNonNull(GraphQLList(cvType)),
-      description: 'A list of chapter-verse references',
-      resolve: root => root.cvs,
-    },
-  }),
-});
+const verseNumberSchemaString = `
+""""""
+type verseNumber {
+  number: Int!
+  range: String!
+  orig: orig!
+}
+`;
 
+const verseNumberResolvers = {
+  orig: (root, args, context) => {
+    const localBook = context.doc.headers.bookCode;
+    const localChapter = context.cvIndex[0];
+    const localVerse = root.number;
+    const mainSequence = context.doc.sequences[context.doc.mainId];
+
+    if (
+      mainSequence.verseMapping &&
+      'forward' in mainSequence.verseMapping &&
+      `${localChapter}` in mainSequence.verseMapping.forward
+    ) {
+      const mapping = mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
+      return ({
+        book: mapping[0],
+        cvs: mapping[1],
+      });
+    } else {
+      return ({
+        book: localBook,
+        cvs: [[localChapter, localVerse]],
+      });
+    }
+  },
+};
 
 const verseNumberType = new GraphQLObjectType({
   name: 'verseNumber',
@@ -44,31 +60,13 @@ const verseNumberType = new GraphQLObjectType({
     orig: {
       type: GraphQLNonNull(orig),
       description: 'The reference for this verse when mapped to \'original\' versification',
-      resolve: (root, args, context) => {
-        const localBook = context.doc.headers.bookCode;
-        const localChapter = context.cvIndex[0];
-        const localVerse = root.number;
-        const mainSequence = context.doc.sequences[context.doc.mainId];
-
-        if (
-          mainSequence.verseMapping &&
-          'forward' in mainSequence.verseMapping &&
-          `${localChapter}` in mainSequence.verseMapping.forward
-        ) {
-          const mapping = mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
-          return ({
-            book: mapping[0],
-            cvs: mapping[1],
-          });
-        } else {
-          return ({
-            book: localBook,
-            cvs: [[localChapter, localVerse]],
-          });
-        }
-      },
+      resolve: verseNumberResolvers.orig,
     },
   }),
 });
 
-module.exports = { verseNumberType };
+module.exports = {
+  verseNumberSchemaString,
+  verseNumberResolvers,
+  verseNumberType,
+};

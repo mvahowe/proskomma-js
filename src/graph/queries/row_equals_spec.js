@@ -6,6 +6,16 @@ const {
   GraphQLInt,
 } = require('graphql');
 
+const rowEqualsSpecSchemaString = `
+"""Row Equals Specification"""
+type rowEqualsSpec {
+  """The position of the column in which to search a match"""
+  colN: Int!
+  """The values to match"""
+  values: [String!]!
+}
+`;
+
 const rowEqualsSpecType = new GraphQLInputObjectType({
   name: 'rowEqualsSpec',
   description: 'Row Equals Specification',
@@ -21,4 +31,4 @@ const rowEqualsSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { rowEqualsSpecType };
+module.exports = { rowEqualsSpecSchemaString, rowEqualsSpecType };

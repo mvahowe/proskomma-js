@@ -34,6 +34,29 @@ const {
   itemSchemaString,
   itemResolvers,
 } = require('./item');
+const {
+  itemGroupSchemaString,
+  itemGroupResolvers,
+} = require('./itemGroup');
+const {
+  kvEntrySchemaString,
+  kvEntryResolvers,
+} = require('./kv_entry');
+const {
+  regexIndexSchemaString,
+  regexIndexResolvers,
+} = require('./regex_index');
+const { rowEqualsSpecSchemaString } = require('./row_equals_spec');
+const { rowMatchSpecSchemaString } = require('./row_match_spec');
+const { verseRangeSchemaString } = require('./verseRange');
+const {
+  origSchemaString,
+  origResolvers,
+} = require('./orig');
+const {
+  verseNumberSchemaString,
+  verseNumberResolvers,
+} = require('./verseNumber');
 
 const combinedSchema = `
       type StubQuery {
@@ -46,6 +69,14 @@ const combinedSchema = `
         KeyValues: KeyValues!
         InputItemObject: InputItemObject!
         Item: Item!
+        ItemGroup: ItemGroup!
+        kvEntry: kvEntry!
+        regexIndex: regexIndex!
+        rowEqualsSpec: rowEqualsSpec!
+        rowMatchSpec: rowMatchSpec!
+        verseRange: verseRange!
+        orig: orig!
+        verseNumber: verseNumber!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -56,6 +87,14 @@ const combinedSchema = `
       ${keyValuesSchemaString}
       ${inputItemObjectSchemaString}
       ${itemSchemaString}
+      ${itemGroupSchemaString}
+      ${kvEntrySchemaString}
+      ${regexIndexSchemaString}
+      ${rowEqualsSpecSchemaString}
+      ${rowMatchSpecSchemaString}
+      ${verseRangeSchemaString}
+      ${origSchemaString}
+      ${verseNumberSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -67,6 +106,10 @@ const executableSchema =
         cv: cvResolvers,
         idParts: idPartsResolvers,
         Item: itemResolvers,
+        ItemGroup: itemGroupResolvers,
+        kvEntry: kvEntryResolvers,
+        regexIndex: regexIndexResolvers,
+        verseNumber: verseNumberResolvers,
       },
     },
   });
