@@ -20,4 +20,4 @@ const rowMatchSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = rowMatchSpecType;
+module.exports = { rowMatchSpecType };

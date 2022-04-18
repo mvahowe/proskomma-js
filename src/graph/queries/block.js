@@ -1,5 +1,4 @@
 import xre from 'xregexp';
-import itemGroupType from './itemGroup';
 const {
   GraphQLObjectType,
   GraphQLInt,
@@ -11,8 +10,9 @@ const {
 const {
   headerBytes,
 } = require('proskomma-utils');
+import { itemGroupType } from './itemGroup';
 const { dumpBlock } = require('../lib/dump');
-const itemType = require('./item');
+const { itemType } = require('./item');
 
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {

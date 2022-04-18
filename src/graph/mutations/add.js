@@ -10,7 +10,7 @@ const {
 } = require('proskomma-utils');
 const { remakeBlocks } = require('../lib/remake_blocks');
 const { inputKeyValueType } = require('../queries/input_key_value');
-const inputBlockSpecType = require('../queries/inputBlockSpec');
+const { inputBlockSpecType } = require('../queries/inputBlockSpec');
 
 const addMutations = {
   addDocument: {
@@ -128,4 +128,4 @@ const addMutations = {
   },
 };
 
-module.exports = addMutations;
+module.exports = { addMutations };

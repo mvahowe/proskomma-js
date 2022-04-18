@@ -19,4 +19,4 @@ const rehashMutations = {
   },
 };
 
-module.exports = rehashMutations;
+module.exports = { rehashMutations };

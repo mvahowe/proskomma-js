@@ -22,7 +22,7 @@ const {
 
 const { documentType } = require('./document');
 const { keyValueType } = require('./key_value');
-const regexIndexType = require('./regex_index');
+const { regexIndexType } = require('./regex_index');
 const { inputKeyValueType } = require('./input_key_value');
 
 const docSetType = new GraphQLObjectType({

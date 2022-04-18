@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import {keyValueType} from './key_value';
+import { keyValueType } from './key_value';
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -10,9 +10,9 @@ const {
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
 
-const {cellType} = require('./cell');
-const rowMatchSpecType = require('./row_match_spec');
-const rowEqualsSpecType = require('./row_equals_spec');
+const { cellType } = require('./cell');
+const { rowMatchSpecType } = require('./row_match_spec');
+const { rowEqualsSpecType } = require('./row_equals_spec');
 
 const tableSequenceType = new GraphQLObjectType({
   name: 'tableSequence',
@@ -225,4 +225,4 @@ const tableSequenceType = new GraphQLObjectType({
   }),
 });
 
-module.exports = tableSequenceType;
+module.exports = { tableSequenceType };

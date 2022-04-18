@@ -8,9 +8,9 @@ const {
 } = require('graphql');
 
 const { dumpItems } = require('../lib/dump');
-const itemType = require('./item');
-const verseNumberType = require('./verseNumber');
-const verseRangeType = require('./verseRange');
+const { itemType } = require('./item');
+const { verseNumberType } = require('./verseNumber');
+const { verseRangeType } = require('./verseRange');
 
 const cvVerseElementType = new GraphQLObjectType({
   name: 'cvVerseElement',

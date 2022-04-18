@@ -71,4 +71,4 @@ const verseNumberType = new GraphQLObjectType({
   }),
 });
 
-module.exports = verseNumberType;
+module.exports = { verseNumberType };

@@ -5,7 +5,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const tokenType = new GraphQLObjectType({
+const selectorSpecType = new GraphQLObjectType({
   name: 'selectorSpec',
   description: 'Specification of a selector',
   fields: () => ({
@@ -42,4 +42,4 @@ const tokenType = new GraphQLObjectType({
   }),
 });
 
-module.exports = tokenType;
+module.exports = { selectorSpecType };

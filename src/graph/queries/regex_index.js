@@ -22,4 +22,4 @@ const regexIndexType = new GraphQLObjectType({
   }),
 });
 
-module.exports = regexIndexType;
+module.exports = { regexIndexType };

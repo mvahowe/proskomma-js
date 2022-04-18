@@ -1,10 +1,10 @@
 const { GraphQLObjectType } = require('graphql');
-const tagMutations = require('./tags');
-const deleteMutations = require('./delete');
-const addMutations = require('./add');
-const rehashMutations = require('./rehash');
-const updateMutations = require('./update');
-const versificationMutations = require('./versification');
+const { tagMutations } = require('./tags');
+const { deleteMutations } = require('./delete');
+const { addMutations } = require('./add');
+const { rehashMutations } = require('./rehash');
+const { updateMutations } = require('./update');
+const { versificationMutations } = require('./versification');
 
 const schemaFields = {
   ...tagMutations,

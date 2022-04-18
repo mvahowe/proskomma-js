@@ -6,7 +6,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 const { dumpItemGroup } = require('../lib/dump');
-const itemType = require('./item');
+const { itemType } = require('./item');
 
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {
@@ -98,4 +98,4 @@ const itemGroupType = new GraphQLObjectType({
   }),
 });
 
-module.exports = itemGroupType;
+module.exports = { itemGroupType };

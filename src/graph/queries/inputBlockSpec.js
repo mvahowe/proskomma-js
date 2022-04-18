@@ -4,33 +4,33 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const inputItemType = require('./inputItemObject');
+const { inputItemObjectType } = require('./inputItemObject');
 
 const inputBlockSpecType = new GraphQLInputObjectType({
   name: 'InputBlockSpec',
   description: 'A specification to create or update a block',
   fields: () => ({
     bs: {
-      type: GraphQLNonNull(inputItemType),
+      type: GraphQLNonNull(inputItemObjectType),
       description: 'The block scope as an item',
     },
     bg: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObjectType))),
       description: 'The block grafts as items',
     },
     os: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObjectType))),
       description: 'The open scopes as items',
     },
     is: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObjectType))),
       description: 'The included scopes as items',
     },
     items: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemType))),
+      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputItemObjectType))),
       description: 'The items',
     },
   }),
 });
 
-module.exports = inputBlockSpecType;
+module.exports = { inputBlockSpecType };

@@ -80,4 +80,4 @@ const itemType = new GraphQLObjectType({
   }),
 });
 
-module.exports = itemType;
+module.exports = { itemType };

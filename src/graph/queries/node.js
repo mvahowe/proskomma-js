@@ -2,13 +2,11 @@ const {
   GraphQLNonNull,
   GraphQLList,
   GraphQLObjectType,
-  GraphQLInt,
   GraphQLString,
   GraphQLBoolean,
 } = require('graphql');
 const { headerBytes } = require('proskomma-utils');
-const itemType = require('./item');
-const itemGroupType = require('./itemGroup');
+const { itemGroupType } = require('./itemGroup');
 
 const nodeType = new GraphQLObjectType({
   name: 'node',
@@ -44,19 +42,17 @@ const nodeType = new GraphQLObjectType({
         description: 'If true, adds scope and nextToken information to each token',
       },
       description: 'The content as itemGroups',
-      resolve: (root, args, context) => {
-        return context.docSet.sequenceItemsByScopes([root], ['tTreeContent/'], args.includeContext || false);
-      },
+      resolve: (root, args, context) =>
+        context.docSet.sequenceItemsByScopes([root], ['tTreeContent/'], args.includeContext || false),
     },
     childIds: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
       description: 'The node children ids',
-      resolve: (root, args, context) => {
-        return context.docSet.unsuccinctifyScopes(root.is).filter(s => s[2].startsWith('tTreeChild'))
-          .map(s => s[2].split('/')[2]);
-      },
+      resolve: (root, args, context) =>
+        context.docSet.unsuccinctifyScopes(root.is).filter(s => s[2].startsWith('tTreeChild'))
+          .map(s => s[2].split('/')[2]),
     },
   }),
 });
 
-module.exports = nodeType;
+module.exports = { nodeType };

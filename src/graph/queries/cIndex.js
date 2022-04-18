@@ -8,7 +8,7 @@ const {
 } = require('graphql');
 
 const { dumpItems } = require('../lib/dump');
-const itemType = require('./item');
+const { itemType } = require('./item');
 
 const cIndexType = new GraphQLObjectType({
   name: 'cIndex',

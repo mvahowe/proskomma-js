@@ -9,7 +9,7 @@ const {
 
 const xre = require('xregexp');
 
-const kvEntryType = require('./kv_entry');
+const { kvEntryType } = require('./kv_entry');
 const { keyMatchesType } = require('./input_key_matches');
 const { keyValuesType } = require('./input_key_values');
 const { keyValueType } = require('./key_value');
@@ -185,4 +185,4 @@ const kvSequenceType = new GraphQLObjectType({
   }),
 });
 
-module.exports = kvSequenceType;
+module.exports = { kvSequenceType };

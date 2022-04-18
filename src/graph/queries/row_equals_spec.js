@@ -21,4 +21,4 @@ const rowEqualsSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = rowEqualsSpecType;
+module.exports = { rowEqualsSpecType };

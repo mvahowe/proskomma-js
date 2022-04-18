@@ -23,4 +23,4 @@ const inputItemObjectType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = inputItemObjectType;
+module.exports = { inputItemObjectType };

@@ -5,8 +5,8 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const {keyValueType} = require('./key_value');
-const itemGroupType = require('./itemGroup');
+const { keyValueType } = require('./key_value');
+const { itemGroupType } = require('./itemGroup');
 
 const kvEntryType = new GraphQLObjectType({
   name: 'kvEntry',
@@ -32,4 +32,4 @@ const kvEntryType = new GraphQLObjectType({
   }),
 });
 
-module.exports = kvEntryType;
+module.exports = { kvEntryType };

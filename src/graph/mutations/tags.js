@@ -173,4 +173,4 @@ const tagMutations = {
   },
 };
 
-module.exports = tagMutations;
+module.exports = { tagMutations };

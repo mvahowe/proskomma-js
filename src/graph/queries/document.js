@@ -10,16 +10,16 @@ const {
 } = require('graphql');
 
 const { do_cv } = require('../lib/do_cv');
-const sequenceType = require('./sequence');
-const tableSequenceType = require('./table_sequence');
-const treeSequenceType = require('./tree_sequence');
-const kvSequenceType = require('./kv_sequence');
+const { sequenceType } = require('./sequence');
+const { tableSequenceType } = require('./table_sequence');
+const { treeSequenceType } = require('./tree_sequence');
+const { kvSequenceType } = require('./kv_sequence');
 const { blockType } = require('./block');
 const { keyValueType } = require('./key_value');
 const { cvIndexType } = require('./cvIndex');
 const { cIndexType } = require('./cIndex');
-const itemGroupType = require('./itemGroup');
-const itemType = require('./item');
+const { itemGroupType } = require('./itemGroup');
+const { itemType } = require('./item');
 const { cvNavigationType } = require('./cvNavigation');
 const { idPartsType } = require('./idParts');
 

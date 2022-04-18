@@ -9,8 +9,8 @@ const {
 
 const Tribos = require('../lib/tribos');
 
-const nodeType = require('./node');
-const {keyValueType} = require('./key_value');
+const { nodeType } = require('./node');
+const { keyValueType } = require('./key_value');
 
 const treeSequenceType = new GraphQLObjectType({
   name: 'treeSequence',
@@ -93,4 +93,4 @@ const treeSequenceType = new GraphQLObjectType({
   }),
 });
 
-module.exports = treeSequenceType;
+module.exports = { treeSequenceType };

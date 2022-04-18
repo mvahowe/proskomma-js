@@ -86,4 +86,4 @@ const deleteMutations = {
   },
 };
 
-module.exports = deleteMutations;
+module.exports = { deleteMutations };

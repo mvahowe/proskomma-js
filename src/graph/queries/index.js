@@ -10,7 +10,7 @@ const { bookCodeCompareFunctions } = require('../lib/sort');
 const { docSetType } = require('./doc_set');
 const { documentType } = require('./document');
 const { inputKeyValueType } = require('./input_key_value');
-const selectorSpecType = require('./selector_spec');
+const { selectorSpecType } = require('./selector_spec');
 // const diffRecordType = require('./diff_record');
 
 const schemaQueries = new GraphQLObjectType({

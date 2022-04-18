@@ -15,8 +15,8 @@ const {
 } = require('../lib/sequence_chars');
 
 const { blockType } = require('./block');
-const itemType = require('./item');
-const itemGroupType = require('./itemGroup');
+const { itemType } = require('./item');
+const { itemGroupType } = require('./itemGroup');
 const { inputAttSpecType } = require('./input_att_spec');
 const { keyValueType } = require('./key_value');
 
@@ -399,4 +399,4 @@ const sequenceType = new GraphQLObjectType({
   }),
 });
 
-module.exports = sequenceType;
+module.exports = { sequenceType };

@@ -7,8 +7,8 @@ const {
 } = require('graphql');
 
 const { remakeBlocks } = require('../lib/remake_blocks');
-const inputItemObject = require('../queries/inputItemObject');
-const inputBlockSpecType = require('../queries/inputBlockSpec');
+const { inputItemObjectType } = require('../queries/inputItemObject');
+const { inputBlockSpecType } = require('../queries/inputBlockSpec');
 
 const updateMutations = {
   updateItems: {
@@ -32,15 +32,15 @@ const updateMutations = {
         description: 'The zero-indexed number of the block for which the items will be updated',
       },
       items: {
-        type: GraphQLList(GraphQLNonNull(inputItemObject)),
+        type: GraphQLList(GraphQLNonNull(inputItemObjectType)),
         description: 'The new content for the block as item objects',
       },
       blockGrafts: {
-        type: GraphQLList(GraphQLNonNull(inputItemObject)),
+        type: GraphQLList(GraphQLNonNull(inputItemObjectType)),
         description: 'BlockGrafts for the block as item objects',
       },
       blockScope: {
-        type: inputItemObject,
+        type: inputItemObjectType,
         description: 'Optional blockScope for the block as an item object',
       },
     },
@@ -174,4 +174,4 @@ const updateMutations = {
   },
 };
 
-module.exports = updateMutations;
+module.exports = { updateMutations };

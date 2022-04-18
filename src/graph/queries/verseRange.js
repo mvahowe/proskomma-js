@@ -23,4 +23,4 @@ const verseRangeType = new GraphQLObjectType({
   }),
 });
 
-module.exports = verseRangeType;
+module.exports = { verseRangeType };

@@ -6,7 +6,7 @@ const {
   GraphQLString,
   GraphQLBoolean,
 } = require('graphql');
-const itemType = require('./item');
+const { itemType } = require('./item');
 
 const cellType = new GraphQLObjectType({
   name: 'cell',

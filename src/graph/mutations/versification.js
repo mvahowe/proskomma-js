@@ -113,4 +113,4 @@ const versificationMutations = {
   },
 };
 
-module.exports = versificationMutations;
+module.exports = { versificationMutations };
