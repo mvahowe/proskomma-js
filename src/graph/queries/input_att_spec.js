@@ -28,4 +28,4 @@ const inputAttSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = inputAttSpecType;
+module.exports = { inputAttSpecType };

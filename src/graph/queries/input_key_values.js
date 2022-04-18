@@ -20,4 +20,4 @@ const keyValuesType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = keyValuesType;
+module.exports = { keyValuesType };

@@ -320,4 +320,4 @@ const blockType = new GraphQLObjectType({
   }),
 });
 
-module.exports = blockType;
+module.exports = {blockType};

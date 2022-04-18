@@ -122,4 +122,4 @@ const cIndexType = new GraphQLObjectType({
   }),
 });
 
-module.exports = cIndexType;
+module.exports = {cIndexType};

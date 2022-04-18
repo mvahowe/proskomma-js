@@ -20,4 +20,4 @@ const cvType = new GraphQLObjectType({
   }),
 });
 
-module.exports = cvType;
+module.exports = {cvType};

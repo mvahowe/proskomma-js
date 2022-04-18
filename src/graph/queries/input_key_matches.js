@@ -19,4 +19,4 @@ const keyMatchesType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = keyMatchesType;
+module.exports = { keyMatchesType };

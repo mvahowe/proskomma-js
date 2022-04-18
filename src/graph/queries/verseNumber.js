@@ -7,7 +7,7 @@ const {
 } = require('graphql');
 
 const { mapVerse } = require('proskomma-utils');
-const cvType = require('./cv');
+const {cvType} = require('./cv');
 
 const orig = new GraphQLObjectType({
   name: 'orig',

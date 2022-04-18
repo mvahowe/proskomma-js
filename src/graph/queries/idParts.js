@@ -34,4 +34,4 @@ const idPartsType = new GraphQLObjectType({
   }),
 });
 
-module.exports = idPartsType;
+module.exports = { idPartsType };

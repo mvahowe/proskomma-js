@@ -9,7 +9,7 @@ const {
   pushSuccinctGraftBytes,
 } = require('proskomma-utils');
 const { remakeBlocks } = require('../lib/remake_blocks');
-const inputKeyValue = require('../queries/input_key_value');
+const { inputKeyValueType } = require('../queries/input_key_value');
 const inputBlockSpecType = require('../queries/inputBlockSpec');
 
 const addMutations = {
@@ -18,7 +18,7 @@ const addMutations = {
     description: 'Adds a document which will be assigned to an existing or new docSet on the basis of the specified selectors',
     args: {
       selectors: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputKeyValue))),
+        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputKeyValueType))),
         description: 'The selectors for this document, the keys of which must match those of the Proskomma instance',
       },
       contentType: {

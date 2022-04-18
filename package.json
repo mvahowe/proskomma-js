@@ -40,6 +40,8 @@
     "deep-copy-all": "^1.3.4",
     "deep-equal": "^2.0.5",
     "graphql": "^15.3.0",
+    "graphql-tag": "^2.12.6",
+    "graphql-tools": "^8.2.7",
     "jsonschema": "^1.4.0",
     "prettier": "^2.4.1",
     "proskomma-utils": "^0.4.28",

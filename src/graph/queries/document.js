@@ -14,14 +14,14 @@ const sequenceType = require('./sequence');
 const tableSequenceType = require('./table_sequence');
 const treeSequenceType = require('./tree_sequence');
 const kvSequenceType = require('./kv_sequence');
-const blockType = require('./block');
-const keyValueType = require('./key_value');
-const cvIndexType = require('./cvIndex');
-const cIndexType = require('./cIndex');
+const { blockType } = require('./block');
+const { keyValueType } = require('./key_value');
+const { cvIndexType } = require('./cvIndex');
+const { cIndexType } = require('./cIndex');
 const itemGroupType = require('./itemGroup');
 const itemType = require('./item');
-const cvNavigationType = require('./cvNavigation');
-const idPartsType = require('./idParts');
+const { cvNavigationType } = require('./cvNavigation');
+const { idPartsType } = require('./idParts');
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -726,4 +726,4 @@ const documentType = new GraphQLObjectType({
   }),
 });
 
-module.exports = documentType;
+module.exports = { documentType };

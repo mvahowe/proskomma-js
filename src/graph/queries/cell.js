@@ -57,4 +57,4 @@ const cellType = new GraphQLObjectType({
   }),
 });
 
-module.exports = cellType;
+module.exports = {cellType};

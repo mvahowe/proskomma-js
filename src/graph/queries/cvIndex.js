@@ -181,4 +181,4 @@ const cvIndexType = new GraphQLObjectType({
   }),
 });
 
-module.exports = cvIndexType;
+module.exports = {cvIndexType};

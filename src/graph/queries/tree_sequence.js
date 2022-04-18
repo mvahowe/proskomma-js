@@ -10,7 +10,7 @@ const {
 const Tribos = require('../lib/tribos');
 
 const nodeType = require('./node');
-const keyValueType = require('./key_value');
+const {keyValueType} = require('./key_value');
 
 const treeSequenceType = new GraphQLObjectType({
   name: 'treeSequence',

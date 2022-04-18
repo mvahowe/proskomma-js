@@ -4,6 +4,17 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
+const keyValueSchemaString = `
+type keyValue {
+    key: String!
+    value: String!
+}`;
+
+const keyValueResolvers = {
+  key: root => root[0],
+  value: root => root[1],
+};
+
 const keyValueType = new GraphQLObjectType({
   name: 'KeyValue',
   description: 'Key/Value tuple',
@@ -21,4 +32,8 @@ const keyValueType = new GraphQLObjectType({
   }),
 });
 
-module.exports = keyValueType;
+module.exports = {
+  keyValueSchemaString,
+  keyValueResolvers,
+  keyValueType,
+};

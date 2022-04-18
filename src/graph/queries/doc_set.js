@@ -20,10 +20,10 @@ const {
   sequenceHasMatchingChars,
 } = require('../lib/sequence_chars');
 
-const documentType = require('./document');
-const keyValueType = require('./key_value');
+const { documentType } = require('./document');
+const { keyValueType } = require('./key_value');
 const regexIndexType = require('./regex_index');
-const inputKeyValueType = require('./input_key_value');
+const { inputKeyValueType } = require('./input_key_value');
 
 const docSetType = new GraphQLObjectType({
   name: 'DocSet',
@@ -302,5 +302,5 @@ const docSetType = new GraphQLObjectType({
 },
 );
 
-module.exports = docSetType;
+module.exports = { docSetType };
 

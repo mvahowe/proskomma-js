@@ -19,4 +19,4 @@ const inputKeyValueType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = inputKeyValueType;
+module.exports = { inputKeyValueType };

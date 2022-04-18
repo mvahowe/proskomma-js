@@ -5,7 +5,7 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const keyValueType = require('./key_value');
+const {keyValueType} = require('./key_value');
 const itemGroupType = require('./itemGroup');
 
 const kvEntryType = new GraphQLObjectType({
