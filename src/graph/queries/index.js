@@ -49,14 +49,32 @@ const {
 const { rowEqualsSpecSchemaString } = require('./row_equals_spec');
 const { rowMatchSpecSchemaString } = require('./row_match_spec');
 const { verseRangeSchemaString } = require('./verseRange');
-const {
-  origSchemaString,
-  origResolvers,
-} = require('./orig');
+const { origSchemaString } = require('./orig');
 const {
   verseNumberSchemaString,
   verseNumberResolvers,
 } = require('./verseNumber');
+const {
+  cellSchemaString,
+  cellResolvers,
+} = require('./cell');
+const {
+  cIndexSchemaString,
+  cIndexResolvers,
+} = require('./cIndex');
+const {
+  cvVerseElementSchemaString,
+  cvVerseElementResolvers,
+} = require('./cvVerseElement');
+const { cvVersesSchemaString } = require('./cvVerses');
+const {
+  cvIndexSchemaString,
+  cvIndexResolvers,
+} = require('./cvIndex');
+const {
+  cvNavigationSchemaString,
+  cvNavigationResolvers,
+} = require('./cvNavigation');
 
 const combinedSchema = `
       type StubQuery {
@@ -77,6 +95,12 @@ const combinedSchema = `
         verseRange: verseRange!
         orig: orig!
         verseNumber: verseNumber!
+        cell: cell!
+        cIndex: cIndex!
+        cvVerseElement: cvVerseElement!
+        cvVerses: cvVerses!
+        cvIndex: cvIndex!
+        cvNavigation: cvNavigation!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -95,6 +119,12 @@ const combinedSchema = `
       ${verseRangeSchemaString}
       ${origSchemaString}
       ${verseNumberSchemaString}
+      ${cellSchemaString}
+      ${cIndexSchemaString}
+      ${cvVerseElementSchemaString}
+      ${cvVersesSchemaString}
+      ${cvIndexSchemaString}
+      ${cvNavigationSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -110,6 +140,11 @@ const executableSchema =
         kvEntry: kvEntryResolvers,
         regexIndex: regexIndexResolvers,
         verseNumber: verseNumberResolvers,
+        cell: cellResolvers,
+        cIndex: cIndexResolvers,
+        cvVerseElement: cvVerseElementResolvers,
+        cvIndex: cvIndexResolvers,
+        cvNavigation: cvNavigationResolvers,
       },
     },
   });

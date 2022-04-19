@@ -1,8 +1,6 @@
 const {
   GraphQLObjectType,
-  GraphQLList,
   GraphQLString,
-  GraphQLNonNull,
 } = require('graphql');
 
 const { cvType } = require('./cv');
@@ -76,54 +74,85 @@ const pv = (root, newVerseRange) => {
   return ret;
 };
 
+const cvNavigationSchemaString = `
+"""Various answers to 'previous' and 'next' with respect to a verse"""
+type cvNavigation {
+  """The verse number for the next verse"""
+  nextVerse: cv
+  """The verse number for the previous verse"""
+  previousVerse: cv
+  """The verse number for the next verse range"""
+  nextVerseRangeVerse: cv
+  """The verse number for the previous verse range"""
+  previousVerseRangeVerse: cv
+  """The next chapter number (as a string)"""
+  nextChapter: cv
+  """The previous chapter number (as a string)"""
+  previousChapter: cv
+}
+`;
+
+// root is [ < 0 chapter >, < 1 verse >, < 2 previousChapterIndex >, < 3 thisChapterIndex >, < 4 nextChapterIndex > ]
+const cvNavigationResolvers = {
+  nextVerse: root => nv(root, false),
+  previousVerse: root => pv(root, false),
+  nextVerseRangeVerse: root => nv(root, true),
+  previousVerseRangeVerse: root => pv(root, true),
+  nextChapter: root => {
+    if (root[3].length > 0 && root[4].length > 0) {
+      return (parseInt(root[0]) + 1).toString();
+    } else {
+      return null;
+    }
+  },
+  previousChapter: {
+    type: GraphQLString,
+    description: 'The previous chapter number (as a string)',
+    resolve: root => {
+      if (root[2].length > 0 && root[3].length > 0) {
+        return (parseInt(root[0]) - 1).toString();
+      } else {
+        return null;
+      }
+    },
+  },
+};
+
 const cvNavigationType = new GraphQLObjectType({
-  // root is [ < 0 chapter >, < 1 verse >, < 2 previousChapterIndex >, < 3 thisChapterIndex >, < 4 nextChapterIndex > ]
   name: 'cvNavigation',
   description: 'Various answers to \'previous\' and \'next\' with respect to a verse',
   fields: () => ({
     nextVerse: {
       type: cvType,
       description: 'The verse number for the next verse',
-      resolve: root => nv(root, false),
+      resolve: cvNavigationResolvers.nextVerse,
     },
     previousVerse: {
       type: cvType,
       description: 'The verse number for the previous verse',
-      resolve: root => pv(root, false),
+      resolve: cvNavigationResolvers.previousVerse,
     },
     nextVerseRangeVerse: {
       type: cvType,
       description: 'The verse number for the next verse range',
-      resolve: root => nv(root, true),
+      resolve: cvNavigationResolvers.nextVerseRangeVerse,
     },
     previousVerseRangeVerse: {
       type: cvType,
       description: 'The verse number for the previous verse range',
-      resolve: root => pv(root, true),
+      resolve: cvNavigationResolvers.previousVerseRangeVerse,
     },
     nextChapter: {
       type: GraphQLString,
       description: 'The next chapter number (as a string)',
-      resolve: root => {
-        if (root[3].length > 0 && root[4].length > 0) {
-          return (parseInt(root[0]) + 1).toString();
-        } else {
-          return null;
-        }
-      },
+      resolve: cvNavigationResolvers.nextChapter,
     },
-    previousChapter: {
-      type: GraphQLString,
-      description: 'The previous chapter number (as a string)',
-      resolve: root => {
-        if (root[2].length > 0 && root[3].length > 0) {
-          return (parseInt(root[0]) - 1).toString();
-        } else {
-          return null;
-        }
-      },
-    },
+    previousChapter: cvNavigationResolvers.previousChapter,
   }),
 });
 
-module.exports = { cvNavigationType };
+module.exports = {
+  cvNavigationSchemaString,
+  cvNavigationResolvers,
+  cvNavigationType,
+};
