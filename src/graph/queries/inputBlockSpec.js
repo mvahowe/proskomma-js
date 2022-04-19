@@ -6,6 +6,22 @@ const {
 
 const { inputItemObjectType } = require('./inputItemObject');
 
+const inputBlockSpecSchemaString = `
+"""A specification to create or update a block"""
+type inputBlockSpec {
+  """The block scope as an item"""
+  bs: InputItemObject!
+  """The block grafts as items"""
+  bg: [InputItemObject!]!
+  """The open scopes as items"""
+  os: [InputItemObject!]!
+  """The included scopes as items"""
+  is: [InputItemObject!]!
+  """The items"""
+  items: [InputItemObject!]!
+}
+`;
+
 const inputBlockSpecType = new GraphQLInputObjectType({
   name: 'InputBlockSpec',
   description: 'A specification to create or update a block',
@@ -33,4 +49,7 @@ const inputBlockSpecType = new GraphQLInputObjectType({
   }),
 });
 
-module.exports = { inputBlockSpecType };
+module.exports = {
+  inputBlockSpecSchemaString,
+  inputBlockSpecType,
+};

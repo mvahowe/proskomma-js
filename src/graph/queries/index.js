@@ -75,6 +75,11 @@ const {
   cvNavigationSchemaString,
   cvNavigationResolvers,
 } = require('./cvNavigation');
+const { inputBlockSpecSchemaString } = require('./inputBlockSpec');
+const {
+  nodeSchemaString,
+  nodeResolvers,
+} = require('./node');
 
 const combinedSchema = `
       type StubQuery {
@@ -101,6 +106,8 @@ const combinedSchema = `
         cvVerses: cvVerses!
         cvIndex: cvIndex!
         cvNavigation: cvNavigation!
+        inputBlockSpec: inputBlockSpec!
+        node: node!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -125,6 +132,8 @@ const combinedSchema = `
       ${cvVersesSchemaString}
       ${cvIndexSchemaString}
       ${cvNavigationSchemaString}
+      ${inputBlockSpecSchemaString}
+      ${nodeSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -145,6 +154,7 @@ const executableSchema =
         cvVerseElement: cvVerseElementResolvers,
         cvIndex: cvIndexResolvers,
         cvNavigation: cvNavigationResolvers,
+        node: nodeResolvers,
       },
     },
   });
