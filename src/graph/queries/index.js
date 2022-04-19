@@ -80,6 +80,18 @@ const {
   nodeSchemaString,
   nodeResolvers,
 } = require('./node');
+const {
+  kvSequenceSchemaString,
+  kvSequenceResolvers,
+} = require('./kv_sequence');
+const {
+  tableSequenceSchemaString,
+  tableSequenceResolvers,
+} = require('./table_sequence');
+const {
+  treeSequenceSchemaString,
+  treeSequenceResolvers,
+} = require('./tree_sequence');
 
 const combinedSchema = `
       type StubQuery {
@@ -108,6 +120,9 @@ const combinedSchema = `
         cvNavigation: cvNavigation!
         inputBlockSpec: inputBlockSpec!
         node: node!
+        kvSequence: kvSequence!
+        tableSequence: tableSequence!
+        treeSequence: treeSequence!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -134,6 +149,9 @@ const combinedSchema = `
       ${cvNavigationSchemaString}
       ${inputBlockSpecSchemaString}
       ${nodeSchemaString}
+      ${kvSequenceSchemaString}
+      ${tableSequenceSchemaString}
+      ${treeSequenceSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -155,6 +173,9 @@ const executableSchema =
         cvIndex: cvIndexResolvers,
         cvNavigation: cvNavigationResolvers,
         node: nodeResolvers,
+        kvSequence: kvSequenceResolvers,
+        tableSequence: tableSequenceResolvers,
+        treeSequence: treeSequenceResolvers,
       },
     },
   });
