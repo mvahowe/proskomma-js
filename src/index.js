@@ -1,6 +1,7 @@
 import xre from 'xregexp';
 
 const { Mutex } = require('async-mutex');
+const checksum = require('checksum');
 const {
   graphql,
   graphqlSync,
@@ -531,6 +532,11 @@ class Proskomma {
 
   serializeSuccinct(docSetId) {
     return this.docSets[docSetId].serializeSuccinct();
+  }
+
+  checksum() {
+    const dsChecksums = Object.values(this.docSets).map(ds => ds.checksum()).sort().join(' ');
+    return checksum(dsChecksums);
   }
 }
 

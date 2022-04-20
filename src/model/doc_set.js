@@ -1,3 +1,5 @@
+import checksum from 'checksum';
+
 import {
   addTag,
   ByteArray,
@@ -375,6 +377,11 @@ class DocSet {
 
   serializeSuccinct() {
     return serializeSuccinct(this);
+  }
+
+  checksum() {
+    const docIdsString = [...this.docIds].sort().join(' ');
+    return checksum(docIdsString);
   }
 }
 
