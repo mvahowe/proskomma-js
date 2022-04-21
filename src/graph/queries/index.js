@@ -96,6 +96,10 @@ const {
   blockSchemaString,
   blockResolvers,
 } = require('./block');
+const {
+  sequenceSchemaString,
+  sequenceResolvers,
+} = require('./sequence');
 
 const combinedSchema = `
       type StubQuery {
@@ -128,6 +132,7 @@ const combinedSchema = `
         tableSequence: tableSequence!
         treeSequence: treeSequence!
         block: Block!
+        sequence: Sequence!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -158,6 +163,7 @@ const combinedSchema = `
       ${tableSequenceSchemaString}
       ${treeSequenceSchemaString}
       ${blockSchemaString}
+      ${sequenceSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -183,6 +189,7 @@ const executableSchema =
         tableSequence: tableSequenceResolvers,
         treeSequence: treeSequenceResolvers,
         block: blockResolvers,
+        sequence: sequenceResolvers,
       },
     },
   });
