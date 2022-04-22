@@ -6,13 +6,14 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const { makeExecutableSchema } = require('@graphql-tools/schema');
+// const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { bookCodeCompareFunctions } = require('../lib/sort');
 const { docSetType } = require('./doc_set');
 const { documentType } = require('./document');
 const { inputKeyValueType } = require('./input_key_value');
 const { selectorSpecType } = require('./selector_spec');
 
+/*
 const {
   keyValueSchemaString,
   keyValueResolvers,
@@ -193,6 +194,7 @@ const executableSchema =
       },
     },
   });
+*/
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -509,5 +511,5 @@ const schemaQueries = new GraphQLObjectType({
 
 module.exports = {
   schemaQueries,
-  executableSchema,
+  // executableSchema,
 };
