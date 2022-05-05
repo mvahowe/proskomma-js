@@ -6,14 +6,13 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-// const { makeExecutableSchema } = require('@graphql-tools/schema');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { bookCodeCompareFunctions } = require('../lib/sort');
 const { docSetType } = require('./doc_set');
 const { documentType } = require('./document');
 const { inputKeyValueType } = require('./input_key_value');
 const { selectorSpecType } = require('./selector_spec');
 
-/*
 const {
   keyValueSchemaString,
   keyValueResolvers,
@@ -101,6 +100,10 @@ const {
   sequenceSchemaString,
   sequenceResolvers,
 } = require('./sequence');
+const {
+  documentSchemaString,
+  documentResolvers,
+} = require('./document');
 
 const combinedSchema = `
       type StubQuery {
@@ -134,6 +137,7 @@ const combinedSchema = `
         treeSequence: treeSequence!
         block: Block!
         sequence: Sequence!
+        document: Document!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -165,6 +169,7 @@ const combinedSchema = `
       ${treeSequenceSchemaString}
       ${blockSchemaString}
       ${sequenceSchemaString}
+      ${documentSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -191,10 +196,10 @@ const executableSchema =
         treeSequence: treeSequenceResolvers,
         block: blockResolvers,
         sequence: sequenceResolvers,
+        document: documentResolvers,
       },
     },
   });
-*/
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
