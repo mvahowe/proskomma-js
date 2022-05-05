@@ -94,7 +94,7 @@ type Sequence {
   blocksItems: [[Item!]!]
   """The tokens for each block in the sequence"""
   blocksTokens: [[Item!]!]
-  """If true, converts each whitespace character to a single space"""
+  """The text for each block in the sequence"""
   blocksText: [String!]
   """The text for the sequence"""
   text(
