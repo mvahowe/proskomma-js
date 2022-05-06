@@ -6,207 +6,146 @@ const {
   GraphQLNonNull,
 } = require('graphql');
 
-const { makeExecutableSchema } = require('@graphql-tools/schema');
 const { bookCodeCompareFunctions } = require('../lib/sort');
 const { docSetType } = require('./doc_set');
 const { documentType } = require('./document');
 const { inputKeyValueType } = require('./input_key_value');
 const { selectorSpecType } = require('./selector_spec');
 
-const {
-  keyValueSchemaString,
-  keyValueResolvers,
-} = require('./key_value');
-const {
-  cvSchemaString,
-  cvResolvers,
-} = require('./cv');
-const {
-  idPartsSchemaString,
-  idPartsResolvers,
-} = require('./idParts');
-const { inputAttSpecSchemaString } = require('./input_att_spec');
-const { keyMatchesSchemaString } = require('./input_key_matches');
-const { inputKeyValueSchemaString } = require('./input_key_value');
-const { keyValuesSchemaString } = require('./input_key_values');
-const { inputItemObjectSchemaString } = require('./inputItemObject');
-const {
-  itemSchemaString,
-  itemResolvers,
-} = require('./item');
-const {
-  itemGroupSchemaString,
-  itemGroupResolvers,
-} = require('./itemGroup');
-const {
-  kvEntrySchemaString,
-  kvEntryResolvers,
-} = require('./kv_entry');
-const {
-  regexIndexSchemaString,
-  regexIndexResolvers,
-} = require('./regex_index');
-const { rowEqualsSpecSchemaString } = require('./row_equals_spec');
-const { rowMatchSpecSchemaString } = require('./row_match_spec');
-const { verseRangeSchemaString } = require('./verseRange');
-const { origSchemaString } = require('./orig');
-const {
-  verseNumberSchemaString,
-  verseNumberResolvers,
-} = require('./verseNumber');
-const {
-  cellSchemaString,
-  cellResolvers,
-} = require('./cell');
-const {
-  cIndexSchemaString,
-  cIndexResolvers,
-} = require('./cIndex');
-const {
-  cvVerseElementSchemaString,
-  cvVerseElementResolvers,
-} = require('./cvVerseElement');
-const { cvVersesSchemaString } = require('./cvVerses');
-const {
-  cvIndexSchemaString,
-  cvIndexResolvers,
-} = require('./cvIndex');
-const {
-  cvNavigationSchemaString,
-  cvNavigationResolvers,
-} = require('./cvNavigation');
-const { inputBlockSpecSchemaString } = require('./inputBlockSpec');
-const {
-  nodeSchemaString,
-  nodeResolvers,
-} = require('./node');
-const {
-  kvSequenceSchemaString,
-  kvSequenceResolvers,
-} = require('./kv_sequence');
-const {
-  tableSequenceSchemaString,
-  tableSequenceResolvers,
-} = require('./table_sequence');
-const {
-  treeSequenceSchemaString,
-  treeSequenceResolvers,
-} = require('./tree_sequence');
-const {
-  blockSchemaString,
-  blockResolvers,
-} = require('./block');
-const {
-  sequenceSchemaString,
-  sequenceResolvers,
-} = require('./sequence');
-const {
-  documentSchemaString,
-  documentResolvers,
-} = require('./document');
-const {
-  docSetSchemaString,
-  docSetResolvers,
-} = require('./doc_set');
-
-const combinedSchema = `
-      type StubQuery {
-        KeyValue: KeyValue!
-        cv: cv!
-        idParts: idParts!
-        AttSpec: AttSpec!
-        KeyMatches: KeyMatches!
-        InputKeyValue: InputKeyValue!
-        KeyValues: KeyValues!
-        InputItemObject: InputItemObject!
-        Item: Item!
-        ItemGroup: ItemGroup!
-        kvEntry: kvEntry!
-        regexIndex: regexIndex!
-        rowEqualsSpec: rowEqualsSpec!
-        rowMatchSpec: rowMatchSpec!
-        verseRange: verseRange!
-        orig: orig!
-        verseNumber: verseNumber!
-        cell: cell!
-        cIndex: cIndex!
-        cvVerseElement: cvVerseElement!
-        cvVerses: cvVerses!
-        cvIndex: cvIndex!
-        cvNavigation: cvNavigation!
-        inputBlockSpec: inputBlockSpec!
-        node: node!
-        kvSequence: kvSequence!
-        tableSequence: tableSequence!
-        treeSequence: treeSequence!
-        block: Block!
-        sequence: Sequence!
-        document: Document!
-        docSet: DocSet!
+const querySchemaString = `
+"""The top level of Proskomma queries"""
+type Query {
+  """The id of the processor, which is different for each Proskomma instance"""
+  id: String!
+  """A string describing the processor class"""
+  processor: String!
+  """The NPM package version"""
+  packageVersion: String!
+  """The selectors used to define docSets"""
+  selectors: [selectorSpec!]!
+  """The number of docSets"""
+  nDocSets: Int!
+  """The docSets in the processor"""
+  docSets(
+    """A whitelist of ids of docSets to include"""
+    ids: [String!]
+    """Only return docSets that match the list of selector values"""
+    withSelectors: [InputKeyValue!]
+    """Only return docSets containing a document with the specified bookCode"""
+    withBook: String
+    """Only return docSets with all the specified tags"""
+    withTags: [String!]
+    """Only return docSets with none of the specified tags"""
+    withoutTags: [String!]
+  ): [DocSet!]!
+  """The docSet with the specified id"""
+  docSet(
+    """The id of the docSet"""
+    id: String!
+  ): DocSet
+  """The number of documents in the processor"""
+  nDocuments: Int!
+  """The documents in the processor"""
+  documents(
+    """A whitelist of ids of documents to include"""
+    ids: [String!]
+    """Only return documents with the specified bookCode"""
+    withBook: String
+    """Only return documents with the specified header key/values"""
+    withHeaderValues: [InputKeyValue!]
+    """Only return documents with all the specified tags"""
+    withTags: [String!]
+    """Only return documents with none of the specified tags"""
+    withoutTags: [String!]
+    """Sort returned documents by the designated method (currently ${Object.keys(bookCodeCompareFunctions).join(', ')})"""
+    sortedBy: String
+  ): [Document!]!
+  """The document with the specified id, or the specified docSet and withBook"""
+  document(
+    """The id of the document"""
+    id: String
+    """The docSet of the document (use with withBook)"""
+    docSetId: String
+    """The book of the document (use with docSetId)"""
+    withBook: String
+  ) : Document
+}
+`;
+const queryResolvers = {
+  id: root => root.processorId,
+  selectors: root => root.selectors,
+  docSets: (root, args) => {
+    const docSetMatchesSelectors = (ds, selectors) => {
+      for (const selector of selectors) {
+        if (ds.selectors[selector.key].toString() !== selector.value) {
+          return false;
+        }
       }
-      ${keyValueSchemaString}
-      ${cvSchemaString}
-      ${idPartsSchemaString}
-      ${inputAttSpecSchemaString}
-      ${keyMatchesSchemaString}
-      ${inputKeyValueSchemaString}
-      ${keyValuesSchemaString}
-      ${inputItemObjectSchemaString}
-      ${itemSchemaString}
-      ${itemGroupSchemaString}
-      ${kvEntrySchemaString}
-      ${regexIndexSchemaString}
-      ${rowEqualsSpecSchemaString}
-      ${rowMatchSpecSchemaString}
-      ${verseRangeSchemaString}
-      ${origSchemaString}
-      ${verseNumberSchemaString}
-      ${cellSchemaString}
-      ${cIndexSchemaString}
-      ${cvVerseElementSchemaString}
-      ${cvVersesSchemaString}
-      ${cvIndexSchemaString}
-      ${cvNavigationSchemaString}
-      ${inputBlockSpecSchemaString}
-      ${nodeSchemaString}
-      ${kvSequenceSchemaString}
-      ${tableSequenceSchemaString}
-      ${treeSequenceSchemaString}
-      ${blockSchemaString}
-      ${sequenceSchemaString}
-      ${documentSchemaString}
-      ${docSetSchemaString}
-  `;
-// console.log(combinedSchema);
-const executableSchema =
-  makeExecutableSchema({
-    typeDefs: combinedSchema,
-    resolvers: {
-      StubQuery: {
-        KeyValue: keyValueResolvers,
-        cv: cvResolvers,
-        idParts: idPartsResolvers,
-        Item: itemResolvers,
-        ItemGroup: itemGroupResolvers,
-        kvEntry: kvEntryResolvers,
-        regexIndex: regexIndexResolvers,
-        verseNumber: verseNumberResolvers,
-        cell: cellResolvers,
-        cIndex: cIndexResolvers,
-        cvVerseElement: cvVerseElementResolvers,
-        cvIndex: cvIndexResolvers,
-        cvNavigation: cvNavigationResolvers,
-        node: nodeResolvers,
-        kvSequence: kvSequenceResolvers,
-        tableSequence: tableSequenceResolvers,
-        treeSequence: treeSequenceResolvers,
-        block: blockResolvers,
-        sequence: sequenceResolvers,
-        document: documentResolvers,
-        docSet: docSetResolvers,
-      },
-    },
-  });
+      return true;
+    };
+
+    let ret = ('withBook' in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
+      .filter(ds => !args.ids || args.ids.includes(ds.id));
+
+    if (args.withSelectors) {
+      ret = ret.filter(ds => docSetMatchesSelectors(ds, args.withSelectors));
+    }
+
+    if (args.withTags) {
+      ret = ret.filter(ds => args.withTags.filter(t => ds.tags.has(t)).length === args.withTags.length);
+    }
+
+    if (args.withoutTags) {
+      ret = ret.filter(ds => args.withoutTags.filter(t => ds.tags.has(t)).length === 0);
+    }
+
+    return ret;
+  },
+  docSet: (root, args) => root.docSetById(args.id),
+  documents: (root, args) => {
+    const headerValuesMatch = (docHeaders, requiredHeaders) => {
+      for (const requiredHeader of requiredHeaders || []) {
+        if (!(requiredHeader.key in docHeaders) || docHeaders[requiredHeader.key] !== requiredHeader.value) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    let ret = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
+    ret = ret.filter(d => !args.ids || args.ids.includes(d.id));
+
+    if (args.withHeaderValues) {
+      ret = ret.filter(d => headerValuesMatch(d.headers, args.withHeaderValues));
+    }
+
+    if (args.withTags) {
+      ret = ret.filter(d => args.withTags.filter(t => d.tags.has(t)).length === args.withTags.length);
+    }
+
+    if (args.withoutTags) {
+      ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
+    }
+
+    if (args.sortedBy) {
+      if (!(args.sortedBy in bookCodeCompareFunctions)) {
+        throw new Error(`sortedBy value must be one of [${Object.keys(bookCodeCompareFunctions).join(', ')}], not ${args.sortedBy}`);
+      }
+      ret.sort(bookCodeCompareFunctions[args.sortedBy]);
+    }
+
+    return ret;
+  },
+  document: (root, args) => {
+    if (args.id && !args.docSetId && !args.withBook) {
+      return root.documentById(args.id);
+    } else if (!args.id && args.docSetId && args.withBook) {
+      return root.documentsWithBook(args.withBook).filter(d => d.docSetId === args.docSetId)[0];
+    } else {
+      throw new Error('document requires either id or both docSetId and withBook (but not all three)');
+    }
+  },
+};
 
 const schemaQueries = new GraphQLObjectType({
   name: 'Query',
@@ -215,7 +154,7 @@ const schemaQueries = new GraphQLObjectType({
     id: {
       type: GraphQLNonNull(GraphQLString),
       description: 'The id of the processor, which is different for each Proskomma instance',
-      resolve: root => root.processorId,
+      resolve: queryResolvers.id,
     },
     processor: {
       type: GraphQLNonNull(GraphQLString),
@@ -228,7 +167,7 @@ const schemaQueries = new GraphQLObjectType({
     selectors: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(selectorSpecType))),
       description: 'The selectors used to define docSets',
-      resolve: root => root.selectors,
+      resolve: queryResolvers.selectors,
     },
     nDocSets: {
       type: GraphQLNonNull(GraphQLInt),
@@ -259,33 +198,7 @@ const schemaQueries = new GraphQLObjectType({
           description: 'Only return docSets with none of the specified tags',
         },
       },
-      resolve: (root, args) => {
-        const docSetMatchesSelectors = (ds, selectors) => {
-          for (const selector of selectors) {
-            if (ds.selectors[selector.key].toString() !== selector.value) {
-              return false;
-            }
-          }
-          return true;
-        };
-
-        let ret = ('withBook' in args ? root.docSetsWithBook(args.withBook) : Object.values(root.docSets))
-          .filter(ds => !args.ids || args.ids.includes(ds.id));
-
-        if (args.withSelectors) {
-          ret = ret.filter(ds => docSetMatchesSelectors(ds, args.withSelectors));
-        }
-
-        if (args.withTags) {
-          ret = ret.filter(ds => args.withTags.filter(t => ds.tags.has(t)).length === args.withTags.length);
-        }
-
-        if (args.withoutTags) {
-          ret = ret.filter(ds => args.withoutTags.filter(t => ds.tags.has(t)).length === 0);
-        }
-
-        return ret;
-      },
+      resolve: queryResolvers.docSets,
     },
     docSet: {
       type: docSetType,
@@ -296,7 +209,7 @@ const schemaQueries = new GraphQLObjectType({
           description: 'The id of the docSet',
         },
       },
-      resolve: (root, args) => root.docSetById(args.id),
+      resolve: queryResolvers.docSet,
     },
     nDocuments: {
       type: GraphQLNonNull(GraphQLInt),
@@ -331,40 +244,7 @@ const schemaQueries = new GraphQLObjectType({
           description: 'Sort returned documents by the designated method (currently ${Object.keys(bookCodeCompareFunctions).join(\', \')})',
         },
       },
-      resolve: (root, args) => {
-        const headerValuesMatch = (docHeaders, requiredHeaders) => {
-          for (const requiredHeader of requiredHeaders || []) {
-            if (!(requiredHeader.key in docHeaders) || docHeaders[requiredHeader.key] !== requiredHeader.value) {
-              return false;
-            }
-          }
-          return true;
-        };
-
-        let ret = args.withBook ? root.documentsWithBook(args.withBook) : root.documentList();
-        ret = ret.filter(d => !args.ids || args.ids.includes(d.id));
-
-        if (args.withHeaderValues) {
-          ret = ret.filter(d => headerValuesMatch(d.headers, args.withHeaderValues));
-        }
-
-        if (args.withTags) {
-          ret = ret.filter(d => args.withTags.filter(t => d.tags.has(t)).length === args.withTags.length);
-        }
-
-        if (args.withoutTags) {
-          ret = ret.filter(d => args.withoutTags.filter(t => d.tags.has(t)).length === 0);
-        }
-
-        if (args.sortedBy) {
-          if (!(args.sortedBy in bookCodeCompareFunctions)) {
-            throw new Error(`sortedBy value must be one of [${Object.keys(bookCodeCompareFunctions).join(', ')}], not ${args.sortedBy}`);
-          }
-          ret.sort(bookCodeCompareFunctions[args.sortedBy]);
-        }
-
-        return ret;
-      },
+      resolve: queryResolvers.documents,
     },
     document: {
       type: documentType,
@@ -383,145 +263,13 @@ const schemaQueries = new GraphQLObjectType({
           description: 'The book of the document (use with docSetId)',
         },
       },
-      resolve: (root, args) => {
-        if (args.id && !args.docSetId && !args.withBook) {
-          return root.documentById(args.id);
-        } else if (!args.id && args.docSetId && args.withBook) {
-          return root.documentsWithBook(args.withBook).filter(d => d.docSetId === args.docSetId)[0];
-        } else {
-          throw new Error('document requires either id or both docSetId and withBook (but not all three)');
-        }
-      },
+      resolve: queryResolvers.document,
     },
-    /*
-    diff: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(diffRecordType))),
-      description: 'Compare two documents',
-      args: {
-        document1: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The id of the first document',
-        },
-        document2: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The id of the second document',
-        },
-        mode: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'compare \'words\' or \'tokens\'',
-        },
-      },
-      resolve: (root, args) => {
-        if (args.document1 === args.document2) {
-          throw new Error('document1 and document2 should not be equal');
-        }
-
-        if (!['words', 'tokens'].includes(args.mode)) {
-          throw new Error(`mode should be 'words' or 'tokens', not '${args.mode}'`);
-        }
-
-        if (!(args.document1 in root.documents)) {
-          throw new Error(`document1 id '${args.document1}' does not exist`);
-        }
-
-        if (!(args.document2 in root.documents)) {
-          throw new Error(`document2 id '${args.document2}' does not exist`);
-        }
-
-        const docSet1 = root.docSets[root.documents[args.document1].docSetId];
-        docSet1.maybeBuildEnumIndexes();
-
-        if (!docSet1) {
-          throw new Error(`No docSet for document '${args.document1}'`);
-        }
-
-        const docSet2 = root.docSets[root.documents[args.document2].docSetId];
-        docSet1.maybeBuildEnumIndexes();
-
-        if (!docSet2) {
-          throw new Error(`No docSet for document '${args.document2}'`);
-        }
-
-        const doc1 = root.documents[args.document1];
-        const doc2 = root.documents[args.document2];
-        const doc1Indexes = doc1.chapterVerseIndexes();
-        const doc2Indexes = doc2.chapterVerseIndexes();
-        const diffRecords = [];
-
-        for (const [chapterN, chapter1Index] of Object.entries(doc1Indexes)) {
-          if (!(chapterN in doc2Indexes)) { // Removed chapter
-            diffRecords.push([chapterN, null, 'removedChapter', null, null]);
-            continue;
-          }
-
-          const chapter2Index = doc2Indexes[chapterN];
-
-          for (const verseN of [...chapter1Index.entries()].map(e => e[0])) {
-            if ((chapter1Index[verseN].length > 0) && (verseN >= chapter2Index.length || chapter2Index[verseN].length === 0)) { // removed verse
-              const doc1Items = docSet1.itemsByIndex(doc1.sequences[doc1.mainId], chapter1Index[verseN][0])
-                .reduce((a, b) => a.concat([b]), [])
-                .reduce((a, b) => a.concat(b), []);
-              diffRecords.push([chapterN, verseN, 'removedVerse', doc1Items, null]);
-              continue;
-            }
-
-            if ((chapter1Index[verseN].length === 0) && (chapter2Index[verseN].length > 0)) { // added Verse
-              const doc2Items = docSet2.itemsByIndex(doc2.sequences[doc2.mainId], chapter2Index[verseN][0])
-                .reduce((a, b) => a.concat([b]), [])
-                .reduce((a, b) => a.concat(b), []);
-              diffRecords.push([chapterN, verseN, 'addedVerse', null, doc2Items]);
-              continue;
-            }
-
-            const doc1Items = docSet1
-              .itemsByIndex(doc1.sequences[doc1.mainId], chapter1Index[verseN][0])
-              .reduce((a, b) => a.concat([b]), [])
-              .reduce((a, b) => a.concat(b), []);
-            const doc2Items = docSet2
-              .itemsByIndex(doc2.sequences[doc2.mainId], chapter2Index[verseN][0])
-              .reduce((a, b) => a.concat([b]), [])
-              .reduce((a, b) => a.concat(b), []);
-            let doc1Tokens = doc1Items.filter(i => i[0] === 'token');
-            let doc2Tokens = doc2Items.filter(i => i[0] === 'token');
-            let doc1Text;
-            let doc2Text;
-
-            if (args.mode === 'words') {
-              doc1Tokens = doc1Tokens.filter(t => t[1] === 'wordLike');
-              doc2Tokens = doc2Tokens.filter(t => t[1] === 'wordLike');
-              doc1Text = doc1Tokens.map(t => t[2]).join(' ');
-              doc2Text = doc2Tokens.map(t => t[2]).join(' ');
-            } else {
-              doc1Text = doc1Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
-              doc2Text = doc2Tokens.map(t => t[1] === 'lineSpace' ? ' ' : t[2]).join('');
-            }
-
-            if (doc1Text !== doc2Text) {
-              diffRecords.push([chapterN, verseN, 'changedVerse', doc1Items, doc2Items]);
-            }
-          }
-
-          if (chapter2Index.length > chapter1Index.length) { // Extra verses at end of doc2
-            for (const v of [...Array(chapter2Index.length - chapter1Index.length).keys()].map(i => i + chapter1Index.length)) {
-              diffRecords.push([chapterN, v, 'addedVerse', null, null]);
-            }
-          }
-        }
-
-        for (const doc2Key of Object.keys(doc2Indexes)) {
-          if (!(doc2Key in doc1Indexes)) { // Added chapters
-            diffRecords.push([doc2Key, null, 'addedChapter', null, null]);
-          }
-        }
-        return diffRecords;
-      },
-    },
-
- */
   },
 });
 
 module.exports = {
+  querySchemaString,
+  queryResolvers,
   schemaQueries,
-  // executableSchema,
 };
