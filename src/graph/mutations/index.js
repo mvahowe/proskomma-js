@@ -6,6 +6,18 @@ const { rehashMutations } = require('./rehash');
 const { updateMutations } = require('./update');
 const { versificationMutations } = require('./versification');
 
+const {
+  addMutationsSchemaString,
+  addMutationsResolvers,
+} = require('./add');
+
+const mutationsSchemaString = `
+type Mutation {
+${addMutationsSchemaString}
+}`;
+
+const mutationsResolvers = { ...addMutationsResolvers };
+
 const schemaFields = {
   ...tagMutations,
   ...deleteMutations,
@@ -21,4 +33,8 @@ const schemaMutations = new GraphQLObjectType({
   fields: schemaFields,
 });
 
-module.exports = { schemaMutations };
+module.exports = {
+  mutationsSchemaString,
+  mutationsResolvers,
+  schemaMutations,
+};

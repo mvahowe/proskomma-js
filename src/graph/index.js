@@ -107,9 +107,14 @@ const {
   selectorSpecSchemaString,
   selectorSpecResolvers,
 } = require('./queries/selector_spec');
+const {
+  mutationsSchemaString,
+  mutationsResolvers,
+} = require('./mutations/index');
 
 const combinedSchema = `
       ${querySchemaString}
+      ${mutationsSchemaString}
       ${keyValueSchemaString}
       ${cvSchemaString}
       ${idPartsSchemaString}
@@ -149,6 +154,7 @@ const executableSchema =
   makeExecutableSchema({
     typeDefs: combinedSchema,
     resolvers: {
+      Mutation: mutationsResolvers,
       Query: queryResolvers,
       KeyValue: keyValueResolvers,
       cv: cvResolvers,
