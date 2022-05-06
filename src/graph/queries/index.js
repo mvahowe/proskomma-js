@@ -104,6 +104,10 @@ const {
   documentSchemaString,
   documentResolvers,
 } = require('./document');
+const {
+  docSetSchemaString,
+  docSetResolvers,
+} = require('./doc_set');
 
 const combinedSchema = `
       type StubQuery {
@@ -138,6 +142,7 @@ const combinedSchema = `
         block: Block!
         sequence: Sequence!
         document: Document!
+        docSet: DocSet!
       }
       ${keyValueSchemaString}
       ${cvSchemaString}
@@ -170,6 +175,7 @@ const combinedSchema = `
       ${blockSchemaString}
       ${sequenceSchemaString}
       ${documentSchemaString}
+      ${docSetSchemaString}
   `;
 // console.log(combinedSchema);
 const executableSchema =
@@ -197,6 +203,7 @@ const executableSchema =
         block: blockResolvers,
         sequence: sequenceResolvers,
         document: documentResolvers,
+        docSet: docSetResolvers,
       },
     },
   });
