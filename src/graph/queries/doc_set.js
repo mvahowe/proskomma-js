@@ -4,26 +4,12 @@ import {
   unpackEnum,
 } from 'proskomma-utils';
 
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLBoolean,
-  GraphQLInt,
-} = require('graphql');
 const { bookCodeCompareFunctions } = require('../lib/sort');
-
 
 const {
   sequenceHasChars,
   sequenceHasMatchingChars,
 } = require('../lib/sequence_chars');
-
-const { documentType } = require('./document');
-const { keyValueType } = require('./key_value');
-const { regexIndexType } = require('./regex_index');
-const { inputKeyValueType } = require('./input_key_value');
 
 const docSetSchemaString = `
 """A collection of documents that share the same set of selector values"""
@@ -231,176 +217,8 @@ const docSetResolvers = {
   },
 };
 
-const docSetType = new GraphQLObjectType({
-  name: 'DocSet',
-  description: 'A collection of documents that share the same set of selector values',
-  fields: {
-    id: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The id of the docSet, which is formed by concatenating the docSet\'s selector values',
-    },
-    selectors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
-      description: 'The selectors of the docSet',
-      resolve: docSetResolvers.selectors,
-    },
-    selector: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'A selector for this docSet',
-      args: {
-        id: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The id of the selector',
-        },
-      },
-      resolve: docSetResolvers.selector,
-    },
-    tags: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of the tags of this docSet',
-      resolve: docSetResolvers.tags,
-    },
-    tagsKv: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
-      description: 'A list of the tags of this docSet as key/value tuples',
-      resolve: docSetResolvers.tagsKv,
-    },
-    hasTag: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      description: 'Whether or not the docSet has the specified tag',
-      args: {
-        tagName: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The tag',
-        },
-      },
-      resolve: docSetResolvers.hasTag,
-    },
-    documents: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(documentType))),
-      description: 'The documents in the docSet',
-      args: {
-        ids: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'A whitelist of ids of documents to include',
-        },
-        withChars: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return documents whose main sequence contains a token whose payload is an exact match to one of the specified strings',
-        },
-        withMatchingChars: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return documents whose main sequence contains a token whose payload matches the specified regexes',
-        },
-        allChars: {
-          type: GraphQLBoolean,
-          description: 'If true, documents where all search terms match will be included',
-        },
-        withScopes: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return documents where the list of scopes is used',
-        },
-        allScopes: {
-          type: GraphQLBoolean,
-          description: 'If true, documents where all scopes are found will be included',
-        },
-        withHeaderValues: {
-          type: GraphQLList(GraphQLNonNull(inputKeyValueType)),
-          description: 'Only return documents with the specified header key/values',
-        },
-        withTags: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return documents with all the specified tags',
-        },
-        withoutTags: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return documents with none of the specified tags',
-        },
-        sortedBy: {
-          type: GraphQLString,
-          description: `Sort returned documents by the designated method (currently ${Object.keys(bookCodeCompareFunctions).join(', ')})`,
-        },
-      },
-      resolve: docSetResolvers.documents,
-    },
-    nDocuments: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The number documents in the docSet',
-      resolve: docSetResolvers.nDocuments,
-    },
-    document: {
-      type: documentType,
-      description: 'The document with the specified book code',
-      args: {
-        bookCode: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The book code of the required document',
-        },
-      },
-      resolve: docSetResolvers.document,
-    },
-    hasMapping: {
-      type: GraphQLBoolean,
-      resolve: docSetResolvers.hasMapping,
-    },
-    enumIndexForString: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The internal index number corresponding to a string in a given docset enum',
-      args: {
-        enumType: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The enum to be searched',
-        },
-        searchString: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The string to match',
-        },
-      },
-      resolve: docSetResolvers.enumIndexForString,
-    },
-    enumRegexIndexesForString: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(regexIndexType))),
-      description: 'Information about internal indexes matching the case-insensitive regex in a given docset enum',
-      args: {
-        enumType: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The enum to be searched',
-        },
-        searchRegex: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The regex to match',
-        },
-      },
-      resolve: docSetResolvers.enumRegexIndexesForString,
-    },
-    wordLikes: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of wordLike token strings in the docSet',
-      args: {
-        coerceCase: {
-          type: GraphQLString,
-          description: 'Whether to coerce the strings (toLower|toUpper|none)',
-        },
-      },
-      resolve: docSetResolvers.wordLikes,
-    },
-    uniqueChars: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of unique characters in the docSet',
-      resolve: docSetResolvers.uniqueChars,
-    },
-    uniqueCharsString: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'A string containing the unique characters in the docSet',
-      resolve: docSetResolvers.uniqueCharsString,
-    },
-  },
-},
-);
-
 module.exports = {
   docSetSchemaString,
   docSetResolvers,
-  docSetType,
 };
 

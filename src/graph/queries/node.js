@@ -1,12 +1,4 @@
-const {
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLBoolean,
-} = require('graphql');
 const { headerBytes } = require('proskomma-utils');
-const { itemGroupType } = require('./itemGroup');
 
 const nodeSchemaString = `
 """A tree node"""
@@ -46,46 +38,7 @@ const nodeResolvers = {
       .map(s => s[2].split('/')[2]),
 };
 
-const nodeType = new GraphQLObjectType({
-  name: 'node',
-  description: 'A tree node',
-  fields: () => ({
-    id: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The node id',
-      resolve: nodeResolvers.id,
-    },
-    parentId: {
-      type: GraphQLString,
-      description: 'The node parent id',
-      resolve: nodeResolvers.parentId,
-    },
-    keys: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'The keys for content',
-      resolve: nodeResolvers.keys,
-    },
-    itemGroups: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemGroupType))),
-      args: {
-        includeContext: {
-          type: GraphQLBoolean,
-          description: 'If true, adds scope and nextToken information to each token',
-        },
-      },
-      description: 'The content as itemGroups',
-      resolve: nodeResolvers.itemGroups,
-    },
-    childIds: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'The node children ids',
-      resolve: nodeResolvers.childIds,
-    },
-  }),
-});
-
 module.exports = {
   nodeSchemaString,
   nodeResolvers,
-  nodeType,
 };

@@ -1,18 +1,4 @@
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
 const xre = require('xregexp');
-
-const { kvEntryType } = require('./kv_entry');
-const { keyMatchesType } = require('./input_key_matches');
-const { keyValuesType } = require('./input_key_values');
-const { keyValueType } = require('./key_value');
 
 const kvSequenceSchemaString = `
 """A contiguous flow of content for key-values"""
@@ -159,76 +145,7 @@ const kvSequenceResolvers = {
   hasTag: (root, args) => root.tags.has(args.tagName),
 };
 
-const kvSequenceType = new GraphQLObjectType({
-  name: 'kvSequence',
-  description: 'A contiguous flow of content for key-values',
-  fields: () => ({
-    id: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The id of the sequence',
-    },
-    nEntries: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The number of entries in the key-value sequence',
-      resolve: kvSequenceResolvers.nEntries,
-    },
-    entries: {
-      type: GraphQLList(GraphQLNonNull(kvEntryType)),
-      description: 'The entries in the key-value sequence',
-      args: {
-        keyMatches: {
-          type: GraphQLString,
-          description: 'Only return entries whose key matches the specification',
-        },
-        keyEquals: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only return entries whose key equals one of the values in the specification',
-        },
-        secondaryMatches: {
-          type: GraphQLList(GraphQLNonNull(keyMatchesType)),
-          description: 'Only return entries whose secondary keys match the specification',
-        },
-        secondaryEquals: {
-          type: GraphQLList(GraphQLNonNull(keyValuesType)),
-          description: 'Only return entries whose secondary keys equal one of the values in the specification',
-        },
-        contentMatches: {
-          type: GraphQLList(GraphQLNonNull(keyMatchesType)),
-          description: 'Only return entries whose content matches the specification',
-        },
-        contentEquals: {
-          type: GraphQLList(GraphQLNonNull(keyValuesType)),
-          description: 'Only return entries whose content equals one of the values in the specification',
-        },
-      },
-      resolve: kvSequenceResolvers.entries,
-    },
-    tags: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of the tags of this sequence',
-      resolve: kvSequenceResolvers.tags,
-    },
-    tagsKv: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
-      description: 'A list of the tags of this sequence as key/value tuples',
-      resolve: kvSequenceResolvers.tagsKv,
-    },
-    hasTag: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      description: 'Whether or not the sequence has the specified tag',
-      args: {
-        tagName: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The tag name',
-        },
-      },
-      resolve: kvSequenceResolvers.hasTag,
-    },
-  }),
-});
-
 module.exports = {
   kvSequenceSchemaString,
   kvSequenceResolvers,
-  kvSequenceType,
 };

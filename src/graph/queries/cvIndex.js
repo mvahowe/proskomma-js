@@ -1,14 +1,3 @@
-const {
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
-const { verseNumberType } = require('./verseNumber');
-const { verseRangeType } = require('./verseRange');
-const { cvVersesType } = require('./cvVerses');
-
 const cvIndexSchemaString = `
 """A chapterVerse index entry"""
 type cvIndex {
@@ -52,35 +41,7 @@ const cvIndexResolvers = {
   },
 };
 
-const cvIndexType = new GraphQLObjectType({
-  name: 'cvIndex',
-  description: 'A chapterVerse index entry',
-  fields: () => ({
-    chapter: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The chapter number',
-      resolve: cvIndexResolvers.chapter,
-    },
-    verses: {
-      type: GraphQLList(cvVersesType),
-      description: 'Information about the verses in the chapter',
-      resolve: cvIndexResolvers.verses,
-    },
-    verseNumbers: {
-      type: GraphQLList(GraphQLNonNull(verseNumberType)),
-      description: 'A list of verse number and range information, organized by verse number',
-      resolve: cvIndexResolvers.verseNumbers,
-    },
-    verseRanges: {
-      type: GraphQLList(GraphQLNonNull(verseRangeType)),
-      description: 'A list of verse number and range information, organized by verse range',
-      resolve: cvIndexResolvers.verseRanges,
-    },
-  }),
-});
-
 module.exports = {
   cvIndexSchemaString,
   cvIndexResolvers,
-  cvIndexType,
 };

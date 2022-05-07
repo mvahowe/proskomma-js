@@ -1,12 +1,4 @@
-const {
-  GraphQLObjectType,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLString,
-  GraphQLNonNull,
-} = require('graphql');
 const { dumpItemGroup } = require('../lib/dump');
-const { itemType } = require('./item');
 
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {
@@ -77,67 +69,7 @@ const itemGroupResolvers = {
     ),
 };
 
-const itemGroupType = new GraphQLObjectType({
-  name: 'ItemGroup',
-  description: 'A collection of items, with scope context',
-  fields: () => ({
-    items: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-      description: 'Items for this itemGroup',
-      resolve: itemGroupResolvers.items,
-    },
-    tokens: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-      description: 'Tokens for this itemGroup',
-      args: {
-        withChars: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return tokens whose payload is an exact match to one of the specified strings',
-        },
-        withSubTypes: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return tokens with one of the specified subTypes',
-        },
-      },
-      resolve: itemGroupResolvers.tokens,
-    },
-    text: {
-      type: GraphQLNonNull(GraphQLString),
-      args: {
-        normalizeSpace: {
-          type: GraphQLBoolean,
-          description: 'If true, converts each whitespace character to a single space',
-        },
-      },
-      description: 'The text of the itemGroup as a single string',
-      resolve: itemGroupResolvers.text,
-    },
-    scopeLabels: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'The labels of scopes that were open at the beginning of the itemGroup',
-      args: {
-        startsWith: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only include scopes that begin with this value',
-        },
-      },
-      resolve: itemGroupResolvers.scopeLabels,
-    },
-    dump: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The itemGroup content as a string in a compact eyeballable format',
-      resolve: itemGroupResolvers.dump,
-    },
-    includedScopes: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of scopes from the items of the itemGroup',
-      resolve: itemGroupResolvers.includedScopes,
-    },
-  }),
-});
-
 module.exports = {
   itemGroupSchemaString,
   itemGroupResolvers,
-  itemGroupType,
 };

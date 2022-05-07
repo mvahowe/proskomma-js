@@ -1,14 +1,4 @@
-const {
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
 const { dumpItems } = require('../lib/dump');
-const { itemType } = require('./item');
 
 const cIndexSchemaString = `
 """A chapter index entry"""
@@ -91,91 +81,7 @@ const cIndexResolvers = {
   },
 };
 
-const cIndexType = new GraphQLObjectType({
-  name: 'cIndex',
-  description: 'A chapter index entry',
-  fields: () => ({
-    chapter: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The chapter number',
-      resolve: cIndexResolvers.chapter,
-    },
-    startBlock: {
-      type: GraphQLInt,
-      description: 'The zero-indexed number of the block where the chapter starts',
-      resolve: cIndexResolvers.startBlock,
-    },
-    endBlock: {
-      type: GraphQLInt,
-      description: 'The zero-indexed number of the block where the chapter ends',
-      resolve: cIndexResolvers.endBlock,
-    },
-    startItem: {
-      type: GraphQLInt,
-      description: 'The zero-indexed position of the item where the chapter starts',
-      resolve: cIndexResolvers.startItem,
-    },
-    endItem: {
-      type: GraphQLInt,
-      description: 'The zero-indexed position of the item where the chapter ends',
-      resolve: cIndexResolvers.endItem,
-    },
-    nextToken: {
-      type: GraphQLInt,
-      description: 'The value of nextToken at the beginning of the chapter',
-      resolve: cIndexResolvers.nextToken,
-    },
-    items: {
-      type: GraphQLNonNull(GraphQLList(itemType)),
-      description: 'A list of items for this chapter',
-      args: {
-        includeContext: {
-          type: GraphQLBoolean,
-          description: 'If true, adds scope and nextToken information to each token',
-        },
-      },
-      resolve: cIndexResolvers.items,
-    },
-    dumpItems: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The items as a string in a compact eyeballable format',
-      resolve: cIndexResolvers.dumpItems,
-    },
-    tokens: {
-      type: GraphQLNonNull(GraphQLList(itemType)),
-      description: 'A list of tokens for this chapter',
-      args: {
-        includeContext: {
-          type: GraphQLBoolean,
-          description: 'If true, adds scope and nextToken information to each token',
-        },
-        withChars: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return tokens whose payload is an exact match to one of the specified strings',
-        },
-        withSubTypes: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Return tokens with one of the specified subTypes',
-        },
-      },
-      resolve: cIndexResolvers.tokens,
-    },
-    text: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The text of the chapter as a single string',
-      args: {
-        normalizeSpace: {
-          type: GraphQLBoolean,
-          description: 'If true, converts each whitespace character to a single space',
-        },
-      },
-      resolve: cIndexResolvers.text,
-    },
-  }),
-});
-
 module.exports = {
   cIndexSchemaString,
   cIndexResolvers,
-  cIndexType,
 };

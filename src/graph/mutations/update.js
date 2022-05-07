@@ -1,14 +1,4 @@
-const {
-  GraphQLString,
-  GraphQLNonNull,
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLList,
-} = require('graphql');
-
 const { remakeBlocks } = require('../lib/remake_blocks');
-const { inputItemObjectType } = require('../queries/inputItemObject');
-const { inputBlockSpecType } = require('../queries/inputBlockSpec');
 
 const updateMutationsSchemaString = `
   """Replaces the items of a block with a new set of items"""
@@ -142,84 +132,7 @@ const updateMutationsResolvers = {
   },
 };
 
-const updateMutations = {
-  updateItems: {
-    type: GraphQLNonNull(GraphQLBoolean),
-    description: 'Replaces the items of a block with a new set of items',
-    args: {
-      docSetId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the docSet containing the document containing the sequence containing the block for which the items will be updated',
-      },
-      documentId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the document containing the sequence containing the block for which the items will be updated',
-      },
-      sequenceId: {
-        type: GraphQLString,
-        description: 'The id of the sequence containing the block for which the items will be updated (defaults to the main sequence)',
-      },
-      blockPosition: {
-        type: GraphQLNonNull(GraphQLInt),
-        description: 'The zero-indexed number of the block for which the items will be updated',
-      },
-      items: {
-        type: GraphQLList(GraphQLNonNull(inputItemObjectType)),
-        description: 'The new content for the block as item objects',
-      },
-      blockGrafts: {
-        type: GraphQLList(GraphQLNonNull(inputItemObjectType)),
-        description: 'BlockGrafts for the block as item objects',
-      },
-      blockScope: {
-        type: inputItemObjectType,
-        description: 'Optional blockScope for the block as an item object',
-      },
-    },
-    resolve: updateMutationsResolvers.updateItems,
-  },
-  updateAllBlocks: {
-    type: GraphQLNonNull(GraphQLBoolean),
-    description: 'Replaces all the blocks of a sequence with a new set of blocks',
-    args: {
-      docSetId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the docSet containing the document containing the sequence for which the blocks will be updated',
-      },
-      documentId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the document containing the sequence for which the blocks will be updated',
-      },
-      sequenceId: {
-        type: GraphQLString,
-        description: 'The id of the sequence for which the blocks will be updated (defaults to the main sequence)',
-      },
-      blocksSpec: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(inputBlockSpecType))),
-        description: 'The JSON describing blocks',
-      },
-    },
-    resolve: updateMutationsResolvers.updateAllBlocks,
-  },
-  gcSequences: {
-    type: GraphQLNonNull(GraphQLBoolean),
-    description: 'Garbage collects unused sequences within a document. (You probably don\'t need to do this.)',
-    args: {
-      docSetId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the docSet containing the document to be garbage collected',
-      },
-      documentId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the document to be garbage collected',
-      },
-    },
-    resolve: updateMutationsResolvers.gcSequences,
-  },
-};
-
 module.exports = {
   updateMutationsSchemaString,
   updateMutationsResolvers,
-  updateMutations,
 };

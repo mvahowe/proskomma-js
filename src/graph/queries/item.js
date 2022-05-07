@@ -1,12 +1,3 @@
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {
     return true;
@@ -74,51 +65,7 @@ const itemResolvers = {
     root[4] ? root[4].filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)) : [],
 };
 
-const itemType = new GraphQLObjectType({
-  name: 'Item',
-  description: 'Item',
-  fields: () => ({
-    type: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The basic item type (token, scope or graft)',
-      resolve: root => root[0],
-    },
-    subType: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The type-dependent subtype of the item',
-      resolve: root => root[1],
-    },
-    payload: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The content of the item (the text for tokens, the label for scopes and the sequence id for grafts)',
-      args: {
-        normalizeSpace: { type: GraphQLBoolean },
-        includeChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-        excludeChars: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-      },
-      resolve: itemResolvers.payload,
-    },
-    position: {
-      type: GraphQLInt,
-      description: 'If \'includeContext\' was selected, and for tokens, the index of the token from the start of the sequence',
-      resolve: root => root[3],
-    },
-    scopes: {
-      type: GraphQLList(GraphQLNonNull(GraphQLString)),
-      description: 'If \'includeContext\' was selected, a list of scopes that are open around the item',
-      args: {
-        startsWith: {
-          type: GraphQLList(GraphQLNonNull(GraphQLString)),
-          description: 'Only include scopes that begin with this value',
-        },
-      },
-      resolve: itemResolvers.scopes,
-    },
-  }),
-});
-
 module.exports = {
   itemSchemaString,
   itemResolvers,
-  itemType,
 };

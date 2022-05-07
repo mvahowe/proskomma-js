@@ -1,13 +1,3 @@
-const {
-  GraphQLNonNull,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLString,
-  GraphQLBoolean,
-} = require('graphql');
-const { itemType } = require('./item');
-
 const cellSchemaString = `
 """A table cell"""
 type cell {
@@ -46,46 +36,7 @@ const cellResolvers = {
   },
 };
 
-const cellType = new GraphQLObjectType({
-  name: 'cell',
-  description: 'A table cell',
-  fields: () => ({
-    rows: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInt))),
-      description: 'The row numbers',
-      resolve: cellResolvers.rows,
-    },
-    columns: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInt))),
-      description: 'The column numbers',
-      resolve: cellResolvers.columns,
-    },
-    items: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-      description: 'A list of items from the c (content) field of the cell',
-      resolve: cellResolvers.items,
-    },
-    tokens: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(itemType))),
-      description: 'A list of tokens from the c (content) field of the cell',
-      resolve: cellResolvers.tokens,
-    },
-    text: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The text of the cell as a single string',
-      args: {
-        normalizeSpace: {
-          type: GraphQLBoolean,
-          description: 'If true, converts each whitespace character to a single space',
-        },
-      },
-      resolve: cellResolvers.text,
-    },
-  }),
-});
-
 module.exports = {
   cellSchemaString,
   cellResolvers,
-  cellType,
 };

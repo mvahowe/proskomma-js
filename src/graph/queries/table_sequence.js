@@ -1,18 +1,5 @@
 import xre from 'xregexp';
-import { keyValueType } from './key_value';
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLBoolean,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
 const { headerBytes } = require('proskomma-utils');
-
-const { cellType } = require('./cell');
-const { rowMatchSpecType } = require('./row_match_spec');
-const { rowEqualsSpecType } = require('./row_equals_spec');
 
 const tableSequenceSchemaString = `
 """A contiguous flow of content for a table"""
@@ -195,88 +182,7 @@ const tableSequenceResolvers = {
     .map(t => t.split(':')[1]),
 };
 
-const tableSequenceType = new GraphQLObjectType({
-  name: 'tableSequence',
-  description: 'A contiguous flow of content for a table',
-  fields: () => ({
-    id: {
-      type: GraphQLNonNull(GraphQLString),
-      description: 'The id of the sequence',
-    },
-    nCells: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The number of cells in the table sequence',
-      resolve: tableSequenceResolvers.nCells,
-    },
-    nRows: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The number of rows in the table sequence',
-      resolve: tableSequenceResolvers.nRows,
-    },
-    nColumns: {
-      type: GraphQLNonNull(GraphQLInt),
-      description: 'The number of columns in the table sequence',
-      resolve: tableSequenceResolvers.nColumns,
-    },
-    cells: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(cellType))),
-      description: 'The cells in the table sequence',
-      resolve: tableSequenceResolvers.cells,
-    },
-    rows: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLList(GraphQLNonNull(cellType))))),
-      description: 'The rows in the table sequence',
-      args: {
-        positions: {
-          type: GraphQLList(GraphQLNonNull(GraphQLInt)),
-          description: 'Only return rows whose zero-indexed position is in the list',
-        },
-        columns: {
-          type: GraphQLList(GraphQLNonNull(GraphQLInt)),
-          description: 'Only return columns whose zero-indexed position is in the list',
-        },
-        matches: {
-          type: GraphQLList(GraphQLNonNull(rowMatchSpecType)),
-          description: 'Only return rows whose cells match the specification',
-        },
-        equals: {
-          type: GraphQLList(GraphQLNonNull(rowEqualsSpecType)),
-          description: 'Only return rows whose cells contain one of the values in the specification',
-        },
-      },
-      resolve: tableSequenceResolvers.rows,
-    },
-    tags: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of the tags of this sequence',
-      resolve: tableSequenceResolvers.tags,
-    },
-    tagsKv: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(keyValueType))),
-      description: 'A list of the tags of this sequence as key/value tuples',
-      resolve: tableSequenceResolvers.tagsKv,
-    },
-    hasTag: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      description: 'Whether or not the sequence has the specified tag',
-      args: {
-        tagName: {
-          type: GraphQLNonNull(GraphQLString),
-          description: 'The tag name',
-        },
-      },
-      resolve: tableSequenceResolvers.hasTag,
-    },
-    headings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
-      description: 'A list of column headings for this tableSequence, derived from the sequence tags',
-      resolve: tableSequenceResolvers.headings,
-    },
-  }),
-});
-
 module.exports = {
   tableSequenceSchemaString,
   tableSequenceResolvers,
-  tableSequenceType,
 };

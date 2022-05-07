@@ -1,10 +1,3 @@
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
 const inputSelectorSpecSchemaString = `
 """Input specification of a selector"""
 input inputSelectorSpec {

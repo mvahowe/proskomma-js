@@ -1,10 +1,4 @@
 const {
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLNonNull,
-} = require('graphql');
-
-const {
   vrs2json,
   reverseVersification,
   succinctifyVerseMappings,
@@ -100,41 +94,7 @@ const versificationMutationsResolvers = {
   },
 };
 
-const versificationMutations = {
-  setVerseMapping: {
-    type: GraphQLNonNull(GraphQLBoolean),
-    description: 'Adds verse mapping tables to the documents in a docSet, where the verse mapping may be provided in legacy .vrs or JSON format',
-    args: {
-      docSetId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'the id of the docSet to which the verse mapping will be added',
-      },
-      vrsSource: {
-        type: GraphQLString,
-        description: 'The verse mapping, in legacy .vrs format (as a string)',
-      },
-      jsonSource: {
-        type: GraphQLString,
-        description: 'The verse mapping, in JSON format (as a string)',
-      },
-    },
-    resolve: versificationMutationsResolvers.setVerseMapping,
-  },
-  unsetVerseMapping: {
-    type: GraphQLNonNull(GraphQLBoolean),
-    description: 'Removes verse mapping tables from the documents in a docSet',
-    args: {
-      docSetId: {
-        type: GraphQLNonNull(GraphQLString),
-        description: 'The id of the docSet from which verse mapping will be removed',
-      },
-    },
-    resolve: versificationMutationsResolvers.unsetVerseMapping,
-  },
-};
-
 module.exports = {
   versificationMutationsSchemaString,
   versificationMutationsResolvers,
-  versificationMutations,
 };
