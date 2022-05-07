@@ -14,7 +14,10 @@ type idParts {
   """An array of parts of the ID"""
   parts: [String]
   """A part of the ID, by index"""
-  part: String
+  part(
+    """The numeric index of the part"""
+    index: Int!
+  ): String
 }
 `;
 

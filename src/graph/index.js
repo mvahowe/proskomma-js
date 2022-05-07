@@ -57,7 +57,10 @@ const {
   cvVerseElementSchemaString,
   cvVerseElementResolvers,
 } = require('./queries/cvVerseElement');
-const { cvVersesSchemaString } = require('./queries/cvVerses');
+const {
+  cvVersesSchemaString,
+  cvVersesResolvers,
+} = require('./queries/cvVerses');
 const {
   cvIndexSchemaString,
   cvIndexResolvers,
@@ -107,6 +110,7 @@ const {
   selectorSpecSchemaString,
   selectorSpecResolvers,
 } = require('./queries/selector_spec');
+const { inputSelectorSpecSchemaString } = require('./queries/input_selector_spec');
 const {
   mutationsSchemaString,
   mutationsResolvers,
@@ -148,9 +152,10 @@ const combinedSchema = `
       ${documentSchemaString}
       ${docSetSchemaString}
       ${selectorSpecSchemaString}
+      ${inputSelectorSpecSchemaString}
   `;
 // console.log(combinedSchema);
-const executableSchema =
+const gqlSchema =
   makeExecutableSchema({
     typeDefs: combinedSchema,
     resolvers: {
@@ -167,6 +172,7 @@ const executableSchema =
       cell: cellResolvers,
       cIndex: cIndexResolvers,
       cvVerseElement: cvVerseElementResolvers,
+      cvVerses: cvVersesResolvers,
       cvIndex: cvIndexResolvers,
       cvNavigation: cvNavigationResolvers,
       node: nodeResolvers,
@@ -181,7 +187,7 @@ const executableSchema =
     },
   });
 
-const gqlSchema = new GraphQLSchema({
+const OLDgqlSchema = new GraphQLSchema({
   query: schemaQueries,
   mutation: schemaMutations,
 });

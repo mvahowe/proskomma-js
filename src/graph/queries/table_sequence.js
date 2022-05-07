@@ -28,7 +28,16 @@ type tableSequence {
   """The cells in the table sequence"""
   cells: [cell!]!
   """The rows in the table sequence"""
-  rows: [[cell!]!]!
+  rows(
+    """Only return rows whose zero-indexed position is in the list"""
+    positions: [Int!]
+    """Only return columns whose zero-indexed position is in the list"""
+    columns: [Int!]
+    """Only return rows whose cells match the specification"""
+    matches: [rowMatchSpec!]
+    """'Only return rows whose cells contain one of the values in the specification"""
+    equals: [rowEqualsSpec!]
+  ): [[cell!]!]!
   """A list of the tags of this sequence"""
   tags: [String!]!
   """A list of the tags of this sequence as key/value tuples"""

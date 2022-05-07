@@ -5,8 +5,8 @@ const {
 } = require('graphql');
 
 const inputKeyValueSchemaString = `
-"""Key/Value Object"""
-type InputKeyValue {
+"""Input Key/Value Object"""
+input InputKeyValue {
     """The key"""
     key: String!
     """The value"""

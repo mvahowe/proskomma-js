@@ -14,7 +14,7 @@ type kvEntry {
     """The key"""
     key: String!
     """The secondary keys"""
-    secondaryKeys: [String!]
+    secondaryKeys: [KeyValue!]
     """The fields as itemGroups"""
     itemGroups: [ItemGroup]!
 }`;

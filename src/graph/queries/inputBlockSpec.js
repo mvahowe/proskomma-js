@@ -8,7 +8,7 @@ const { inputItemObjectType } = require('./inputItemObject');
 
 const inputBlockSpecSchemaString = `
 """A specification to create or update a block"""
-type inputBlockSpec {
+input inputBlockSpec {
   """The block scope as an item"""
   bs: InputItemObject!
   """The block grafts as items"""

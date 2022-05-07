@@ -41,7 +41,7 @@ type Document {
   header(
     """The header id, corresponding to the tag name minus any trailing '1'"""
     id: String!
-  ): String!
+  ): String
   """The main sequence"""
   mainSequence: Sequence!
   """The number of sequences"""
@@ -134,7 +134,9 @@ type Document {
   """A list of the tags of this document as key/value tuples"""
   tagsKv: [KeyValue!]!
   """'Whether or not the document has the specified tag"""
-  hasTag: Boolean!
+  hasTag(
+    tagName: String!
+  ): Boolean!
   """Content for a Scripture reference within this document, using local versification"""
   cv(
     """The chapter number (as a string)"""

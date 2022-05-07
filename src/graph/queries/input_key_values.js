@@ -6,12 +6,12 @@ const {
 } = require('graphql');
 
 const keyValuesSchemaString = `
-"""Key/Values Object"""
-type KeyValues {
+"""Input Key/Values Object"""
+input KeyValues {
     """The key"""
     key: String!
     """The values"""
-    value: [String!]!
+    values: [String!]!
 }
 `;
 

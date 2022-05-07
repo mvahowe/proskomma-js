@@ -95,7 +95,10 @@ type Sequence {
   """The tokens for each block in the sequence"""
   blocksTokens: [[Item!]!]
   """The text for each block in the sequence"""
-  blocksText: [String!]
+  blocksText(
+    """If true, converts each whitespace character to a single space"""
+    normalizeSpace: Boolean
+  ): [String!]
   """The text for the sequence"""
   text(
     """If true, converts each whitespace character to a single space"""

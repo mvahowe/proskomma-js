@@ -86,9 +86,9 @@ type cvNavigation {
   """The verse number for the previous verse range"""
   previousVerseRangeVerse: cv
   """The next chapter number (as a string)"""
-  nextChapter: cv
+  nextChapter: String
   """The previous chapter number (as a string)"""
-  previousChapter: cv
+  previousChapter: String
 }
 `;
 

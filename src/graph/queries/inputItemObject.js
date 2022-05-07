@@ -6,7 +6,7 @@ const {
 
 const inputItemObjectSchemaString = `
 """Item for arguments"""
-type InputItemObject {
+input InputItemObject {
     """The basic item type (token, scope or graft)'"""
     type: String!
     """The type-dependent subtype of the item"""

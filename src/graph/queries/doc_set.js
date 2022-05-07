@@ -59,7 +59,7 @@ type DocSet {
     """Only return documents where the list of scopes is used"""
     withScopes: [String!]
     """If true, documents where all scopes are found will be included"""
-    allScopes: [String!]
+    allScopes: Boolean
     """Only return documents with the specified header key/values"""
     withHeaderValues: [InputKeyValue!]
     """Only return documents with all the specified tags"""
@@ -67,7 +67,7 @@ type DocSet {
     """Only return documents with none of the specified tags"""
     withoutTags: [String!]
     """Sort returned documents by the designated method (currently ${Object.keys(bookCodeCompareFunctions).join(', ')})\`"""
-    sortedBy: String!
+    sortedBy: String
   ): [Document!]!
   """The number of documents in the docSet"""
   nDocuments: Int!
@@ -79,9 +79,19 @@ type DocSet {
   """Whether the docSet has versification information loaded"""
   hasMapping: Boolean!
   """The internal index number corresponding to a string in a given docSet enum"""
-  enumIndexForString: Int!
+  enumIndexForString(
+    """The enum to be searched"""
+    enumType: String!
+    """The string to match"""
+    searchString: String!
+  ): Int!
   """Information about internal indexes matching the case-insensitive regex in a given docSet enum"""
-  enumRegexIndexesForString: [regexIndex!]!
+  enumRegexIndexesForString(
+    """The enum to be searched"""
+    enumType: String!
+    """The regex to match"""
+    searchRegex: String!
+  ): [regexIndex!]!
   """A list of wordLike token strings in the docSet"""
   wordLikes(
     """Whether to coerce the strings (toLower|toUpper|none)"""

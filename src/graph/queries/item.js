@@ -30,7 +30,7 @@ type Item {
   """The content of the item (the text for tokens, the label for scopes and the sequence id for grafts)"""
   payload(
     """If true, turn all whitespace into a normal space"""
-    normalizeSpace: Boolean!
+    normalizeSpace: Boolean
     """A whitelist of characters to include"""
     includeChars: [String!]
     """A blacklist of characters to exclude"""
@@ -42,7 +42,10 @@ type Item {
     startsWith: [String!]
   ): Int
   """If 'includeContext' was selected, a list of scopes that are open around the item"""
-  scopes: [String!]
+  scopes(
+    """Only include scopes that begin with this value"""
+    startsWith: [String!]
+  ): [String!]
 }
 `;
 

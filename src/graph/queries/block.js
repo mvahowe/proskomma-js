@@ -64,7 +64,7 @@ type Block {
     """If true, withScopes filtering matches items within at least one of the specified scopes"""
     anyScope: Boolean
     """Only return items that are within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)"""
-    WithScriptureCV: String
+    withScriptureCV: String
     """If true, adds scope and nextToken information to each token"""
     includeContext: Boolean
   ) : [Item!]! 
@@ -75,7 +75,7 @@ type Block {
     """If true, withScopes filtering matches tokens within at least one of the specified scopes"""
     anyScope: Boolean
     """Only return tokens that are within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)"""
-    WithScriptureCV: String
+    withScriptureCV: String
     """If true, adds scope and nextToken information to each token"""
     includeContext: Boolean
     """Return tokens whose payload is an exact match to one of the specified strings"""
@@ -88,7 +88,7 @@ type Block {
   """The text of the block as a single string"""
   text(
     """Only return text that is within a chapterVerse range (ch or ch:v or ch:v-v or ch:v-ch:v)"""
-    WithScriptureCV: String
+    withScriptureCV: String
     """If true, converts each whitespace character to a single space"""
     normalizeSpace: Boolean
   ): String!

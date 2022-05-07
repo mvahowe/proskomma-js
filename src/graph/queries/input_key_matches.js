@@ -6,7 +6,7 @@ const {
 
 const keyMatchesSchemaString = `
 """Key/Regex tuple"""
-type KeyMatches {
+input KeyMatches {
   """The key"""
   key: String!
   """The regex to match"""

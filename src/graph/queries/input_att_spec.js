@@ -7,7 +7,7 @@ const {
 
 const inputAttSpecSchemaString = `
 """Attribute Specification"""
-type AttSpec {
+input AttSpec {
 """The type of attribute, ie what type of thing it's connected to"""
 attType: String!
 """The name of the USFM tag to which the attribute is connected"""

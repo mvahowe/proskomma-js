@@ -8,7 +8,7 @@ const {
 
 const rowEqualsSpecSchemaString = `
 """Row Equals Specification"""
-type rowEqualsSpec {
+input rowEqualsSpec {
   """The position of the column in which to search a match"""
   colN: Int!
   """The values to match"""

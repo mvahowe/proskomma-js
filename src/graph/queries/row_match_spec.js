@@ -7,11 +7,11 @@ const {
 
 const rowMatchSpecSchemaString = `
 """Row Match Specification"""
-type rowMatchSpec {
+input rowMatchSpec {
   """The position of the column in which to search a match"""
   colN: Int!
   """The regex to match"""
-  values: String!
+  matching: String!
 }
 `;
 

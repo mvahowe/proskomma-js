@@ -14,7 +14,7 @@ const addMutationsSchemaString = `
   """Adds a document which will be assigned to an existing or new docSet on the basis of the specified selectors"""
   addDocument(
     """The selectors for this document, the keys of which must match those of the Proskomma instance"""
-    selectors: [KeyValue!]!
+    selectors: [InputKeyValue!]!
     """The format of the content (probably usfm or usx)"""
     contentType: String!
     """The document content as a string"""
@@ -34,7 +34,7 @@ const addMutationsSchemaString = `
     graftToMain: Boolean
     """'A list of tags to be added"""
     tags: [String!]
-  ): Boolean!
+  ): String!
   """Adds a new block to a sequence"""
   newBlock(
     """The id of the document containing the sequence to which the block will be added"""

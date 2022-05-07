@@ -37,9 +37,9 @@ type cvVerseElement {
     """If true, adds scope and nextToken information to each token"""
     includeContext: Boolean
     """Return tokens whose payload is an exact match to one of the specified strings"""
-    withChars: [String!]!
+    withChars: [String!]
     """Return tokens with one of the specified subTypes"""
-    withSubTypes: [String!]!
+    withSubTypes: [String!]
   ): [Item]!
   """The text of the verse as a single string"""
   text(

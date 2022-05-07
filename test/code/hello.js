@@ -33,7 +33,7 @@ test(
       }
       const query2 = '{documents { toc: header(id:"toc") toc3: header(id:"toc3") banana: header(id:"banana")} }';
       const result2 = await pk.gqlQuery(query2);
-      t.ok('data' in result2);
+      t.equal(result2.errors, undefined);
       t.equal(result2.data.documents[0].toc, 'The Gospel of Mark');
       t.equal(result2.data.documents[0].toc3, 'Mk');
       t.equal(result2.data.documents[0].banana, null);
