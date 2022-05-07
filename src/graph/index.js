@@ -1,5 +1,3 @@
-const { makeExecutableSchema } = require('@graphql-tools/schema');
-
 const {
   keyValueSchemaString,
   keyValueResolvers,
@@ -112,7 +110,7 @@ const {
   mutationsResolvers,
 } = require('./mutations/index');
 
-const combinedSchema = `
+const typeDefs = `
       ${querySchemaString}
       ${mutationsSchemaString}
       ${keyValueSchemaString}
@@ -150,37 +148,36 @@ const combinedSchema = `
       ${selectorSpecSchemaString}
       ${inputSelectorSpecSchemaString}
   `;
-// console.log(combinedSchema);
-const gqlSchema =
-  makeExecutableSchema({
-    typeDefs: combinedSchema,
-    resolvers: {
-      Mutation: mutationsResolvers,
-      Query: queryResolvers,
-      KeyValue: keyValueResolvers,
-      cv: cvResolvers,
-      idParts: idPartsResolvers,
-      Item: itemResolvers,
-      ItemGroup: itemGroupResolvers,
-      kvEntry: kvEntryResolvers,
-      regexIndex: regexIndexResolvers,
-      verseNumber: verseNumberResolvers,
-      cell: cellResolvers,
-      cIndex: cIndexResolvers,
-      cvVerseElement: cvVerseElementResolvers,
-      cvVerses: cvVersesResolvers,
-      cvIndex: cvIndexResolvers,
-      cvNavigation: cvNavigationResolvers,
-      node: nodeResolvers,
-      kvSequence: kvSequenceResolvers,
-      tableSequence: tableSequenceResolvers,
-      treeSequence: treeSequenceResolvers,
-      Block: blockResolvers,
-      Sequence: sequenceResolvers,
-      Document: documentResolvers,
-      DocSet: docSetResolvers,
-      selectorSpec: selectorSpecResolvers,
-    },
-  });
 
-module.exports = { gqlSchema };
+const resolvers = {
+  Mutation: mutationsResolvers,
+  Query: queryResolvers,
+  KeyValue: keyValueResolvers,
+  cv: cvResolvers,
+  idParts: idPartsResolvers,
+  Item: itemResolvers,
+  ItemGroup: itemGroupResolvers,
+  kvEntry: kvEntryResolvers,
+  regexIndex: regexIndexResolvers,
+  verseNumber: verseNumberResolvers,
+  cell: cellResolvers,
+  cIndex: cIndexResolvers,
+  cvVerseElement: cvVerseElementResolvers,
+  cvVerses: cvVersesResolvers,
+  cvIndex: cvIndexResolvers,
+  cvNavigation: cvNavigationResolvers,
+  node: nodeResolvers,
+  kvSequence: kvSequenceResolvers,
+  tableSequence: tableSequenceResolvers,
+  treeSequence: treeSequenceResolvers,
+  Block: blockResolvers,
+  Sequence: sequenceResolvers,
+  Document: documentResolvers,
+  DocSet: docSetResolvers,
+  selectorSpec: selectorSpecResolvers,
+};
+
+module.exports = {
+  typeDefs,
+  resolvers,
+};

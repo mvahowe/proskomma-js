@@ -1,4 +1,5 @@
 import xre from 'xregexp';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 
 const { Mutex } = require('async-mutex');
 const checksum = require('checksum');
@@ -16,7 +17,10 @@ const {
 const packageJson = require('../package.json');
 const { DocSet } = require('./model/doc_set');
 const { Document } = require('./model/document');
-const { gqlSchema } = require('./graph');
+const {
+  typeDefs,
+  resolvers,
+} = require('./graph');
 
 const { lexingRegexes } = require('./parser/lexers/lexingRegexes');
 const blocksSpecUtils = require('./util/blocksSpec');
@@ -26,6 +30,12 @@ const {
 } = require('./parser/lexers/nodes');
 
 const tree2nodes = tree => flattenNodes(numberNodes(tree));
+
+const executableSchema =
+  makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  });
 
 class Proskomma {
   constructor() {
@@ -333,7 +343,6 @@ class Proskomma {
     if (!selected[lastSelectorValue]) {
       throw new Error(`Could not find docSetId '${docSetId}' in docSetsBySelector in deleteDocSet`);
     }
-    ;
     delete selected[lastSelectorValue];
     delete this.docSets[docSetId];
     return true;
@@ -510,7 +519,7 @@ class Proskomma {
     const release = await this.mutex.acquire();
 
     try {
-      const result = await graphql(gqlSchema, query, this, {});
+      const result = await graphql(executableSchema, query, this, {});
 
       if (callback) {
         callback(result);
@@ -522,7 +531,7 @@ class Proskomma {
   }
 
   gqlQuerySync(query, callback) {
-    const result = graphqlSync(gqlSchema, query, this, {});
+    const result = graphqlSync(executableSchema, query, this, {});
 
     if (callback) {
       callback(result);
@@ -542,6 +551,8 @@ class Proskomma {
 
 module.exports = {
   Proskomma,
+  typeDefs,
+  resolvers,
   lexingRegexes,
   blocksSpecUtils,
   tree2nodes,
