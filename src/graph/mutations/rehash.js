@@ -4,6 +4,19 @@ const {
   GraphQLBoolean,
 } = require('graphql');
 
+const rehashMutationsSchemaString = `
+  """Explicitly rebuild the text lookup tables for a docSet. (You probably don't need to do this)"""
+  rehashDocSet(
+    """The id of the docSet"""
+    docSetId: String!
+  ): Boolean!
+`;
+
+const rehashMutationsResolvers = {
+  rehashDocSet: (root, args) =>
+    root.rehashDocSet(args.docSetId),
+};
+
 const rehashMutations = {
   rehashDocSet: {
     type: GraphQLNonNull(GraphQLBoolean),
@@ -14,9 +27,12 @@ const rehashMutations = {
         description: 'The id of the docSet',
       },
     },
-    resolve: (root, args) =>
-      root.rehashDocSet(args.docSetId),
+    resolve: rehashMutationsResolvers.rehashDocSet,
   },
 };
 
-module.exports = { rehashMutations };
+module.exports = {
+  rehashMutationsSchemaString,
+  rehashMutationsResolvers,
+  rehashMutations,
+};

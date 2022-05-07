@@ -11,12 +11,35 @@ const {
   addMutationsResolvers,
 } = require('./add');
 
+const {
+  deleteMutationsSchemaString,
+  deleteMutationsResolvers,
+} = require('./delete');
+
+const {
+  rehashMutationsSchemaString,
+  rehashMutationsResolvers,
+} = require('./rehash');
+
+const {
+  tagMutationsSchemaString,
+  tagMutationsResolvers,
+} = require('./tags');
+
 const mutationsSchemaString = `
 type Mutation {
 ${addMutationsSchemaString}
+${deleteMutationsSchemaString}
+${rehashMutationsSchemaString}
+${tagMutationsSchemaString}
 }`;
 
-const mutationsResolvers = { ...addMutationsResolvers };
+const mutationsResolvers = {
+  ...addMutationsResolvers,
+  ...deleteMutationsResolvers,
+  ...rehashMutationsResolvers,
+  ...tagMutationsResolvers,
+};
 
 const schemaFields = {
   ...tagMutations,
