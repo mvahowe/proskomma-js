@@ -26,12 +26,24 @@ const {
   tagMutationsResolvers,
 } = require('./tags');
 
+const {
+  updateMutationsSchemaString,
+  updateMutationsResolvers,
+} = require('./update');
+
+const {
+  versificationMutationsSchemaString,
+  versificationMutationsResolvers,
+} = require('./versification');
+
 const mutationsSchemaString = `
 type Mutation {
 ${addMutationsSchemaString}
 ${deleteMutationsSchemaString}
 ${rehashMutationsSchemaString}
 ${tagMutationsSchemaString}
+${updateMutationsSchemaString}
+${versificationMutationsSchemaString}
 }`;
 
 const mutationsResolvers = {
@@ -39,6 +51,8 @@ const mutationsResolvers = {
   ...deleteMutationsResolvers,
   ...rehashMutationsResolvers,
   ...tagMutationsResolvers,
+  ...updateMutationsResolvers,
+  ...versificationMutationsResolvers,
 };
 
 const schemaFields = {
