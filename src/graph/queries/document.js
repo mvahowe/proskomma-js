@@ -1,6 +1,6 @@
 import xre from 'xregexp';
 
-const { do_cv } = require('../lib/do_cv');
+import { do_cv } from '../lib/do_cv';
 
 const headerById = (root, id) =>
   (id in root.headers) ? root.headers[id] : null;
@@ -532,7 +532,7 @@ const documentResolvers = {
   },
 };
 
-module.exports = {
+export {
   documentSchemaString,
   documentResolvers,
 };

@@ -1,7 +1,7 @@
-const {
+import {
   addTag,
   removeTag,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 const tagMutationsSchemaString = `
   """Add one or more tags to a docSet, if they are not already present"""

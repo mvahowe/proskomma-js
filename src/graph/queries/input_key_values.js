@@ -8,5 +8,4 @@ input KeyValues {
 }
 `;
 
-
-module.exports = { keyValuesSchemaString };
+export { keyValuesSchemaString };

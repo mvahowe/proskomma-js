@@ -54,4 +54,4 @@ const remakeBlocks = (docSet, document, sequence, blocksSpec) => {
   }
 };
 
-module.exports = { remakeBlocks };
+export { remakeBlocks };

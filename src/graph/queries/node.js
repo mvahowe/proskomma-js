@@ -1,4 +1,4 @@
-const { headerBytes } = require('proskomma-utils');
+import { headerBytes } from 'proskomma-utils';
 
 const nodeSchemaString = `
 """A tree node"""
@@ -38,7 +38,7 @@ const nodeResolvers = {
       .map(s => s[2].split('/')[2]),
 };
 
-module.exports = {
+export {
   nodeSchemaString,
   nodeResolvers,
 };

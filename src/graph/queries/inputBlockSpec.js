@@ -14,4 +14,4 @@ input inputBlockSpec {
 }
 `;
 
-module.exports = { inputBlockSpecSchemaString };
+export { inputBlockSpecSchemaString };

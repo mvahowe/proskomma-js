@@ -13,7 +13,7 @@ const cvResolvers = {
   verse: root => root[1],
 };
 
-module.exports = {
+export {
   cvSchemaString,
   cvResolvers,
 };

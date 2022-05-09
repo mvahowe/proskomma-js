@@ -1,7 +1,7 @@
 import xre from 'xregexp';
 
-const { expressions, doPredicate } = require('./tribos_expression');
-const { stepActions } = require('./tribos_step');
+import { expressions, doPredicate } from './tribos_expression';
+import { stepActions } from './tribos_step';
 
 class Tribos {
   constructor() {

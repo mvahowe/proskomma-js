@@ -12,7 +12,7 @@ const regexIndexResolvers = {
   matched: root => root[1],
 };
 
-module.exports = {
+export {
   regexIndexSchemaString,
   regexIndexResolvers,
 };

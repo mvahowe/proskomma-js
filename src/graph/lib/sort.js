@@ -1,4 +1,4 @@
-const { ptBooks } = require('proskomma-utils');
+import { ptBooks } from 'proskomma-utils';
 
 const ptCompare = (a, b) => {
   const bcA = a.headers.bookCode || 'GEN';
@@ -35,4 +35,4 @@ const bookCodeCompareFunctions = {
   alpha2: alpha2Compare,
 };
 
-module.exports = { bookCodeCompareFunctions };
+export { bookCodeCompareFunctions };

@@ -76,7 +76,7 @@ const sequenceHasMatchingChars = (docSet, seq, chars, allChars) => {
   return sequenceMatchesSearchTerms(seq, charsIndexesArray, allChars);
 };
 
-module.exports = {
+export {
   sequenceHasChars,
   sequenceHasMatchingChars,
   // sequenceMatchesSearchTerms,

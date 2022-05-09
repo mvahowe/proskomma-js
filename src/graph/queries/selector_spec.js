@@ -23,7 +23,7 @@ const selectorSpecResolvers = {
   enum: root => root.enum || null,
 };
 
-module.exports = {
+export {
   selectorSpecSchemaString,
   selectorSpecResolvers,
 };

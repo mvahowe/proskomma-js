@@ -1,32 +1,32 @@
-const {
+import {
   addMutationsSchemaString,
   addMutationsResolvers,
-} = require('./add');
+} from './add';
 
-const {
+import {
   deleteMutationsSchemaString,
   deleteMutationsResolvers,
-} = require('./delete');
+} from './delete';
 
-const {
+import {
   rehashMutationsSchemaString,
   rehashMutationsResolvers,
-} = require('./rehash');
+} from './rehash';
 
-const {
+import {
   tagMutationsSchemaString,
   tagMutationsResolvers,
-} = require('./tags');
+} from './tags';
 
-const {
+import {
   updateMutationsSchemaString,
   updateMutationsResolvers,
-} = require('./update');
+} from './update';
 
-const {
+import {
   versificationMutationsSchemaString,
   versificationMutationsResolvers,
-} = require('./versification');
+} from './versification';
 
 const mutationsSchemaString = `
 type Mutation {
@@ -48,7 +48,7 @@ const mutationsResolvers = {
 };
 
 
-module.exports = {
+export {
   mutationsSchemaString,
   mutationsResolvers,
 };

@@ -10,7 +10,7 @@ const cvVersesResolvers = { verse: root => root };
 
 
 
-module.exports = {
+export {
   cvVersesSchemaString,
   cvVersesResolvers,
 };

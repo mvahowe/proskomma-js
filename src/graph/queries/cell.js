@@ -36,7 +36,7 @@ const cellResolvers = {
   },
 };
 
-module.exports = {
+export {
   cellSchemaString,
   cellResolvers,
 };

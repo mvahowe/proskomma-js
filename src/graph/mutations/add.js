@@ -1,5 +1,5 @@
-const { pushSuccinctGraftBytes } = require('proskomma-utils');
-const { remakeBlocks } = require('../lib/remake_blocks');
+import { pushSuccinctGraftBytes } from 'proskomma-utils';
+import { remakeBlocks } from '../lib/remake_blocks';
 
 const addMutationsSchemaString = `
   """Adds a document which will be assigned to an existing or new docSet on the basis of the specified selectors"""
@@ -85,7 +85,7 @@ const addMutationsResolvers = {
   },
 };
 
-module.exports = {
+export {
   addMutationsSchemaString,
   addMutationsResolvers,
 };

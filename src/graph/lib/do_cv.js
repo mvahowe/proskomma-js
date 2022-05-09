@@ -1,5 +1,5 @@
-const { mapVerse } = require('proskomma-utils');
-const xre = require('xregexp');
+import { mapVerse } from 'proskomma-utils';
+import xre from 'xregexp';
 
 const updatedOpenScopes = (openScopes, items) => {
   let ret = openScopes;
@@ -246,4 +246,4 @@ const do_cv = (root, args, context, doMap, mappedDocSetId) => {
   }
 };
 
-module.exports = { do_cv };
+export { do_cv };

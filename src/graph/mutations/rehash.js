@@ -11,7 +11,7 @@ const rehashMutationsResolvers = {
     root.rehashDocSet(args.docSetId),
 };
 
-module.exports = {
+export {
   rehashMutationsSchemaString,
   rehashMutationsResolvers,
 };

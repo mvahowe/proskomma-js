@@ -1,16 +1,4 @@
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-} = require('graphql');
-
 const { bookCodeCompareFunctions } = require('../lib/sort');
-const { docSetType } = require('./doc_set');
-const { documentType } = require('./document');
-const { inputKeyValueType } = require('./input_key_value');
-const { selectorSpecType } = require('./selector_spec');
 
 const querySchemaString = `
 """The top level of Proskomma queries"""
@@ -147,7 +135,7 @@ const queryResolvers = {
   },
 };
 
-module.exports = {
+export {
   querySchemaString,
   queryResolvers,
 };

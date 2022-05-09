@@ -55,7 +55,7 @@ const deleteMutationsResolvers = {
 };
 
 
-module.exports = {
+export {
   deleteMutationsSchemaString,
   deleteMutationsResolvers,
 };

@@ -1,8 +1,8 @@
-const {
+import {
   vrs2json,
   reverseVersification,
   succinctifyVerseMappings,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 const versificationMutationsSchemaString = `
   """Adds verse mapping tables to the documents in a docSet, where the verse mapping may be provided in legacy .vrs or JSON format"""
@@ -94,7 +94,7 @@ const versificationMutationsResolvers = {
   },
 };
 
-module.exports = {
+export {
   versificationMutationsSchemaString,
   versificationMutationsResolvers,
 };

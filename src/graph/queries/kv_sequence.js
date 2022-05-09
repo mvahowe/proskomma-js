@@ -1,4 +1,4 @@
-const xre = require('xregexp');
+import xre from 'xregexp';
 
 const kvSequenceSchemaString = `
 """A contiguous flow of content for key-values"""
@@ -145,7 +145,7 @@ const kvSequenceResolvers = {
   hasTag: (root, args) => root.tags.has(args.tagName),
 };
 
-module.exports = {
+export {
   kvSequenceSchemaString,
   kvSequenceResolvers,
 };

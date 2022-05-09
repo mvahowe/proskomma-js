@@ -8,4 +8,4 @@ input KeyMatches {
 }
 `;
 
-module.exports = { keyMatchesSchemaString };
+export { keyMatchesSchemaString };

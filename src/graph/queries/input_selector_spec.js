@@ -16,4 +16,4 @@ input inputSelectorSpec {
 }
 `;
 
-module.exports = { inputSelectorSpecSchemaString };
+export { inputSelectorSpecSchemaString };

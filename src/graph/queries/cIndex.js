@@ -1,4 +1,4 @@
-const { dumpItems } = require('../lib/dump');
+import { dumpItems } from '../lib/dump';
 
 const cIndexSchemaString = `
 """A chapter index entry"""
@@ -81,7 +81,7 @@ const cIndexResolvers = {
   },
 };
 
-module.exports = {
+export {
   cIndexSchemaString,
   cIndexResolvers,
 };

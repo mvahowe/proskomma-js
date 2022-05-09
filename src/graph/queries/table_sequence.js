@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-const { headerBytes } = require('proskomma-utils');
+import { headerBytes } from 'proskomma-utils';
 
 const tableSequenceSchemaString = `
 """A contiguous flow of content for a table"""
@@ -182,7 +182,7 @@ const tableSequenceResolvers = {
     .map(t => t.split(':')[1]),
 };
 
-module.exports = {
+export {
   tableSequenceSchemaString,
   tableSequenceResolvers,
 };

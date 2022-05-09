@@ -1,4 +1,4 @@
-const { dumpItems } = require('../lib/dump');
+import { dumpItems } from '../lib/dump';
 
 const cvVerseElementSchemaString = `
 """"""
@@ -78,7 +78,7 @@ const cvVerseElementResolvers = {
   },
 };
 
-module.exports = {
+export {
   cvVerseElementSchemaString,
   cvVerseElementResolvers,
 };

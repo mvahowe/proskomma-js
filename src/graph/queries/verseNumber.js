@@ -1,4 +1,4 @@
-const { mapVerse } = require('proskomma-utils');
+import { mapVerse } from 'proskomma-utils';
 
 const verseNumberSchemaString = `
 """Information about a verse number (which may be part of a verse range)"""
@@ -38,7 +38,7 @@ const verseNumberResolvers = {
   },
 };
 
-module.exports = {
+export {
   verseNumberSchemaString,
   verseNumberResolvers,
 };

@@ -107,7 +107,7 @@ const cvNavigationResolvers = {
   },
 };
 
-module.exports = {
+export {
   cvNavigationSchemaString,
   cvNavigationResolvers,
 };

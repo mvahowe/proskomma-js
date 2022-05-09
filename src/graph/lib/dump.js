@@ -32,7 +32,7 @@ const dumpBlock = b => {
   return ret.join('\n');
 };
 
-module.exports = {
+export {
   dumpBlock,
   dumpItemGroup,
   dumpItems,

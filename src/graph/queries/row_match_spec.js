@@ -8,4 +8,4 @@ input rowMatchSpec {
 }
 `;
 
-module.exports = { rowMatchSpecSchemaString };
+export { rowMatchSpecSchemaString };

@@ -1,4 +1,4 @@
-const Tribos = require('../lib/tribos');
+import Tribos from '../lib/tribos';
 
 const treeSequenceSchemaString = `
 """The nodes of a tree"""
@@ -52,7 +52,7 @@ const treeSequenceResolvers = {
   hasTag: (root, args) => root.tags.has(args.tagName),
 };
 
-module.exports = {
+export {
   treeSequenceSchemaString,
   treeSequenceResolvers,
 };

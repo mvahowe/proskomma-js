@@ -1,9 +1,9 @@
-const {
+import {
   sequenceHasChars,
   sequenceHasMatchingChars,
   regexSearchTermIndexes,
   exactSearchTermIndexes,
-} = require('../lib/sequence_chars');
+} from '../lib/sequence_chars';
 
 const options = {
   tokens: false,
@@ -308,7 +308,7 @@ const sequenceResolvers = {
   },
 };
 
-module.exports = {
+export {
   sequenceSchemaString,
   sequenceResolvers,
 };

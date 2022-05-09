@@ -1,4 +1,4 @@
-const { remakeBlocks } = require('../lib/remake_blocks');
+import { remakeBlocks } from '../lib/remake_blocks';
 
 const updateMutationsSchemaString = `
   """Replaces the items of a block with a new set of items"""
@@ -132,7 +132,7 @@ const updateMutationsResolvers = {
   },
 };
 
-module.exports = {
+export {
   updateMutationsSchemaString,
   updateMutationsResolvers,
 };

@@ -8,4 +8,4 @@ type verseRange {
 }
 `;
 
-module.exports = { verseRangeSchemaString };
+export { verseRangeSchemaString };

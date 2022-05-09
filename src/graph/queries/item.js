@@ -65,7 +65,7 @@ const itemResolvers = {
     root[4] ? root[4].filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)) : [],
 };
 
-module.exports = {
+export {
   itemSchemaString,
   itemResolvers,
 };

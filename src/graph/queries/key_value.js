@@ -12,7 +12,7 @@ const keyValueResolvers = {
   value: root => root[1],
 };
 
-module.exports = {
+export {
   keyValueSchemaString,
   keyValueResolvers,
 };

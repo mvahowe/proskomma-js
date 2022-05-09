@@ -69,7 +69,7 @@ const itemGroupResolvers = {
     ),
 };
 
-module.exports = {
+export {
   itemGroupSchemaString,
   itemGroupResolvers,
 };

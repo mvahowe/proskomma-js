@@ -1,6 +1,6 @@
 import xre from 'xregexp';
-const { headerBytes } = require('proskomma-utils');
-const { dumpBlock } = require('../lib/dump');
+import { headerBytes } from 'proskomma-utils';
+import { dumpBlock } from '../lib/dump';
 
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {
@@ -221,7 +221,7 @@ const blockResolvers = {
       .filter(s => !args.startsWith || scopeMatchesStartsWith(args.startsWith, s)),
 };
 
-module.exports = {
+export {
   blockSchemaString,
   blockResolvers,
 };

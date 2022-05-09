@@ -15,7 +15,7 @@ const kvEntryResolvers = {
   itemGroups: root => root[2],
 };
 
-module.exports = {
+export {
   kvEntrySchemaString,
   kvEntryResolvers,
 };

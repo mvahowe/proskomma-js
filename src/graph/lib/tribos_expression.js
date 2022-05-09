@@ -553,4 +553,4 @@ const doPredicate = (docSet, result, predicateString) => ({
   }),
 });
 
-module.exports = { expressions, doPredicate };
+export { expressions, doPredicate };

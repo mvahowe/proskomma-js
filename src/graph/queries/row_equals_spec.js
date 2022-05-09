@@ -8,4 +8,4 @@ input rowEqualsSpec {
 }
 `;
 
-module.exports = { rowEqualsSpecSchemaString };
+export { rowEqualsSpecSchemaString };

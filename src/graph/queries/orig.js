@@ -8,4 +8,4 @@ type orig {
 }
 `;
 
-module.exports = { origSchemaString };
+export { origSchemaString };

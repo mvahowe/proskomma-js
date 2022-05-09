@@ -41,7 +41,7 @@ const cvIndexResolvers = {
   },
 };
 
-module.exports = {
+export {
   cvIndexSchemaString,
   cvIndexResolvers,
 };

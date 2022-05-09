@@ -4,7 +4,7 @@ import {
   unpackEnum,
 } from 'proskomma-utils';
 
-const { bookCodeCompareFunctions } = require('../lib/sort');
+import { bookCodeCompareFunctions } from '../lib/sort';
 
 const {
   sequenceHasChars,
@@ -217,7 +217,7 @@ const docSetResolvers = {
   },
 };
 
-module.exports = {
+export {
   docSetSchemaString,
   docSetResolvers,
 };

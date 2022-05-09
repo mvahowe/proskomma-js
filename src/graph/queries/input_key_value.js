@@ -8,4 +8,4 @@ input InputKeyValue {
 }
 `;
 
-module.exports = { inputKeyValueSchemaString };
+export { inputKeyValueSchemaString };

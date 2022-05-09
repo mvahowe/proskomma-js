@@ -24,7 +24,7 @@ const idPartsResolvers = {
   },
 };
 
-module.exports = {
+export {
   idPartsSchemaString,
   idPartsResolvers,
 };

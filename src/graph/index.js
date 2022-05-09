@@ -1,114 +1,114 @@
-const {
+import {
   keyValueSchemaString,
   keyValueResolvers,
-} = require('./queries/key_value');
-const {
+} from './queries/key_value';
+import {
   cvSchemaString,
   cvResolvers,
-} = require('./queries/cv');
-const {
+} from './queries/cv';
+import {
   idPartsSchemaString,
   idPartsResolvers,
-} = require('./queries/idParts');
-const { inputAttSpecSchemaString } = require('./queries/input_att_spec');
-const { keyMatchesSchemaString } = require('./queries/input_key_matches');
-const { inputKeyValueSchemaString } = require('./queries/input_key_value');
-const { keyValuesSchemaString } = require('./queries/input_key_values');
-const { inputItemObjectSchemaString } = require('./queries/inputItemObject');
-const {
+} from './queries/idParts';
+import { inputAttSpecSchemaString } from './queries/input_att_spec';
+import { keyMatchesSchemaString } from './queries/input_key_matches';
+import { inputKeyValueSchemaString } from './queries/input_key_value';
+import { keyValuesSchemaString } from './queries/input_key_values';
+import { inputItemObjectSchemaString } from './queries/inputItemObject';
+import {
   itemSchemaString,
   itemResolvers,
-} = require('./queries/item');
-const {
+} from './queries/item';
+import {
   itemGroupSchemaString,
   itemGroupResolvers,
-} = require('./queries/itemGroup');
-const {
+} from './queries/itemGroup';
+import {
   kvEntrySchemaString,
   kvEntryResolvers,
-} = require('./queries/kv_entry');
-const {
+} from './queries/kv_entry';
+import {
   regexIndexSchemaString,
   regexIndexResolvers,
-} = require('./queries/regex_index');
-const { rowEqualsSpecSchemaString } = require('./queries/row_equals_spec');
-const { rowMatchSpecSchemaString } = require('./queries/row_match_spec');
-const { verseRangeSchemaString } = require('./queries/verseRange');
-const { origSchemaString } = require('./queries/orig');
-const {
+} from './queries/regex_index';
+import { rowEqualsSpecSchemaString } from './queries/row_equals_spec';
+import { rowMatchSpecSchemaString } from './queries/row_match_spec';
+import { verseRangeSchemaString } from './queries/verseRange';
+import { origSchemaString } from './queries/orig';
+import {
   verseNumberSchemaString,
   verseNumberResolvers,
-} = require('./queries/verseNumber');
-const {
+} from './queries/verseNumber';
+import {
   cellSchemaString,
   cellResolvers,
-} = require('./queries/cell');
-const {
+} from './queries/cell';
+import {
   cIndexSchemaString,
   cIndexResolvers,
-} = require('./queries/cIndex');
-const {
+} from './queries/cIndex';
+import {
   cvVerseElementSchemaString,
   cvVerseElementResolvers,
-} = require('./queries/cvVerseElement');
-const {
+} from './queries/cvVerseElement';
+import {
   cvVersesSchemaString,
   cvVersesResolvers,
-} = require('./queries/cvVerses');
-const {
+} from './queries/cvVerses';
+import {
   cvIndexSchemaString,
   cvIndexResolvers,
-} = require('./queries/cvIndex');
-const {
+} from './queries/cvIndex';
+import {
   cvNavigationSchemaString,
   cvNavigationResolvers,
-} = require('./queries/cvNavigation');
-const { inputBlockSpecSchemaString } = require('./queries/inputBlockSpec');
-const {
+} from './queries/cvNavigation';
+import { inputBlockSpecSchemaString } from './queries/inputBlockSpec';
+import {
   nodeSchemaString,
   nodeResolvers,
-} = require('./queries/node');
-const {
+} from './queries/node';
+import {
   kvSequenceSchemaString,
   kvSequenceResolvers,
-} = require('./queries/kv_sequence');
-const {
+} from './queries/kv_sequence';
+import {
   tableSequenceSchemaString,
   tableSequenceResolvers,
-} = require('./queries/table_sequence');
-const {
+} from './queries/table_sequence';
+import {
   treeSequenceSchemaString,
   treeSequenceResolvers,
-} = require('./queries/tree_sequence');
-const {
+} from './queries/tree_sequence';
+import {
   blockSchemaString,
   blockResolvers,
-} = require('./queries/block');
-const {
+} from './queries/block';
+import {
   sequenceSchemaString,
   sequenceResolvers,
-} = require('./queries/sequence');
-const {
+} from './queries/sequence';
+import {
   documentSchemaString,
   documentResolvers,
-} = require('./queries/document');
-const {
+} from './queries/document';
+import {
   docSetSchemaString,
   docSetResolvers,
-} = require('./queries/doc_set');
-const {
+} from './queries/doc_set';
+import {
   querySchemaString,
   queryResolvers,
-} = require('./queries/index');
-const {
+} from './queries/index';
+import {
   selectorSpecSchemaString,
   selectorSpecResolvers,
-} = require('./queries/selector_spec');
-const { inputSelectorSpecSchemaString } = require('./queries/input_selector_spec');
-const {
+} from './queries/selector_spec';
+import { inputSelectorSpecSchemaString } from './queries/input_selector_spec';
+import {
   mutationsSchemaString,
   mutationsResolvers,
-} = require('./mutations/index');
+} from './mutations/index';
 
 const typeDefs = `
       ${querySchemaString}
@@ -177,7 +177,7 @@ const resolvers = {
   selectorSpec: selectorSpecResolvers,
 };
 
-module.exports = {
+export {
   typeDefs,
   resolvers,
 };

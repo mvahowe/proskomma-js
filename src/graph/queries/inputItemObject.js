@@ -9,4 +9,4 @@ input InputItemObject {
     payload: String!
 }`;
 
-module.exports = { inputItemObjectSchemaString };
+export { inputItemObjectSchemaString };
