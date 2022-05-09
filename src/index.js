@@ -1,33 +1,33 @@
 import xre from 'xregexp';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-const { Mutex } = require('async-mutex');
-const checksum = require('checksum');
-const {
+import { Mutex } from 'async-mutex';
+import checksum from 'checksum';
+import {
   graphql,
   graphqlSync,
-} = require('graphql');
-const BitSet = require('bitset');
+} from 'graphql';
+import BitSet from 'bitset';
 
-const {
+import {
   ByteArray,
   generateId,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
-const packageJson = require('../package.json');
-const { DocSet } = require('./model/doc_set');
-const { Document } = require('./model/document');
-const {
+import packageJson from '../package.json';
+import { DocSet } from './model/doc_set';
+import { Document } from './model/document';
+import {
   typeDefs,
   resolvers,
-} = require('./graph');
+} from './graph';
 
-const { lexingRegexes } = require('./parser/lexers/lexingRegexes');
-const blocksSpecUtils = require('./util/blocksSpec');
-const {
+import { lexingRegexes } from './parser/lexers/lexingRegexes';
+import blocksSpecUtils from './util/blocksSpec';
+import {
   flattenNodes,
   numberNodes,
-} = require('./parser/lexers/nodes');
+} from './parser/lexers/nodes';
 
 const tree2nodes = tree => flattenNodes(numberNodes(tree));
 
@@ -549,7 +549,7 @@ class Proskomma {
   }
 }
 
-module.exports = {
+export {
   Proskomma,
   typeDefs,
   resolvers,

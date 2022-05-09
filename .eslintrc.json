@@ -1,9 +1,9 @@
-module.exports = {
+{
   "extends": [
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "prettier",
+    "prettier"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
@@ -16,7 +16,7 @@ module.exports = {
   "env": {
     "browser": true,
     "node": true,
-    "es6": true,
+    "es6": true
   },
   "plugins": [
     "prettier",
@@ -59,7 +59,7 @@ module.exports = {
     "no-return-assign": "error",
     "padding-line-between-statements": [
       "error",
-      { "blankLine": "always", "prev": "*", "next": ["function", "if", "for", "while", "switch", "try", ] },
+      { "blankLine": "always", "prev": "*", "next": ["function", "if", "for", "while", "switch", "try" ] },
       { "blankLine": "always", "prev": ["const", "let", "var"], "next": ["block", "block-like", "multiline-expression"] },
       { "blankLine": "always", "prev": ["block", "block-like", "multiline-expression"]  , "next":["const", "let", "var"]}
     ],
