@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
   "files": [
@@ -41,10 +41,8 @@
     "deep-copy-all": "^1.3.4",
     "deep-equal": "^2.0.5",
     "graphql": "^15.3.0",
-    "graphql-tag": "^2.12.6",
     "graphql-tools": "^8.2.7",
     "jsonschema": "^1.4.0",
-    "prettier": "^2.4.1",
     "proskomma-utils": "^0.4.28",
     "sax": "^1.2.4",
     "utf8-string-bytes": "^1.0.3",
@@ -63,6 +61,7 @@
     "eslint-plugin-jsdoc": "^36.1.0",
     "fs-extra": "^9.0.1",
     "nyc": "^15.1.0",
+    "prettier": "^2.4.1",
     "tap-summary": "^4.0.0",
     "tape": "^5.0.1"
   }
