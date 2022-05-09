@@ -1,6 +1,6 @@
-const { labelForScope } = require('proskomma-utils');
-const { Sequence } = require('../../model/sequence');
-const { tokenizeString } = require('../../../parser/lib/tokenize');
+import { labelForScope } from 'proskomma-utils';
+import { Sequence } from '../../model/sequence';
+import { tokenizeString } from '../../lib/tokenize';
 
 const parseTableToDocument = (str, parser, bookCode) => {
   const { rows } = JSON.parse(str);
@@ -41,4 +41,4 @@ const parseTableToDocument = (str, parser, bookCode) => {
   });
 };
 
-module.exports = { parseTableToDocument };
+export { parseTableToDocument };

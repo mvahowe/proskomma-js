@@ -1,12 +1,15 @@
 import xre from 'xregexp';
 
-const sax = require('sax');
+import sax from 'sax';
 
-const {
+import {
   lexingRegexes,
   mainRegex,
-} = require('../lexingRegexes');
-const { preTokenObjectForFragment, constructorForFragment } = require('../object_for_fragment');
+} from '../lexingRegexes';
+import {
+  preTokenObjectForFragment,
+  constructorForFragment,
+} from '../object_for_fragment';
 
 class UsxLexer {
   constructor() {
@@ -315,4 +318,4 @@ class UsxLexer {
   }
 }
 
-module.exports = { UsxLexer };
+export { UsxLexer };

@@ -1,4 +1,4 @@
-const { nComponentsForScope } = require('proskomma-utils');
+import { nComponentsForScope } from 'proskomma-utils';
 
 const recordPreEnums = (docSet, seq) => {
   docSet.recordPreEnum('scopeBits', '0');
@@ -61,4 +61,7 @@ const rerecordBlockPreEnums= (docSet, ba) => {
   }
 };
 
-module.exports = { recordPreEnums, rerecordPreEnums };
+export {
+  recordPreEnums,
+  rerecordPreEnums,
+};

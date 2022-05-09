@@ -1,5 +1,5 @@
-const fse = require('fs-extra');
-const { tokenizeString } = require('../../dist/util/blocksSpec');
+import fse from 'fs-extra';
+import { tokenizeString } from '../../dist/util/blocksSpec';
 
 const itemTokens = str => tokenizeString(str).map(tr => ({
   type: 'token',

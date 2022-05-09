@@ -1,8 +1,8 @@
-const {
+import {
   labelForScope,
   generateId,
-} = require('proskomma-utils');
-const { constructorForFragment } = require('./lexers/object_for_fragment');
+} from 'proskomma-utils';
+import { constructorForFragment } from './lexers/object_for_fragment';
 
 const buildSpecLookup = specs => {
   const ret = {};
@@ -777,4 +777,7 @@ const specs = (pt) => [
   },
 ];
 
-module.exports = { specs, buildSpecLookup };
+export {
+  specs,
+  buildSpecLookup,
+};

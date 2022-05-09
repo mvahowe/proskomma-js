@@ -39,7 +39,7 @@ const lexingRegexes = [
 
 const mainRegex = xre.union(lexingRegexes.map((x) => x[2]));
 
-module.exports = {
+export {
   lexingRegexes,
   mainRegex,
 };

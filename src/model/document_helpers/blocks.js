@@ -1,4 +1,4 @@
-const {
+import {
   ByteArray,
   headerBytes,
   itemEnum,
@@ -9,9 +9,9 @@ const {
   scopeEnum,
   scopeEnumLabels,
   tokenEnum,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
-const { updateBlockGrafts } = require('../doc_set_helpers/update');
+import { updateBlockGrafts } from '../doc_set_helpers/update';
 
 const deleteBlock = (document, seqId, blockN, buildCV) => {
   if (buildCV !== false) {
@@ -127,7 +127,7 @@ const rewriteBlock = (block, oldToNew) => {
   }
 };
 
-module.exports = {
+export {
   newBlock,
   deleteBlock,
   rewriteBlock,

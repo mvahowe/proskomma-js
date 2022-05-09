@@ -117,7 +117,7 @@ const tagMutationsResolvers = {
   },
 };
 
-module.exports = {
+export {
   tagMutationsSchemaString,
   tagMutationsResolvers,
 };

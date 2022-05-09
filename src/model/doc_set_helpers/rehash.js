@@ -47,4 +47,7 @@ const makeRehashEnumMap = docSet => {
   return ret;
 };
 
-module.exports = { rehash, makeRehashEnumMap };
+export {
+  rehash,
+  makeRehashEnumMap,
+};

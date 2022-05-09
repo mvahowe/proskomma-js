@@ -1,6 +1,9 @@
-const { labelForScope } = require('proskomma-utils');
-const { tokenizeString } = require('../parser/lib/tokenize');
-const { flattenNodes, numberNodes } = require('../parser/lexers/nodes');
+import { labelForScope } from 'proskomma-utils';
+import { tokenizeString } from '../parser/lib/tokenize';
+import {
+  flattenNodes,
+  numberNodes,
+} from '../parser/lexers/nodes';
 
 const tsvToInputBlock = (tsv, hasHeadings) => {
   const ret = [];
@@ -177,7 +180,7 @@ const blocksSpec2Query =
           `  {\n    bs: ${oneObject2Query(b.bs)}, \n    bg: ${object2Query(b.bg)}, \n    os: ${object2Query(b.os)}, \n    is: ${object2Query(b.is)}, \n    items: ${object2Query(b.items)}}\n`) +
       ']';
 
-module.exports = {
+export {
   tokenizeString,
   tsvToInputBlock,
   tsvHeadingTags,

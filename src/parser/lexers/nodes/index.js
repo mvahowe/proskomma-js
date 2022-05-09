@@ -1,6 +1,6 @@
-const { labelForScope } = require('proskomma-utils');
-const { Sequence } = require('../../model/sequence');
-const { tokenizeString } = require('../../../parser/lib/tokenize');
+import { labelForScope } from 'proskomma-utils';
+import { Sequence } from '../../model/sequence';
+import { tokenizeString } from '../../lib/tokenize';
 
 let nextNodeId = 0;
 
@@ -115,6 +115,8 @@ const parseNodes = (str, parser, bookCode) => {
   });
 };
 
-module.exports = {
-  flattenNodes, numberNodes, parseNodes,
+export {
+  flattenNodes,
+  numberNodes,
+  parseNodes,
 };

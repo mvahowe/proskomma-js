@@ -52,4 +52,4 @@ const serializeSuccinctBlock = blockOb => {
   };
 };
 
-module.exports = { serializeSuccinct };
+export { serializeSuccinct };

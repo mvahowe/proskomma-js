@@ -54,5 +54,5 @@ const validateSelectors = (docSet, selectors) => {
   return selectors;
 };
 
-module.exports = { validateSelectors };
+export { validateSelectors };
 

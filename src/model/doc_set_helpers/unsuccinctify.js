@@ -279,7 +279,7 @@ const unsuccinctifyItemsWithScriptureCV = (docSet, block, cv, options) => {
   return ret;
 };
 
-module.exports = {
+export {
   unsuccinctifyBlock,
   unsuccinctifyItem,
   unsuccinctifyItems,

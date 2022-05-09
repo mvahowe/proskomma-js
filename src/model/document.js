@@ -1,37 +1,40 @@
-const {
+import {
   addTag,
   generateId,
   parserConstants,
   removeTag,
   validateTags,
-} = require('proskomma-utils');
-const {
+} from 'proskomma-utils';
+import {
   parseUsfm,
   parseUsx,
   parseLexicon,
   parseTableToDocument,
   parseNodes,
-} = require('../parser/lexers');
-const { Parser } = require('../parser');
-const {
+} from '../parser/lexers';
+import { Parser } from '../parser';
+import {
   buildChapterVerseIndex,
   chapterVerseIndex,
   chapterIndex,
-} = require('./document_helpers/chapter_verse');
-const {
+} from './document_helpers/chapter_verse';
+import {
   modifySequence,
   deleteSequence,
   gcSequences,
   newSequence,
-} = require('./document_helpers/sequences');
-const {
+} from './document_helpers/sequences';
+import {
   deleteBlock,
   newBlock,
   rewriteBlock,
-} = require('./document_helpers/blocks');
-const { succinctFilter } = require('./document_helpers/succinct_filter');
-const { serializeSuccinct } = require('./document_helpers/serialize_succinct');
-const { recordPreEnums, rerecordPreEnums } = require('./document_helpers/pre_enums');
+} from './document_helpers/blocks';
+import { succinctFilter } from './document_helpers/succinct_filter';
+import { serializeSuccinct } from './document_helpers/serialize_succinct';
+import {
+  recordPreEnums,
+  rerecordPreEnums,
+} from './document_helpers/pre_enums';
 
 // const maybePrint = str => console.log(str);
 const maybePrint = str => str;
@@ -292,4 +295,4 @@ class Document {
   }
 }
 
-module.exports = { Document };
+export { Document };

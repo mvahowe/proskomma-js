@@ -1,9 +1,9 @@
-const { parseUsfm } = require('./usfm');
-const { parseUsx } = require('./usx');
-const { parseTableToDocument } = require('./tsv');
-const { parseNodes } = require('./nodes');
+import { parseUsfm } from './usfm';
+import { parseUsx } from './usx';
+import { parseTableToDocument } from './tsv';
+import { parseNodes } from './nodes';
 
-module.exports = {
+export {
   parseUsfm,
   parseUsx,
   parseTableToDocument,

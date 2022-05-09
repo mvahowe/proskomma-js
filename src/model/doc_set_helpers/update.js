@@ -273,7 +273,7 @@ const updateBlockIndexesAfterFilter = (docSet, sequence) => {
   }
 };
 
-module.exports = {
+export {
   updateItems,
   updateBlockGrafts,
   updateBlockScope,

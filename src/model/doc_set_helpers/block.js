@@ -221,7 +221,7 @@ const blockHasMatchingItem = (docSet, block, testFunction, options) => {
   return false;
 };
 
-module.exports = {
+export {
   blocksWithScriptureCV,
   allBlockScopes,
   anyScopeInBlock,

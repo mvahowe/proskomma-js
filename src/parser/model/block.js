@@ -1,4 +1,5 @@
-const { generateId } = require('proskomma-utils');
+import { generateId } from 'proskomma-utils';
+import { Sequence } from './sequence';
 
 const Block = class {
   constructor(blockScope) {
@@ -89,7 +90,6 @@ const Block = class {
   }
 
   makeNoteGrafts(parser) {
-    const { Sequence } = require('./sequence');
     const noteStarts = [];
 
     for (const [pos, item] of this.items.entries()) {
@@ -263,4 +263,4 @@ const Block = class {
   }
 };
 
-module.exports = { Block };
+export { Block };

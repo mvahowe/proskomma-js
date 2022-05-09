@@ -190,7 +190,7 @@ const sequenceItemsByMilestones = (docSet, blocks, byMilestones) => {
   return ret;
 };
 
-module.exports = {
+export {
   countItems,
   itemsByIndex,
   sequenceItemsByMilestones,

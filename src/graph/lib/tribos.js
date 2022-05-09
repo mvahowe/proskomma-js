@@ -94,4 +94,4 @@ class Tribos {
   }
 }
 
-module.exports = Tribos;
+export default Tribos;

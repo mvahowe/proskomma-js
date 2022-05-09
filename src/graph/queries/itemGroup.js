@@ -1,4 +1,4 @@
-const { dumpItemGroup } = require('../lib/dump');
+import { dumpItemGroup } from '../lib/dump';
 
 const scopeMatchesStartsWith = (sw, s) => {
   if (sw.length === 0) {

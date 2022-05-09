@@ -1,5 +1,5 @@
-const xre = require('xregexp');
-const { mainRegex, lexingRegexes } = require('../lexers/lexingRegexes');
+import xre from 'xregexp';
+import { lexingRegexes } from '../lexers/lexingRegexes';
 
 const tokenTypes = {};
 const unionComponents = [];
@@ -32,4 +32,4 @@ const tokenizeString = str => {
   return ret;
 };
 
-module.exports = { tokenizeString };
+export { tokenizeString };

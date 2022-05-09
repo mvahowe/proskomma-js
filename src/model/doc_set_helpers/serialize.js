@@ -19,4 +19,4 @@ const serializeSuccinct = docSet => {
   return ret;
 };
 
-module.exports = { serializeSuccinct };
+export { serializeSuccinct };

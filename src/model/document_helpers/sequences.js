@@ -1,11 +1,11 @@
-const deepCopy = require('deep-copy-all');
+import deepCopy from 'deep-copy-all';
 
-const {
+import {
   generateId,
   headerBytes,
   itemEnum,
   succinctGraftSeqId,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 const gcSequences = document => {
   const usedSequences = new Set();
@@ -202,7 +202,7 @@ const modifyBlockItems = (
   }
 };
 
-module.exports = {
+export {
   newSequence,
   gcSequences,
   deleteSequence,

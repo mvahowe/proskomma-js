@@ -1,9 +1,7 @@
-import xre from 'xregexp';
-
-const { UsxLexer } = require("./usx_lexer");
+import { UsxLexer } from "./usx_lexer";
 
 const parseUsx = (str, parser) => {
     new UsxLexer().lexAndParse(str, parser);
 }
 
-module.exports = { parseUsx };
+export { parseUsx };

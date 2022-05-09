@@ -1,12 +1,12 @@
-const {
+import {
   labelForScope,
   parserConstants,
-} = require('proskomma-utils');
-const { Sequence } = require('./model/sequence');
-const {
+} from 'proskomma-utils';
+import { Sequence } from './model/sequence';
+import {
   specs,
   buildSpecLookup,
-} = require('./parser_specs');
+} from './parser_specs';
 
 const Parser = class {
   constructor(filterOptions, customTags, emptyBlocks) {
@@ -502,4 +502,4 @@ const Parser = class {
   }
 };
 
-module.exports = { Parser };
+export { Parser };

@@ -77,7 +77,7 @@ const enumForCategoryValue = (docSet, category, value, addUnknown) => {
 };
 
 
-module.exports = {
+export {
   buildPreEnum,
   recordPreEnum,
   buildEnum,

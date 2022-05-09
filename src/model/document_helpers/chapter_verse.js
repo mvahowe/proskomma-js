@@ -1,11 +1,11 @@
-const BitSet = require('bitset');
+import BitSet from 'bitset';
 
-const {
+import {
   ByteArray,
   headerBytes,
   itemEnum,
   tokenEnum,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 const emptyCVIndexType = 0;
 const shortCVIndexType = 2;
@@ -286,7 +286,7 @@ const verseLengthByte= (succinct, pos) => {
   ];
 };
 
-module.exports = {
+export {
   buildChapterVerseIndex,
   chapterVerseIndex,
   chapterIndex,

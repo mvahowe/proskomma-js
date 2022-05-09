@@ -6,10 +6,10 @@ import {
 
 import { bookCodeCompareFunctions } from '../lib/sort';
 
-const {
+import {
   sequenceHasChars,
   sequenceHasMatchingChars,
-} = require('../lib/sequence_chars');
+} from '../lib/sequence_chars';
 
 const docSetSchemaString = `
 """A collection of documents that share the same set of selector values"""

@@ -1,4 +1,4 @@
-const { bookCodeCompareFunctions } = require('../lib/sort');
+import { bookCodeCompareFunctions } from '../lib/sort';
 
 const querySchemaString = `
 """The top level of Proskomma queries"""

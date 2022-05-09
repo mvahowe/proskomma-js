@@ -1,8 +1,8 @@
-const {
+import {
   ByteArray,
   headerBytes,
   itemEnum,
-} = require('proskomma-utils');
+} from 'proskomma-utils';
 
 
 const succinctFilter = (document, filterOptions) => {
@@ -100,4 +100,4 @@ const succinctFilter = (document, filterOptions) => {
   document.gcSequences();
 };
 
-module.exports = { succinctFilter };
+export { succinctFilter };

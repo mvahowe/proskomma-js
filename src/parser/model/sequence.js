@@ -1,4 +1,4 @@
-const {
+import {
   addTag,
   ByteArray,
   generateId,
@@ -10,8 +10,8 @@ const {
   scopeEnum,
   tokenCategory,
   tokenEnum,
-} = require('proskomma-utils');
-const { Block } = require('./block');
+} from 'proskomma-utils';
+import { Block } from './block';
 
 const Sequence = class {
   constructor(sType) {
@@ -359,4 +359,4 @@ const Sequence = class {
   }
 };
 
-module.exports = { Sequence };
+export { Sequence };
