@@ -11,7 +11,7 @@ const addMutationsSchemaString = `
     """The document content as a string"""
     content: String!
     """A list of tags to be added"""
-    tags: [String!]!
+    tags: [String!]
   ): Boolean!
   """Creates a new, empty sequence"""
   newSequence(
