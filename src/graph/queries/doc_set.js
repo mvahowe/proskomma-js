@@ -57,7 +57,7 @@ type DocSet {
   ): [Document!]!
   """The number of documents in the docSet"""
   nDocuments: Int!
-  """The book code of the required document"""
+  """A document in the docSet, if present"""
   document(
     """The book code of the required document"""
     bookCode: String!
