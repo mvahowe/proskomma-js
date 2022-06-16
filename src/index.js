@@ -433,7 +433,7 @@ class Proskomma {
     doc.filterOptions = {};
     doc.customTags = [];
     doc.emptyBlocks = [];
-    doc.tags = succinctDocOb.tags;
+    doc.tags = new Set(succinctDocOb.tags);
     doc.headers = succinctDocOb.headers;
     doc.mainId = succinctDocOb.mainId;
     doc.sequences = {};
