@@ -1,6 +1,8 @@
 const test = require('tape');
 const path = require('path');
 const fse = require('fs-extra');
+const deepEqual = require('deep-equal');
+
 const { Proskomma } = require('../../src');
 
 const { pkWithDoc } = require('../lib/load');
@@ -297,6 +299,33 @@ test(
       t.ok('mainText' in result.data.documents[0]);
       t.ok(result.data.documents[0].mainText.startsWith('In the days when'));
       t.ok(result.data.documents[0].normalized.startsWith('In the days when'));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `perf (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(9);
+      let query = '{ documents { perf } }';
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('perf' in result.data.documents[0]);
+      let perfJSON;
+      t.doesNotThrow(() => perfJSON = JSON.parse(result.data.documents[0].perf));
+      query = '{ documents { perf(indent:2) } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('perf' in result.data.documents[0]);
+      let perfJSON2;
+      t.doesNotThrow(() => perfJSON2 = JSON.parse(result.data.documents[0].perf));
+      t.ok(deepEqual(perfJSON, perfJSON2));
     } catch
       (err) {
       console.log(err);

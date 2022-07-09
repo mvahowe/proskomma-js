@@ -5,10 +5,10 @@ import {
   removeTag,
   validateTags,
 } from 'proskomma-utils';
+import { ProskommaRenderFromProskomma, identityActions } from 'proskomma-json-tools';
 import {
   parseUsfm,
   parseUsx,
-  parseLexicon,
   parseTableToDocument,
   parseNodes,
 } from '../parser/lexers';
@@ -292,6 +292,25 @@ class Document {
 
   newBlock(seqId, blockN, blockScope, blockGrafts, buildCV) {
     return newBlock(this, seqId, blockN, blockScope, blockGrafts, buildCV);
+  }
+
+  perf(indent) {
+    const cl = new ProskommaRenderFromProskomma(
+      {
+        proskomma: this.processor,
+        actions: identityActions,
+      },
+    );
+    const output = {};
+
+    cl.renderDocument(
+      {
+        docId: this.id,
+        config: {},
+        output,
+      },
+    );
+    return indent ? JSON.stringify(output, null, indent) : JSON.stringify(output);
   }
 }
 

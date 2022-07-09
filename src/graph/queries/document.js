@@ -181,6 +181,11 @@ type Document {
     """If true, verses where all scopes match will be included"""
     allScopes: Boolean
   ): [ItemGroup!]!
+  """A string of PERF JSON for this document"""
+  perf(
+    """Format JSON string with this indent"""
+    indent: Int
+  ): String! 
 }
 `;
 
@@ -530,6 +535,7 @@ const documentResolvers = {
         allRegexesInGroup(ig[1]),
     );
   },
+  perf: (root, args) => root.perf(args.indent),
 };
 
 export {
