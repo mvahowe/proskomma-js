@@ -186,6 +186,13 @@ type Document {
     """Format JSON string with this indent"""
     indent: Int
   ): String! 
+  """A string of SOFRIA JSON for this document"""
+  sofria(
+    """Format JSON string with this indent"""
+    indent: Int
+    """Return SOFRIA for this chapter only"""
+    chapter: Int
+  ): String! 
 }
 `;
 
@@ -536,6 +543,7 @@ const documentResolvers = {
     );
   },
   perf: (root, args) => root.perf(args.indent),
+  sofria: (root, args) => root.sofria(args.indent, args.chapter),
 };
 
 export {

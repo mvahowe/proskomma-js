@@ -5,7 +5,11 @@ import {
   removeTag,
   validateTags,
 } from 'proskomma-utils';
-import { ProskommaRenderFromProskomma, identityActions } from 'proskomma-json-tools';
+import {
+  PerfRenderFromProskomma,
+  SofriaRenderFromProskomma,
+  transforms,
+} from 'proskomma-json-tools';
 import {
   parseUsfm,
   parseUsx,
@@ -295,10 +299,10 @@ class Document {
   }
 
   perf(indent) {
-    const cl = new ProskommaRenderFromProskomma(
+    const cl = new PerfRenderFromProskomma(
       {
         proskomma: this.processor,
-        actions: identityActions,
+        actions: transforms.perf2perf.identityActions,
       },
     );
     const output = {};
@@ -310,7 +314,37 @@ class Document {
         output,
       },
     );
-    return indent ? JSON.stringify(output, null, indent) : JSON.stringify(output);
+    return indent ? JSON.stringify(output.perf, null, indent) : JSON.stringify(output.perf);
+  }
+
+
+  sofria(indent, chapter) {
+    const cl = new SofriaRenderFromProskomma(
+      {
+        proskomma: this.processor,
+        actions: transforms.sofria2sofria.identityActions,
+      },
+    );
+    const output = {};
+    const config = {};
+
+    if (chapter) {
+      config.chapters = [`${chapter}`];
+    }
+
+    try {
+      cl.renderDocument(
+        {
+          docId: this.id,
+          config,
+          output,
+        },
+      );
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+    return indent ? JSON.stringify(output.sofria, null, indent) : JSON.stringify(output.sofria);
   }
 }
 

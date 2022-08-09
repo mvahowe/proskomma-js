@@ -332,3 +332,30 @@ test(
     }
   },
 );
+
+test(
+  `sofria (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(9);
+      let query = '{ documents { sofria } }';
+      let result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sofria' in result.data.documents[0]);
+      let sofriaJSON;
+      t.doesNotThrow(() => sofriaJSON = JSON.parse(result.data.documents[0].sofria));
+      query = '{ documents { sofria(indent:2) } }';
+      result = await pk3.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.ok('documents' in result.data);
+      t.ok('sofria' in result.data.documents[0]);
+      let sofriaJSON2;
+      t.doesNotThrow(() => sofriaJSON2 = JSON.parse(result.data.documents[0].sofria));
+      t.ok(deepEqual(sofriaJSON, sofriaJSON2));
+    } catch
+      (err) {
+      console.log(err);
+    }
+  },
+);
