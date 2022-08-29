@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
   "files": [
@@ -11,7 +11,7 @@
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/$TESTSCRIPT.cjs",
     "coverage": "node_modules/nyc/bin/nyc.js babel-tape-runner test/code/*.cjs",
-    "build": "babel src -d dist",
+    "build": "rm -fr dist && webpack --mode production --config webpack.prod.js",
     "prepublishOnly": "rm -fr dist && npm run build",
     "serialize": "babel-tape-runner test/code/serialize.js"
   },
@@ -54,6 +54,7 @@
     "@babel/cli": "^7.12.8",
     "@babel/preset-env": "^7.12.7",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
     "babel-tape-runner": "^3.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -64,6 +65,8 @@
     "nyc": "^15.1.0",
     "prettier": "^2.4.1",
     "tap-summary": "^4.0.0",
-    "tape": "^5.0.1"
+    "tape": "^5.0.1",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.9"
   }
 }
