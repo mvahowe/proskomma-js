@@ -88,3 +88,36 @@ test(
     }
   },
 );
+
+test(
+  'Specify Selector Spec (${testGroup})',
+  async function (t) {
+    try {
+      t.plan(2);
+      t.doesNotThrow(() => new Proskomma([
+        {
+          name: 'lang',
+          type: 'string',
+          regex: '[a-z]{3}',
+        },
+        {
+          name: 'abbr',
+          type: 'string',
+        },
+      ]));
+      t.throws(() => new Proskomma([
+        {
+          name: 'lang',
+          type: 'stringz',
+          regex: '[a-z]{3}',
+        },
+        {
+          name: 'abbr',
+          type: 'string',
+        },
+      ]), /stringz/);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+)

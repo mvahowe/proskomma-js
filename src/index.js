@@ -38,7 +38,7 @@ const executableSchema =
   });
 
 class Proskomma {
-  constructor() {
+  constructor(selectors) {
     this.processorId = generateId();
     this.documents = {};
     this.docSetsBySelector = {};
@@ -53,7 +53,7 @@ class Proskomma {
       introHeading: [],
     };
     this.emptyBlocks = [];
-    this.selectors = [
+    this.selectors = selectors || [
       {
         name: 'lang',
         type: 'string',
@@ -64,6 +64,7 @@ class Proskomma {
         type: 'string',
       },
     ];
+    this.validateSelectorSpec(this.selectors);
     this.mutex = new Mutex();
     this.nextPeriph = 0;
     this.nextTable = 0;
@@ -141,6 +142,28 @@ class Proskomma {
       for (const selectorKey of Object.keys(selector)) {
         if (!['name', 'type', 'regex', 'min', 'max', 'enum'].includes(selectorKey)) {
           throw new Error(`Unexpected key '${selectorKey}' in selector ${n}`);
+        }
+      }
+    }
+  }
+
+  validateSelectorSpec(spec) {
+    for (const specElement of spec) {
+      if (!specElement['name']) {
+        throw new Error(`name not found in selector spec element '${JSON.stringify(specElement)}'`);
+      }
+
+      if (!specElement['type']) {
+        throw new Error(`type not found in selector spec element '${JSON.stringify(specElement)}'`);
+      }
+
+      if (!['string', 'integer'].includes(specElement.type)) {
+        throw new Error(`Type for spec element must be string or number, not ${specElement.type}`);
+      }
+
+      for (const selectorKey of Object.keys(specElement)) {
+        if (!['name', 'type', 'regex', 'min', 'max', 'enum'].includes(selectorKey)) {
+          throw new Error(`Unexpected key '${selectorKey}' in selectorSpec`);
         }
       }
     }
@@ -326,7 +349,7 @@ class Proskomma {
       return false;
     }
 
-    for (const docId of Object.entries(this.documents).filter(([id, doc]) => doc.docSetId === docSetId).map(tup => tup[0])) {
+    for (const docId of Object.entries(this.documents).filter(tup => tup[1].docSetId === docSetId).map(tup => tup[0])) {
       this.deleteDocument(docSetId, docId, false, false);
     }
 

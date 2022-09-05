@@ -47,7 +47,7 @@ test(
   `Reload Deleted DocSet (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2);
+      t.plan(3);
       const selectors = {
         lang: 'eng',
         abbr: 'ust',
@@ -57,9 +57,10 @@ test(
       let result = await pk.gqlQuery(query);
       query = `mutation { deleteDocSet(docSetId: "${result.data.docSets[0].id}") }`;
       result = await pk.gqlQuery(query);
-      query = '{ docSets { id } }';
+      query = '{ docSets { id } nDocuments}';
       result = await pk.gqlQuery(query);
       t.equal(result.data.docSets.length, 0);
+      t.equal(result.data.nDocuments, 0);
       const content = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_rut.usx'));
 
       t.doesNotThrow(
