@@ -1,6 +1,6 @@
 {
   "name": "proskomma",
-  "version": "0.7.14",
+  "version": "0.7.15",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
   "files": [
@@ -44,7 +44,7 @@
     "graphql-tools": "^8.2.7",
     "jsonschema": "^1.4.0",
     "proskomma-json-tools": "^0.5.6",
-    "proskomma-utils": "^0.8.1",
+    "proskomma-utils": "^0.8.2",
     "sax": "^1.2.4",
     "utf8-string-bytes": "^1.0.3",
     "uuid-base64": "^1.0.0",
