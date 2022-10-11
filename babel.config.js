@@ -1,20 +1,20 @@
 module.exports = {
-  "plugins": [
+  "assumptions": {
+    "noDocumentAll": true,
+    "pureGetters": true,
+    "iterableIsArray": true,
+    "ignoreToPrimitiveHint": true
+  },
+  "presets": [
     [
-      "@babel/plugin-transform-template-literals",
+      "@babel/preset-env",
       {
-        "loose": true
-      }
-    ]
-  ],
-  'presets': [
-    [
-      '@babel/preset-env',
-      {
-        'targets': {
-          'esmodules': true,
+        "targets": {
+          "esmodules": true,
         },
-      },
+        useBuiltIns: "entry",
+        corejs: "3.25.1"
+      }
     ],
   ],
 };
