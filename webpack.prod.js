@@ -1,4 +1,6 @@
 var path = require('path');
+const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -13,13 +15,14 @@ module.exports = {
     filename: 'index.js',
     library: 'index',
     globalObject: "this",
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
+    hashFunction: "xxhash64"
   },
   externals: {},
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.m?js$/,
         include: path.join(__dirname, 'src'),
         exclude: path.join(__dirname, '/node_modules/'),
         loader: 'babel-loader',
@@ -34,10 +37,31 @@ module.exports = {
       }
     ]
   },
-  node: {
-    child_process: 'empty',
-    fs: 'empty',
-    // "os": require.resolve("os-browserify/browser"),
-    // "stream": require.resolve("stream-browserify")
-  }
+  resolve: {
+    fallback: {
+      fs: false,
+      string_decoder: false,
+      stream: require.resolve('stream'),
+      crypto: false,
+      child_process: "empty",
+      buffer: require.resolve('buffer/'),
+      constants: require.resolve("constants-browserify"),
+      assert: require.resolve("assert/"),
+      path: require.resolve("path-browserify"),
+      util: require.resolve("util/")
+    },
+    alias: {
+      process: "process/browser"
+    }
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+    new NodePolyfillPlugin()
+  ],
+  target: 'node'
 };

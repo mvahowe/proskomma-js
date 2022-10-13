@@ -317,6 +317,26 @@ class Document {
     return indent ? JSON.stringify(output.perf, null, indent) : JSON.stringify(output.perf);
   }
 
+  // TODO add usfm() here with Pipelinehandler
+  // usfm(indent) {
+  //   const perf = this.perf();
+  //   const cl = new PerfRenderFromProskomma(
+  //     {
+  //       proskomma: this.processor,
+  //       actions: transforms.perf2perf.identityActions,
+  //     },
+  //   );
+  //   const output = {};
+
+  //   cl.renderDocument(
+  //     {
+  //       docId: this.id,
+  //       config: {},
+  //       output,
+  //     },
+  //   );
+  //   return indent ? JSON.stringify(output.perf, null, indent) : JSON.stringify(output.perf);
+  // }
 
   sofria(indent, chapter) {
     const cl = new SofriaRenderFromProskomma(

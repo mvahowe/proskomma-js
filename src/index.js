@@ -542,7 +542,7 @@ class Proskomma {
     const release = await this.mutex.acquire();
 
     try {
-      const result = await graphql(executableSchema, query, this, {});
+      const result = await graphql({schema: executableSchema, source: query, rootValue:this, contextValue:{}});
 
       if (callback) {
         callback(result);
@@ -554,7 +554,7 @@ class Proskomma {
   }
 
   gqlQuerySync(query, callback) {
-    const result = graphqlSync(executableSchema, query, this, {});
+    const result = graphqlSync({schema: executableSchema, source: query, rootValue:this, contextValue:{}});
 
     if (callback) {
       callback(result);
