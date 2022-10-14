@@ -1,5 +1,5 @@
 const { Proskomma } = require("../../dist");
-const test = require('tape');
+const test = require("tape");
 
 const testGroup = "Subclass test";
 
@@ -9,16 +9,16 @@ test(
         try {
             t.plan(1);
             t.doesNotThrow(() => {
-                class SubclassProskomma extends Proskomma {
+                class SubClassProskomma extends Proskomma {
                     constructor() {
                         super();
                         this.test = "test";
                     }
                 }
-                const sbClass = new SubclassProskomma();
+                const sbClass = new SubClassProskomma();
             });
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 );
