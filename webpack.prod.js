@@ -13,8 +13,12 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    library: 'index',
     globalObject: "this",
+    // one day we might need "library" instead of "libraryTarget"
+    // https://github.com/webpack/webpack/issues/11800
+    // library: {
+    //   type: 'commonjs-static',
+    // },
     libraryTarget: 'commonjs2',
     hashFunction: "xxhash64"
   },
