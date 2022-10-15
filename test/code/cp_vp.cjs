@@ -94,6 +94,7 @@ test(
       const query =
         '{ documents { mainSequence { blocks { items { type subType payload } } } } }';
       const result = await pk2.gqlQuery(query);
+      // console.log(JSON.stringify(result.data, null, 2))
       t.equal(result.errors, undefined);
       const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => i.type === 'scope');
       let count = 0;
