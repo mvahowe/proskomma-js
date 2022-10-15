@@ -203,6 +203,21 @@ const Sequence = class {
     }
   }
 
+  moveOrphanStartScopes2() {
+    for (const [blockNo, block] of this.blocks.entries()) {
+      if (blockNo >= this.blocks.length - 1) {
+        continue;
+      }
+
+      for (const item of [...block.items].reverse()) {
+        if (item.subType !== 'start') {
+          break;
+        }
+        this.blocks[blockNo + 1].items.unshift(this.blocks[blockNo].items.pop());
+      }
+    }
+  }
+
   moveOrphanEndScopes() {
     for (const [blockNo, block] of this.blocks.entries()) {
       if (blockNo === 0) {

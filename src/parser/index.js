@@ -153,6 +153,7 @@ const Parser = class {
       seq.addTableScopes();
       seq.close(this);
       this.substitutePubNumberScopes(seq);
+      seq.moveOrphanStartScopes2();
 
       if (seq.type === 'sidebar') {
         this.substituteEsbCatScopes(seq);
