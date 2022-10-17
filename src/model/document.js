@@ -320,7 +320,6 @@ class Document {
     return indent ? JSON.stringify(output.perf, null, indent) : JSON.stringify(output.perf);
   }
 
-  // TODO add usfm() here with Pipelinehandler
   async usfm() {
     const perf = JSON.parse(this.perf());
     try {
