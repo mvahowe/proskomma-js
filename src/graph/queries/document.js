@@ -186,6 +186,8 @@ type Document {
     """Format JSON string with this indent"""
     indent: Int
   ): String! 
+  """A string of USFM for this document"""
+  usfm: String! 
   """A string of SOFRIA JSON for this document"""
   sofria(
     """Format JSON string with this indent"""
@@ -543,6 +545,7 @@ const documentResolvers = {
     );
   },
   perf: (root, args) => root.perf(args.indent),
+  usfm: (root, args) => root.usfm(),
   sofria: (root, args) => root.sofria(args.indent, args.chapter),
 };
 

@@ -39,6 +39,9 @@ import {
   recordPreEnums,
   rerecordPreEnums,
 } from './document_helpers/pre_enums';
+import PipelineHandler from "pipeline-handler";
+import pipelines from "../pipelines/perf2x";
+import customTransforms from "../transforms";
 
 // const maybePrint = str => console.log(str);
 const maybePrint = str => str;
@@ -318,25 +321,16 @@ class Document {
   }
 
   // TODO add usfm() here with Pipelinehandler
-  // usfm(indent) {
-  //   const perf = this.perf();
-  //   const cl = new PerfRenderFromProskomma(
-  //     {
-  //       proskomma: this.processor,
-  //       actions: transforms.perf2perf.identityActions,
-  //     },
-  //   );
-  //   const output = {};
-
-  //   cl.renderDocument(
-  //     {
-  //       docId: this.id,
-  //       config: {},
-  //       output,
-  //     },
-  //   );
-  //   return indent ? JSON.stringify(output.perf, null, indent) : JSON.stringify(output.perf);
-  // }
+  async usfm() {
+    const perf = JSON.parse(this.perf());
+    try {
+      const pipelineHandler = new PipelineHandler(pipelines, customTransforms, this.processor);
+      const output = await pipelineHandler.runPipeline("perf2usfmPipeline", { perf });
+      return output.usfm;
+    } catch(err) {
+      console.error("pipelineHandler Error :\n", err);
+    }
+  }
 
   sofria(indent, chapter) {
     const cl = new SofriaRenderFromProskomma(
