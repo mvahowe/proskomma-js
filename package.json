@@ -37,6 +37,7 @@
     "@graphql-tools/schema": "^9.0.3",
     "assert": "^2.0.0",
     "async-mutex": "^0.4.0",
+    "babel-eslint": "^10.1.0",
     "base64-js": "^1.5.1",
     "bitset": "^5.1.1",
     "checksum": "^1.0.0",
@@ -48,14 +49,14 @@
     "jsonschema": "^1.4.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "path-browserify": "^1.0.1",
+    "pipeline-handler": "1.1.1",
     "proskomma-json-tools": "^0.5.7",
     "proskomma-utils": "^0.8.2",
     "sax": "^1.2.4",
     "stream": "0.0.2",
     "utf8-string-bytes": "^1.0.3",
     "util": "^0.12.4",
-    "xregexp": "^5.1.1",
-    "pipeline-handler": "1.1.1"
+    "xregexp": "^5.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
