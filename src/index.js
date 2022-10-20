@@ -15,6 +15,7 @@ import {
 } from 'proskomma-utils';
 
 import packageJson from '../package.json';
+import utils from './util';
 import { DocSet } from './model/doc_set';
 import { Document } from './model/document';
 import {
@@ -579,4 +580,5 @@ export {
   lexingRegexes,
   blocksSpecUtils,
   tree2nodes,
+  utils
 };

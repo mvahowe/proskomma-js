@@ -1,0 +1,186 @@
+{
+  "title": "Root",
+  "type": "object",
+  "description": "Root Element",
+  "definitions": {
+    "base64String": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9/+=]*$"
+    },
+    "tagString": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(:.+)?$"
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "selectors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "selectors"
+      ],
+      "additionalProperties": false
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "$ref": "#/definitions/tagString"
+      }
+    },
+    "enums": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/definitions/base64String"
+        },
+        "wordLike": {
+          "$ref": "#/definitions/base64String"
+        },
+        "notWordLike": {
+          "$ref": "#/definitions/base64String"
+        },
+        "scopeBits": {
+          "$ref": "#/definitions/base64String"
+        },
+        "graftTypes": {
+          "$ref": "#/definitions/base64String"
+        }
+      },
+      "required": [
+        "ids",
+        "wordLike",
+        "notWordLike",
+        "scopeBits",
+        "graftTypes"
+      ],
+      "additionalProperties": false
+    },
+    "docs": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "bs": {
+                        "type": "string"
+                      },
+                      "bg": {
+                        "type": "string"
+                      },
+                      "c": {
+                        "type": "string"
+                      },
+                      "is": {
+                        "type": "string"
+                      },
+                      "os": {
+                        "type": "string"
+                      },
+                      "nt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "bs",
+                      "bg",
+                      "c",
+                      "is",
+                      "os",
+                      "nt"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "$ref": "#/definitions/tagString"
+                  }
+                },
+                "chapters": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "chapterVerses": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "tokensPresent": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "blocks",
+                "tags"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "mainId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "$ref": "#/definitions/tagString"
+            }
+          }
+        },
+        "required": [
+          "sequences",
+          "headers",
+          "mainId",
+          "tags"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  },
+  "required": [
+    "id",
+    "enums",
+    "docs",
+    "tags"
+  ],
+  "additionalProperties": false
+}

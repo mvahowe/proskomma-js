@@ -1,0 +1,2977 @@
+[
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "chapter/1"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/1"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/1"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "In"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "days"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "when"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "judges"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "judged"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "there"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "a"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/bd"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/it"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "famine"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/it"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/it"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "land"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/it"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/bd"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "A"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "certain"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "man"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Bethlehem"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Judah"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "went"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "to"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "live"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "country"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Moab"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "his"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "wife"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "his"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "sons"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/1"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/1"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/2"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/2"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "The"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "name"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "man"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Elimelech"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "name"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "his"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "wife"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Naomi"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "The"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "names"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "his"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "sons"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "were"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Mahlon"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Chilion"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Ephrathites"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Bethlehem"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Judah"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "They"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "came"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "into"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "country"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Moab"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "lived"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "there"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/2"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/2"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/3"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/3"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Elimelech"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Naomi"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "’"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "s"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "husband"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "died"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ";"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "she"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "left"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "sons"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/3"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/3"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/4"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/4"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "They"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "took"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "for"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "themselves"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "wives"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "women"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Moab"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "The"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "name"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "one"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Orpah"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "name"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "other"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Ruth"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "They"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "lived"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "there"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "about"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "ten"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "years"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/4"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/4"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/5"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/5"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Mahlon"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Chilion"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "both"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "died"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "woman"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "bereaved"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "children"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "husband"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/5"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/5"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/6"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/6"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Then"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "she"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "arose"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "daughters"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "law"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "that"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "she"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "might"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "return"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "from"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "country"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Moab"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ";"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "for"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "she"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "had"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "heard"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "country"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Moab"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "how"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/nd"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "LORD"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/nd"
+  },
+  {
+    "type": "graft",
+    "subType": "footnote",
+    "payload": "V7tgUpekGj9Y"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "had"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "visited"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "his"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "people"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "giving"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "them"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "bread"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/6"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/6"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/7"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/7"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "She"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "went"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "out"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "place"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "where"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "she"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "was"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "daughters"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "law"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "They"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "went"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "on"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "way"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "to"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "return"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "to"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "land"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Judah"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/7"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/7"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/8"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/8"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Naomi"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "said"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "to"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "two"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "daughters"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "-"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "law"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "“"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "Go"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "return"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "each"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "to"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "mother"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "’"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "s"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "house"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "May"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/nd"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "LORD"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/nd"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "deal"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "kindly"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "as"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "have"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "dealt"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "dead"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "and"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "with"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "me"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/8"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/8"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verse/9"
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "verses/9"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "May"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "The"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/nd"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "LORD"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/nd"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "grant"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "that"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "may"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "find"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "rest"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": ","
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "each"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "you"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "in"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "the"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "house"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "of"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "scope",
+    "subType": "start",
+    "payload": "span/bd"
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "her"
+  },
+  {
+    "type": "token",
+    "subType": "lineSpace",
+    "payload": " "
+  },
+  {
+    "type": "token",
+    "subType": "wordLike",
+    "payload": "husband"
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "."
+  },
+  {
+    "type": "token",
+    "subType": "punctuation",
+    "payload": "”"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "span/bd"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verses/9"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "verse/9"
+  },
+  {
+    "type": "scope",
+    "subType": "end",
+    "payload": "chapter/1"
+  }
+]
