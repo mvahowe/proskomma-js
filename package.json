@@ -1,5 +1,5 @@
 {
-  "name": "proskomma",
+  "name": "proskomma-core",
   "version": "0.8.0",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "test": "npm run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "testUtils": "bash -c \"tape -r @babel/register test/code/utils/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "oneTest": "tape -r @babel/register test/code/$TESTSCRIPT.cjs",
     "coverage": "node_modules/nyc/bin/nyc.js tape -r @babel/register test/code/*.cjs",
