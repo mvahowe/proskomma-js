@@ -1,4 +1,4 @@
-import { pushSuccinctGraftBytes } from 'proskomma-utils';
+import utils from "../../util";
 import { remakeBlocks } from '../lib/remake_blocks';
 
 const addMutationsSchemaString = `
@@ -70,7 +70,7 @@ const addMutationsResolvers = {
       const mainSequenceBG = document.sequences[document.mainId].blocks[0].bg;
       const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', args.type, true);
       const seqEnumIndex = docSet.enumForCategoryValue('ids', newSeqId, true);
-      pushSuccinctGraftBytes(mainSequenceBG, graftTypeEnumIndex, seqEnumIndex);
+      utils.succinct.pushSuccinctGraftBytes(mainSequenceBG, graftTypeEnumIndex, seqEnumIndex);
     }
     return newSeqId;
   },

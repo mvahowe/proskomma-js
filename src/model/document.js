@@ -1,10 +1,4 @@
-import {
-  addTag,
-  generateId,
-  parserConstants,
-  removeTag,
-  validateTags,
-} from 'proskomma-utils';
+import utils from "../util";
 import {
   PerfRenderFromProskomma,
   SofriaRenderFromProskomma,
@@ -43,6 +37,12 @@ import PipelineHandler from "pipeline-handler";
 import pipelines from "../pipelines/perf2x";
 import customTransforms from "../transforms";
 
+const {
+  addTag,
+  removeTag,
+  validateTags
+} = utils.tags;
+const parserConstantDef = utils.parserConstants;
 // const maybePrint = str => console.log(str);
 const maybePrint = str => str;
 
@@ -50,10 +50,10 @@ class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
     this.docSetId = docSetId;
-    this.baseSequenceTypes = parserConstants.usfm.baseSequenceTypes;
-
+    this.baseSequenceTypes = parserConstantDef.usfm.baseSequenceTypes;
+    
     if (contentType) {
-      this.id = generateId();
+      this.id = utils.generateId();
       this.filterOptions = filterOptions;
       this.customTags = customTags;
       this.emptyBlocks = emptyBlocks;

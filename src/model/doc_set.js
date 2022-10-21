@@ -1,20 +1,18 @@
 import checksum from 'checksum';
-
-import {
-  addTag,
-  ByteArray,
-  enumIndex,
-  enumIndexes,
-  headerBytes,
-  itemEnum,
-  removeTag,
+import utils from "../util";
+const ByteArray = utils.ByteArray;
+const { addTag, removeTag, validateTags } = utils.tags;
+const {
   succinctGraftName,
   succinctGraftSeqId,
   succinctScopeLabel,
   succinctTokenChars,
-  tokenEnumLabels,
-  validateTags,
-} from 'proskomma-utils';
+  headerBytes,
+  enumIndex,
+  enumIndexes
+} = utils.succinct;
+const { itemEnum } = utils.itemDefs;
+const { tokenEnumLabels } = utils.tokenDefs;
 import { validateSelectors } from './doc_set_helpers/selectors';
 import {
   blocksWithScriptureCV,

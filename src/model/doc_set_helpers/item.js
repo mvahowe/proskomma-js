@@ -1,4 +1,4 @@
-import { headerBytes } from 'proskomma-utils';
+import utils from "../../util";
 
 const countItems = (docSet, succinct) => {
   let count = 0;
@@ -83,7 +83,7 @@ const sequenceItemsByScopes = (docSet, blocks, byScopes) => {
   let scopeMatchEnded = true; // Always start new itemGroup the first time
 
   for (const [blockN, block] of blocks.entries()) {
-    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+    const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
     const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
     const startBlockScope = ['scope', 'start', blockScope];
     const endBlockScope = ['scope', 'end', blockScope];
@@ -148,7 +148,7 @@ const sequenceItemsByMilestones = (docSet, blocks, byMilestones) => {
   const ret = [[[], []]];
 
   for (const block of blocks) {
-    const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+    const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
     const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
     const blockGrafts = docSet.unsuccinctifyGrafts(block.bg);
     allBlockScopes.add(blockScope);

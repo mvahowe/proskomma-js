@@ -1,7 +1,4 @@
-import {
-  addTag,
-  removeTag,
-} from 'proskomma-utils';
+import utils from "../../util";
 
 const tagMutationsSchemaString = `
   """Add one or more tags to a docSet, if they are not already present"""
@@ -84,7 +81,7 @@ const tagMutationsResolvers = {
     const sequence = document.sequences[args.sequenceId];
 
     for (const tag of args.tags) {
-      addTag(sequence.tags, tag);
+      utils.tags.addTag(sequence.tags, tag);
     }
     return Array.from(sequence.tags);
   },
@@ -111,7 +108,7 @@ const tagMutationsResolvers = {
     const sequence = document.sequences[args.sequenceId];
 
     for (const tag of args.tags) {
-      removeTag(sequence.tags, tag);
+      utils.tags.removeTag(sequence.tags, tag);
     }
     return Array.from(sequence.tags);
   },

@@ -1,10 +1,10 @@
-import { headerBytes, itemEnum } from 'proskomma-utils';
+import utils from "../../util";
 import xre from 'xregexp';
 
 const unsuccinctifyBlock = (docSet, block, options) => {
   docSet.maybeBuildEnumIndexes();
   const succinctBlockScope = block.bs;
-  const [itemLength, itemType, itemSubtype] = headerBytes(succinctBlockScope, 0);
+  const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(succinctBlockScope, 0);
   const blockScope = docSet.unsuccinctifyScope(succinctBlockScope, itemType, itemSubtype, 0);
   const blockGrafts = docSet.unsuccinctifyGrafts(block.bg);
   const openScopes = docSet.unsuccinctifyScopes(block.os);
@@ -70,21 +70,21 @@ const unsuccinctifyItems = (docSet, succinct, options, nextToken, openScopes) =>
 
 const unsuccinctifyItem = (docSet, succinct, pos, options) => {
   let item = null;
-  const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
+  const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(succinct, pos);
 
   switch (itemType) {
-  case itemEnum.token:
+  case utils.itemDefs.itemEnum.token:
     if (Object.keys(options).length === 0 || options.tokens) {
       item = docSet.unsuccinctifyToken(succinct, itemSubtype, pos);
     }
     break;
-  case itemEnum.startScope:
-  case itemEnum.endScope:
+  case utils.itemDefs.itemEnum.startScope:
+  case utils.itemDefs.itemEnum.endScope:
     if (Object.keys(options).length === 0 || options.scopes) {
       item = docSet.unsuccinctifyScope(succinct, itemType, itemSubtype, pos);
     }
     break;
-  case itemEnum.graft:
+  case utils.itemDefs.itemEnum.graft:
     if (Object.keys(options).length === 0 || options.grafts) {
       item = docSet.unsuccinctifyGraft(succinct, itemSubtype, pos);
     }

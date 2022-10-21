@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import { headerBytes } from 'proskomma-utils';
+import utils from "../../util";
 import { dumpBlock } from '../lib/dump';
 
 const scopeMatchesStartsWith = (sw, s) => {
@@ -111,7 +111,7 @@ const blockResolvers = {
   is: (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
   os: (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
   bs: (root, args, context) => {
-    const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
+    const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(root.bs, 0);
     return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
   },
   bg: (root, args, context) => context.docSet.unsuccinctifyGrafts(root.bg),

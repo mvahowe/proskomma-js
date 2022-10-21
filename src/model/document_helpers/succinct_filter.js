@@ -1,8 +1,6 @@
-import {
-  ByteArray,
-  headerBytes,
-  itemEnum,
-} from 'proskomma-utils';
+import utils from "../../util";
+const ByteArray = utils.ByteArray;
+const { itemEnum } = utils.itemDefs;
 
 
 const succinctFilter = (document, filterOptions) => {
@@ -57,7 +55,7 @@ const succinctFilter = (document, filterOptions) => {
     let pos = 0;
 
     while (pos < block.bg.length) {
-      const [itemLength, itemType, itemSubtype] = headerBytes(block.bg, pos);
+      const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bg, pos);
       const graftOb = docSet.unsuccinctifyGraft(block.bg, itemSubtype, pos);
 
       if (

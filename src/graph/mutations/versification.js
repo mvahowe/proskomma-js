@@ -1,8 +1,4 @@
-import {
-  vrs2json,
-  reverseVersification,
-  succinctifyVerseMappings,
-} from 'proskomma-utils';
+import utils from "../../util";
 
 const versificationMutationsSchemaString = `
   """Adds verse mapping tables to the documents in a docSet, where the verse mapping may be provided in legacy .vrs or JSON format"""
@@ -37,17 +33,17 @@ const versificationMutationsResolvers = {
     let jsonSource;
 
     if (args.vrsSource) {
-      jsonSource = vrs2json(args.vrsSource);
+      jsonSource = utils.versification.vrs2json(args.vrsSource);
     } else {
       jsonSource = args.jsonSource;
     }
 
-    const forwardSuccinctTree = succinctifyVerseMappings(
+    const forwardSuccinctTree = utils.versification.succinctifyVerseMappings(
       jsonSource.mappedVerses,
     );
 
-    const reversedJsonSource = reverseVersification(jsonSource);
-    const reversedSuccinctTree = succinctifyVerseMappings(
+    const reversedJsonSource = utils.versification.reverseVersification(jsonSource);
+    const reversedSuccinctTree = utils.versification.succinctifyVerseMappings(
       reversedJsonSource.reverseMappedVerses,
     );
 
