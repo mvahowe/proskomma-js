@@ -1,5 +1,6 @@
 const test = require('tape');
-const { validateTags } = require('proskomma-utils');
+const {utils} = require("../../dist/index");
+const { validateTags } = utils.tags;
 const { pkWithDoc } = require('../lib/load');
 
 const pk = pkWithDoc('../test_data/usx/web_rut.usx', {

@@ -1,4 +1,4 @@
-import { mapVerse } from 'proskomma-utils';
+import utils from '../../util';
 import xre from 'xregexp';
 
 const updatedOpenScopes = (openScopes, items) => {
@@ -57,7 +57,7 @@ const do_chapter_verse_array = (root, context, mainSequence, chapterN, verses, i
 
       for (const verse of verses) { // May handle multiple verses one day, but, eg, may map to multiple books
         mappings.push(
-          mapVerse(
+          utils.versification.mapVerse(
             mainSequence.verseMapping.forward[chapterN],
             root.headers.bookCode,
             chapterN,
@@ -82,7 +82,7 @@ const do_chapter_verse_array = (root, context, mainSequence, chapterN, verses, i
         for (const [origC, origV] of chapterVerses) {
           if (`${origC}` in mappedMainSequence.verseMapping.reversed) {
             doubleMappings.push(
-              mapVerse(
+              utils.versification.mapVerse(
                 mappedMainSequence.verseMapping.reversed[`${origC}`],
                 book,
                 origC,

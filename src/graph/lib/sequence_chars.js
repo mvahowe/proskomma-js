@@ -1,10 +1,10 @@
-import { enumRegexIndexTuples, enumStringIndex } from 'proskomma-utils';
+import utils from '../../util';
 
 const exactSearchTermIndexes = (docSet, chars, allChars) => {
   let charsIndexesArray = [
     chars
       .map(
-        c => [enumStringIndex(docSet.enums.wordLike, c)],
+        c => [utils.enums.enumStringIndex(docSet.enums.wordLike, c)],
       ),
   ];
 
@@ -21,7 +21,7 @@ const regexSearchTermIndexes = (docSet, chars, allChars) => {
     chars
       .map(
         c =>
-          enumRegexIndexTuples(docSet.enums.wordLike, c)
+          utils.enums.enumRegexIndexTuples(docSet.enums.wordLike, c)
             .map(tup => tup[0]),
       ),
   ];

@@ -1,9 +1,8 @@
 const test = require('tape');
 const Validator = require('jsonschema').Validator;
-const {
-  serializedSchema,
-  unpackEnum,
-} = require('proskomma-utils');
+const {utils} = require("../../dist/index");
+const serializedSchema = utils.proskommaSerialized;
+const { unpackEnum } = utils.succinct;
 
 const { Proskomma } = require('../../src');
 

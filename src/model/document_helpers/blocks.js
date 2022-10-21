@@ -1,15 +1,14 @@
-import {
-  ByteArray,
-  headerBytes,
-  itemEnum,
-  nComponentsForScope,
+import utils from "../../util";
+const ByteArray = utils.ByteArray;
+const {
   pushSuccinctGraftBytes,
   pushSuccinctScopeBytes,
   pushSuccinctTokenBytes,
-  scopeEnum,
-  scopeEnumLabels,
-  tokenEnum,
-} from 'proskomma-utils';
+} = utils.succinct;
+const { itemEnum } = utils.itemDefs;
+const { scopeEnum, scopeEnumLabels, nComponentsForScope } = utils.scopeDefs;
+const { tokenCategory, tokenEnum } = utils.tokenDefs;
+const { headerBytes } = utils.succinct;
 
 import { updateBlockGrafts } from '../doc_set_helpers/update';
 

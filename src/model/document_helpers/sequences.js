@@ -1,11 +1,6 @@
 import deepCopy from 'deep-copy-all';
 
-import {
-  generateId,
-  headerBytes,
-  itemEnum,
-  succinctGraftSeqId,
-} from 'proskomma-utils';
+import utils from "../../util";
 
 const gcSequences = document => {
   const usedSequences = new Set();
@@ -44,7 +39,7 @@ const gcSequences = document => {
 };
 
 const newSequence = (document, seqType, tags) => {
-  const seqId = generateId();
+  const seqId = utils.generateId();
 
   document.sequences[seqId] = {
     id: seqId,
@@ -86,12 +81,12 @@ const gcSequenceReferences = (document, seqContext, seqId) => {
       let pos = 0;
 
       while (pos < succinct.length) {
-        const [itemLength, itemType] = headerBytes(succinct, pos);
+        const [itemLength, itemType] = utils.succinct.headerBytes(succinct, pos);
 
-        if (itemType !== itemEnum.graft) {
+        if (itemType !== utils.itemDefs.itemEnum.graft) {
           pos += itemLength;
         } else {
-          const graftSeqId = succinctGraftSeqId(docSet.enums, docSet.enumIndexes, succinct, pos);
+          const graftSeqId = utils.succinct.succinctGraftSeqId(docSet.enums, docSet.enumIndexes, succinct, pos);
 
           if (graftSeqId === seqId) {
             succinct.deleteItem(pos);
@@ -193,7 +188,7 @@ const modifyBlockItems = (
 
   while (pos < oldBlock.c.length) {
     itemN++;
-    const [itemLength, itemType, itemSubtype] = headerBytes(oldBlock.c, pos);
+    const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(oldBlock.c, pos);
 
     if (itemFilterFunc(oldSequence, oldBlockN, oldBlock, itemN, itemType, itemSubtype, pos)) {
       itemRewriteFunc(oldSequence, oldBlockN, oldBlock, newBlock, itemN, itemLength, itemType, itemSubtype, pos);

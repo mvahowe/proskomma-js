@@ -10,7 +10,8 @@ const {
   blocksSpec2Query,
 } = require('../../src/util/blocksSpec');
 const { Validator } = require('jsonschema');
-const { serializedSchema } = require('proskomma-utils');
+const { utils } = require("../../dist/index");
+const serializedSchema = utils.proskommaSerialized;
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {
   lang: 'eng',

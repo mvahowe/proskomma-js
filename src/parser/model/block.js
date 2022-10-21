@@ -1,9 +1,9 @@
-import { generateId } from 'proskomma-utils';
+import utils from "../../util";
 import { Sequence } from './sequence';
 
 const Block = class {
   constructor(blockScope) {
-    this.id = generateId();
+    this.id = utils.generateId();
     this.items = [];
     this.bg = [];
     this.bs = {

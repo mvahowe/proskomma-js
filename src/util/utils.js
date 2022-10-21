@@ -5,7 +5,7 @@ import { generateId } from "./lib/generateId/generate_id";
 import graftDefs from "./lib/graftDefs";
 import inspect from "./lib/inspectSuccinct";
 import itemDefs from "./lib/itemDefs";
-import parserConstants from "./lib/parserConstants";
+import parserConstants from "./lib/parserConstants/parser_constant_defs";
 import proskommaSerialized from "./lib/proskommaSerialized";
 import scopeDefs from "./lib/scopeDefs";
 import succinct from "./lib/succinct";
