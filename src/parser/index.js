@@ -1,12 +1,12 @@
-import {
-  labelForScope,
-  parserConstants,
-} from 'proskomma-utils';
+import utils from '../util';
 import { Sequence } from './model/sequence';
 import {
   specs,
   buildSpecLookup,
 } from './parser_specs';
+
+const { labelForScope } = utils.scopeDefs;
+const parserConstantDef = utils.parserConstants;
 
 const Parser = class {
   constructor(filterOptions, customTags, emptyBlocks) {
@@ -16,8 +16,8 @@ const Parser = class {
     this.specs = specs(this);
     this.specLookup = buildSpecLookup(this.specs);
     this.headers = {};
-    this.baseSequenceTypes = parserConstants.usfm.baseSequenceTypes;
-    this.inlineSequenceTypes = parserConstants.usfm.inlineSequenceTypes;
+    this.baseSequenceTypes = parserConstantDef.usfm.baseSequenceTypes;
+    this.inlineSequenceTypes = parserConstantDef.usfm.inlineSequenceTypes;
     this.setSequences();
     this.setCurrent();
   }

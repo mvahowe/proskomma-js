@@ -1,8 +1,4 @@
-import {
-  enumRegexIndexTuples,
-  enumStringIndex,
-  unpackEnum,
-} from 'proskomma-utils';
+import utils from "../../util";
 
 import { bookCodeCompareFunctions } from '../lib/sort';
 
@@ -176,15 +172,15 @@ const docSetResolvers = {
   document: (root, args) => root.documentWithBook(args.bookCode),
   hasMapping: root => root.tags.has('hasMapping'),
   enumIndexForString: (root, args) =>
-    enumStringIndex(root.enums[args.enumType], args.searchString),
+  utils.enums.enumStringIndex(root.enums[args.enumType], args.searchString),
   enumRegexIndexesForString: (root, args) =>
-    enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
+  utils.enums.enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
   wordLikes: (root, args) => {
     if (args.coerceCase && !['toLower', 'toUpper', 'none'].includes(args.coerceCase)) {
       throw new Error(`coerceCase, when present, must be 'toLower', 'toUpper' or 'none', not '${args.coerceCase}'`);
     }
 
-    let tokens = unpackEnum(root.enums.wordLike);
+    let tokens = utils.succinct.unpackEnum(root.enums.wordLike);
 
     if (args.coerceCase === 'toLower') {
       tokens = tokens.map(t => t.toLowerCase());
@@ -198,7 +194,7 @@ const docSetResolvers = {
   uniqueChars: root => {
     const retSet = new Set([]);
 
-    for (const token of [...unpackEnum(root.enums.wordLike), ...unpackEnum(root.enums.notWordLike)]) {
+    for (const token of [...utils.succinct.unpackEnum(root.enums.wordLike), ...utils.succinct.unpackEnum(root.enums.notWordLike)]) {
       for (const char of token.split('')) {
         retSet.add(char);
       }
@@ -208,7 +204,7 @@ const docSetResolvers = {
   uniqueCharsString: root => {
     const retSet = new Set([]);
 
-    for (const token of [...unpackEnum(root.enums.wordLike), ...unpackEnum(root.enums.notWordLike)]) {
+    for (const token of [...utils.succinct.unpackEnum(root.enums.wordLike), ...utils.succinct.unpackEnum(root.enums.notWordLike)]) {
       for (const char of token.split('')) {
         retSet.add(char);
       }

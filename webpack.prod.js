@@ -16,9 +16,9 @@ module.exports = {
     globalObject: "this",
     // one day we might need "library" instead of "libraryTarget"
     // https://github.com/webpack/webpack/issues/11800
-    // library: {
-    //   type: 'commonjs-static',
-    // },
+    library: {
+      type: 'commonjs-static',
+    },
     libraryTarget: 'commonjs2',
     hashFunction: "xxhash64"
   },
@@ -45,14 +45,7 @@ module.exports = {
     fallback: {
       fs: false,
       string_decoder: false,
-      stream: require.resolve('stream'),
       crypto: false,
-      child_process: "empty",
-      buffer: require.resolve('buffer/'),
-      constants: require.resolve("constants-browserify"),
-      assert: require.resolve("assert/"),
-      path: require.resolve("path-browserify"),
-      util: require.resolve("util/")
     },
     alias: {
       process: "process/browser"

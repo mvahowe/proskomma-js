@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import { headerBytes, itemEnum } from 'proskomma-utils';
+import utils from "../../util";
 
 const blocksWithScriptureCV = (docSet, blocks, cv) => {
   const hasMiddleChapter = (b, fromC, toC) => {
@@ -142,7 +142,7 @@ const blocksWithScriptureCV = (docSet, blocks, cv) => {
 };
 
 const allBlockScopes = (docSet, block) => {
-  const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+  const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
   const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
   return new Set([
     ...docSet.unsuccinctifyScopes(block.os).map(s => s[2]),
@@ -175,7 +175,7 @@ const anyScopeInBlock = (docSet, block, scopes) => {
 };
 
 const blockHasBlockScope = (docSet, block, scope) => {
-  const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+  const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
   const blockScope = docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0);
   return (blockScope[2] === scope);
 };
@@ -190,9 +190,9 @@ const blockHasChars = (docSet, block, charsIndexes) => {
   }
 
   while (!ret && (pos < succinct.length)) {
-    const [itemLength, itemType] = headerBytes(succinct, pos);
+    const [itemLength, itemType] = utils.succinct.headerBytes(succinct, pos);
 
-    if (itemType === itemEnum['token']) {
+    if (itemType === utils.itemDefs.itemEnum['token']) {
       if (charsIndexes.includes(succinct.nByte(pos + 2))) {
         ret = true;
       }

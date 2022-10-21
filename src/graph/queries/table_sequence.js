@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import { headerBytes } from 'proskomma-utils';
+import utils from "../../util";
 
 const tableSequenceSchemaString = `
 """A contiguous flow of content for a table"""
@@ -45,7 +45,7 @@ const tableSequenceResolvers = {
     const rowNs = new Set([]);
 
     for (const block of root.blocks) {
-      const [itemLength, itemType, itemSubtype] = headerBytes(block.bs, 0);
+      const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
       const bsPayload = context.docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
       rowNs.add(bsPayload.split('/')[1]);
     }

@@ -1,5 +1,4 @@
 const fse = require('fs-extra');
-const proskommaUtils = require('proskomma-utils');
 
 const { Proskomma } = require('../dist/index.js');
 

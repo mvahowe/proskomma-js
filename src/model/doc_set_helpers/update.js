@@ -1,13 +1,13 @@
-import {
-  ByteArray,
-  itemEnum,
+import utils from "../../util";
+const ByteArray = utils.ByteArray;
+const {
   pushSuccinctGraftBytes,
   pushSuccinctScopeBytes,
   pushSuccinctTokenBytes,
-  scopeEnum,
-  tokenCategory,
-  tokenEnum,
-} from 'proskomma-utils';
+} = utils.succinct;
+const { itemEnum } = utils.itemDefs;
+const { scopeEnum } = utils.scopeDefs;
+const { tokenCategory, tokenEnum } = utils.tokenDefs;
 
 const updateItems1 = (
   docSet,

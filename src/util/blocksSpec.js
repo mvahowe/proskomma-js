@@ -1,4 +1,5 @@
-import { labelForScope } from 'proskomma-utils';
+import utils from "../util";
+const { labelForScope } = utils.scopeDefs;
 import { tokenizeString } from '../parser/lib/tokenize';
 import {
   flattenNodes,

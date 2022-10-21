@@ -1,11 +1,9 @@
 import BitSet from 'bitset';
 
-import {
-  ByteArray,
-  headerBytes,
-  itemEnum,
-  tokenEnum,
-} from 'proskomma-utils';
+import utils from "../../util";
+const ByteArray = utils.ByteArray;
+const { itemEnum } = utils.itemDefs;
+const { tokenEnum } = utils.tokenDefs;
 
 const emptyCVIndexType = 0;
 const shortCVIndexType = 2;
@@ -42,7 +40,7 @@ const buildChapterVerseIndex = document => {
 
     while (pos < succinct.length) {
       itemN++;
-      const [itemLength, itemType, itemSubtype] = headerBytes(succinct, pos);
+      const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(succinct, pos);
 
       if (itemType === itemEnum['startScope']) {
         let scopeLabel = docSet.succinctScopeLabel(succinct, itemSubtype, pos);
