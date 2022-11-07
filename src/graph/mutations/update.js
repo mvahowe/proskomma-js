@@ -1,4 +1,7 @@
 import { remakeBlocks } from '../lib/remake_blocks';
+import PipelineHandler from 'pipeline-handler';
+import pipelines from '../../pipelines/perf2x';
+import customTransforms from '../../transforms';
 
 const updateMutationsSchemaString = `
   """Replaces the items of a block with a new set of items"""
@@ -28,6 +31,17 @@ const updateMutationsSchemaString = `
     sequenceId: String
     """The JSON describing blocks"""
     blocksSpec: [inputBlockSpec!]!
+  ): Boolean!
+  """Replaces all the blocks of a sequence with a new set of blocks derived from PERF"""
+  updateSequenceFromPerf(
+    """The id of the docSet containing the document containing the sequence for which the blocks will be updated"""
+    docSetId: String!
+    """The id of the document containing the sequence for which the blocks will be updated"""
+    documentId: String!
+    """The id of the sequence for which the blocks will be updated (defaults to the main sequence)"""
+    sequenceId: String
+    """The JSON describing blocks"""
+    perf: String!
   ): Boolean!
   """Garbage collects unused sequences within a document. (You probably don\\'t need to do this.)"""
   gcSequences(
@@ -107,6 +121,39 @@ const updateMutationsResolvers = {
       throw new Error(`Sequence '${args.sequenceId || document.mainId}' not found`);
     }
     remakeBlocks(docSet, document, sequence, args.blocksSpec);
+    document.buildChapterVerseIndex();
+    return true;
+  },
+  updateSequenceFromPerf: async (root, args) => {
+    const docSet = root.docSets[args.docSetId];
+
+    if (!docSet) {
+      throw new Error(`DocSet '${args.docSetId}' not found`);
+    }
+
+    const document = root.documents[args.documentId];
+
+    if (!document) {
+      throw new Error(`Document '${args.documentId}' not found`);
+    }
+
+    const sequence = document.sequences[args.sequenceId || document.mainId];
+
+    if (!sequence) {
+      throw new Error(`Sequence '${args.sequenceId || document.mainId}' not found`);
+    }
+    const sequencePerf = JSON.parse(args.perf);
+    let blocksSpec = {};
+    try {
+      const pipelineHandler = new PipelineHandler(pipelines, customTransforms, root);
+      const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf: sequencePerf });
+      blocksSpec =  output.pkJson;
+      console.log("bs", blocksSpec)
+    } catch(err) {
+      console.error("pipelineHandler Error :\n", err);
+      return false;
+    }
+    remakeBlocks(docSet, document, sequence, blocksSpec);
     document.buildChapterVerseIndex();
     return true;
   },
