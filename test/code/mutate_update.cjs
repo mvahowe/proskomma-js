@@ -28,6 +28,19 @@ const blockSetup = async t => {
   return [pk, docSet, document, sequence, block, items];
 };
 
+const perfSetup = async t => {
+  const pk = deepCopy(cleanPk);
+  let query = '{docSets { id documents { id perf mainSequence { id } } } }';
+  let result = await pk.gqlQuery(query);
+  t.equal(result.errors, undefined);
+  t.equal(result.data.docSets.length, 1);
+  const docSetId = result.data.docSets[0].id;
+  const documentId = result.data.docSets[0].documents[0].id;
+  const sequenceId = result.data.docSets[0].documents[0].mainSequence.id;
+  const perf = result.data.docSets[0].documents[0].perf;
+  return [pk, docSetId, documentId, sequenceId, perf];
+};
+
 const searchScopes = (items, searchStr) => items.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
 const searchGrafts = (items, searchStr) => items.filter(i => i.type === 'graft' && i.subType.includes(searchStr));
 
@@ -416,6 +429,26 @@ test(
       t.ok(result.data.documents[0].mainSequence.blocks[1].os.map(s => s.payload).includes('chapter/1'));
       t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('verse/1'));
       t.ok(result.data.documents[0].mainSequence.blocks[4].is.map(s => s.payload).includes('verses/3'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `update from PERF (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(16);
+      let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
+      let query = `mutation { updateSequenceFromPerf(` +
+        `docSetId: "${docSetId}"` +
+        ` documentId: "${documentId}"` +
+        ` sequenceId: "${sequenceId}"` +
+        ` perf: """${perf}""") }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateSequenceFromPerf, true);
     } catch (err) {
       console.log(err);
     }
