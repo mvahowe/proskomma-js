@@ -37,8 +37,9 @@ const perfSetup = async t => {
   const docSetId = result.data.docSets[0].id;
   const documentId = result.data.docSets[0].documents[0].id;
   const sequenceId = result.data.docSets[0].documents[0].mainSequence.id;
-  const perf = result.data.docSets[0].documents[0].perf;
-  return [pk, docSetId, documentId, sequenceId, perf];
+  const perf = JSON.parse(result.data.docSets[0].documents[0].perf);
+  const perfSequence = JSON.stringify(perf.sequences[perf.main_sequence_id]);
+  return [pk, docSetId, documentId, sequenceId, perfSequence];
 };
 
 const searchScopes = (items, searchStr) => items.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
@@ -449,6 +450,10 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.updateSequenceFromPerf, true);
+      query = '{documents { mainSequence { id blocks { text bs {payload} bg {subType payload} } } } }';
+      result = await pk.gqlQuery(query);
+      console.log(result.data.documents[0].mainSequence);
+      t.equal(result.errors, undefined);
     } catch (err) {
       console.log(err);
     }

@@ -415,7 +415,6 @@ const perf2PkJsonActions = {
                             itemN--;
                         }
                     }
-                    console.log("output", output)
                 },
             },
         ],
