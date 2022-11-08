@@ -109,6 +109,18 @@ import {
   mutationsSchemaString,
   mutationsResolvers,
 } from './mutations/index';
+import {
+  versificationSchemaString,
+  versificationResolvers
+} from './queries/versification';
+import {
+  cvBookSchemaString,
+  cvBookResolvers
+} from './queries/cvBook';
+import {
+  cvChapterSchemaString,
+  cvChapterResolvers
+} from './queries/cvChapter';
 
 const typeDefs = `
       ${querySchemaString}
@@ -147,6 +159,9 @@ const typeDefs = `
       ${docSetSchemaString}
       ${selectorSpecSchemaString}
       ${inputSelectorSpecSchemaString}
+      ${versificationSchemaString}
+      ${cvBookSchemaString}
+      ${cvChapterSchemaString}
   `;
 
 const resolvers = {
@@ -175,6 +190,9 @@ const resolvers = {
   Document: documentResolvers,
   DocSet: docSetResolvers,
   selectorSpec: selectorSpecResolvers,
+  versification: versificationResolvers,
+  cvBook: cvBookResolvers,
+  cvChapter: cvChapterResolvers,
 };
 
 export {
