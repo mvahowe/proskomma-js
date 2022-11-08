@@ -14,6 +14,11 @@ const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'ust',
 }, {}, {}, [], [])[0];
 
+const cleanPk2 = pkWithDoc('../test_data/usfm/ust_psa.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 const blockSetup = async t => {
   const pk = deepCopy(cleanPk);
   let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { bs { payload } text items { type subType payload } } } } } }';
@@ -29,7 +34,7 @@ const blockSetup = async t => {
 };
 
 const perfSetup = async t => {
-  const pk = deepCopy(cleanPk);
+  const pk = deepCopy(cleanPk2);
   let query = '{docSets { id documents { id perf mainSequence { id } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
@@ -452,7 +457,7 @@ test(
       t.equal(result.data.updateSequenceFromPerf, true);
       query = '{documents { mainSequence { id blocks { text bs {payload} bg {subType payload} } } } }';
       result = await pk.gqlQuery(query);
-      console.log(result.data.documents[0].mainSequence);
+      console.log(JSON.stringify(result.data.documents[0].mainSequence, null, 2));
       t.equal(result.errors, undefined);
     } catch (err) {
       console.log(err);
