@@ -148,7 +148,7 @@ const updateMutationsResolvers = {
       const pipelineHandler = new PipelineHandler(pipelines, customTransforms, root);
       const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf: sequencePerf });
       blocksSpec =  output.pkJson;
-      console.log("bs", blocksSpec)
+      console.log("bs", output)
     } catch(err) {
       console.error("pipelineHandler Error :\n", err);
       return false;
