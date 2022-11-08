@@ -434,7 +434,7 @@ test(
     }
   },
 );
-/*
+
 test(
   `update from PERF (${testGroup})`,
   async function (t) {
@@ -454,7 +454,6 @@ test(
     }
   },
 );
- */
 
 test(
   `gcSequences (${testGroup})`,

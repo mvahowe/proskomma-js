@@ -415,7 +415,7 @@ const perf2PkJsonActions = {
                             itemN--;
                         }
                     }
-                    console.log(output)
+                    console.log("output", output)
                 },
             },
         ],
@@ -428,6 +428,7 @@ const perf2PkJsonCode = function ({perf}) {
     const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
+            ignoreMissingSequences: true,
             actions: perf2PkJsonActions,
         },
     );
