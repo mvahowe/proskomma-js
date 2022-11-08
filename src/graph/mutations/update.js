@@ -143,12 +143,48 @@ const updateMutationsResolvers = {
       throw new Error(`Sequence '${args.sequenceId || document.mainId}' not found`);
     }
     const sequencePerf = JSON.parse(args.perf);
+    const perf = {
+      "schema": {
+        "structure": "flat",
+        "structure_version": "0.3.0",
+        "constraints": [
+          {
+            "name": "perf",
+            "version": "0.3.0"
+          }
+        ]
+      },
+      "metadata": {
+        "translation": {
+          "id": "eBible/fra_fraLSG",
+          "selectors": {
+            "lang": "fra",
+            "abbr": "fraLSG"
+          },
+          "tags": [],
+          "properties": {}
+        },
+        "document": {
+          "tags": [],
+          "properties": {},
+          "id": "MRK MRKFLS1910.PTX, Louis Segond 1910, French, 31-10-2011, Moon Sun Kim. Updated for DBL by E. Canales, September 2012.",
+          "bookCode": "MRK",
+          "ide": "UTF-8",
+          "h": "MARC",
+          "toc": "Évangile selon Marc",
+          "toc2": "Marc"
+        }
+      },
+      sequences: {},
+      main_sequence_id: args.sequenceId
+    };
+    perf.sequences[args.sequenceId] = sequencePerf
+
     let blocksSpec = {};
     try {
       const pipelineHandler = new PipelineHandler(pipelines, customTransforms, root);
-      const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf: sequencePerf });
-      blocksSpec =  output.pkJson;
-      console.log("pkJson", blocksSpec)
+      const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf });
+      blocksSpec =  Object.values(output.pkJson)[0];
     } catch(err) {
       console.error("pipelineHandler Error :\n", err);
       return false;
