@@ -445,7 +445,7 @@ test(
   `update from PERF (${testGroup})`,
   async function (t) {
     try {
-      t.plan(16);
+      t.plan(5);
       let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
       let query = `mutation { updateSequenceFromPerf(` +
         `docSetId: "${docSetId}"` +

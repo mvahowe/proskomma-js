@@ -104,7 +104,7 @@ const perf2PkJsonActions = {
             },
         ],
 
-    blockGraft: [
+    unresolvedBlockGraft: [
         {
             description: 'Stash for next para',
             test: () => true,
@@ -121,7 +121,7 @@ const perf2PkJsonActions = {
         },
     ],
 
-    inlineGraft: [
+    unresolvedInlineGraft: [
             {
                 description: 'Follow inline grafts',
                 test: () => true,
