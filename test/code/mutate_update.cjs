@@ -442,10 +442,10 @@ test(
 );
 
 test(
-  `update from PERF (${testGroup})`,
+  `Roundtrip (non-)update from PERF (${testGroup})`,
   async function (t) {
     try {
-      t.plan(5);
+      t.plan(6);
       let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
       let query = `mutation { updateSequenceFromPerf(` +
         `docSetId: "${docSetId}"` +
@@ -455,10 +455,38 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.updateSequenceFromPerf, true);
-      query = '{documents { mainSequence { id blocks { text bs {payload} bg {subType payload} } } } }';
+      query = '{documents { perf } }';
       result = await pk.gqlQuery(query);
-      console.log(JSON.stringify(result.data.documents[0].mainSequence, null, 2));
       t.equal(result.errors, undefined);
+      const newPerf = Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === "main")[0];
+      t.equal(perf, JSON.stringify(newPerf));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Update from PERF (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
+      perf = perf.replace(/Yahweh/g, "The LORD");
+      let query = `mutation { updateSequenceFromPerf(` +
+        `docSetId: "${docSetId}"` +
+        ` documentId: "${documentId}"` +
+        ` sequenceId: "${sequenceId}"` +
+        ` perf: """${perf}""") }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateSequenceFromPerf, true);
+      query = '{documents { perf } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newPerf = JSON.stringify(Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === "main")[0]);
+      t.notOk(newPerf.includes("Yahweh"));
+      t.ok(newPerf.includes("The LORD"));
     } catch (err) {
       console.log(err);
     }
