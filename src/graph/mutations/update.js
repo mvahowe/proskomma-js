@@ -1,5 +1,5 @@
 import { remakeBlocks } from '../lib/remake_blocks';
-import PipelineHandler from 'pipeline-handler';
+import { PipelineHandler } from 'pipeline-handler';
 import pipelines from '../../pipelines/perf2x';
 import customTransforms from '../../transforms';
 
@@ -165,7 +165,11 @@ const updateMutationsResolvers = {
 
     let blocksSpec = {};
     try {
-      const pipelineHandler = new PipelineHandler(pipelines, customTransforms, root);
+      const pipelineHandler = new PipelineHandler({
+          pipelines:pipelines,
+          transforms:customTransforms,
+          proskomma:root
+      });
       const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf });
       blocksSpec =  Object.values(output.pkJson)[0];
     } catch(err) {
