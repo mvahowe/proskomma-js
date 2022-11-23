@@ -36,7 +36,7 @@ test(
 
 test(
   `Throw on bad spec (${testGroup})`,
-  async function (t) {
+  function (t) {
     try {
       t.plan(15);
       let selectors = [];
@@ -142,7 +142,7 @@ test(
 
 test(
   `Throw on bad selector name and type (${testGroup})`,
-  async function (t) {
+  function (t) {
     try {
       t.plan(8);
       const customProskomma = class extends Proskomma {

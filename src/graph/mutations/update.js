@@ -1,5 +1,5 @@
-import { remakeBlocks } from '../lib/remake_blocks';
 import { PipelineHandler } from 'pipeline-handler';
+import { remakeBlocks } from '../lib/remake_blocks';
 import pipelines from '../../pipelines/perf2x';
 import customTransforms from '../../transforms';
 
@@ -142,38 +142,40 @@ const updateMutationsResolvers = {
     if (!sequence) {
       throw new Error(`Sequence '${args.sequenceId || document.mainId}' not found`);
     }
+
     const sequencePerf = JSON.parse(args.perf);
     const perf = {
-      "schema": {
-        "structure": "flat",
-        "structure_version": "0.3.0",
-        "constraints": [
+      'schema': {
+        'structure': 'flat',
+        'structure_version': '0.3.0',
+        'constraints': [
           {
-            "name": "perf",
-            "version": "0.3.0"
-          }
-        ]
+            'name': 'perf',
+            'version': '0.3.0',
+          },
+        ],
       },
-      "metadata": {
-        "translation": {},
-        "document": {}
+      'metadata': {
+        'translation': {},
+        'document': {},
       },
-      sequences: {},
-      main_sequence_id: args.sequenceId
+      'sequences': {},
+      'main_sequence_id': args.sequenceId,
     };
-    perf.sequences[args.sequenceId] = sequencePerf
+    perf.sequences[args.sequenceId] = sequencePerf;
 
     let blocksSpec = {};
+
     try {
       const pipelineHandler = new PipelineHandler({
-          pipelines:pipelines,
-          transforms:customTransforms,
-          proskomma:root
+        pipelines:pipelines,
+        transforms:customTransforms,
+        proskomma:root,
       });
-      const output = await pipelineHandler.runPipeline("perf2PkJsonPipeline", { perf });
-      blocksSpec =  Object.values(output.pkJson)[0];
-    } catch(err) {
-      console.error("pipelineHandler Error :\n", err);
+      const output = await pipelineHandler.runPipeline('perf2PkJsonPipeline', { perf });
+      blocksSpec = Object.values(output.pkJson)[0];
+    } catch (err) {
+      console.error('pipelineHandler Error :\n', err);
       return false;
     }
     remakeBlocks(docSet, document, sequence, blocksSpec);
