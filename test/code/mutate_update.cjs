@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const path = require('path');
 const fse = require('fs-extra');
 const test = require('tape');
@@ -14,6 +15,16 @@ const cleanPk = pkWithDoc('../test_data/usx/web_rut.usx', {
   abbr: 'ust',
 }, {}, {}, [], [])[0];
 
+const cleanPk2 = pkWithDoc('../test_data/usfm/ust_psa.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
+const cleanPk3 = pkWithDoc('../test_data/usfm/milestone_attributes.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 const blockSetup = async t => {
   const pk = deepCopy(cleanPk);
   let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { bs { payload } text items { type subType payload } } } } } }';
@@ -26,6 +37,20 @@ const blockSetup = async t => {
   let block = sequence.blocks[0];
   const items = block.items;
   return [pk, docSet, document, sequence, block, items];
+};
+
+const perfSetup = async t => {
+  const pk = deepCopy(cleanPk3);
+  let query = '{docSets { id documents { id perf mainSequence { id } } } }';
+  let result = await pk.gqlQuery(query);
+  t.equal(result.errors, undefined);
+  t.equal(result.data.docSets.length, 1);
+  const docSetId = result.data.docSets[0].id;
+  const documentId = result.data.docSets[0].documents[0].id;
+  const sequenceId = result.data.docSets[0].documents[0].mainSequence.id;
+  const perf = JSON.parse(result.data.docSets[0].documents[0].perf);
+  const perfSequence = JSON.stringify(perf.sequences[perf.main_sequence_id]);
+  return [pk, docSetId, documentId, sequenceId, perfSequence];
 };
 
 const searchScopes = (items, searchStr) => items.filter(i => i.type === 'scope' && i.payload.includes(searchStr));
@@ -416,6 +441,58 @@ test(
       t.ok(result.data.documents[0].mainSequence.blocks[1].os.map(s => s.payload).includes('chapter/1'));
       t.ok(result.data.documents[0].mainSequence.blocks[0].is.map(s => s.payload).includes('verse/1'));
       t.ok(result.data.documents[0].mainSequence.blocks[4].is.map(s => s.payload).includes('verses/3'));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Roundtrip (non-)update from PERF (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(6);
+      let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
+      let query = `mutation { updateSequenceFromPerf(` +
+        `docSetId: "${docSetId}"` +
+        ` documentId: "${documentId}"` +
+        ` sequenceId: "${sequenceId}"` +
+        ` perf: """${perf}""") }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateSequenceFromPerf, true);
+      query = '{documents { perf } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newPerf = Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === 'main')[0];
+      t.equal(perf, JSON.stringify(newPerf));
+    } catch (err) {
+      console.log(err);
+    }
+  },
+);
+
+test(
+  `Update from PERF (${testGroup})`,
+  async function (t) {
+    try {
+      t.plan(7);
+      let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
+      perf = perf.replace(/Obadiah/g, 'OBADIAH');
+      let query = `mutation { updateSequenceFromPerf(` +
+        `docSetId: "${docSetId}"` +
+        ` documentId: "${documentId}"` +
+        ` sequenceId: "${sequenceId}"` +
+        ` perf: """${perf}""") }`;
+      let result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      t.equal(result.data.updateSequenceFromPerf, true);
+      query = '{documents { perf } }';
+      result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const newPerf = JSON.stringify(Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === 'main')[0]);
+      t.notOk(newPerf.includes('Obadiah'));
+      t.ok(newPerf.includes('OBADIAH'));
     } catch (err) {
       console.log(err);
     }

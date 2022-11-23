@@ -1,4 +1,4 @@
-import utils from "../../../util";
+import utils from '../../../util';
 const { labelForScope } = utils.scopeDefs;
 import { Sequence } from '../../model/sequence';
 import { tokenizeString } from '../../lib/tokenize';

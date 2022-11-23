@@ -7,7 +7,7 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "npm run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "test": "bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "testUtils": "bash -c \"tape -r @babel/register test/code/utils/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "oneTest": "tape -r @babel/register test/code/$TESTSCRIPT.cjs",
@@ -50,8 +50,8 @@
     "jsonschema": "^1.4.1",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "path-browserify": "^1.0.1",
-    "pipeline-handler": "1.1.1",
-    "proskomma-json-tools": "^0.5.7",
+    "pipeline-handler": "2.2.0",
+    "proskomma-json-tools": "^0.5.9",
     "sax": "^1.2.4",
     "stream": "0.0.2",
     "utf8-string-bytes": "^1.0.3",

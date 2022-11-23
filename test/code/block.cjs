@@ -484,11 +484,19 @@ test(
       ];
       t.plan((4 * charClauses.length) + 2);
 
+      let results = [];
+
       for (const charClause of charClauses) {
         const query = '{ documents { mainSequence { blocks {' +
           `text tokens(includeContext:true ${charClause[0]}) { payload position scopes(startsWith:["chapter/", "verses/"]) }` +
           '} } } }';
-        let result = await pk7.gqlQuery(query);
+        results.push(pk7.gqlQuery(query));
+      }
+
+      results = await Promise.all(results);
+      let i = 0;
+
+      for (let result of results) {
         t.equal(result.errors, undefined);
         const blockEntriesWithContent = [...result.data.documents[0].mainSequence.blocks.entries()].filter(be => be[1].tokens.length > 0);
         const matches = [];
@@ -503,10 +511,12 @@ test(
             });
           }
         }
+
         // console.log(JSON.stringify(matches, null, 2));
-        t.equal(matches.filter(m => m.payload === 'righteous').length, charClause[1]);
-        t.equal(matches.filter(m => m.payload === 'upright').length, charClause[2]);
-        t.equal(matches.length, charClause[3]);
+        t.equal(matches.filter(m => m.payload === 'righteous').length, charClauses[i][1]);
+        t.equal(matches.filter(m => m.payload === 'upright').length, charClauses[i][2]);
+        t.equal(matches.length, charClauses[i][3]);
+        i++;
       }
 
       const query = '{ documents { mainSequence { blocks {' +
