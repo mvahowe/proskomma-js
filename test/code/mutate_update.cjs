@@ -19,6 +19,11 @@ const cleanPk2 = pkWithDoc('../test_data/usfm/ust_psa.usfm', {
   abbr: 'ust',
 }, {}, {}, [], [])[0];
 
+const cleanPk3 = pkWithDoc('../test_data/usfm/milestone_attributes.usfm', {
+  lang: 'eng',
+  abbr: 'ust',
+}, {}, {}, [], [])[0];
+
 const blockSetup = async t => {
   const pk = deepCopy(cleanPk);
   let query = '{docSets { id documents { id nSequences  sequences { id type } mainSequence { id blocks(positions: [0]) { bs { payload } text items { type subType payload } } } } } }';
@@ -34,7 +39,7 @@ const blockSetup = async t => {
 };
 
 const perfSetup = async t => {
-  const pk = deepCopy(cleanPk2);
+  const pk = deepCopy(cleanPk3);
   let query = '{docSets { id documents { id perf mainSequence { id } } } }';
   let result = await pk.gqlQuery(query);
   t.equal(result.errors, undefined);
@@ -472,7 +477,7 @@ test(
     try {
       t.plan(7);
       let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
-      perf = perf.replace(/Yahweh/g, "The LORD");
+      perf = perf.replace(/Obadiah/g, "OBADIAH");
       let query = `mutation { updateSequenceFromPerf(` +
         `docSetId: "${docSetId}"` +
         ` documentId: "${documentId}"` +
@@ -485,8 +490,8 @@ test(
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const newPerf = JSON.stringify(Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === "main")[0]);
-      t.notOk(newPerf.includes("Yahweh"));
-      t.ok(newPerf.includes("The LORD"));
+      t.notOk(newPerf.includes("Obadiah"));
+      t.ok(newPerf.includes("OBADIAH"));
     } catch (err) {
       console.log(err);
     }
