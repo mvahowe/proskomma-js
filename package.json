@@ -7,7 +7,7 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "npm run build && bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
+    "test": "bash -c \"tape -r @babel/register test/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "testUtils": "bash -c \"tape -r @babel/register test/code/utils/code/*.cjs | node_modules/tap-summary/bin/cmd.js\"",
     "rawTest": "tape -r @babel/register test/code/*.cjs",
     "oneTest": "tape -r @babel/register test/code/$TESTSCRIPT.cjs",

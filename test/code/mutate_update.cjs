@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const path = require('path');
 const fse = require('fs-extra');
 const test = require('tape');
@@ -463,7 +464,7 @@ test(
       query = '{documents { perf } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      const newPerf = Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === "main")[0];
+      const newPerf = Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === 'main')[0];
       t.equal(perf, JSON.stringify(newPerf));
     } catch (err) {
       console.log(err);
@@ -477,7 +478,7 @@ test(
     try {
       t.plan(7);
       let [pk, docSetId, documentId, sequenceId, perf] = await perfSetup(t);
-      perf = perf.replace(/Obadiah/g, "OBADIAH");
+      perf = perf.replace(/Obadiah/g, 'OBADIAH');
       let query = `mutation { updateSequenceFromPerf(` +
         `docSetId: "${docSetId}"` +
         ` documentId: "${documentId}"` +
@@ -489,9 +490,9 @@ test(
       query = '{documents { perf } }';
       result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
-      const newPerf = JSON.stringify(Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === "main")[0]);
-      t.notOk(newPerf.includes("Obadiah"));
-      t.ok(newPerf.includes("OBADIAH"));
+      const newPerf = JSON.stringify(Object.values(JSON.parse(result.data.documents[0].perf).sequences).filter(s => s.type === 'main')[0]);
+      t.notOk(newPerf.includes('Obadiah'));
+      t.ok(newPerf.includes('OBADIAH'));
     } catch (err) {
       console.log(err);
     }

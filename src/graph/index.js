@@ -111,15 +111,15 @@ import {
 } from './mutations/index';
 import {
   versificationSchemaString,
-  versificationResolvers
+  versificationResolvers,
 } from './queries/versification';
 import {
   cvBookSchemaString,
-  cvBookResolvers
+  cvBookResolvers,
 } from './queries/cvBook';
 import {
   cvChapterSchemaString,
-  cvChapterResolvers
+  cvChapterResolvers,
 } from './queries/cvChapter';
 
 const typeDefs = `
