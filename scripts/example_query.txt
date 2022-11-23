@@ -1,1 +1,1 @@
-{ documents { mainSequence { id type blocks { os { payload } is { payload } text } } } }
+{ documents { m }
