@@ -33,7 +33,7 @@ import {
   recordPreEnums,
   rerecordPreEnums,
 } from './document_helpers/pre_enums';
-import PipelineHandler from "pipeline-handler";
+import { PipelineHandler } from "pipeline-handler";
 import pipelines from "../pipelines/perf2x";
 import customTransforms from "../transforms";
 
@@ -323,7 +323,11 @@ class Document {
   async usfm() {
     const perf = JSON.parse(this.perf());
     try {
-      const pipelineHandler = new PipelineHandler(pipelines, customTransforms, this.processor);
+      const pipelineHandler = new PipelineHandler({
+          pipelines:pipelines,
+          transforms:customTransforms,
+          proskomma:this.processor
+      });
       const output = await pipelineHandler.runPipeline("perf2usfmPipeline", { perf });
       return output.usfm;
     } catch(err) {
