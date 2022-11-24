@@ -1,0 +1,41 @@
+[
+  {
+    "id": 0,
+    "type": "Inputs",
+    "inputs": {
+      "perf": "json"
+    }
+  },
+  {
+    "id": 1,
+    "title": "PERF to PkJSON",
+    "name": "perf2PkJson",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Input perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pkJson",
+        "type": "json"
+      }
+    ],
+    "documentation": "",
+    "description": "PERF=>JSON: Converts PERF to current Proskomma input format"
+  },
+  {
+    "id": 999,
+    "type": "Outputs",
+    "outputs": [
+      {
+        "name": "pkJson",
+        "type": "json",
+        "source": "Transform 1 pkJson"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1 @@
+{ documents { cvIndexes { chapter verses { verse { verseRange text } } } } }

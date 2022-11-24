@@ -1,21 +1,21 @@
-import {
-  addTag,
-  ByteArray,
-  generateId,
-  itemEnum,
-  labelForScope,
+import utils from "../../util";
+const ByteArray = utils.ByteArray;
+const {
   pushSuccinctGraftBytes,
   pushSuccinctScopeBytes,
   pushSuccinctTokenBytes,
-  scopeEnum,
-  tokenCategory,
-  tokenEnum,
-} from 'proskomma-utils';
+} = utils.succinct;
+const { addTag } = utils.tags;
+const { labelForScope } = utils.scopeDefs;
+const { itemEnum } = utils.itemDefs;
+const { scopeEnum } = utils.scopeDefs;
+const { tokenCategory, tokenEnum } = utils.tokenDefs;
+
 import { Block } from './block';
 
 const Sequence = class {
   constructor(sType) {
-    this.id = generateId();
+    this.id = utils.generateId();
     this.type = sType;
     this.tags = new Set([]);
     this.blocks = [];

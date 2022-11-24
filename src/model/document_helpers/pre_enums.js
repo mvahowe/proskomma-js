@@ -1,4 +1,4 @@
-import { nComponentsForScope } from 'proskomma-utils';
+import utils from "../../util";
 
 const recordPreEnums = (docSet, seq) => {
   docSet.recordPreEnum('scopeBits', '0');
@@ -14,7 +14,7 @@ const recordPreEnums = (docSet, seq) => {
       } else if (item.subType === 'start') {
         const labelBits = item.payload.split('/');
 
-        if (labelBits.length !== nComponentsForScope(labelBits[0])) {
+        if (labelBits.length !== utils.scopeDefs.nComponentsForScope(labelBits[0])) {
           throw new Error(`Scope ${item.payload} has unexpected number of components`);
         }
 
@@ -50,7 +50,7 @@ const rerecordBlockPreEnums= (docSet, ba) => {
     } else if (item[0] === 'scope' && item[1] === 'start') {
       const labelBits = item[2].split('/');
 
-      if (labelBits.length !== nComponentsForScope(labelBits[0])) {
+      if (labelBits.length !== utils.scopeDefs.nComponentsForScope(labelBits[0])) {
         throw new Error(`Scope ${item[2]} has unexpected number of components`);
       }
 

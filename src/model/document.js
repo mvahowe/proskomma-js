@@ -1,15 +1,10 @@
 import {
-  addTag,
-  generateId,
-  parserConstants,
-  removeTag,
-  validateTags,
-} from 'proskomma-utils';
-import {
   PerfRenderFromProskomma,
   SofriaRenderFromProskomma,
   transforms,
 } from 'proskomma-json-tools';
+import { PipelineHandler } from 'pipeline-handler';
+import utils from '../util';
 import {
   parseUsfm,
   parseUsx,
@@ -17,6 +12,8 @@ import {
   parseNodes,
 } from '../parser/lexers';
 import { Parser } from '../parser';
+import pipelines from '../pipelines/perf2x';
+import customTransforms from '../transforms';
 import {
   buildChapterVerseIndex,
   chapterVerseIndex,
@@ -39,10 +36,13 @@ import {
   recordPreEnums,
   rerecordPreEnums,
 } from './document_helpers/pre_enums';
-import PipelineHandler from "pipeline-handler";
-import pipelines from "../pipelines/perf2x";
-import customTransforms from "../transforms";
 
+const {
+  addTag,
+  removeTag,
+  validateTags,
+} = utils.tags;
+const parserConstantDef = utils.parserConstants;
 // const maybePrint = str => console.log(str);
 const maybePrint = str => str;
 
@@ -50,10 +50,10 @@ class Document {
   constructor(processor, docSetId, contentType, contentString, filterOptions, customTags, emptyBlocks, tags) {
     this.processor = processor;
     this.docSetId = docSetId;
-    this.baseSequenceTypes = parserConstants.usfm.baseSequenceTypes;
+    this.baseSequenceTypes = parserConstantDef.usfm.baseSequenceTypes;
 
     if (contentType) {
-      this.id = generateId();
+      this.id = utils.generateId();
       this.filterOptions = filterOptions;
       this.customTags = customTags;
       this.emptyBlocks = emptyBlocks;
@@ -322,12 +322,17 @@ class Document {
 
   async usfm() {
     const perf = JSON.parse(this.perf());
+
     try {
-      const pipelineHandler = new PipelineHandler(pipelines, customTransforms, this.processor);
-      const output = await pipelineHandler.runPipeline("perf2usfmPipeline", { perf });
+      const pipelineHandler = new PipelineHandler({
+        pipelines:pipelines,
+        transforms:customTransforms,
+        proskomma:this.processor,
+      });
+      const output = await pipelineHandler.runPipeline('perf2usfmPipeline', { perf });
       return output.usfm;
-    } catch(err) {
-      console.error("pipelineHandler Error :\n", err);
+    } catch (err) {
+      console.error('pipelineHandler Error :\n', err);
     }
   }
 

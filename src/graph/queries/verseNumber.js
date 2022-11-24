@@ -1,4 +1,4 @@
-import { mapVerse } from 'proskomma-utils';
+import utils from "../../util";
 
 const verseNumberSchemaString = `
 """Information about a verse number (which may be part of a verse range)"""
@@ -24,7 +24,7 @@ const verseNumberResolvers = {
       'forward' in mainSequence.verseMapping &&
       `${localChapter}` in mainSequence.verseMapping.forward
     ) {
-      const mapping = mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
+      const mapping = utils.versification.mapVerse(mainSequence.verseMapping.forward[`${localChapter}`], localBook, localChapter, localVerse);
       return ({
         book: mapping[0],
         cvs: mapping[1],

@@ -5,7 +5,7 @@
     "plugin:import/warnings",
     "prettier"
   ],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 2018,
     "ecmaFeatures": {

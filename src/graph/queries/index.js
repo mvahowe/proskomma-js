@@ -1,4 +1,5 @@
 import { bookCodeCompareFunctions } from '../lib/sort';
+import versifications from '../../model/versifications';
 
 const querySchemaString = `
 """The top level of Proskomma queries"""
@@ -57,6 +58,13 @@ type Query {
     """The book of the document (use with docSetId)"""
     withBook: String
   ) : Document
+  """Reference information about standard versifications"""
+  versifications: [versification!]!
+  """Reference information about a named, standard versification"""
+  versification(
+    """The id of the versification"""
+    id: String!
+  ) : versification!
 }
 `;
 const queryResolvers = {
@@ -133,6 +141,12 @@ const queryResolvers = {
       throw new Error('document requires either id or both docSetId and withBook (but not all three)');
     }
   },
+  versifications: root => {
+    return Object.entries(versifications);
+  },
+  versification: (root, args) => {
+    return Object.entries(versifications).filter(v => v[0] === args.id)[0];
+  }
 };
 
 export {

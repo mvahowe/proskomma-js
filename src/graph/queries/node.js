@@ -1,4 +1,4 @@
-import { headerBytes } from 'proskomma-utils';
+import utils from "../../util";
 
 const nodeSchemaString = `
 """A tree node"""
@@ -21,7 +21,7 @@ type node {
 
 const nodeResolvers = {
   id: (root, args, context) => {
-    const [itemLength, itemType, itemSubtype] = headerBytes(root.bs, 0);
+    const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(root.bs, 0);
     return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0)[2].split('/')[1];
   },
   parentId: (root, args, context) => {

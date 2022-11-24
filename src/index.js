@@ -9,12 +9,8 @@ import {
 } from 'graphql';
 import BitSet from 'bitset';
 
-import {
-  ByteArray,
-  generateId,
-} from 'proskomma-utils';
-
 import packageJson from '../package.json';
+import utils from './util';
 import { DocSet } from './model/doc_set';
 import { Document } from './model/document';
 import {
@@ -39,7 +35,7 @@ const executableSchema =
 
 class Proskomma {
   constructor(selectors) {
-    this.processorId = generateId();
+    this.processorId = utils.generateId();
     this.documents = {};
     this.docSetsBySelector = {};
     this.docSets = {};
@@ -477,7 +473,7 @@ class Proskomma {
         }
 
         for (const [chK, chV] of Object.entries(seq.chapters)) {
-          const bA = new ByteArray();
+          const bA = new utils.ByteArray();
           bA.fromBase64(chV);
           doc.sequences[seqId].chapters[chK] = bA;
         }
@@ -488,7 +484,7 @@ class Proskomma {
         }
 
         for (const [chvK, chvV] of Object.entries(seq.chapterVerses)) {
-          const bA = new ByteArray();
+          const bA = new utils.ByteArray();
           bA.fromBase64(chvV);
           doc.sequences[seqId].chapterVerses[chvK] = bA;
         }
@@ -504,7 +500,7 @@ class Proskomma {
         const block = {};
 
         for (const [blockField, blockSuccinct] of Object.entries(succinctBlock)) {
-          const ba = new ByteArray(256);
+          const ba = new utils.ByteArray(256);
           ba.fromBase64(blockSuccinct);
           block[blockField] = ba;
         }
@@ -542,7 +538,9 @@ class Proskomma {
     const release = await this.mutex.acquire();
 
     try {
-      const result = await graphql({schema: executableSchema, source: query, rootValue:this, contextValue:{}});
+      const result = await graphql({
+        schema: executableSchema, source: query, rootValue:this, contextValue:{},
+      });
 
       if (callback) {
         callback(result);
@@ -554,7 +552,9 @@ class Proskomma {
   }
 
   gqlQuerySync(query, callback) {
-    const result = graphqlSync({schema: executableSchema, source: query, rootValue:this, contextValue:{}});
+    const result = graphqlSync({
+      schema: executableSchema, source: query, rootValue:this, contextValue:{},
+    });
 
     if (callback) {
       callback(result);
@@ -579,4 +579,5 @@ export {
   lexingRegexes,
   blocksSpecUtils,
   tree2nodes,
+  utils,
 };

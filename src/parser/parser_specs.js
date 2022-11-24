@@ -1,7 +1,5 @@
-import {
-  labelForScope,
-  generateId,
-} from 'proskomma-utils';
+import utils from "../util";
+const { labelForScope } = utils.scopeDefs;
 import { constructorForFragment } from './lexers/object_for_fragment';
 
 const buildSpecLookup = specs => {
@@ -230,7 +228,7 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        const scopeId = generateId();
+        const scopeId = utils.generateId();
         const esbScope = {
           label: () => labelForScope('esbCat', [scopeId]),
           endedBy: ['startTag/esbe'],
@@ -432,7 +430,7 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        const scopeId = generateId();
+        const scopeId = utils.generateId();
         const caScope = {
           label: () => labelForScope('altChapter', [scopeId]),
           endedBy: ['startTag/ca', 'chapter'],
@@ -486,7 +484,7 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        const scopeId = generateId();
+        const scopeId = utils.generateId();
         const vpScope = {
           label: () => labelForScope('pubVerse', [scopeId]),
           endedBy: ['startTag/vp', 'verses', 'chapter', 'pubchapter'],
@@ -515,7 +513,7 @@ const specs = (pt) => [
         },
       ],
       during: (parser, pt) => {
-        const scopeId = generateId();
+        const scopeId = utils.generateId();
         const vpScope = {
           label: () => labelForScope('altVerse', [scopeId]),
           endedBy: ['startTag/va', 'verses', 'chapter', 'pubchapter'],
