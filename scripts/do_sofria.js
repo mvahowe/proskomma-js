@@ -18,7 +18,7 @@ try {
 }
 
 const contentType = contentPath.split('.').pop();
-let query = `{ documents { sofria${process.argv[3] ? "(chapter: " + process.argv[3] + ")": ""} } }`;
+let query = `{ documents { sofria${process.argv[3] ? '(chapter: ' + process.argv[3] + ')': ''} } }`;
 
 const pk = new Proskomma();
 //try {

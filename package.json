@@ -1,5 +1,5 @@
 {
-  "name": "proskomma-core",
+  "name": "proskomma",
   "version": "0.9.1",
   "description": "A Scripture Runtime Engine",
   "main": "dist/index.js",
