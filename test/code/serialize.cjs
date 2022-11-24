@@ -1,6 +1,6 @@
 const test = require('tape');
 const Validator = require('jsonschema').Validator;
-const {utils} = require("../../dist/index");
+const { utils } = require('../../dist/index');
 const serializedSchema = utils.proskommaSerialized;
 const { unpackEnum } = utils.succinct;
 
@@ -62,8 +62,8 @@ test(
       t.equal(result.data.docSets.length, 1);
       t.equal(result.data.docSets[0].documents.length, 1);
       t.equal(result.data.documents.length, 1);
-      t.ok(result.data.documents[0].cv[0].text.startsWith("In the days"));
-      t.ok(result.data.documents[0].cv2[0].text.startsWith("In the days"));
+      t.ok(result.data.documents[0].cv[0].text.startsWith('In the days'));
+      t.ok(result.data.documents[0].cv2[0].text.startsWith('In the days'));
       const firstBlock = result.data.documents[0].mainSequence.blocks[0];
       t.ok(firstBlock.text.startsWith('In the days when the judges judged'));
       t.throws(() => pk2.loadSuccinctDocSet(serialized), /already loaded/);

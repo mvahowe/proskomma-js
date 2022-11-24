@@ -36,9 +36,11 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
+
       for (const seq of result.data.documents[0].sequences) {
         sequences[seq.id] = seq;
       }
+
       const mainSequence = sequences[result.data.documents[0].mainSequence.id];
       t.equal(mainSequence.blocks.length, 5);
       const footnoteCallerBlock = mainSequence.blocks[2];
@@ -47,6 +49,7 @@ test(
       const footnoteItems = sequences[footnoteGrafts[0].payload].blocks[0].items;
       const scopes = footnoteItems.filter(i => i.type === 'scope');
       let count = 0;
+
       for (const [sOrE, expectedLabel] of expectedScopes) {
         t.equal(scopes[count].subType, sOrE === 's' ? 'start' : 'end');
         t.equal(scopes[count].payload, expectedLabel);
@@ -75,9 +78,11 @@ test(
       const result = await pk2.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
+
       for (const seq of result.data.documents[0].sequences) {
         sequences[seq.id] = seq;
       }
+
       const mainSequence = sequences[result.data.documents[0].mainSequence.id];
       t.equal(mainSequence.blocks.length, 1);
       const xrefCallerBlock = mainSequence.blocks[0];
@@ -86,6 +91,7 @@ test(
       const xrefItems = sequences[xrefGrafts[0].payload].blocks[0].items;
       const scopes = xrefItems.filter(i => i.type === 'scope');
       let count = 0;
+
       for (const [sOrE, expectedLabel] of expectedScopes) {
         t.equal(scopes[count].subType, sOrE === 's' ? 'start' : 'end');
         t.equal(scopes[count].payload, expectedLabel);

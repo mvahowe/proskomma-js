@@ -15,9 +15,7 @@ const queryToBlock = async (t, filter) => {
   return result.data.documents[0].mainSequence.blocks[0];
 };
 
-const inlineGrafts = block => {
-  return block.items.filter(i => i.type === 'graft');
-};
+const inlineGrafts = block => block.items.filter(i => i.type === 'graft');
 
 test(
   `No Filter (${testGroup})`,
@@ -38,9 +36,11 @@ test(
       t.equal(block.bg[0].subType, 'title');
       t.equal(block.bg[1].subType, 'heading');
       t.equal(block.scopeLabels.length, 7);
+
       for (const scopeLabel of scopeLabels) {
         t.ok(block.scopeLabels.includes(scopeLabel));
       }
+
       const inlines = inlineGrafts(block);
       t.equal(inlines.length, 1);
     } catch (err) {
@@ -130,6 +130,7 @@ test(
       t.plan(2 + scopeLabels.length);
       const block = await queryToBlock(t, { includeScopes: ['chapter', 'verse/'] });
       t.equal(block.scopeLabels.length, 3);
+
       for (const scopeLabel of scopeLabels) {
         t.ok(block.scopeLabels.includes(scopeLabel));
       }
@@ -152,6 +153,7 @@ test(
       t.plan(2 + scopeLabels.length);
       const block = await queryToBlock(t, { excludeScopes: ['chapter', 'verse/'] });
       t.equal(block.scopeLabels.length, 5);
+
       for (const scopeLabel of scopeLabels) {
         t.ok(block.scopeLabels.includes(scopeLabel));
       }

@@ -51,6 +51,7 @@ test(
       t.equal(result.errors, undefined);
       const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => i.type === 'scope');
       let count = 0;
+
       for (const [sOrE, expectedLabel] of expectedScopes) {
         t.equal(scopes[count].subType, sOrE === 's' ? 'start' : 'end');
         t.equal(scopes[count].payload, expectedLabel);
@@ -98,6 +99,7 @@ test(
       t.equal(result.errors, undefined);
       const scopes = result.data.documents[0].mainSequence.blocks[0].items.filter(i => i.type === 'scope');
       let count = 0;
+
       for (const [sOrE, expectedLabel] of expectedScopes) {
         t.equal(scopes[count].subType, sOrE === 's' ? 'start' : 'end');
         t.equal(scopes[count].payload, expectedLabel);
@@ -143,6 +145,7 @@ test(
       t.equal(result.errors, undefined);
       const scopes = result.data.documents[0].mainSequence.blocks.map(b => b.items.filter(i => i.type === 'scope')).reduce((a, b) => a.concat(b));
       let count = 0;
+
       for (const [sOrE, expectedLabel] of expectedScopes) {
         t.equal(scopes[count].subType, sOrE === 's' ? 'start' : 'end');
         t.equal(scopes[count].payload, expectedLabel);

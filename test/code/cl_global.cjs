@@ -1,14 +1,10 @@
 const test = require('tape');
 
-const { Proskomma } = require('../../src');
-const {
-  pkWithDoc,
-  pkWithDocs,
-} = require('../lib/load');
+const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Global CL';
 
-const [pk, pkDoc] = pkWithDoc('../test_data/usfm/cl.usfm', {
+const [pk] = pkWithDoc('../test_data/usfm/cl.usfm', {
   lang: 'eng',
   abbr: 'ult',
 });
@@ -26,6 +22,7 @@ test(
       t.equal(titleSequence.blocks[0].text, 'Psalms');
       const headersArray = result.data.documents[0].headers;
       const headers = {};
+
       for (const header of headersArray) {
         headers[header.key] = header.value;
       }

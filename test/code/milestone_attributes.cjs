@@ -138,13 +138,24 @@ test(
   `Literal slash in attribute value (${testGroup})`,
   async function (t) {
     try {
-      t.plan(1);
+      t.plan(5);
       let pk;
 
-      t.doesNotThrow(() => pk = pkWithDoc('../test_data/usfm/slash_in_att.usfm', {
-        lang: 'fra',
-        abbr: 'hello',
-      })[0]);
+      t.doesNotThrow(() => {
+        pk = pkWithDoc('../test_data/usfm/slash_in_att.usfm', {
+          lang: 'fra',
+          abbr: 'hello',
+        })[0];
+      });
+
+      t.equal(pk.nDocuments(), 1);
+      const query = '{documents { headers { key value } sequences { type text } } }';
+      const result = await pk.gqlQuery(query);
+      t.equal(result.errors, undefined);
+      const firstDoc = result.data.documents[0];
+      const headerKeys = firstDoc.headers.map(h => h.key);
+      t.ok(headerKeys.includes('id'));
+      t.ok(headerKeys.includes('bookCode'));
     } catch (err) {
       console.log(err);
     }

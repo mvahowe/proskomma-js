@@ -20,6 +20,7 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const blocks = result.data.documents[0].mainSequence.blocks;
+
       for (const [n, block] of blocks.entries()) {
         t.equal(block.bs.payload, `blockTag/${bsScopes[n]}`);
       }

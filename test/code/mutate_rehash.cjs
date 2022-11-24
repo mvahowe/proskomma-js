@@ -1,6 +1,6 @@
+const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');
-const path = require('path');
 const { pkWithDoc } = require('../lib/load');
 
 const pk = pkWithDoc('../test_data/usx/web_psa150.usx', {
@@ -45,9 +45,10 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       t.equal(result.data.docSets.length, 1);
-      const firstDocumentId = result.data.docSets[0].documents[0].id;
-      const nMainSequenceBlocks = result.data.docSets[0].documents[0].mainSequence.nBlocks;
+      // const firstDocumentId = result.data.docSets[0].documents[0].id;
+      // const nMainSequenceBlocks = result.data.docSets[0].documents[0].mainSequence.nBlocks;
       const content = fse.readFileSync(path.resolve(__dirname, '../test_data/usx/web_rut.usx'));
+
       pk.importDocument({
         lang: 'eng',
         abbr: 'web',

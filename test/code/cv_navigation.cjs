@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const test = require('tape');
 
 const { pkWithDoc } = require('../lib/load');
@@ -30,6 +31,7 @@ test(
         ['5', null, null],
       ];
       t.plan(3 * expected.length);
+
       for (const [chap, prev, next] of expected) {
         const query =
           '{ documents { nav: cvNavigation(chapter:"%c%" verse:"3") { previousChapter nextChapter } } }'
@@ -63,6 +65,7 @@ test(
         [pk2, 51, 0, 50, 23, 51, 1],
       ];
       t.plan(5 * expected.length);
+
       for (const [pros, chap, verse, prevChap, prevVerse, nextChap, nextVerse] of expected) {
         const query =
           '{ documents { nav: cvNavigation(chapter:"%c%" verse:"%v%") { previousVerse { chapter verse } nextVerse { chapter verse } } } }'
@@ -100,6 +103,7 @@ test(
         [pk3, 150, 4, 150, 2, 150, 6],
       ];
       t.plan(5 * expected.length);
+
       for (const [pros, chap, verse, prevChap, prevVerse, nextChap, nextVerse] of expected) {
         const query =
           '{ documents { nav: cvNavigation(chapter:"%c%" verse:"%v%") { previousVerseRangeVerse { chapter verse } nextVerseRangeVerse { chapter verse } } } }'

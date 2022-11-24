@@ -180,11 +180,11 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
 
-      const document = result.data.docSets[0].document;
-      const scripture = document.cv[0].tokens;
-      const tNotes = document.tnTable[0].rows.map(r => r.map(c => c.text));
-      const tWords = document.twlTable[0].rows.map(r => r.map(c => c.text));
-      const sTree = JSON.parse(document.sTree[0].tribos).data.map(n => n.content);
+      // const document = result.data.docSets[0].document;
+      // const scripture = document.cv[0].tokens;
+      // const tNotes = document.tnTable[0].rows.map(r => r.map(c => c.text));
+      // const tWords = document.twlTable[0].rows.map(r => r.map(c => c.text));
+      // const sTree = JSON.parse(document.sTree[0].tribos).data.map(n => n.content);
       /*
       const cleanKV = entry => {
         const fields = {};

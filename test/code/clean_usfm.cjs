@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 const path = require('path');
 const test = require('tape');
 const fse = require('fs-extra');

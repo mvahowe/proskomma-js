@@ -5,7 +5,6 @@ const {
   pkWithDoc,
   pkWithDocs,
 } = require('../lib/load');
-const { Proskomma } = require('../../src');
 
 const testGroup = 'Mutate Delete Operations';
 
