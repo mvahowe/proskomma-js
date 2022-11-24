@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 
 const ptCompare = (a, b) => {
   const bcA = a.headers.bookCode || 'GEN';
@@ -21,6 +21,7 @@ const alpha2Compare = (a, b) => {
   if (digits.includes(bcA[0])) {
     bcA = bcA.substring(1) + bcA[0];
   }
+
   let bcB = b.headers.bookCode || 'GEN';
 
   if (digits.includes(bcB[0])) {

@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 const ByteArray = utils.ByteArray;
 const {
   pushSuccinctGraftBytes,
@@ -43,35 +43,41 @@ const updateItems1 = (
   docSet.maybeBuildPreEnums();
 
   let nextToken = 0;
+
   if (blockPosition < 0) {
     nextToken = sequence.blocks[blockPosition - 1].nt.nByte(0);
   }
+
+  let charsEnumIndex, graftTypeEnumIndex, seqEnumIndex, scopeBits, scopeTypeByte, scopeBitBytes = null;
+
   for (const item of itemObjects) {
     switch (item.type) {
     case 'token':
-      const charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.subType], item.payload, true);
+      charsEnumIndex = docSet.enumForCategoryValue(tokenCategory[item.subType], item.payload, true);
       pushSuccinctTokenBytes(newItemsBA, tokenEnum[item.subType], charsEnumIndex);
       nextToken++;
       break;
     case 'graft':
-      const graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.subType, true);
-      const seqEnumIndex = docSet.enumForCategoryValue('ids', item.payload, true);
+      graftTypeEnumIndex = docSet.enumForCategoryValue('graftTypes', item.subType, true);
+      seqEnumIndex = docSet.enumForCategoryValue('ids', item.payload, true);
       pushSuccinctGraftBytes(newItemsBA, graftTypeEnumIndex, seqEnumIndex);
       break;
     case 'scope':
-      const scopeBits = item.payload.split('/');
-      const scopeTypeByte = scopeEnum[scopeBits[0]];
+      scopeBits = item.payload.split('/');
+      scopeTypeByte = scopeEnum[scopeBits[0]];
 
       if (!scopeTypeByte && scopeTypeByte !== 0) {
         throw new Error(`"${scopeBits[0]}" is not a scope type`);
       }
-      const scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
+
+      scopeBitBytes = scopeBits.slice(1).map(b => docSet.enumForCategoryValue('scopeBits', b, true));
       pushSuccinctScopeBytes(newItemsBA, itemEnum[`${item.subType}Scope`], scopeTypeByte, scopeBitBytes);
       break;
     }
   }
   newItemsBA.trim();
   block[typedArrayName] = newItemsBA;
+
   if (typedArrayName === 'c') {
     block.nt.clear();
     block.nt.pushNByte(nextToken);

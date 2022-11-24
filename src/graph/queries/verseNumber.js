@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 
 const verseNumberSchemaString = `
 """Information about a verse number (which may be part of a verse range)"""

@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 import { Sequence } from './sequence';
 
 const Block = class {
@@ -40,6 +40,7 @@ const Block = class {
       let tokens = [];
       let scopes = [];
 
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         if (pos >= this.items.length) {
           break;

@@ -1,3 +1,3 @@
-import * as enums from "./enums";
+import * as enums from './enums';
 
 export default enums;

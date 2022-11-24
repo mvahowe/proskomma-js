@@ -1,5 +1,6 @@
-import utils from "../../util";
+/* eslint-disable no-unused-vars */
 import xre from 'xregexp';
+import utils from '../../util';
 
 const unsuccinctifyBlock = (docSet, block, options) => {
   docSet.maybeBuildEnumIndexes();

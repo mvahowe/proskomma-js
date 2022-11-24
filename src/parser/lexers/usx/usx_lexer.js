@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import xre from 'xregexp';
 
 import sax from 'sax';

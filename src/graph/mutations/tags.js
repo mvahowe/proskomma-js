@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 
 const tagMutationsSchemaString = `
   """Add one or more tags to a docSet, if they are not already present"""

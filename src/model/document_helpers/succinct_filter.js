@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 const ByteArray = utils.ByteArray;
 const { itemEnum } = utils.itemDefs;
 
@@ -55,6 +55,7 @@ const succinctFilter = (document, filterOptions) => {
     let pos = 0;
 
     while (pos < block.bg.length) {
+      // eslint-disable-next-line no-unused-vars
       const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bg, pos);
       const graftOb = docSet.unsuccinctifyGraft(block.bg, itemSubtype, pos);
 

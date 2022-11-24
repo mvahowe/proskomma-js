@@ -1,5 +1,5 @@
-import utils from '../../util';
 import xre from 'xregexp';
+import utils from '../../util';
 
 const updatedOpenScopes = (openScopes, items) => {
   let ret = openScopes;

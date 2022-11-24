@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 import { remakeBlocks } from '../lib/remake_blocks';
 
 const addMutationsSchemaString = `

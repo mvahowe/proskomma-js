@@ -23,6 +23,6 @@ const removeTag = (tags, tag) => {
 };
 
 export {
-  validateTags, validateTag, addTag, removeTag
+  validateTags, validateTag, addTag, removeTag,
 };
 
