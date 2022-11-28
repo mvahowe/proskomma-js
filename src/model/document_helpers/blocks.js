@@ -1,4 +1,5 @@
-import utils from "../../util";
+/* eslint-disable no-unused-vars */
+import utils from '../../util';
 const ByteArray = utils.ByteArray;
 const {
   pushSuccinctGraftBytes,
@@ -6,7 +7,9 @@ const {
   pushSuccinctTokenBytes,
 } = utils.succinct;
 const { itemEnum } = utils.itemDefs;
-const { scopeEnum, scopeEnumLabels, nComponentsForScope } = utils.scopeDefs;
+const {
+  scopeEnum, scopeEnumLabels, nComponentsForScope,
+} = utils.scopeDefs;
 const { tokenCategory, tokenEnum } = utils.tokenDefs;
 const { headerBytes } = utils.succinct;
 

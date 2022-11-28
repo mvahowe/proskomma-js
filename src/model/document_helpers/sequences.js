@@ -1,6 +1,6 @@
 import deepCopy from 'deep-copy-all';
 
-import utils from "../../util";
+import utils from '../../util';
 
 const gcSequences = document => {
   const usedSequences = new Set();

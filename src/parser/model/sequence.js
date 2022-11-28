@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 const ByteArray = utils.ByteArray;
 const {
   pushSuccinctGraftBytes,

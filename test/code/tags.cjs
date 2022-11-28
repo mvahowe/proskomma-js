@@ -1,5 +1,5 @@
 const test = require('tape');
-const {utils} = require("../../dist/index");
+const { utils } = require('../../dist/index');
 const { validateTags } = utils.tags;
 const { pkWithDoc } = require('../lib/load');
 
@@ -183,7 +183,7 @@ test(
 test(
   `Throw on bad tag format (${testGroup})`,
   // Destructive!
-  async function (t) {
+  function (t) {
     try {
       t.plan(2);
       const importFn = () =>
@@ -206,7 +206,7 @@ test(
 test(
   `Support colon tag format (${testGroup})`,
   // Destructive!
-  async function (t) {
+  function (t) {
     try {
       t.plan(2);
       const importFn = () =>
@@ -230,7 +230,7 @@ test(
 test(
   `tagsKv on docSet (${testGroup})`,
   // Relies on destructive tests above
-  async function (t) {
+  function (t) {
     try {
       t.plan(5);
       pk.docSetList()[0].tags.add('baa');

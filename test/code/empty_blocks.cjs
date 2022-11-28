@@ -14,7 +14,6 @@ const pk = pkWithDoc('../test_data/usfm/en_ust_psa_1.usfm', {
 })[0];
 
 const customProskomma = class extends Proskomma {
-
   constructor() {
     super();
     this.filters = {};

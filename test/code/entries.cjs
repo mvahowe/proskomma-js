@@ -1,12 +1,13 @@
+/* eslint-disable no-return-assign */
 const path = require('path');
 const fse = require('fs-extra');
 const test = require('tape');
 
+const { Validator } = require('jsonschema');
 const { pkWithDoc } = require('../lib/load');
 
 const { blocksSpec2Query } = require('../../src/util/blocksSpec');
-const { Validator } = require('jsonschema');
-const {utils} = require("../../dist/index");
+const { utils } = require('../../dist/index');
 const serializedSchema = utils.proskommaSerialized;
 
 const [pk, pkDoc] = pkWithDoc('../test_data/usfm/66-JUD-ust.usfm', {

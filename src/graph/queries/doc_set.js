@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 
 import { bookCodeCompareFunctions } from '../lib/sort';
 
@@ -172,9 +172,9 @@ const docSetResolvers = {
   document: (root, args) => root.documentWithBook(args.bookCode),
   hasMapping: root => root.tags.has('hasMapping'),
   enumIndexForString: (root, args) =>
-  utils.enums.enumStringIndex(root.enums[args.enumType], args.searchString),
+    utils.enums.enumStringIndex(root.enums[args.enumType], args.searchString),
   enumRegexIndexesForString: (root, args) =>
-  utils.enums.enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
+    utils.enums.enumRegexIndexTuples(root.enums[args.enumType], args.searchRegex),
   wordLikes: (root, args) => {
     if (args.coerceCase && !['toLower', 'toUpper', 'none'].includes(args.coerceCase)) {
       throw new Error(`coerceCase, when present, must be 'toLower', 'toUpper' or 'none', not '${args.coerceCase}'`);

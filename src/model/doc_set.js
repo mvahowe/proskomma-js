@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 import checksum from 'checksum';
-import utils from "../util";
+import utils from '../util';
 const ByteArray = utils.ByteArray;
-const { addTag, removeTag, validateTags } = utils.tags;
+const {
+  addTag, removeTag, validateTags,
+} = utils.tags;
 const {
   succinctGraftName,
   succinctGraftSeqId,
@@ -9,7 +12,7 @@ const {
   succinctTokenChars,
   headerBytes,
   enumIndex,
-  enumIndexes
+  enumIndexes,
 } = utils.succinct;
 const { itemEnum } = utils.itemDefs;
 const { tokenEnumLabels } = utils.tokenDefs;

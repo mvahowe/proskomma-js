@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 const test = require('tape');
 
 const { Proskomma } = require('../../src');
@@ -14,7 +15,6 @@ const pk = pkWithDoc('../test_data/usfm/custom.usfm', {
 })[0];
 
 const customProskomma = class extends Proskomma {
-
   constructor() {
     super();
     this.filters = {};
@@ -27,7 +27,6 @@ const customProskomma = class extends Proskomma {
       introHeading: ['zhi'],
     };
   }
-
 };
 
 const customPk = customPkWithDoc(customProskomma, '../test_data/usfm/custom.usfm', {
@@ -74,9 +73,11 @@ test(
       t.equal(mainSequence.blocks[1].items.filter(i => i.subType === 'unknown').length, 0);
       t.equal(mainSequence.blocks[0].bs.payload, 'blockTag/p');
       t.equal(mainSequence.blocks[1].bs.payload, 'blockTag/zp');
+
       for (const label of ['span/zc', 'spanWithAtts/zw', 'attribute/spanWithAtts/zw/x-foo/0/baa']) {
         t.ok(mainSequence.blocks[1].scopeLabels.includes(label));
       }
+
       const introSequence = sequences.filter(s => s.type === 'introduction')[0];
       t.equal(introSequence.blocks.length, 2);
       t.equal(introSequence.blocks[0].bs.payload, 'blockTag/ip');
@@ -120,4 +121,4 @@ test(
       console.log(err);
     }
   },
-)
+);

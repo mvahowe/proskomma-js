@@ -1,3 +1,4 @@
+/* eslint-disable require-await */
 const test = require('tape');
 
 const { pkWithDoc } = require('../lib/load');

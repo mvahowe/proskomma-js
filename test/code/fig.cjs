@@ -27,9 +27,11 @@ const checkResult = (t, result) => {
   t.equal(lastFigItem.subType, 'end');
   t.equal(lastFigItem.payload, 'spanWithAtts/fig');
   const attributeTypes = figSequence.blocks[0].scopeLabels.filter(sl => sl.startsWith('attribute')).map(sl => sl.split('/')[3]);
+
   for (const att of ['src', 'size', 'ref']) {
     t.ok(attributeTypes.includes(att));
   }
+
   const mainSequence = sequences.filter(s => s.type === 'main')[0];
   const lastMainItem = mainSequence.blocks[0].items[mainSequence.blocks[0].items.length - 1];
   t.equal(lastMainItem.type, 'graft');

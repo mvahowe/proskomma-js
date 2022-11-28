@@ -192,10 +192,13 @@ test(
       t.ok(result.data.docSet.documents[0].drh[0].text.startsWith('In the Lord'));
       t.ok(result.data.docSet.documents[0].web[0].text.endsWith('to your mountain”?'));
       t.ok(result.data.docSet.documents[0].drh[0].text.endsWith('like a sparrow?'));
+      let results = [];
+
       for (const docSetId of ['eng_webbe', 'eng_drh']) {
         let mutationQuery = `mutation { unsetVerseMapping(docSetId: "${docSetId}")}`;
-        result = await pk.gqlQuery(mutationQuery);
+        results.push(pk.gqlQuery(mutationQuery));
       }
+      results = Promise.all(results);
       docSetQuery =
         '{ docSet(id: "eng_webbe") { documents { web: cv(chapter: "1" verses: ["1"]) { text } drh: mappedCv(chapter: "1" verses: ["1"], mappedDocSetId: "eng_drh") { text } } } }';
       result = await pk.gqlQuery(docSetQuery);

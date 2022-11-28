@@ -1,4 +1,5 @@
-import utils from "../../util";
+/* eslint-disable no-unused-vars */
+import utils from '../../util';
 
 const nodeSchemaString = `
 """A tree node"""

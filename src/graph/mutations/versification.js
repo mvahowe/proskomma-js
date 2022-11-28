@@ -1,4 +1,4 @@
-import utils from "../../util";
+import utils from '../../util';
 
 const versificationMutationsSchemaString = `
   """Adds verse mapping tables to the documents in a docSet, where the verse mapping may be provided in legacy .vrs or JSON format"""

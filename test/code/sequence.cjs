@@ -4,7 +4,7 @@ const { pkWithDoc } = require('../lib/load');
 
 const testGroup = 'Graph Sequence';
 
-const [pk, pkDoc] = pkWithDoc('../test_data/usfm/hello.usfm', {
+const [pk] = pkWithDoc('../test_data/usfm/hello.usfm', {
   lang: 'eng',
   abbr: 'ust',
 });
@@ -239,8 +239,7 @@ test(
       t.ok(sequence.orLogic);
       t.ok(!sequence.andLogic);
       t.ok(!sequence.allMiss);
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -265,8 +264,7 @@ test(
       const sequence = result.data.documents[0].mainSequence;
       t.ok(sequence.orLogic);
       t.ok(!sequence.andLogic);
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -287,8 +285,7 @@ test(
       t.equal(blocksItems[0][1].payload, 'verse/1');
       t.equal(blocksItems[0][2].payload, 'verses/1');
       t.equal(blocksItems[0][3].payload, 'In');
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -305,8 +302,7 @@ test(
       t.ok('documents' in result.data);
       t.ok('blocksTokens' in result.data.documents[0].mainSequence);
       t.equal(result.data.documents[0].mainSequence.blocksTokens[0][0].payload, 'In');
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -324,8 +320,7 @@ test(
       t.ok('blocksText' in result.data.documents[0].mainSequence);
       t.ok(result.data.documents[0].mainSequence.blocksText[0].startsWith('In the days when'));
       t.ok(result.data.documents[0].mainSequence.normalized[0].startsWith('In the days when'));
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -342,8 +337,7 @@ test(
       t.ok('documents' in result.data);
       t.ok('text' in result.data.documents[0].mainSequence);
       t.ok(result.data.documents[0].mainSequence.text.startsWith('In the days when'));
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },
@@ -360,8 +354,7 @@ test(
       t.ok('documents' in result.data);
       t.ok('text' in result.data.documents[0].mainSequence);
       t.ok(result.data.documents[0].mainSequence.text.startsWith('In the days when'));
-    } catch
-      (err) {
+    } catch (err) {
       console.log(err);
     }
   },

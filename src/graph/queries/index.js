@@ -141,12 +141,8 @@ const queryResolvers = {
       throw new Error('document requires either id or both docSetId and withBook (but not all three)');
     }
   },
-  versifications: root => {
-    return Object.entries(versifications);
-  },
-  versification: (root, args) => {
-    return Object.entries(versifications).filter(v => v[0] === args.id)[0];
-  }
+  versifications: () => Object.entries(versifications),
+  versification: (root, args) => Object.entries(versifications).filter(v => v[0] === args.id)[0],
 };
 
 export {

@@ -5,6 +5,7 @@ const nv = (root, newVerseRange) => {
   if (root[3].length <= verseN || root[3][verseN].length === 0) {
     return null;
   }
+
   let ret = null;
   let nc = chapterN;
   let nv = verseN;
@@ -40,6 +41,7 @@ const pv = (root, newVerseRange) => {
   if (root[3].length <= verseN || root[3][verseN].length === 0) {
     return null;
   }
+
   let ret = null;
   let nc = chapterN;
   let nv = verseN;
@@ -49,6 +51,7 @@ const pv = (root, newVerseRange) => {
 
   while (!ret) {
     nv -= 1;
+
     if (nv < 0) {
       if (onPreviousChapter || !root[2]) {
         break;

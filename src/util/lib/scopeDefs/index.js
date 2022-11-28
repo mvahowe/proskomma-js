@@ -1,3 +1,3 @@
-import * as scopeDefs from "./scope_defs";
+import * as scopeDefs from './scope_defs';
 
 export default scopeDefs;

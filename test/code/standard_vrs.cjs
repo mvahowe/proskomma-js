@@ -16,7 +16,7 @@ test(
       t.equal(result.errors, undefined);
       const versifications = result.data.versifications;
       t.equal(versifications.length, 6);
-      t.equal(versifications.filter(v => v.id === "eng").length, 1);
+      t.equal(versifications.filter(v => v.id === 'eng').length, 1);
     } catch (err) {
       console.log(err);
     }
@@ -32,8 +32,8 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const versification = result.data.versification;
-      t.equal(versification.id, "eng");
-      t.ok(versification.vrs.includes("English"));
+      t.equal(versification.id, 'eng');
+      t.ok(versification.vrs.includes('English'));
     } catch (err) {
       console.log(err);
     }
@@ -49,7 +49,7 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cvBooks = result.data.versification.cvBooks;
-      t.equal(cvBooks.filter(b => b.bookCode === "TIT").length, 1);
+      t.equal(cvBooks.filter(b => b.bookCode === 'TIT').length, 1);
     } catch (err) {
       console.log(err);
     }
@@ -65,7 +65,7 @@ test(
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const cvBook = result.data.versification.cvBook;
-      t.equal(cvBook.bookCode, "TIT");
+      t.equal(cvBook.bookCode, 'TIT');
       t.equal(cvBook.chapters.length, 3);
       t.equal(cvBook.chapters[0].chapter, 1);
       t.equal(cvBook.chapters[0].maxVerse, 16);

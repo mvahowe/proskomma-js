@@ -1,4 +1,3 @@
-const util = require('util');
 const test = require('tape');
 const deepCopy = require('deep-copy-all');
 const deepEqual = require('deep-equal');
@@ -14,7 +13,7 @@ const pk = pkWithDoc('../test_data/usfm/hello.usfm', {
 
 test(
   `Identity Transform (${testGroup})`,
-  async function (t) {
+  function (t) {
     try {
       t.plan(1);
       const myPk = deepCopy(pk);

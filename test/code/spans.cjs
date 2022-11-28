@@ -40,6 +40,7 @@ test(
       const joel = result.data.documents[0].mainSequence.blocks[0].tokens.filter(t => t.payload === 'Joel')[0];
       t.ok('position' in joel);
       t.ok('scopes' in joel);
+
       for (const scope of ['chapter/1', 'verse/1', 'verses/1', 'span/it', 'span/bd']) {
         t.ok(joel.scopes.includes(scope));
       }

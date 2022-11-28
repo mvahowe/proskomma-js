@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import utils from "../../util";
+import utils from '../../util';
 
 const tableSequenceSchemaString = `
 """A contiguous flow of content for a table"""
@@ -45,6 +45,7 @@ const tableSequenceResolvers = {
     const rowNs = new Set([]);
 
     for (const block of root.blocks) {
+      // eslint-disable-next-line no-unused-vars
       const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(block.bs, 0);
       const bsPayload = context.docSet.unsuccinctifyScope(block.bs, itemType, itemSubtype, 0)[2];
       rowNs.add(bsPayload.split('/')[1]);
@@ -85,6 +86,7 @@ const tableSequenceResolvers = {
       if (row[matchSpec.colN] === undefined) {
         return false;
       }
+
       const matchCellText = row[matchSpec.colN][2]
         .filter(i => i[0] === 'token')
         .map(i => i[2])
@@ -107,6 +109,7 @@ const tableSequenceResolvers = {
       if (row[matchSpec.colN] === undefined) {
         return false;
       }
+
       const matchCellText = row[matchSpec.colN][2]
         .filter(i => i[0] === 'token')
         .map(i => i[2])
@@ -131,6 +134,7 @@ const tableSequenceResolvers = {
     for (const block of root.blocks) {
       const rows = context.docSet.unsuccinctifyScopes(block.bs)
         .map(s => parseInt(s[2].split('/')[1]));
+
       if (args.positions && !args.positions.includes(rows[0])) {
         continue;
       }

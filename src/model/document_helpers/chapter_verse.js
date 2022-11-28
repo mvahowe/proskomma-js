@@ -1,6 +1,6 @@
 import BitSet from 'bitset';
 
-import utils from "../../util";
+import utils from '../../util';
 const ByteArray = utils.ByteArray;
 const { itemEnum } = utils.itemDefs;
 const { tokenEnum } = utils.tokenDefs;

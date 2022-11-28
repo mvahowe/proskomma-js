@@ -545,7 +545,7 @@ const documentResolvers = {
     );
   },
   perf: (root, args) => root.perf(args.indent),
-  usfm: (root, args) => root.usfm(),
+  usfm: (root) => root.usfm(),
   sofria: (root, args) => root.sofria(args.indent, args.chapter),
 };
 

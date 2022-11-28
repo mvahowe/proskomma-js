@@ -1,3 +1,3 @@
-import * as succinct from "./succinct";
+import * as succinct from './succinct';
 
 export default succinct;

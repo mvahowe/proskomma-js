@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import xre from 'xregexp';
-import utils from "../../util";
+import utils from '../../util';
 
 const blocksWithScriptureCV = (docSet, blocks, cv) => {
   const hasMiddleChapter = (b, fromC, toC) => {

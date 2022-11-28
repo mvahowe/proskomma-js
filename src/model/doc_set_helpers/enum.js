@@ -21,9 +21,11 @@ const recordPreEnum = (docSet, category, value) => {
   if (!(category in docSet.preEnums)) {
     throw new Error(`Unknown category ${category} in recordPreEnum. Maybe call buildPreEnums()?`);
   }
+
   if (value.length > 255) {
     console.log('Value length of', value.length, 'in recordPreEnum');
   }
+
   if (!docSet.preEnums[category].has(value)) {
     docSet.preEnums[category].set(
       value,

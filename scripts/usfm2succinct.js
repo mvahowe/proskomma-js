@@ -39,7 +39,7 @@ pk.importDocument(
 const docSetId = Object.values(pk.docSets)[0].id;
 const succinct = pk.serializeSuccinct(docSetId);
 
-try{
+try {
   fse.writeFileSync(destinationPath, JSON.stringify(succinct));
 } catch (err) {
   console.log('ERROR : File not created');

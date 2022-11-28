@@ -82,7 +82,7 @@ test(
 
 test(
   `Duplicate Documents (${testGroup})`,
-  async function (t) {
+  function (t) {
     try {
       t.plan(1);
       t.throws(() => pkWithDocSetDocs(

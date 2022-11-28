@@ -26,11 +26,13 @@ test(
       t.equal(result.errors, undefined);
       const queryHeaders = result.data.documents[0].headers;
       t.equal(queryHeaders.length, expectedHeaders.length);
+
       for (const [expectedKey, expectedValue] of expectedHeaders) {
         const queryTuple = queryHeaders.filter(kv => kv.key === expectedKey);
         t.ok(queryTuple.length === 1);
         t.ok(queryTuple[0].value === expectedValue);
       }
+
       const query2 = '{documents { toc: header(id:"toc") toc3: header(id:"toc3") banana: header(id:"banana")} }';
       const result2 = await pk.gqlQuery(query2);
       t.equal(result2.errors, undefined);

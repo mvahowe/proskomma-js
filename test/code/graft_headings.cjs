@@ -18,9 +18,11 @@ test(
       const result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       const sequences = {};
+
       for (const seq of result.data.documents[0].sequences) {
         sequences[seq.id] = seq;
       }
+
       const mainSequence = sequences[result.data.documents[0].mainSequence.id];
       t.equal(mainSequence.blocks[0].bg.length, 2);
       t.equal(mainSequence.blocks[0].bg[0].subType, 'title');

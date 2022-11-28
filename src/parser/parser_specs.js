@@ -1,4 +1,4 @@
-import utils from "../util";
+import utils from '../util';
 const { labelForScope } = utils.scopeDefs;
 import { constructorForFragment } from './lexers/object_for_fragment';
 

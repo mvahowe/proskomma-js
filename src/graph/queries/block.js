@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import utils from "../../util";
+import utils from '../../util';
 import { dumpBlock } from '../lib/dump';
 
 const scopeMatchesStartsWith = (sw, s) => {
@@ -111,6 +111,7 @@ const blockResolvers = {
   is: (root, args, context) => context.docSet.unsuccinctifyScopes(root.is),
   os: (root, args, context) => context.docSet.unsuccinctifyScopes(root.os),
   bs: (root, args, context) => {
+    // eslint-disable-next-line no-unused-vars
     const [itemLength, itemType, itemSubtype] = utils.succinct.headerBytes(root.bs, 0);
     return context.docSet.unsuccinctifyScope(root.bs, itemType, itemSubtype, 0);
   },

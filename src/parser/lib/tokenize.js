@@ -3,6 +3,7 @@ import { lexingRegexes } from '../lexers/lexingRegexes';
 
 const tokenTypes = {};
 const unionComponents = [];
+
 for (const lr of lexingRegexes) {
   if (['wordLike', 'eol', 'lineSpace', 'punctuation', 'unknown'].includes(lr[1])) {
     tokenTypes[lr[1]] = xre(`^${lr[2].xregexp.source}$`);
@@ -13,6 +14,7 @@ for (const lr of lexingRegexes) {
 const tokenizeString = str => {
   const unionRegex = xre.union(unionComponents);
   const ret = [];
+
   for (const token of xre.match(str, unionRegex, 'all')) {
     let tokenType;
 
