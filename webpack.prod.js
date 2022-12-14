@@ -8,19 +8,17 @@ module.exports = {
   devtool: false,
   performance: {
     maxEntrypointSize: 2048000,
-    maxAssetSize: 2048000
+    maxAssetSize: 2048000,
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    globalObject: "this",
-    // one day we might need "library" instead of "libraryTarget"
+    globalObject: 'this',
+    // one day we might need 'library' instead of 'libraryTarget'
     // https://github.com/webpack/webpack/issues/11800
-    library: {
-      type: 'commonjs-static',
-    },
-    libraryTarget: 'commonjs2',
-    hashFunction: "xxhash64"
+    library: { type: 'commonjs2' },
+    // libraryTarget: 'commonjs2',
+    hashFunction: 'xxhash64',
   },
   externals: {},
   module: {
@@ -30,35 +28,27 @@ module.exports = {
         include: path.join(__dirname, 'src'),
         exclude: path.join(__dirname, '/node_modules/'),
         loader: 'babel-loader',
-        options: {
-          plugins: ['@babel/plugin-proposal-optional-chaining'],
-        },
+        options: { plugins: ['@babel/plugin-proposal-optional-chaining'] },
       },
       {
         test: /\.mjs$/,
         include: /node_modules/,
-        type: 'javascript/auto'
-      }
-    ]
+        type: 'javascript/auto',
+      },
+    ],
   },
   resolve: {
     fallback: {
       fs: false,
       string_decoder: false,
-      crypto: false,
+      crypto: require.resolve('crypto-browserify'),
     },
-    alias: {
-      process: "process/browser"
-    }
+    alias: { process: 'process/browser' },
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      Buffer: ['buffer', 'Buffer'],
-    }),
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
-    new NodePolyfillPlugin()
+    new webpack.ProvidePlugin({ Buffer: ['buffer', 'Buffer'] }),
+    new webpack.ProvidePlugin({ process: 'process/browser' }),
+    new NodePolyfillPlugin(),
   ],
-  target: 'node'
+  target: 'node',
 };
