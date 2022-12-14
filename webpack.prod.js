@@ -39,9 +39,10 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      fs: false,
-      string_decoder: false,
+      fs: require.resolve('fse'),
+      string_decoder: require.resolve('string_decoder'),
       crypto: require.resolve('crypto-browserify'),
+      path: require.resolve('path-browserify'),
     },
     alias: { process: 'process/browser' },
   },
