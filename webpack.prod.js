@@ -20,7 +20,8 @@ module.exports = {
     // libraryTarget: 'commonjs2',
     hashFunction: 'xxhash64',
   },
-  externals: {},
+  externalsType: 'commonjs2',
+  externals: { 'fs-extra': 'fs-extra' },
   module: {
     rules: [
       {
@@ -39,7 +40,7 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      fs: require.resolve('fse'),
+      fs: require.resolve('fs-extra'),
       string_decoder: require.resolve('string_decoder'),
       crypto: require.resolve('crypto-browserify'),
       path: require.resolve('path-browserify'),
