@@ -1,4 +1,4 @@
-import { PipelineHandler } from 'pipeline-handler';
+import { PipelineHandler } from 'proskomma-json-tools';
 import { remakeBlocks } from '../lib/remake_blocks';
 import pipelines from '../../pipelines/perf2x';
 import customTransforms from '../../transforms';

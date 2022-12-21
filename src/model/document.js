@@ -2,8 +2,8 @@ import {
   PerfRenderFromProskomma,
   SofriaRenderFromProskomma,
   transforms,
+  PipelineHandler,
 } from 'proskomma-json-tools';
-import { PipelineHandler } from 'pipeline-handler';
 import utils from '../util';
 import {
   parseUsfm,
