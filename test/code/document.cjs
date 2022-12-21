@@ -326,7 +326,7 @@ test(
   },
 );
 
-test.only(
+test(
   `sofria (${testGroup})`,
   async function (t) {
     try {
