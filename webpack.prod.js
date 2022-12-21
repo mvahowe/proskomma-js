@@ -13,15 +13,19 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    globalObject: 'this',
+    // globalObject: 'this',
     // one day we might need 'library' instead of 'libraryTarget'
     // https://github.com/webpack/webpack/issues/11800
-    library: { type: 'commonjs2' },
-    // libraryTarget: 'commonjs2',
+    library: { type: 'commonjs-static' },
+    // libraryTarget: 'module',
     hashFunction: 'xxhash64',
   },
   externalsType: 'commonjs2',
-  externals: { 'fs-extra': 'fs-extra' },
+  externals: {
+    'fs-extra': 'fs-extra',
+    'crypto-browserify': 'crypto-browserify',
+  },
+  // experiments: { outputModule: true },
   module: {
     rules: [
       {
