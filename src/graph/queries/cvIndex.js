@@ -14,7 +14,7 @@ type cvIndex {
 
 const cvIndexResolvers = {
   chapter: root => root[0],
-  verses: root => root[1],
+  verses: root => root[1].filter(v => v.length > 0),
   verseNumbers: (root, args, context) => {
     context.cvIndex = root;
     return [...root[1].entries()]

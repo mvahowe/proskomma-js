@@ -80,13 +80,14 @@ test(
   `cvIndex (${testGroup})`,
   async function (t) {
     try {
-      t.plan(2 + 10 + 6);
+      t.plan(3 + 10 + 6);
       let query =
         `{ documents { cvIndex(chapter:3) ${cvQuery} } }`;
       let result = await pk.gqlQuery(query);
       t.equal(result.errors, undefined);
       let index = result.data.documents[0].cvIndex;
       t.equal(index.chapter, 3);
+      t.equal(index.verses.length, 18);
       checkIndexFields(t, index.verses[1].verse[0]);
       const verseNumbers = result.data.documents[0].cvIndex.verseNumbers;
       t.equal(verseNumbers.length, 18);
