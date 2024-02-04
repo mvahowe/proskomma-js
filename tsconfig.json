@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,        // Allow JavaScript files to be compiled.
+    "checkJs": true,        // Enable type checking for JavaScript files.
+    "declaration": true,    // Generate corresponding '.d.ts' file.
+    "emitDeclarationOnly": true, // Only emit '.d.ts' files and no JavaScript output.
+    "outDir": "./dist/types",    // Specify the output directory for '.d.ts' files.
+    "noEmit": false         // Enable emitting files (important for declaration files).
+  },
+  "include": [
+    "src/**/*"              // Adjust this pattern to include your source files.
+  ],
+  "esModuleInterop": true,  // Enable 'esModuleInterop' for compatibility with Babel.
+}
