@@ -5,6 +5,7 @@ A Javascript Implementation of the Proskomma Scripture Processing Model.
 # Installing and testing the code
 ```
 npm install
+npm run build
 npm test
 npm run rawTest
 TESTSCRIPT=cp_vp npm run oneTest
