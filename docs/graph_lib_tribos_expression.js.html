@@ -1,4 +1,32 @@
-import xre from 'xregexp';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: graph/lib/tribos_expression.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: graph/lib/tribos_expression.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import xre from 'xregexp';
 
 /**
  * An object containing various aggregate functions for processing nodes.
@@ -47,9 +75,9 @@ const aggregateFunctions = {
   div: (docSet, node, a, b) => Math.floor(a / b),
   mod: (docSet, node, a, b) => a % b,
   gt: (docSet, node, a, b) => a > b,
-  lt: (docSet, node, a, b) => a < b,
+  lt: (docSet, node, a, b) => a &lt; b,
   ge: (docSet, node, a, b) => a >= b,
-  le: (docSet, node, a, b) => a <= b,
+  le: (docSet, node, a, b) => a &lt;= b,
 };
 
 /**
@@ -65,7 +93,7 @@ const parseFunctions = {
 /**
  * Splits a string into arguments considering quotes and parentheses.
  * @param {string} str - The string to split.
- * @returns {Array<string>} An array of split arguments.
+ * @returns {Array&lt;string>} An array of split arguments.
  */
 const splitArgs = str => {
   const ret = [[]];
@@ -73,7 +101,7 @@ const splitArgs = str => {
   let nParen = 0;
   let inQuote = false;
 
-  while (str && pos < str.length) {
+  while (str &amp;&amp; pos &lt; str.length) {
     switch (str[pos]) {
     case '\\':
       ret[ret.length - 1].push(str[pos]);
@@ -104,7 +132,7 @@ const splitArgs = str => {
       }
       break;
     case ',':
-      if (!inQuote && nParen === 0) {
+      if (!inQuote &amp;&amp; nParen === 0) {
         ret.push([]);
 
         while (str[pos + 1] === ' ') {
@@ -400,9 +428,9 @@ const expressions = {
     argStructure: [['intExpression', [2, 2]]],
   },
   lt: {
-    regex: xre('^<\\((.+)\\)$'),
+    regex: xre('^&lt;\\((.+)\\)$'),
     doc: {
-      operator: '<',
+      operator: '&lt;',
       args: ['integer', 'integer'],
       result: 'boolean',
       description: 'Is the first integer numerically less than the second?',
@@ -420,9 +448,9 @@ const expressions = {
     argStructure: [['intExpression', [2, 2]]],
   },
   le: {
-    regex: xre('^<=\\((.+)\\)$'),
+    regex: xre('^&lt;=\\((.+)\\)$'),
     doc: {
-      operator: '<=',
+      operator: '&lt;=',
       args: ['integer', 'integer'],
       result: 'boolean',
       description: 'Is the first integer numerically less than or equal to the second?',
@@ -487,11 +515,11 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
     if (argStructure.length > 0) {
       const nExpected = nExpectedArgs(argStructure);
 
-      if (argRecords.length < nExpected[0]) {
+      if (argRecords.length &lt; nExpected[0]) {
         return { errors: `Expected at least ${nExpected[0]} args for '${expressionId}', found ${argRecords.length}` };
       }
 
-      if (!nExpected[1] && argRecords.length > nExpected[0]) {
+      if (!nExpected[1] &amp;&amp; argRecords.length > nExpected[0]) {
         return { errors: `Expected at most ${nExpected[0]} args for '${expressionId}', found ${argRecords.length}` };
       }
 
@@ -499,18 +527,18 @@ const parseRegexExpression = (docSet, node, predicateString, expressionId, match
       let argStructureN = 0;
       let nOccs = 0;
 
-      while (argRecordN < argRecords.length) {
+      while (argRecordN &lt; argRecords.length) {
         const argRecord = argRecords[argRecordN];
         const argResult = parseExpression(docSet, node, argRecord, argStructure[argStructureN][0]);
 
-        if ('breakOn' in expressionRecord && !argResult.errors && argResult.data === expressionRecord.breakOn) {
+        if ('breakOn' in expressionRecord &amp;&amp; !argResult.errors &amp;&amp; argResult.data === expressionRecord.breakOn) {
           return argResult;
         }
         argResults.push(argResult);
         argRecordN++;
         nOccs++;
 
-        if (argStructure[argStructureN][1][1] && nOccs >= argStructure[argStructureN][1][1]) {
+        if (argStructure[argStructureN][1][1] &amp;&amp; nOccs >= argStructure[argStructureN][1][1]) {
           argStructureN++;
           nOccs = 0;
         }
@@ -552,7 +580,7 @@ const parseExpression = (docSet, node, predicate, expressionId) => {
 
       if (!optionResult.errors) {
         return optionResult;
-      } else if (!errors || (optionResult.errors.length < errors.length)) {
+      } else if (!errors || (optionResult.errors.length &lt; errors.length)) {
         errors = optionResult.errors;
       }
     }
@@ -589,3 +617,26 @@ const doPredicate = (docSet, result, predicateString) => ({
 });
 
 export { expressions, doPredicate };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Proskomma.html">Proskomma</a></li></ul><h3>Global</h3><ul><li><a href="global.html#aggregateFunctions">aggregateFunctions</a></li><li><a href="global.html#doPredicate">doPredicate</a></li><li><a href="global.html#executableSchema">executableSchema</a></li><li><a href="global.html#parseExpression">parseExpression</a></li><li><a href="global.html#parseFunctions">parseFunctions</a></li><li><a href="global.html#parseRegexExpression">parseRegexExpression</a></li><li><a href="global.html#splitArgs">splitArgs</a></li><li><a href="global.html#tree2nodes">tree2nodes</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Feb 07 2024 14:34:19 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
