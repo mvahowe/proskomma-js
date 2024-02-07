@@ -35,7 +35,7 @@
   "homepage": "https://github.com/mvahowe/proskomma-js#readme",
   "dependencies": {
     "@babel/core": "^7.23.9",
-    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/plugin-transform-optional-chaining": "^7.21.0",
     "@graphql-tools/schema": "^10.0.2",
     "assert": "^2.1.0",
     "async-mutex": "^0.4.1",

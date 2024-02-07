@@ -5,6 +5,7 @@ module.exports = {
     'iterableIsArray': true,
     'ignoreToPrimitiveHint': true,
   },
+  'compact': true,
   'presets': [
     [
       '@babel/preset-env',

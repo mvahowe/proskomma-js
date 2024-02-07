@@ -31,7 +31,8 @@ module.exports = {
         exclude: path.join(__dirname, '/node_modules/'),
         loader: 'babel-loader',
         options: {
-          plugins: ['@babel/plugin-proposal-optional-chaining'],
+          plugins: ['@babel/plugin-transform-optional-chaining'],
+          compact: true
         },
       },
       {
